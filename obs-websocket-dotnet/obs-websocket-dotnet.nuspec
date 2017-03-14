@@ -21,9 +21,9 @@
 			<dependency id="Newtonsoft.Json" version="9.0.1" />
 			<dependency id="WebSocketSharp" version="1.0.3-rc11" />
 		</dependencies>
-
-		<files>
-			<file src="build\obs-websocket-sharp.dll" target="build" />
-		</files>
 	</metadata>
+
+	<files>
+		<file src="build\obs-websocket-sharp.dll" target="build" />
+	</files>
 </package>
