@@ -7,7 +7,7 @@
 		<authors>Stéphane Lepin</authors>
 		<owners>Palakis</owners>
 		
-		<licenceUrl>https://github.com/Palakis/obs-websocket-dotnet/blob/master/LICENSE.md</licenseUrl>
+		<licenseUrl>https://github.com/Palakis/obs-websocket-dotnet/blob/master/LICENSE.md</licenseUrl>
 		<projectUrl>https://github.com/Palakis/obs-websocket-dotnet</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 
