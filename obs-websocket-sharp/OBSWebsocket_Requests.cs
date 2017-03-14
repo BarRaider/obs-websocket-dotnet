@@ -25,7 +25,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace OBSWebsocketSharp
+namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
     {

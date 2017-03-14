@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using OBSWebsocketSharp;
+using OBSWebsocketDotNet;
 
 namespace TestClient
 {

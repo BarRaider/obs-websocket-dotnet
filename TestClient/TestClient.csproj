@@ -78,9 +78,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\obs-websocket-sharp\obs-websocket-sharp.csproj">
+    <ProjectReference Include="..\obs-websocket-sharp\obs-websocket-dotnet.csproj">
       <Project>{c8668815-f21e-49c0-8f1a-58bc698153af}</Project>
-      <Name>obs-websocket-sharp</Name>
+      <Name>obs-websocket-dotnet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

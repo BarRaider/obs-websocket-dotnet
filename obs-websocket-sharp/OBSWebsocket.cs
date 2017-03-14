@@ -30,7 +30,7 @@ using WebSocketSharp;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
-namespace OBSWebsocketSharp
+namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
     {
