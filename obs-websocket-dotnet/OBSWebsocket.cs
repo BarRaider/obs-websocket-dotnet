@@ -76,7 +76,7 @@ namespace OBSWebsocketDotNet
         public EventHandler OnSceneCollectionListChange;
 
         /// <summary>
-        /// Triggered when switching to another transition type
+        /// Triggered when switching to another transition
         /// </summary>
         public TransitionChangeCallback OnTransitionChange;
 
@@ -86,7 +86,7 @@ namespace OBSWebsocketDotNet
         public TransitionDurationChangeCallback OnTransitionDurationChange;
 
         /// <summary>
-        /// Triggered when a transition type is created or removed
+        /// Triggered when a transition is created or removed
         /// </summary>
         public EventHandler OnTransitionListChange;
 
