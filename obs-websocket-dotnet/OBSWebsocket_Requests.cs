@@ -27,6 +27,9 @@ using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
 {
+    /// <summary>
+    /// Instance of a connection with an obs-websocket server
+    /// </summary>
     public partial class OBSWebsocket
     {
         /// <summary>
@@ -119,7 +122,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all transitions
         /// </summary>
-        /// <returns>A <see cref="List{string}"/> of all transition names</returns>
+        /// <returns>A <see cref="List{T}"/> of all transition names</returns>
         public List<string> ListTransitions()
         {
             JObject response = SendRequest("GetTransitionList");
@@ -289,7 +292,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all scene collections
         /// </summary>
-        /// <returns>A <see cref="List{string}"/> of the names of all scene collections</returns>
+        /// <returns>A <see cref="List{T}"/> of the names of all scene collections</returns>
         public List<string> ListSceneCollections()
         {
             var response = SendRequest("ListSceneCollections");
@@ -329,7 +332,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all profiles
         /// </summary>
-        /// <returns>A <see cref="List{string}"/> of the names of all profiles</returns>
+        /// <returns>A <see cref="List{T}"/> of the names of all profiles</returns>
         public List<string> ListProfiles()
         {
             var response = SendRequest("ListProfiles");

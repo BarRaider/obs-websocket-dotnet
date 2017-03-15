@@ -126,11 +126,14 @@ namespace OBSWebsocketDotNet
         public EventHandler OnExit;
         #endregion
 
-        protected delegate void RequestCallback(OBSWebsocket sender, JObject body);
+        private delegate void RequestCallback(OBSWebsocket sender, JObject body);
 
-        protected WebSocket _ws;
-        protected Dictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        private WebSocket _ws;
+        private Dictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public OBSWebsocket()
         {
             _responseHandlers = new Dictionary<string, TaskCompletionSource<JObject>>();
@@ -177,7 +180,7 @@ namespace OBSWebsocketDotNet
             }
         }
 
-        protected void WSMessageHandler(object sender, MessageEventArgs e)
+        private void WSMessageHandler(object sender, MessageEventArgs e)
         {
             if (!e.IsText)
             {
@@ -282,6 +285,11 @@ namespace OBSWebsocketDotNet
             return true;
         }
 
+        /// <summary>
+        /// Update message handler
+        /// </summary>
+        /// <param name="eventType">Value of "event-type" in the JSON body</param>
+        /// <param name="body">full JSON message body</param>
         protected void ProcessEventType(string eventType, JObject body)
         {
             OBSStreamStatus status;
@@ -412,7 +420,7 @@ namespace OBSWebsocketDotNet
             }
         }
 
-        protected string HashEncode(string input)
+        private string HashEncode(string input)
         {
             var sha256 = new SHA256Managed();
 
@@ -422,7 +430,7 @@ namespace OBSWebsocketDotNet
             return System.Convert.ToBase64String(hash);
         }
 
-        protected string NewMessageID(int length = 16)
+        private string NewMessageID(int length = 16)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var random = new Random();
