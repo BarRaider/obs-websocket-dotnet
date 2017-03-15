@@ -14,7 +14,7 @@
 		<description>C#/VB .NET library to communicate with an obs-websocket server</description>
 		<releaseNotes>First release</releaseNotes>
 		
-		<copyright>Copyright 2016 (c) Stéphane Lepin</copyright>
+		<copyright>Copyright 2017 (c) Stéphane Lepin</copyright>
 		<tags>obs studio websocket api</tags>
 
 		<dependencies>
