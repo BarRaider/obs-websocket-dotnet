@@ -24,6 +24,7 @@
 	</metadata>
 
 	<files>
-		<file src="bin\Release\obs-websocket-sharp.dll" target="build" />
+		<file src="bin\Release\obs-websocket-dotnet.dll" target="build" />
+    <file src="bin\Release\obs-websocket-dotnet.xml" target="build" />
 	</files>
 </package>
