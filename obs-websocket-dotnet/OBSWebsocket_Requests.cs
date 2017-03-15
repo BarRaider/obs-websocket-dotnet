@@ -159,7 +159,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Change the transition's duration
         /// </summary>
-        /// <param name="duration">Desired transition duration</param>
+        /// <param name="duration">Desired transition duration (in milliseconds)</param>
         public void SetTransitionDuration(int duration)
         {
             var requestFields = new JObject();

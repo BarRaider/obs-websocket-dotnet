@@ -38,12 +38,54 @@ namespace OBSWebsocketDotNet
         Stopped
     }
 
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnSceneChange"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="newSceneName">Name of the new current scene</param>
     public delegate void SceneChangeCallback(OBSWebsocket sender, string newSceneName);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnSourceOrderChange"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sceneName">Name of the scene where items where reordered</param>
     public delegate void SourceOrderChangeCallback(OBSWebsocket sender, string sceneName);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnSceneItemVisibilityChange"/>, <see cref="OBSWebsocket.OnSceneItemAdded"/> or <see cref="OBSWebsocket.OnSceneItemRemoved"/> 
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sceneName">Name of the scene where the item is</param>
+    /// <param name="itemName">Name of the concerned item</param>
     public delegate void SceneItemUpdateCallback(OBSWebsocket sender, string sceneName, string itemName);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnTransitionChange"/> 
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="newTransitionName">Name of the new selected transition</param>
     public delegate void TransitionChangeCallback(OBSWebsocket sender, string newTransitionName);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnTransitionDurationChange"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="newDuration">Name of the new transition duration (in milliseconds)</param>
     public delegate void TransitionDurationChangeCallback(OBSWebsocket sender, int newDuration);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnStreamingStateChange"/> or <see cref="OBSWebsocket.OnRecordingStateChange"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="type">New output state</param>
     public delegate void OutputStateCallback(OBSWebsocket sender, OutputState type);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnStreamStatus"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="status">Stream status data</param>
     public delegate void StreamStatusCallback(OBSWebsocket sender, OBSStreamStatus status);
 
     /// <summary>
@@ -61,6 +103,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public List<OBSSceneItem> Items;
 
+        /// <summary>
+        /// Builds the object from the JSON description
+        /// </summary>
+        /// <param name="data">JSON scene description as a <see cref="JObject" /></param>
         public OBSScene(JObject data)
         {
             Name = (string)data["name"];
@@ -81,9 +127,9 @@ namespace OBSWebsocketDotNet
     public struct OBSSceneItem
     {
         /// <summary>
-        /// Scene item name
+        /// Source name
         /// </summary>
-        public string Name;
+        public string SourceName;
 
         /// <summary>
         /// Source internal type
@@ -125,9 +171,13 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public float Height;
 
+        /// <summary>
+        /// Builds the object from the JSON scene description
+        /// </summary>
+        /// <param name="data">JSON item description as a <see cref="JObject"/></param>
         public OBSSceneItem(JObject data)
         {
-            Name = (string)data["name"];
+            SourceName = (string)data["name"];
             InternalType = (string)data["type"];
 
             AudioVolume = (float)data["volume"];
@@ -160,6 +210,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly string PasswordSalt;
 
+        /// <summary>
+        /// Builds the object from JSON response body
+        /// </summary>
+        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public OBSAuthInfo(JObject data)
         {
             AuthRequired = (bool)data["authRequired"];
@@ -188,6 +242,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly string OBSStudioVersion;
 
+        /// <summary>
+        /// Builds the object from the JSON response body
+        /// </summary>
+        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public OBSVersion(JObject data)
         {
             APIVersion = (string)data["version"];
@@ -246,6 +304,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly float FPS;
 
+        /// <summary>
+        /// Builds the object from the JSON event body
+        /// </summary>
+        /// <param name="data">JSON event body as a <see cref="JObject"/></param>
         public OBSStreamStatus(JObject data)
         {
             Streaming = (bool)data["streaming"];
@@ -277,6 +339,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly bool IsRecording;
 
+        /// <summary>
+        /// Builds the object from the JSON response body
+        /// </summary>
+        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public OBSOutputStatus(JObject data)
         {
             IsStreaming = (bool)data["streaming"];
@@ -299,6 +365,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly int Duration;
 
+        /// <summary>
+        /// Builds the object from the JSON response body
+        /// </summary>
+        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public OBSCurrentTransitionInfo(JObject data)
         {
             Name = (string)data["name"];
@@ -321,6 +391,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly bool Muted;
 
+        /// <summary>
+        /// Builds the object from the JSON response body
+        /// </summary>
+        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public OBSVolumeInfo(JObject data)
         {
             Volume = (float)data["volume"];
