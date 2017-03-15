@@ -204,7 +204,7 @@ namespace TestClient
                 var node = new TreeNode(scene.Name);
                 foreach (var item in scene.Items)
                 {
-                    node.Nodes.Add(item.Name);
+                    node.Nodes.Add(item.SourceName);
                 }
 
                 tvScenes.Nodes.Add(node);
