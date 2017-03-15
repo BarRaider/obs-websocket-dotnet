@@ -16,6 +16,8 @@ namespace TestClient
             _obs.OnSceneChange += onSceneChange;
             _obs.OnSceneCollectionChange += onSceneColChange;
             _obs.OnProfileChange += onProfileChange;
+            _obs.OnTransitionChange += onTransitionChange;
+            _obs.OnTransitionDurationChange += onTransitionDurationChange;
 
             _obs.OnStreamingStateChange += onStreamingStateChange;
             _obs.OnRecordingStateChange += onRecordingStateChange;
@@ -45,6 +47,19 @@ namespace TestClient
             {
                 tbProfile.Text = _obs.GetCurrentProfile();
             });
+        }
+
+        private void onTransitionChange(OBSWebsocket sender, string newTransitionName)
+        {
+            BeginInvoke((MethodInvoker)delegate
+            {
+                tbTransition.Text = newTransitionName;
+            });
+        }
+
+        private void onTransitionDurationChange(OBSWebsocket sender, int newDuration)
+        {
+            tbTransitionDuration.Value = newDuration;
         }
 
         private void onStreamingStateChange(OBSWebsocket sender, OutputStateUpdate newState)
@@ -151,11 +166,16 @@ namespace TestClient
                 btnListScenes.PerformClick();
                 btnGetCurrentScene.PerformClick();
 
-                btnListSceneCol.PerformClick();
+                btnListSceneCol.PerformClick(); 
                 btnGetCurrentSceneCol.PerformClick();
 
                 btnListProfiles.PerformClick();
                 btnGetCurrentProfile.PerformClick();
+
+                btnListTransitions.PerformClick();
+                btnGetCurrentTransition.PerformClick();
+
+                btnGetTransitionDuration.PerformClick();
 
                 var streamStatus = _obs.GetStreamingStatus();
                 if (streamStatus.IsStreaming)
@@ -275,6 +295,45 @@ namespace TestClient
         private void btnToggleRecording_Click(object sender, EventArgs e)
         {
             _obs.ToggleRecording();
+        }
+
+        private void btnListTransitions_Click(object sender, EventArgs e)
+        {
+            var transitions = _obs.ListTransitions();
+
+            tvTransitions.Nodes.Clear();
+            foreach (var transition in transitions)
+            {
+                tvTransitions.Nodes.Add(transition);
+            }
+        }
+
+        private void btnGetCurrentTransition_Click(object sender, EventArgs e)
+        {
+            tbTransition.Text = _obs.GetCurrentTransition().Name;
+        }
+
+        private void btnSetCurrentTransition_Click(object sender, EventArgs e)
+        {
+            _obs.SetCurrentTransition(tbTransition.Text);
+        }
+
+        private void tvTransitions_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                tbTransition.Text = e.Node.Text;
+            }
+        }
+
+        private void btnGetTransitionDuration_Click(object sender, EventArgs e)
+        {
+            tbTransitionDuration.Value = _obs.GetCurrentTransition().Duration;
+        }
+
+        private void btnSetTransitionDuration_Click(object sender, EventArgs e)
+        {
+            _obs.SetTransitionDuration((int)tbTransitionDuration.Value);
         }
     }
 }
