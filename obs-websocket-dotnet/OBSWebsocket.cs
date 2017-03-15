@@ -227,8 +227,8 @@ namespace OBSWebsocketDotNet
 
             // Build the bare-minimum body for a request
             var body = new JObject();
-            body.Add(new JProperty("request-type", requestType));
-            body.Add(new JProperty("message-id", messageID));
+            body.Add("request-type", requestType);
+            body.Add("message-id", messageID);
 
             // Add optional fields if provided
             if (additionalFields != null)
@@ -291,7 +291,7 @@ namespace OBSWebsocketDotNet
             string authResponse = HashEncode(secret + authInfo.Challenge);
 
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("auth", authResponse));
+            requestFields.Add("auth", authResponse);
 
             // ArgumentException thrown here if auth fails
             SendRequest("Authenticate", requestFields);

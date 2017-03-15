@@ -39,8 +39,7 @@ namespace OBSWebsocketDotNet
         public OBSScene GetCurrentScene()
         {
             JObject response = SendRequest("GetCurrentScene");
-            var scene = new OBSScene(response);
-            return scene;
+            return new OBSScene(response);
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace OBSWebsocketDotNet
         public void SetCurrentScene(string sceneName)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("scene-name", sceneName));
+            requestFields.Add("scene-name", sceneName);
 
             SendRequest("SetCurrentScene", requestFields);
         }
@@ -83,11 +82,11 @@ namespace OBSWebsocketDotNet
         public void SetSourceRender(string itemName, bool visible, string sceneName = null)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("source", itemName));
-            requestFields.Add(new JProperty("render", visible));
+            requestFields.Add("source", itemName);
+            requestFields.Add("render", visible);
 
             if (sceneName != null)
-                requestFields.Add(new JProperty("scene-name", sceneName));
+                requestFields.Add("scene-name", sceneName);
 
             SendRequest("SetSourceRender", requestFields);
         }
@@ -154,7 +153,7 @@ namespace OBSWebsocketDotNet
         public void SetCurrentTransition(string transitionName)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("transition-name", transitionName));
+            requestFields.Add("transition-name", transitionName);
 
             SendRequest("SetCurrentTransition", requestFields);
         }
@@ -166,7 +165,7 @@ namespace OBSWebsocketDotNet
         public void SetTransitionDuration(int duration)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("duration", duration));
+            requestFields.Add("duration", duration);
 
             SendRequest("SetTransitionDuration", requestFields);
         }
@@ -179,8 +178,8 @@ namespace OBSWebsocketDotNet
         public void SetVolume(string sourceName, float volume)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("source", sourceName));
-            requestFields.Add(new JProperty("volume", volume));
+            requestFields.Add("source", sourceName);
+            requestFields.Add("volume", volume);
 
             SendRequest("SetVolume", requestFields);
         }
@@ -193,7 +192,7 @@ namespace OBSWebsocketDotNet
         public OBSVolumeInfo GetVolume(string sourceName)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("source", sourceName));
+            requestFields.Add("source", sourceName);
 
             var response = SendRequest("GetVolume", requestFields);
             return new OBSVolumeInfo(response);
@@ -207,8 +206,8 @@ namespace OBSWebsocketDotNet
         public void SetMute(string sourceName, bool mute)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("source", sourceName));
-            requestFields.Add(new JProperty("mute", mute));
+            requestFields.Add("source", sourceName);
+            requestFields.Add("mute", mute);
 
             SendRequest("SetMute", requestFields);
         }
@@ -220,7 +219,7 @@ namespace OBSWebsocketDotNet
         public void ToggleMute(string sourceName)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("source", sourceName));
+            requestFields.Add("source", sourceName);
 
             SendRequest("ToggleMute", requestFields);
         }
@@ -235,12 +234,12 @@ namespace OBSWebsocketDotNet
         public void SetSceneItemPosition(string itemName, float x, float y, string sceneName = null)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("item", itemName));
-            requestFields.Add(new JProperty("x", x));
-            requestFields.Add(new JProperty("y", y));
+            requestFields.Add("item", itemName);
+            requestFields.Add("x", x);
+            requestFields.Add("y", y);
 
             if (sceneName != null)
-                requestFields.Add(new JProperty("scene-name", sceneName));
+                requestFields.Add("scene-name", sceneName);
 
             SendRequest("SetSceneItemPosition", requestFields);
         }
@@ -256,13 +255,13 @@ namespace OBSWebsocketDotNet
         public void SetSceneItemTransform(string itemName, float rotation = 0, float xScale = 1, float yScale = 1, string sceneName = null)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("item", itemName));
-            requestFields.Add(new JProperty("x-scale", xScale));
-            requestFields.Add(new JProperty("y-scale", yScale));
-            requestFields.Add(new JProperty("rotation", rotation));
+            requestFields.Add("item", itemName);
+            requestFields.Add("x-scale", xScale);
+            requestFields.Add("y-scale", yScale);
+            requestFields.Add("rotation", rotation);
 
             if (sceneName != null)
-                requestFields.Add(new JProperty("scene-name", sceneName));
+                requestFields.Add("scene-name", sceneName);
 
             SendRequest("SetSceneItemTransform", requestFields);
         }
@@ -274,7 +273,7 @@ namespace OBSWebsocketDotNet
         public void SetCurrentSceneCollection(string scName)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("sc-name", scName));
+            requestFields.Add("sc-name", scName);
 
             SendRequest("SetCurrentSceneCollection", requestFields);
         }
@@ -314,7 +313,7 @@ namespace OBSWebsocketDotNet
         public void SetCurrentProfile(string profileName)
         {
             var requestFields = new JObject();
-            requestFields.Add(new JProperty("profile-name", profileName));
+            requestFields.Add("profile-name", profileName);
 
             SendRequest("SetCurrentProfile", requestFields);
         }
