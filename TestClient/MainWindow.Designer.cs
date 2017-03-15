@@ -121,7 +121,7 @@
             this.txtServerIP.Name = "txtServerIP";
             this.txtServerIP.Size = new System.Drawing.Size(114, 20);
             this.txtServerIP.TabIndex = 2;
-            this.txtServerIP.Text = "127.0.0.1:4444";
+            this.txtServerIP.Text = "ws://127.0.0.1:4444";
             // 
             // txtServerPassword
             // 

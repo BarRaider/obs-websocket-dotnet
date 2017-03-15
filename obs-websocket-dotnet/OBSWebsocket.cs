@@ -34,26 +34,99 @@ namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
     {
-        protected delegate void RequestCallback(OBSWebsocket sender, JObject body);
-
+        #region Events
+        /// <summary>
+        /// Triggered when switching to another scene
+        /// </summary>
         public SceneChangeCallback OnSceneChange;
+
+        /// <summary>
+        /// Triggered when a scene is created, deleted or renamed
+        /// </summary>
         public EventHandler OnSceneListChange;
+
+        /// <summary>
+        /// Triggered when the scene item list of the specified scene is reordered
+        /// </summary>
         public SourceOrderChangeCallback OnSourceOrderChange;
+
+        /// <summary>
+        /// Triggered when a new item is added to the item list of the specified scene
+        /// </summary>
         public SceneItemUpdateCallback OnSceneItemAdded;
+
+        /// <summary>
+        /// Triggered when an item is removed from the item list of the specified scene
+        /// </summary>
         public SceneItemUpdateCallback OnSceneItemRemoved;
+
+        /// <summary>
+        /// Triggered when the visibility of a scene item changes
+        /// </summary>
         public SceneItemUpdateCallback OnSceneItemVisibilityChange;
+
+        /// <summary>
+        /// Triggered when switching to another scene collection
+        /// </summary>
         public EventHandler OnSceneCollectionChange;
+
+        /// <summary>
+        /// Triggered when a scene collection is created, deleted or renamed
+        /// </summary>
         public EventHandler OnSceneCollectionListChange;
+
+        /// <summary>
+        /// Triggered when switching to another transition type
+        /// </summary>
         public TransitionChangeCallback OnTransitionChange;
+
+        /// <summary>
+        /// Triggered when the current transition duration is changed
+        /// </summary>
         public TransitionDurationChangeCallback OnTransitionDurationChange;
+
+        /// <summary>
+        /// Triggered when a transition type is created or removed
+        /// </summary>
         public EventHandler OnTransitionListChange;
+
+        /// <summary>
+        /// Triggered when a transition between two scenes starts. Followed by <see cref="OnSceneChange"/> 
+        /// </summary>
         public EventHandler OnTransitionBegin;
+
+        /// <summary>
+        /// Triggered when switching to another profile
+        /// </summary>
         public EventHandler OnProfileChange;
+
+        /// <summary>
+        /// Triggered when a profile is created, imported, removed or renamed
+        /// </summary>
         public EventHandler OnProfileListChange;
+
+        /// <summary>
+        /// Triggered when the streaming output state changes
+        /// </summary>
         public OutputStateCallback OnStreamingStateChange;
+
+        /// <summary>
+        /// Triggered when the recording output state changes
+        /// </summary>
         public OutputStateCallback OnRecordingStateChange;
+
+        /// <summary>
+        /// Triggered every 2 seconds while streaming is active
+        /// </summary>
         public StreamStatusCallback OnStreamStatus;
+
+        /// <summary>
+        /// Triggered when OBS exits
+        /// </summary>
         public EventHandler OnExit;
+        #endregion
+
+        protected delegate void RequestCallback(OBSWebsocket sender, JObject body);
 
         protected WebSocket _ws;
         protected Dictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
@@ -63,13 +136,18 @@ namespace OBSWebsocketDotNet
             _responseHandlers = new Dictionary<string, TaskCompletionSource<JObject>>();
         }
 
+        /// <summary>
+        /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
+        /// </summary>
+        /// <param name="url">Server URL in standard URL format</param>
+        /// <param name="password">Server password</param>
         public void Connect(string url, string password) {
             if (_ws != null && _ws.IsAlive)
             {
                 Disconnect();
             }
 
-            _ws = new WebSocket("ws://" + url);
+            _ws = new WebSocket(url);
             _ws.OnMessage += WSMessageHandler;
 
             _ws.Connect();
@@ -81,6 +159,9 @@ namespace OBSWebsocketDotNet
             }
         }
 
+        /// <summary>
+        /// Disconnect this instance from the server
+        /// </summary>
         public void Disconnect()
         {
             if (_ws != null)
@@ -125,6 +206,12 @@ namespace OBSWebsocketDotNet
             }
         }
 
+        /// <summary>
+        /// Sends a message to the websocket API with the specified request type and optional parameters
+        /// </summary>
+        /// <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
+        /// <param name="additionalFields">additional JSON fields if required by the request type</param>
+        /// <returns>The server's JSON response as a JObject</returns>
         public JObject SendRequest(string requestType, JObject additionalFields = null) {
             string messageID = NewMessageID();
 
@@ -155,18 +242,32 @@ namespace OBSWebsocketDotNet
             return result;
         }
 
+        /// <summary>
+        /// Requests version info regarding obs-websocket, the API and OBS Studio
+        /// </summary>
+        /// <returns>Version info in an <see cref="OBSVersion"/> object</returns>
         public OBSVersion GetVersion()
         {
             JObject response = SendRequest("GetVersion");
             return new OBSVersion(response);
         }
 
+        /// <summary>
+        /// Request authentication data. You don't have to call this manually.
+        /// </summary>
+        /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
         public OBSAuthInfo GetAuthInfo()
         {
             JObject response = SendRequest("GetAuthRequired");
             return new OBSAuthInfo(response);
         }
 
+        /// <summary>
+        /// Authenticates to the Websocket server using the challenge and salt given in the passed <see cref="OBSAuthInfo"/> object 
+        /// </summary>
+        /// <param name="password">User password</param>
+        /// <param name="authInfo">Authentication data</param>
+        /// <returns>true if authentication succeeds, false otherwise</returns>
         public bool Authenticate(string password, OBSAuthInfo authInfo)
         {
             string secret = HashEncode(password + authInfo.PasswordSalt);
@@ -259,42 +360,42 @@ namespace OBSWebsocketDotNet
 
                 case "StreamStarting":
                     if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputStateUpdate.Starting);
+                        OnStreamingStateChange(this, OutputState.Starting);
                     break;
 
                 case "StreamStarted":
                     if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputStateUpdate.Started);
+                        OnStreamingStateChange(this, OutputState.Started);
                     break;
 
                 case "StreamStopping":
                     if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputStateUpdate.Stopping);
+                        OnStreamingStateChange(this, OutputState.Stopping);
                     break;
 
                 case "StreamStopped":
                     if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputStateUpdate.Stopped);
+                        OnStreamingStateChange(this, OutputState.Stopped);
                     break;
 
                 case "RecordingStarting":
                     if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputStateUpdate.Starting);
+                        OnRecordingStateChange(this, OutputState.Starting);
                     break;
 
                 case "RecordingStarted":
                     if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputStateUpdate.Started);
+                        OnRecordingStateChange(this, OutputState.Started);
                     break;
 
                 case "RecordingStopping":
                     if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputStateUpdate.Stopping);
+                        OnRecordingStateChange(this, OutputState.Stopping);
                     break;
 
                 case "RecordingStopped":
                     if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputStateUpdate.Stopped);
+                        OnRecordingStateChange(this, OutputState.Stopped);
                     break;
 
                 case "StreamStatus":

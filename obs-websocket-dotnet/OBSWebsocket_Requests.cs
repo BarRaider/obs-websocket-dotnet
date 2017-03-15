@@ -29,6 +29,10 @@ namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
     {
+        /// <summary>
+        /// Get the current scene info along with its items
+        /// </summary>
+        /// <returns>An <see cref="OBSScene"/> object describing the current scene</returns>
         public OBSScene GetCurrentScene()
         {
             JObject response = SendRequest("GetCurrentScene");
@@ -36,6 +40,10 @@ namespace OBSWebsocketDotNet
             return scene;
         }
 
+        /// <summary>
+        /// Set the current scene to the specified one
+        /// </summary>
+        /// <param name="sceneName">The desired scene name</param>
         public void SetCurrentScene(string sceneName)
         {
             var requestFields = new JObject();
@@ -44,6 +52,10 @@ namespace OBSWebsocketDotNet
             SendRequest("SetCurrentScene", requestFields);
         }
 
+        /// <summary>
+        /// List every available scene
+        /// </summary>
+        /// <returns>A <see cref="List{OBSScene}" /> of <see cref="OBSScene"/> objects describing each scene</returns>
         public List<OBSScene> ListScenes()
         {
             JObject response = SendRequest("GetSceneList");
@@ -59,6 +71,12 @@ namespace OBSWebsocketDotNet
             return scenes;
         }
 
+        /// <summary>
+        /// Change the visibility of the specified scene item
+        /// </summary>
+        /// <param name="itemName">Scene item which visiblity will be changed</param>
+        /// <param name="visible">Desired visiblity</param>
+        /// <param name="sceneName">Scene name of the specified item</param>
         public void SetSourceRender(string itemName, bool visible, string sceneName = null)
         {
             var requestFields = new JObject();
@@ -71,16 +89,26 @@ namespace OBSWebsocketDotNet
             SendRequest("SetSourceRender", requestFields);
         }
 
+        /// <summary>
+        /// Start/Stop the streaming output
+        /// </summary>
         public void ToggleStreaming()
         {
             SendRequest("StartStopStreaming");
         }
 
+        /// <summary>
+        /// Start/Stop the recording output
+        /// </summary>
         public void ToggleRecording()
         {
             SendRequest("StartStopRecording");
         }
 
+        /// <summary>
+        /// Get the current status of the streaming and recording outputs
+        /// </summary>
+        /// <returns>An <see cref="OBSOutputStatus"/> object describing the current outputs states</returns>
         public OBSOutputStatus GetStreamingStatus()
         {
             JObject response = SendRequest("GetStreamingStatus");
@@ -88,6 +116,10 @@ namespace OBSWebsocketDotNet
             return outputStatus;
         }
 
+        /// <summary>
+        /// List all transitions
+        /// </summary>
+        /// <returns>A <see cref="List{string}"/> of all transition names</returns>
         public List<string> ListTransitions()
         {
             JObject response = SendRequest("GetTransitionList");
@@ -102,12 +134,20 @@ namespace OBSWebsocketDotNet
             return transitionNames;
         }
 
+        /// <summary>
+        /// Get the current transition name and duration
+        /// </summary>
+        /// <returns>An <see cref="OBSCurrentTransitionInfo"/> object with the current transition name and duration</returns>
         public OBSCurrentTransitionInfo GetCurrentTransition()
         {
             JObject respBody = SendRequest("GetCurrentTransition");
             return new OBSCurrentTransitionInfo(respBody);
         }
 
+        /// <summary>
+        /// Set the current transition to the specified one
+        /// </summary>
+        /// <param name="transitionName">Desired transition name</param>
         public void SetCurrentTransition(string transitionName)
         {
             var requestFields = new JObject();
@@ -116,6 +156,10 @@ namespace OBSWebsocketDotNet
             SendRequest("SetCurrentTransition", requestFields);
         }
 
+        /// <summary>
+        /// Change the transition's duration
+        /// </summary>
+        /// <param name="duration">Desired transition duration</param>
         public void SetTransitionDuration(int duration)
         {
             var requestFields = new JObject();
@@ -124,6 +168,11 @@ namespace OBSWebsocketDotNet
             SendRequest("SetTransitionDuration", requestFields);
         }
 
+        /// <summary>
+        /// Change the volume of the specified source
+        /// </summary>
+        /// <param name="sourceName">Name of the source which volume will be changed</param>
+        /// <param name="volume">Desired volume in linear scale (0.0 to 1.0)</param>
         public void SetVolume(string sourceName, float volume)
         {
             var requestFields = new JObject();
@@ -133,6 +182,11 @@ namespace OBSWebsocketDotNet
             SendRequest("SetVolume", requestFields);
         }
 
+        /// <summary>
+        /// Get the volume of the specified source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <returns>An <see cref="OBSVolumeInfo"/> object containing the volume and mute state of the specified source</returns>
         public OBSVolumeInfo GetVolume(string sourceName)
         {
             var requestFields = new JObject();
@@ -142,6 +196,11 @@ namespace OBSWebsocketDotNet
             return new OBSVolumeInfo(response);
         }
 
+        /// <summary>
+        /// Set the mute state of the specified source
+        /// </summary>
+        /// <param name="sourceName">Name of the source which mute state will be changed</param>
+        /// <param name="mute">Desired mute state</param>
         public void SetMute(string sourceName, bool mute)
         {
             var requestFields = new JObject();
@@ -151,6 +210,10 @@ namespace OBSWebsocketDotNet
             SendRequest("SetMute", requestFields);
         }
 
+        /// <summary>
+        /// Toggle the mute state of the specified source
+        /// </summary>
+        /// <param name="sourceName">Name of the source which mute state will be toggled</param>
         public void ToggleMute(string sourceName)
         {
             var requestFields = new JObject();
@@ -159,6 +222,13 @@ namespace OBSWebsocketDotNet
             SendRequest("ToggleMute", requestFields);
         }
 
+        /// <summary>
+        /// Set the position of the specified scene item
+        /// </summary>
+        /// <param name="itemName">Name of the scene item which position will be changed</param>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
         public void SetSceneItemPosition(string itemName, float x, float y, string sceneName = null)
         {
             var requestFields = new JObject();
@@ -172,6 +242,14 @@ namespace OBSWebsocketDotNet
             SendRequest("SetSceneItemPosition", requestFields);
         }
 
+        /// <summary>
+        /// Set the scale and rotation of the specified scene item
+        /// </summary>
+        /// <param name="itemName">Name of the scene item which transform will be changed</param>
+        /// <param name="rotation">Rotation in Degrees</param>
+        /// <param name="xScale">Horizontal scale factor</param>
+        /// <param name="yScale">Vertical scale factor</param>
+        /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
         public void SetSceneItemTransform(string itemName, float rotation = 0, float xScale = 1, float yScale = 1, string sceneName = null)
         {
             var requestFields = new JObject();
@@ -186,6 +264,10 @@ namespace OBSWebsocketDotNet
             SendRequest("SetSceneItemTransform", requestFields);
         }
 
+        /// <summary>
+        /// Set the current scene collection to the specified one
+        /// </summary>
+        /// <param name="scName">Desired scene collection name</param>
         public void SetCurrentSceneCollection(string scName)
         {
             var requestFields = new JObject();
@@ -194,12 +276,20 @@ namespace OBSWebsocketDotNet
             SendRequest("SetCurrentSceneCollection", requestFields);
         }
 
+        /// <summary>
+        /// Get the name of the current scene collection
+        /// </summary>
+        /// <returns>Name of the current scene collection</returns>
         public string GetCurrentSceneCollection()
         {
             var response = SendRequest("GetCurrentSceneCollection");
             return (string)response["sc-name"];
         }
 
+        /// <summary>
+        /// List all scene collections
+        /// </summary>
+        /// <returns>A <see cref="List{string}"/> of the names of all scene collections</returns>
         public List<string> ListSceneCollections()
         {
             var response = SendRequest("ListSceneCollections");
@@ -214,6 +304,10 @@ namespace OBSWebsocketDotNet
             return sceneCollections;
         }
 
+        /// <summary>
+        /// Set the current profile to the specified one
+        /// </summary>
+        /// <param name="profileName">Name of the desired profile</param>
         public void SetCurrentProfile(string profileName)
         {
             var requestFields = new JObject();
@@ -222,12 +316,20 @@ namespace OBSWebsocketDotNet
             SendRequest("SetCurrentProfile", requestFields);
         }
 
+        /// <summary>
+        /// Get the name of the current profile
+        /// </summary>
+        /// <returns>Name of the current profile</returns>
         public string GetCurrentProfile()
         {
             var response = SendRequest("GetCurrentProfile");
             return (string)response["profile-name"];
         }
 
+        /// <summary>
+        /// List all profiles
+        /// </summary>
+        /// <returns>A <see cref="List{string}"/> of the names of all profiles</returns>
         public List<string> ListProfiles()
         {
             var response = SendRequest("ListProfiles");
