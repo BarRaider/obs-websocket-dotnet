@@ -62,16 +62,16 @@ namespace TestClient
             tbTransitionDuration.Value = newDuration;
         }
 
-        private void onStreamingStateChange(OBSWebsocket sender, OutputStateUpdate newState)
+        private void onStreamingStateChange(OBSWebsocket sender, OutputState newState)
         {
             string state = "";
             switch(newState)
             {
-                case OutputStateUpdate.Starting:
+                case OutputState.Starting:
                     state = "Stream starting...";
                     break;
 
-                case OutputStateUpdate.Started:
+                case OutputState.Started:
                     state = "Stop streaming";
                     BeginInvoke((MethodInvoker)delegate
                     {
@@ -79,11 +79,11 @@ namespace TestClient
                     });
                     break;
 
-                case OutputStateUpdate.Stopping:
+                case OutputState.Stopping:
                     state = "Stream stopping...";
                     break;
 
-                case OutputStateUpdate.Stopped:
+                case OutputState.Stopped:
                     state = "Start streaming";
                     BeginInvoke((MethodInvoker)delegate
                     {
@@ -102,24 +102,24 @@ namespace TestClient
             });
         }
 
-        private void onRecordingStateChange(OBSWebsocket sender, OutputStateUpdate newState)
+        private void onRecordingStateChange(OBSWebsocket sender, OutputState newState)
         {
             string state = "";
             switch (newState)
             {
-                case OutputStateUpdate.Starting:
+                case OutputState.Starting:
                     state = "Recording starting...";
                     break;
 
-                case OutputStateUpdate.Started:
+                case OutputState.Started:
                     state = "Stop recording";
                     break;
 
-                case OutputStateUpdate.Stopping:
+                case OutputState.Stopping:
                     state = "Recording stopping...";
                     break;
 
-                case OutputStateUpdate.Stopped:
+                case OutputState.Stopped:
                     state = "Start recording";
                     break;
 
@@ -179,14 +179,14 @@ namespace TestClient
 
                 var streamStatus = _obs.GetStreamingStatus();
                 if (streamStatus.IsStreaming)
-                    onStreamingStateChange(_obs, OutputStateUpdate.Started);
+                    onStreamingStateChange(_obs, OutputState.Started);
                 else
-                    onStreamingStateChange(_obs, OutputStateUpdate.Stopped);
+                    onStreamingStateChange(_obs, OutputState.Stopped);
 
                 if (streamStatus.IsRecording)
-                    onRecordingStateChange(_obs, OutputStateUpdate.Started);
+                    onRecordingStateChange(_obs, OutputState.Started);
                 else
-                    onRecordingStateChange(_obs, OutputStateUpdate.Stopped);
+                    onRecordingStateChange(_obs, OutputState.Stopped);
             }
             catch(ArgumentException ex)
             {
