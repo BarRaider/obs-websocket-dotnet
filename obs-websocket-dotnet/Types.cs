@@ -130,8 +130,7 @@ namespace OBSWebsocketDotNet
             var sceneItems = (JArray)data["sources"];
             foreach (JObject item in sceneItems)
             {
-                var sceneItem = new OBSSceneItem(item);
-                Items.Add(sceneItem);
+                Items.Add(new OBSSceneItem(item));
             }
         }
     }

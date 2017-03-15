@@ -144,22 +144,19 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format</param>
         /// <param name="password">Server password</param>
-        public void Connect(string url, string password) {
+        public void Connect(string url, string password)
+        {
             if (_ws != null && _ws.IsAlive)
-            {
                 Disconnect();
-            }
 
             _ws = new WebSocket(url);
-            _ws.OnMessage += WSMessageHandler;
-
+            _ws.OnMessage += WebsocketMessageHandler;
             _ws.Connect();
 
             OBSAuthInfo authInfo = GetAuthInfo();
+
             if (authInfo.AuthRequired)
-            {
                 Authenticate(password, authInfo);
-            }
         }
 
         /// <summary>
@@ -168,9 +165,8 @@ namespace OBSWebsocketDotNet
         public void Disconnect()
         {
             if (_ws != null)
-            {
                 _ws.Close();
-            }
+
             _ws = null;
 
             foreach (var cb in _responseHandlers)
@@ -180,24 +176,30 @@ namespace OBSWebsocketDotNet
             }
         }
 
-        private void WSMessageHandler(object sender, MessageEventArgs e)
+        // This callback handles incoming JSON messages and determines if it's
+        // a request response or an event ("Update" in obs-websocket terminology)
+        private void WebsocketMessageHandler(object sender, MessageEventArgs e)
         {
             if (!e.IsText)
-            {
                 return;
-            }
 
             JObject body = JObject.Parse(e.Data);
 
             if (body["message-id"] != null)
             {
-                // Handle a request
+                // Handle a request : 
+                // Find the response handler based on 
+                // its associated message ID
                 string msgID = (string)body["message-id"];
-                TaskCompletionSource<JObject> _handler = _responseHandlers[msgID];
+                var handler = _responseHandlers[msgID];
 
-                if (_handler != null)
+                if (handler != null)
                 {
-                    _handler.SetResult(body);
+                    // Set the response body as Result and notify the request sender
+                    handler.SetResult(body);
+
+                    // The message with the given ID has been processed,
+                    // so its handler can be discarded
                     _responseHandlers.Remove(msgID);
                 }
             }
@@ -215,13 +217,20 @@ namespace OBSWebsocketDotNet
         /// <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
         /// <param name="additionalFields">additional JSON fields if required by the request type</param>
         /// <returns>The server's JSON response as a JObject</returns>
-        public JObject SendRequest(string requestType, JObject additionalFields = null) {
-            string messageID = NewMessageID();
+        public JObject SendRequest(string requestType, JObject additionalFields = null)
+        {
+            string messageID;
 
+            // Generate a random message id and make sure it is unique within the handlers dictionary
+            do { messageID = NewMessageID(); }
+            while (_responseHandlers.ContainsKey(messageID));
+
+            // Build the bare-minimum body for a request
             var body = new JObject();
             body.Add(new JProperty("request-type", requestType));
             body.Add(new JProperty("message-id", messageID));
 
+            // Add optional fields if provided
             if (additionalFields != null)
             {
                 var mergeSettings = new JsonMergeSettings 
@@ -232,12 +241,17 @@ namespace OBSWebsocketDotNet
                 body.Merge(additionalFields);
             }
 
+            // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
             _responseHandlers.Add(messageID, tcs);
 
+            // Send the message and wait for a response
+            // (received and notified by the websocket response handler)
             _ws.Send(body.ToString());
             tcs.Task.Wait();
 
+            // Throw an exception if the server returned an error.
+            // An error occurs if authentication fails or one if the request body is invalid.
             var result = tcs.Task.Result;
             if ((string)result["status"] == "error")
                 throw new ArgumentException((string)result["message"]);
