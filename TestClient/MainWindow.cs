@@ -171,45 +171,52 @@ namespace TestClient
             try
             {
                 _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
-                btnConnect.Enabled = false;
-                txtServerIP.Enabled = false;
-                txtServerPassword.Enabled = false;
-                gbControls.Enabled = true;
-
-                var versionInfo = _obs.GetVersion();
-                tbPluginVersion.Text = versionInfo.PluginVersion;
-                tbAPIVersion.Text = versionInfo.APIVersion;
-                tbOBSVersion.Text = versionInfo.OBSStudioVersion;
-
-                btnListScenes.PerformClick();
-                btnGetCurrentScene.PerformClick();
-
-                btnListSceneCol.PerformClick(); 
-                btnGetCurrentSceneCol.PerformClick();
-
-                btnListProfiles.PerformClick();
-                btnGetCurrentProfile.PerformClick();
-
-                btnListTransitions.PerformClick();
-                btnGetCurrentTransition.PerformClick();
-
-                btnGetTransitionDuration.PerformClick();
-
-                var streamStatus = _obs.GetStreamingStatus();
-                if (streamStatus.IsStreaming)
-                    onStreamingStateChange(_obs, OutputState.Started);
-                else
-                    onStreamingStateChange(_obs, OutputState.Stopped);
-
-                if (streamStatus.IsRecording)
-                    onRecordingStateChange(_obs, OutputState.Started);
-                else
-                    onRecordingStateChange(_obs, OutputState.Stopped);
             }
-            catch(ArgumentException ex)
+            catch(AuthFailureException)
+            {
+                MessageBox.Show("Authentication failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            catch(ErrorResponseException ex)
             {
                 MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
             }
+
+            btnConnect.Enabled = false;
+            txtServerIP.Enabled = false;
+            txtServerPassword.Enabled = false;
+            gbControls.Enabled = true;
+
+            var versionInfo = _obs.GetVersion();
+            tbPluginVersion.Text = versionInfo.PluginVersion;
+            tbAPIVersion.Text = versionInfo.APIVersion;
+            tbOBSVersion.Text = versionInfo.OBSStudioVersion;
+
+            btnListScenes.PerformClick();
+            btnGetCurrentScene.PerformClick();
+
+            btnListSceneCol.PerformClick();
+            btnGetCurrentSceneCol.PerformClick();
+
+            btnListProfiles.PerformClick();
+            btnGetCurrentProfile.PerformClick();
+
+            btnListTransitions.PerformClick();
+            btnGetCurrentTransition.PerformClick();
+
+            btnGetTransitionDuration.PerformClick();
+
+            var streamStatus = _obs.GetStreamingStatus();
+            if (streamStatus.IsStreaming)
+                onStreamingStateChange(_obs, OutputState.Started);
+            else
+                onStreamingStateChange(_obs, OutputState.Stopped);
+
+            if (streamStatus.IsRecording)
+                onRecordingStateChange(_obs, OutputState.Started);
+            else
+                onRecordingStateChange(_obs, OutputState.Stopped);
         }
 
         private void btnListScenes_Click(object sender, EventArgs e)

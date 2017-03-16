@@ -23,6 +23,7 @@
 */
 
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
@@ -413,6 +414,27 @@ namespace OBSWebsocketDotNet
         {
             Volume = (float)data["volume"];
             Muted = (bool)data["muted"];
+        }
+    }
+
+    /// <summary>
+    /// Thrown if authentication fails
+    /// </summary>
+    public class AuthFailureException : Exception
+    {
+    }
+
+    /// <summary>
+    /// Thrown when the server responds with an error
+    /// </summary>
+    public class ErrorResponseException : Exception
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message"></param>
+        public ErrorResponseException(string message) : base(message)
+        {
         }
     }
 }

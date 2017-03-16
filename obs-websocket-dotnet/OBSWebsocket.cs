@@ -253,8 +253,9 @@ namespace OBSWebsocketDotNet
             // Throw an exception if the server returned an error.
             // An error occurs if authentication fails or one if the request body is invalid.
             var result = tcs.Task.Result;
+
             if ((string)result["status"] == "error")
-                throw new ArgumentException((string)result["message"]);
+                throw new ErrorResponseException((string)result["error"]);
 
             return result;
         }
@@ -293,8 +294,15 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
             requestFields.Add("auth", authResponse);
 
-            // ArgumentException thrown here if auth fails
-            SendRequest("Authenticate", requestFields);
+            try
+            {
+                // Throws ErrorResponseException if auth fails
+                SendRequest("Authenticate", requestFields);
+            }
+            catch(ErrorResponseException)
+            {
+                throw new AuthFailureException();
+            }
 
             return true;
         }
