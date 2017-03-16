@@ -12,7 +12,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 
 		<description>C#/VB .NET library to communicate with an obs-websocket server</description>
-		<releaseNotes>First release</releaseNotes>
+		<releaseNotes>Better error handling + test coverage</releaseNotes>
 		
 		<copyright>Copyright 2017 (c) Stéphane Lepin</copyright>
 		<tags>obs studio websocket api</tags>
