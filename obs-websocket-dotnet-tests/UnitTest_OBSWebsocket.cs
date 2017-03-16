@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OBSWebsocketDotNet;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebSocketSharp;
 
 namespace OBSWebsocketDotNet.Tests
