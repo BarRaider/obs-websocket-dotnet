@@ -16,7 +16,7 @@ namespace OBSWebsocketDotNet.Tests
 
             var itemData = new JObject();
             itemData.Add("name", itemName);
-            itemData.Add("type", "");
+            itemData.Add("type", "dummy_source");
             itemData.Add("volume", 1.0f);
             itemData.Add("x", 0.0f);
             itemData.Add("y", 0.0f);
@@ -79,18 +79,17 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSAuthInfo_BuildFromJSON()
         {
-            bool required = true;
             string challenge = "pBWv82hj";
             string salt = "B9fL8CF7";
 
             var data = new JObject();
-            data.Add("authRequired", required);
+            data.Add("authRequired", true);
             data.Add("challenge", challenge);
             data.Add("salt", salt);
 
             var authInfo = new OBSAuthInfo(data);
 
-            Assert.AreEqual(required, authInfo.AuthRequired);
+            Assert.IsTrue(authInfo.AuthRequired);
             Assert.AreEqual(challenge, authInfo.Challenge);
             Assert.AreEqual(salt, authInfo.PasswordSalt);
         }
@@ -117,8 +116,6 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSStreamStatus_BuildFromJSON()
         {
-            bool streaming = true;
-            bool recording = true;
             int bytesPerSec = 294400;
             int kbitsPerSec = 2300;
             float strain = 0.5f;
@@ -128,8 +125,8 @@ namespace OBSWebsocketDotNet.Tests
             float fps = 29.97f;
 
             var data = new JObject();
-            data.Add("streaming", streaming);
-            data.Add("recording", recording);
+            data.Add("streaming", true);
+            data.Add("recording", true);
             data.Add("bytes-per-sec", bytesPerSec);
             data.Add("kbits-per-sec", kbitsPerSec);
             data.Add("strain", strain);
@@ -140,8 +137,8 @@ namespace OBSWebsocketDotNet.Tests
 
             var streamStatus = new OBSStreamStatus(data);
 
-            Assert.AreEqual(streaming, streamStatus.Streaming);
-            Assert.AreEqual(recording, streamStatus.Recording);
+            Assert.IsTrue(streamStatus.Streaming);
+            Assert.IsTrue(streamStatus.Recording);
             Assert.AreEqual(bytesPerSec, streamStatus.BytesPerSec);
             Assert.AreEqual(kbitsPerSec, streamStatus.KbitsPerSec);
             Assert.AreEqual(strain, streamStatus.Strain);
@@ -154,17 +151,14 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSOutputStatus_BuildFromJSON()
         {
-            bool streamingActive = true;
-            bool recordingActive = true;
-
             var data = new JObject();
-            data.Add("streaming", streamingActive);
-            data.Add("recording", recordingActive);
+            data.Add("streaming", true);
+            data.Add("recording", true);
 
             var outputState = new OBSOutputStatus(data);
 
-            Assert.AreEqual(streamingActive, outputState.IsStreaming);
-            Assert.AreEqual(recordingActive, outputState.IsRecording);
+            Assert.IsTrue(outputState.IsStreaming);
+            Assert.IsTrue(outputState.IsRecording);
         }
 
         [TestMethod]
@@ -187,16 +181,15 @@ namespace OBSWebsocketDotNet.Tests
         public void OBSVolumeInfo_BuildFromJSON()
         {
             float volumeLevel = 0.50f;
-            bool muteState = true;
 
             var data = new JObject();
             data.Add("volume", volumeLevel);
-            data.Add("muted", muteState);
+            data.Add("muted", true);
 
             var volumeInfo = new OBSVolumeInfo(data);
 
             Assert.AreEqual(volumeLevel, volumeInfo.Volume);
-            Assert.AreEqual(muteState, volumeInfo.Muted);
+            Assert.IsTrue(volumeInfo.Muted);
         }
     }
 }
