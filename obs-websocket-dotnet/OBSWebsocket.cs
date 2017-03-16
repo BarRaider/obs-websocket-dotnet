@@ -434,7 +434,12 @@ namespace OBSWebsocketDotNet
             }
         }
 
-        private string HashEncode(string input)
+        /// <summary>
+        /// Encode a Base64-encoded SHA-256 hash
+        /// </summary>
+        /// <param name="input">source string</param>
+        /// <returns></returns>
+        protected string HashEncode(string input)
         {
             var sha256 = new SHA256Managed();
 
@@ -444,7 +449,12 @@ namespace OBSWebsocketDotNet
             return System.Convert.ToBase64String(hash);
         }
 
-        private string NewMessageID(int length = 16)
+        /// <summary>
+        /// Generate a message ID
+        /// </summary>
+        /// <param name="length">(optional) message ID length</param>
+        /// <returns>A random string of alphanumerical characters</returns>
+        protected string NewMessageID(int length = 16)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var random = new Random();
