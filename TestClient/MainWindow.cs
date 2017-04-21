@@ -77,7 +77,10 @@ namespace TestClient
 
         private void onTransitionDurationChange(OBSWebsocket sender, int newDuration)
         {
-            tbTransitionDuration.Value = newDuration;
+            BeginInvoke((MethodInvoker)delegate
+            {
+                tbTransitionDuration.Value = newDuration;
+            });
         }
 
         private void onStreamingStateChange(OBSWebsocket sender, OutputState newState)
