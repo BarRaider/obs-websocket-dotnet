@@ -345,5 +345,25 @@ namespace OBSWebsocketDotNet
 
             return profiles;
         }
+
+        public void StartStreaming()
+        {
+            SendRequest("StartStreaming");
+        }
+
+        public void StopStreaming()
+        {
+            SendRequest("StopStreaming");
+        }
+
+        public void StartRecording()
+        {
+            SendRequest("StartRecording");
+        }
+
+        public void StopRecording()
+        {
+            SendRequest("StopRecording");
+        }
     }
 }
