@@ -365,5 +365,96 @@ namespace OBSWebsocketDotNet
         {
             SendRequest("StopRecording");
         }
+
+        // TODO: SetSceneItemCrop
+
+        // TODO: GetSpecialSources
+
+        public int GetTransitionDuration()
+        {
+            var response = SendRequest("GetTransitionDuration");
+            return (int)response["transition-duration"];
+        }
+
+        public bool StudioModeEnabled()
+        {
+            var response = SendRequest("GetStudioModeStatus");
+            return (bool)response["studio-mode"];
+        }
+
+        public void SetStudioMode(bool enable)
+        {
+            if (enable)
+                SendRequest("EnableStudioMode");
+            else
+                SendRequest("DisableStudioMode");
+        }
+
+        public void ToggleStudioMode()
+        {
+            SendRequest("ToggleStudioMode");
+        }
+
+        public OBSScene GetPreviewScene()
+        {
+            var response = SendRequest("GetPreviewScene");
+            return new OBSScene(response);
+        }
+
+        public void SetPreviewScene(string previewScene)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("scene-name", previewScene);
+
+            SendRequest("SetPreviewScene", requestFields);
+        }
+
+        public void SetPreviewScene(OBSScene previewScene)
+        {
+            SetPreviewScene(previewScene.Name);
+        }
+
+        public void TransitionToProgram(int transitionDuration = -1, string transitionName = null)
+        {
+            var requestFields = new JObject();
+
+            if(transitionDuration > -1 || transitionName != null)
+            {
+                var withTransition = new JObject();
+
+                if (transitionDuration > -1)
+                    withTransition.Add("duration");
+
+                if (transitionName != null)
+                    withTransition.Add("name", transitionName);
+
+                requestFields.Add("with-transition", withTransition);
+            }
+
+            SendRequest("TransitionToProgram", requestFields);
+        }
+
+        public bool GetMute(string sourceName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("source", sourceName);
+
+            var response = SendRequest("GetMute");
+            return (bool)response["muted"];
+        }
+
+        public string GetRecordingFolder()
+        {
+            var response = SendRequest("GetRecordingFolder");
+            return (string)response["rec-folder"];
+        }
+
+        public void SetRecordingFolder(string recFolder)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("rec-folder", recFolder);
+
+            SendRequest("SetRecordingFolder", requestFields);
+        }
     }
 }

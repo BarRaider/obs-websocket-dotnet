@@ -91,7 +91,7 @@ namespace OBSWebsocketDotNet
         public EventHandler OnTransitionListChange;
 
         /// <summary>
-        /// Triggered when a transition between two scenes starts. Followed by <see cref="OnSceneChange"/> 
+        /// Triggered when a transition between two scenes starts. Followed by <see cref="OnSceneChange"/>
         /// </summary>
         public EventHandler OnTransitionBegin;
 
@@ -119,6 +119,10 @@ namespace OBSWebsocketDotNet
         /// Triggered every 2 seconds while streaming is active
         /// </summary>
         public StreamStatusCallback OnStreamStatus;
+
+        public SceneChangeCallback OnPreviewSceneChanged;
+
+        public EventHandler OnStudioModeSwitched;
 
         /// <summary>
         /// Triggered when OBS exits
@@ -187,8 +191,8 @@ namespace OBSWebsocketDotNet
 
             if (body["message-id"] != null)
             {
-                // Handle a request : 
-                // Find the response handler based on 
+                // Handle a request :
+                // Find the response handler based on
                 // its associated message ID
                 string msgID = (string)body["message-id"];
                 var handler = _responseHandlers[msgID];
@@ -233,7 +237,7 @@ namespace OBSWebsocketDotNet
             // Add optional fields if provided
             if (additionalFields != null)
             {
-                var mergeSettings = new JsonMergeSettings 
+                var mergeSettings = new JsonMergeSettings
                 {
                     MergeArrayHandling = MergeArrayHandling.Union
                 };
@@ -281,7 +285,7 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Authenticates to the Websocket server using the challenge and salt given in the passed <see cref="OBSAuthInfo"/> object 
+        /// Authenticates to the Websocket server using the challenge and salt given in the passed <see cref="OBSAuthInfo"/> object
         /// </summary>
         /// <param name="password">User password</param>
         /// <param name="authInfo">Authentication data</param>
@@ -436,6 +440,16 @@ namespace OBSWebsocketDotNet
                     }
                     break;
 
+                case "PreviewSceneChanged":
+                    if(OnPreviewSceneChanged != null)
+                        OnPreviewSceneChanged(this, (string)body["scene-name"]);
+                    break;
+
+                case "StudioModeSwitched":
+                    if (OnStudioModeSwitched != null)
+                        OnStudioModeSwitched(this, EventArgs.Empty); // TODO: New status info in event
+                    break;
+
                 case "Exiting":
                     OnExit(this, EventArgs.Empty);
                     break;
@@ -466,7 +480,7 @@ namespace OBSWebsocketDotNet
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var random = new Random();
-            
+
             string result = "";
             for (int i = 0; i < length; i++)
             {
