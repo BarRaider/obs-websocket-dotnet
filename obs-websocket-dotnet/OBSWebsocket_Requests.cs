@@ -351,37 +351,75 @@ namespace OBSWebsocketDotNet
             SendRequest("StartStreaming");
         }
 
+        /// <summary>
+        /// Stop streaming. Will trigger an error if streaming is not active.
+        /// </summary>
         public void StopStreaming()
         {
             SendRequest("StopStreaming");
         }
 
+        /// <summary>
+        /// Start recording. Will trigger an error if recording is already active.
+        /// </summary>
         public void StartRecording()
         {
             SendRequest("StartRecording");
         }
 
+        /// <summary>
+        /// Stop recording. Will trigger an error if recording is not active.
+        /// </summary>
         public void StopRecording()
         {
             SendRequest("StopRecording");
         }
 
-        // TODO: SetSceneItemCrop
+        /// <summary>
+        /// Change the current recording folder
+        /// </summary>
+        /// <param name="recFolder">Recording folder path</param>
+        public void SetRecordingFolder(string recFolder)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("rec-folder", recFolder);
+            SendRequest("SetRecordingFolder");
+        }
 
-        // TODO: GetSpecialSources
+        /// <summary>
+        /// Get the path of the current recording folder
+        /// </summary>
+        /// <returns>Current recording folder path</returns>
+        public string GetRecordingFolder()
+        {
+            var response = SendRequest("GetRecordingFolder");
+            return (string)response["rec-folder"];
+        }
 
+        /// <summary>
+        /// Get duration of the currently selected transition (if supported)
+        /// </summary>
+        /// <returns>Current transition duration (in milliseconds)</returns>
         public int GetTransitionDuration()
         {
             var response = SendRequest("GetTransitionDuration");
             return (int)response["transition-duration"];
         }
 
+        /// <summary>
+        /// Get status of Studio Mode
+        /// </summary>
+        /// <returns>Studio Mode status (on/off)</returns>
         public bool StudioModeEnabled()
         {
             var response = SendRequest("GetStudioModeStatus");
             return (bool)response["studio-mode"];
         }
 
+        /// <summary>
+        /// Enable/disable Studio Mode
+        /// </summary>
+        /// <param name="enable">Desired Studio Mode status</param>
         public void SetStudioMode(bool enable)
         {
             if (enable)
@@ -390,30 +428,52 @@ namespace OBSWebsocketDotNet
                 SendRequest("DisableStudioMode");
         }
 
+        /// <summary>
+        /// Toggle Studio Mode status (on to off or off to on)
+        /// </summary>
         public void ToggleStudioMode()
         {
             SendRequest("ToggleStudioMode");
         }
 
+        /// <summary>
+        /// Get the currently selected preview scene. Triggers an error
+        /// if Studio Mode is disabled
+        /// </summary>
+        /// <returns>Preview scene object</returns>
         public OBSScene GetPreviewScene()
         {
             var response = SendRequest("GetPreviewScene");
             return new OBSScene(response);
         }
 
+        /// <summary>
+        /// Change the currently active preview scene to the one specified.
+        /// Triggers an error if Studio Mode is disabled
+        /// </summary>
+        /// <param name="previewScene">Preview scene name</param>
         public void SetPreviewScene(string previewScene)
         {
             var requestFields = new JObject();
             requestFields.Add("scene-name", previewScene);
-
             SendRequest("SetPreviewScene", requestFields);
         }
 
+        /// <summary>
+        /// Change the currently active preview scene to the one specified.
+        /// Triggers an error if Studio Mode is disabled.
+        /// </summary>
+        /// <param name="previewScene">Preview scene object</param>
         public void SetPreviewScene(OBSScene previewScene)
         {
             SetPreviewScene(previewScene.Name);
         }
 
+        /// <summary>
+        /// Triggers a Studio Mode transition (preview scene to program)
+        /// </summary>
+        /// <param name="transitionDuration">(optional) Transition duration</param>
+        /// <param name="transitionName">(optional) Name of transition to use</param>
         public void TransitionToProgram(int transitionDuration = -1, string transitionName = null)
         {
             var requestFields = new JObject();
@@ -434,6 +494,11 @@ namespace OBSWebsocketDotNet
             SendRequest("TransitionToProgram", requestFields);
         }
 
+        /// <summary>
+        /// Get if the specified source is muted
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <returns>Source mute status (on/off)</returns>
         public bool GetMute(string sourceName)
         {
             var requestFields = new JObject();
@@ -443,18 +508,75 @@ namespace OBSWebsocketDotNet
             return (bool)response["muted"];
         }
 
-        public string GetRecordingFolder()
+        /// <summary>
+        /// Toggle the Replay Buffer on/off
+        /// </summary>
+        public void ToggleReplayBuffer()
         {
-            var response = SendRequest("GetRecordingFolder");
-            return (string)response["rec-folder"];
+            SendRequest("StartStopReplayBuffer");
         }
 
-        public void SetRecordingFolder(string recFolder)
+        /// <summary>
+        /// Start recording into the Replay Buffer. Triggers an error
+        /// if the Replay Buffer is already active, or if the "Save Replay Buffer"
+        /// hotkey is not set in OBS' settings
+        /// </summary>
+        public void StartReplayBuffer()
+        {
+            SendRequest("StartReplayBuffer");
+        }
+
+        /// <summary>
+        /// Stop recording into the Replay Buffer. Triggers an error if the
+        /// Replay Buffer is not active.
+        /// </summary>
+        public void StopReplayBuffer()
+        {
+            SendRequest("StopReplayBuffer");
+        }
+
+        /// <summary>
+        /// Save and flush the contents of the Replay Buffer to disk. Basically
+        /// the same as triggering the "Save Replay Buffer" hotkey in OBS.
+        /// Triggers an error if Replay Buffer is not active.
+        /// </summary>
+        public void SaveReplayBuffer()
+        {
+            SendRequest("SaveReplayBuffer");
+        }
+
+        /// <summary>
+        /// Set the audio sync offset of the specified source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="syncOffset">Audio offset (in nanoseconds) for the specified source</param>
+        public void SetSyncOffset(string sourceName, int syncOffset)
         {
             var requestFields = new JObject();
-            requestFields.Add("rec-folder", recFolder);
+            requestFields.Add("source", sourceName);
+            requestFields.Add("offset", syncOffset);
+            SendRequest("SetSyncOffset", requestFields);
+        }
 
-            SendRequest("SetRecordingFolder", requestFields);
+        /// <summary>
+        /// Get the audio sync offset of the specified source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <returns>Audio offset (in nanoseconds) of the specified source</returns>
+        public int GetSyncOffset(string sourceName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("source", sourceName);
+            var response = SendRequest("GetSyncOffset", requestFields);
+            return (int)response["offset"];
+        }
+
+        /// <summary>
+        /// Save current Streaming settings to disk
+        /// </summary>
+        public void SaveStreamSettings()
+        {
+            SendRequest("SaveStreamSettings");
         }
     }
 }
