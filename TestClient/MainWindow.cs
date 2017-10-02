@@ -193,7 +193,6 @@ namespace TestClient
 
             var versionInfo = _obs.GetVersion();
             tbPluginVersion.Text = versionInfo.PluginVersion;
-            tbAPIVersion.Text = versionInfo.APIVersion;
             tbOBSVersion.Text = versionInfo.OBSStudioVersion;
 
             btnListScenes.PerformClick();

@@ -418,6 +418,21 @@ namespace OBSWebsocketDotNet
         }
     }
 
+    public struct OBSStreamingService
+    {
+        public string Type;
+
+        public JObject Settings;
+    }
+
+    public struct OBSItemCropInfo
+    {
+        public int Top;
+        public int Bottom;
+        public int Left;
+        public int Right;
+    }
+
     /// <summary>
     /// Thrown if authentication fails
     /// </summary>

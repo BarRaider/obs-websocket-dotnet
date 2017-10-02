@@ -58,6 +58,16 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.btnSetTransitionDuration = new System.Windows.Forms.Button();
+            this.btnGetTransitionDuration = new System.Windows.Forms.Button();
+            this.tbTransitionDuration = new System.Windows.Forms.NumericUpDown();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btnSetCurrentTransition = new System.Windows.Forms.Button();
+            this.btnGetCurrentTransition = new System.Windows.Forms.Button();
+            this.tbTransition = new System.Windows.Forms.TextBox();
+            this.btnListTransitions = new System.Windows.Forms.Button();
+            this.tvTransitions = new System.Windows.Forms.TreeView();
             this.gbStatus = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.txtTotalFrames = new System.Windows.Forms.Label();
@@ -92,23 +102,14 @@ namespace TestClient
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tbOBSVersion = new System.Windows.Forms.Label();
-            this.tbAPIVersion = new System.Windows.Forms.Label();
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.btnSetCurrentTransition = new System.Windows.Forms.Button();
-            this.btnGetCurrentTransition = new System.Windows.Forms.Button();
-            this.tbTransition = new System.Windows.Forms.TextBox();
-            this.btnListTransitions = new System.Windows.Forms.Button();
-            this.tvTransitions = new System.Windows.Forms.TreeView();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.tbTransitionDuration = new System.Windows.Forms.NumericUpDown();
-            this.btnGetTransitionDuration = new System.Windows.Forms.Button();
-            this.btnSetTransitionDuration = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).BeginInit();
+            this.groupBox6.SuspendLayout();
             this.gbStatus.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -116,9 +117,6 @@ namespace TestClient
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).BeginInit();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -256,6 +254,124 @@ namespace TestClient
             this.gbControls.Size = new System.Drawing.Size(574, 515);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.btnSetTransitionDuration);
+            this.groupBox7.Controls.Add(this.btnGetTransitionDuration);
+            this.groupBox7.Controls.Add(this.tbTransitionDuration);
+            this.groupBox7.Location = new System.Drawing.Point(430, 375);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(138, 79);
+            this.groupBox7.TabIndex = 12;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Transition Duration";
+            // 
+            // btnSetTransitionDuration
+            // 
+            this.btnSetTransitionDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetTransitionDuration.Location = new System.Drawing.Point(89, 46);
+            this.btnSetTransitionDuration.Name = "btnSetTransitionDuration";
+            this.btnSetTransitionDuration.Size = new System.Drawing.Size(40, 23);
+            this.btnSetTransitionDuration.TabIndex = 2;
+            this.btnSetTransitionDuration.Text = "Set";
+            this.btnSetTransitionDuration.UseVisualStyleBackColor = true;
+            this.btnSetTransitionDuration.Click += new System.EventHandler(this.btnSetTransitionDuration_Click);
+            // 
+            // btnGetTransitionDuration
+            // 
+            this.btnGetTransitionDuration.Location = new System.Drawing.Point(7, 46);
+            this.btnGetTransitionDuration.Name = "btnGetTransitionDuration";
+            this.btnGetTransitionDuration.Size = new System.Drawing.Size(41, 23);
+            this.btnGetTransitionDuration.TabIndex = 1;
+            this.btnGetTransitionDuration.Text = "Get";
+            this.btnGetTransitionDuration.UseVisualStyleBackColor = true;
+            this.btnGetTransitionDuration.Click += new System.EventHandler(this.btnGetTransitionDuration_Click);
+            // 
+            // tbTransitionDuration
+            // 
+            this.tbTransitionDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbTransitionDuration.Increment = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.tbTransitionDuration.Location = new System.Drawing.Point(7, 20);
+            this.tbTransitionDuration.Maximum = new decimal(new int[] {
+            120000,
+            0,
+            0,
+            0});
+            this.tbTransitionDuration.Name = "tbTransitionDuration";
+            this.tbTransitionDuration.Size = new System.Drawing.Size(122, 20);
+            this.tbTransitionDuration.TabIndex = 0;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.btnSetCurrentTransition);
+            this.groupBox6.Controls.Add(this.btnGetCurrentTransition);
+            this.groupBox6.Controls.Add(this.tbTransition);
+            this.groupBox6.Controls.Add(this.btnListTransitions);
+            this.groupBox6.Controls.Add(this.tvTransitions);
+            this.groupBox6.Location = new System.Drawing.Point(176, 261);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(192, 243);
+            this.groupBox6.TabIndex = 10;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Transitions";
+            // 
+            // btnSetCurrentTransition
+            // 
+            this.btnSetCurrentTransition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetCurrentTransition.Location = new System.Drawing.Point(104, 199);
+            this.btnSetCurrentTransition.Name = "btnSetCurrentTransition";
+            this.btnSetCurrentTransition.Size = new System.Drawing.Size(81, 38);
+            this.btnSetCurrentTransition.TabIndex = 5;
+            this.btnSetCurrentTransition.Text = "Set\r\nCurTransition";
+            this.btnSetCurrentTransition.UseVisualStyleBackColor = true;
+            this.btnSetCurrentTransition.Click += new System.EventHandler(this.btnSetCurrentTransition_Click);
+            // 
+            // btnGetCurrentTransition
+            // 
+            this.btnGetCurrentTransition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnGetCurrentTransition.Location = new System.Drawing.Point(6, 199);
+            this.btnGetCurrentTransition.Name = "btnGetCurrentTransition";
+            this.btnGetCurrentTransition.Size = new System.Drawing.Size(86, 38);
+            this.btnGetCurrentTransition.TabIndex = 4;
+            this.btnGetCurrentTransition.Text = "Get\r\nCurTransition";
+            this.btnGetCurrentTransition.UseVisualStyleBackColor = true;
+            this.btnGetCurrentTransition.Click += new System.EventHandler(this.btnGetCurrentTransition_Click);
+            // 
+            // tbTransition
+            // 
+            this.tbTransition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbTransition.Location = new System.Drawing.Point(6, 173);
+            this.tbTransition.Name = "tbTransition";
+            this.tbTransition.Size = new System.Drawing.Size(179, 20);
+            this.tbTransition.TabIndex = 3;
+            // 
+            // btnListTransitions
+            // 
+            this.btnListTransitions.Location = new System.Drawing.Point(6, 19);
+            this.btnListTransitions.Name = "btnListTransitions";
+            this.btnListTransitions.Size = new System.Drawing.Size(86, 23);
+            this.btnListTransitions.TabIndex = 2;
+            this.btnListTransitions.Text = "ListTransitions";
+            this.btnListTransitions.UseVisualStyleBackColor = true;
+            this.btnListTransitions.Click += new System.EventHandler(this.btnListTransitions_Click);
+            // 
+            // tvTransitions
+            // 
+            this.tvTransitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvTransitions.Location = new System.Drawing.Point(6, 49);
+            this.tvTransitions.Name = "tvTransitions";
+            this.tvTransitions.Size = new System.Drawing.Size(180, 118);
+            this.tvTransitions.TabIndex = 1;
+            this.tvTransitions.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvTransitions_NodeMouseClick);
             // 
             // gbStatus
             // 
@@ -646,16 +762,13 @@ namespace TestClient
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 89F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.tbOBSVersion, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.tbAPIVersion, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.tbOBSVersion, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.tbPluginVersion, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 1);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(7, 19);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -666,23 +779,12 @@ namespace TestClient
             // 
             this.tbOBSVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbOBSVersion.AutoSize = true;
-            this.tbOBSVersion.Location = new System.Drawing.Point(92, 43);
+            this.tbOBSVersion.Location = new System.Drawing.Point(92, 23);
             this.tbOBSVersion.Name = "tbOBSVersion";
             this.tbOBSVersion.Size = new System.Drawing.Size(58, 13);
             this.tbOBSVersion.TabIndex = 5;
             this.tbOBSVersion.Text = "???";
             this.tbOBSVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tbAPIVersion
-            // 
-            this.tbAPIVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbAPIVersion.AutoSize = true;
-            this.tbAPIVersion.Location = new System.Drawing.Point(92, 23);
-            this.tbAPIVersion.Name = "tbAPIVersion";
-            this.tbAPIVersion.Size = new System.Drawing.Size(58, 13);
-            this.tbAPIVersion.TabIndex = 4;
-            this.tbAPIVersion.Text = "???";
-            this.tbAPIVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tbPluginVersion
             // 
@@ -710,141 +812,12 @@ namespace TestClient
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 43);
+            this.label5.Location = new System.Drawing.Point(3, 23);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(83, 13);
             this.label5.TabIndex = 2;
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 23);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 13);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "API Version :";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.btnSetCurrentTransition);
-            this.groupBox6.Controls.Add(this.btnGetCurrentTransition);
-            this.groupBox6.Controls.Add(this.tbTransition);
-            this.groupBox6.Controls.Add(this.btnListTransitions);
-            this.groupBox6.Controls.Add(this.tvTransitions);
-            this.groupBox6.Location = new System.Drawing.Point(176, 261);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(192, 243);
-            this.groupBox6.TabIndex = 10;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Transitions";
-            // 
-            // btnSetCurrentTransition
-            // 
-            this.btnSetCurrentTransition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSetCurrentTransition.Location = new System.Drawing.Point(104, 199);
-            this.btnSetCurrentTransition.Name = "btnSetCurrentTransition";
-            this.btnSetCurrentTransition.Size = new System.Drawing.Size(81, 38);
-            this.btnSetCurrentTransition.TabIndex = 5;
-            this.btnSetCurrentTransition.Text = "Set\r\nCurTransition";
-            this.btnSetCurrentTransition.UseVisualStyleBackColor = true;
-            this.btnSetCurrentTransition.Click += new System.EventHandler(this.btnSetCurrentTransition_Click);
-            // 
-            // btnGetCurrentTransition
-            // 
-            this.btnGetCurrentTransition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnGetCurrentTransition.Location = new System.Drawing.Point(6, 199);
-            this.btnGetCurrentTransition.Name = "btnGetCurrentTransition";
-            this.btnGetCurrentTransition.Size = new System.Drawing.Size(86, 38);
-            this.btnGetCurrentTransition.TabIndex = 4;
-            this.btnGetCurrentTransition.Text = "Get\r\nCurTransition";
-            this.btnGetCurrentTransition.UseVisualStyleBackColor = true;
-            this.btnGetCurrentTransition.Click += new System.EventHandler(this.btnGetCurrentTransition_Click);
-            // 
-            // tbTransition
-            // 
-            this.tbTransition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbTransition.Location = new System.Drawing.Point(6, 173);
-            this.tbTransition.Name = "tbTransition";
-            this.tbTransition.Size = new System.Drawing.Size(179, 20);
-            this.tbTransition.TabIndex = 3;
-            // 
-            // btnListTransitions
-            // 
-            this.btnListTransitions.Location = new System.Drawing.Point(6, 19);
-            this.btnListTransitions.Name = "btnListTransitions";
-            this.btnListTransitions.Size = new System.Drawing.Size(86, 23);
-            this.btnListTransitions.TabIndex = 2;
-            this.btnListTransitions.Text = "ListTransitions";
-            this.btnListTransitions.UseVisualStyleBackColor = true;
-            this.btnListTransitions.Click += new System.EventHandler(this.btnListTransitions_Click);
-            // 
-            // tvTransitions
-            // 
-            this.tvTransitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvTransitions.Location = new System.Drawing.Point(6, 49);
-            this.tvTransitions.Name = "tvTransitions";
-            this.tvTransitions.Size = new System.Drawing.Size(180, 118);
-            this.tvTransitions.TabIndex = 1;
-            this.tvTransitions.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvTransitions_NodeMouseClick);
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.Controls.Add(this.btnSetTransitionDuration);
-            this.groupBox7.Controls.Add(this.btnGetTransitionDuration);
-            this.groupBox7.Controls.Add(this.tbTransitionDuration);
-            this.groupBox7.Location = new System.Drawing.Point(430, 375);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(138, 79);
-            this.groupBox7.TabIndex = 12;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Transition Duration";
-            // 
-            // tbTransitionDuration
-            // 
-            this.tbTransitionDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbTransitionDuration.Increment = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.tbTransitionDuration.Location = new System.Drawing.Point(7, 20);
-            this.tbTransitionDuration.Maximum = new decimal(new int[] {
-            120000,
-            0,
-            0,
-            0});
-            this.tbTransitionDuration.Name = "tbTransitionDuration";
-            this.tbTransitionDuration.Size = new System.Drawing.Size(122, 20);
-            this.tbTransitionDuration.TabIndex = 0;
-            // 
-            // btnGetTransitionDuration
-            // 
-            this.btnGetTransitionDuration.Location = new System.Drawing.Point(7, 46);
-            this.btnGetTransitionDuration.Name = "btnGetTransitionDuration";
-            this.btnGetTransitionDuration.Size = new System.Drawing.Size(41, 23);
-            this.btnGetTransitionDuration.TabIndex = 1;
-            this.btnGetTransitionDuration.Text = "Get";
-            this.btnGetTransitionDuration.UseVisualStyleBackColor = true;
-            this.btnGetTransitionDuration.Click += new System.EventHandler(this.btnGetTransitionDuration_Click);
-            // 
-            // btnSetTransitionDuration
-            // 
-            this.btnSetTransitionDuration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSetTransitionDuration.Location = new System.Drawing.Point(89, 46);
-            this.btnSetTransitionDuration.Name = "btnSetTransitionDuration";
-            this.btnSetTransitionDuration.Size = new System.Drawing.Size(40, 23);
-            this.btnSetTransitionDuration.TabIndex = 2;
-            this.btnSetTransitionDuration.Text = "Set";
-            this.btnSetTransitionDuration.UseVisualStyleBackColor = true;
-            this.btnSetTransitionDuration.Click += new System.EventHandler(this.btnSetTransitionDuration_Click);
             // 
             // MainWindow
             // 
@@ -862,6 +835,10 @@ namespace TestClient
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbControls.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.gbStatus.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -873,10 +850,6 @@ namespace TestClient
             this.groupBox3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -898,11 +871,9 @@ namespace TestClient
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label tbOBSVersion;
-        private System.Windows.Forms.Label tbAPIVersion;
         private System.Windows.Forms.Label tbPluginVersion;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button btnSetCurrentProfile;
         private System.Windows.Forms.Button btnGetCurrentProfile;

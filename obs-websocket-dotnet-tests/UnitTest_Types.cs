@@ -95,18 +95,15 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSVersion_BuildFromJSON()
         {
-            string apiVersion = "1.1";
             string pluginVersion = "4.0.0";
             string obsVersion = "18.0.1";
 
             var data = new JObject();
-            data.Add("version", apiVersion);
             data.Add("obs-websocket-version", pluginVersion);
             data.Add("obs-studio-version", obsVersion);
 
             var version = new OBSVersion(data);
 
-            Assert.AreEqual(apiVersion, version.APIVersion);
             Assert.AreEqual(pluginVersion, version.PluginVersion);
             Assert.AreEqual(obsVersion, version.OBSStudioVersion);
         }

@@ -346,6 +346,10 @@ namespace OBSWebsocketDotNet
             return profiles;
         }
 
+        // TODO: needs updating
+        /// <summary>
+        /// Start streaming. Will trigger an error if streaming is already active
+        /// </summary>
         public void StartStreaming()
         {
             SendRequest("StartStreaming");
@@ -569,6 +573,91 @@ namespace OBSWebsocketDotNet
             requestFields.Add("source", sourceName);
             var response = SendRequest("GetSyncOffset", requestFields);
             return (int)response["offset"];
+        }
+
+        /// <summary>
+        /// Set the relative crop coordinates of the specified source item
+        /// </summary>
+        /// <param name="sceneItemName">Name of the scene item</param>
+        /// <param name="cropInfo">Crop coordinates</param>
+        /// <param name="sceneName">(optional) parent scene name of the specified source</param>
+        public void SetSceneItemCrop(string sceneItemName,
+            OBSItemCropInfo cropInfo, string sceneName = null)
+        {
+            var requestFields = new JObject();
+
+            if (sceneName != null)
+                requestFields.Add("scene-name");
+
+            requestFields.Add("item", sceneItemName);
+            requestFields.Add("top", cropInfo.Top);
+            requestFields.Add("bottom", cropInfo.Bottom);
+            requestFields.Add("left", cropInfo.Left);
+            requestFields.Add("right", cropInfo.Right);
+
+            SendRequest("SetSceneItemCrop", requestFields);
+        }
+
+        /// <summary>
+        /// Set the relative crop coordinates of the specified source item
+        /// </summary>
+        /// <param name="sceneItem">Scene item object</param>
+        /// <param name="cropInfo">Crop coordinates</param>
+        /// <param name="scene">Parent scene of scene item</param>
+        public void SetSceneItemCrop(OBSSceneItem sceneItem,
+            OBSItemCropInfo cropInfo, OBSScene scene)
+        {
+            SetSceneItemCrop(sceneItem.SourceName, cropInfo, scene.Name);
+        }
+
+        /// <summary>
+        /// Get names of configured special sources (like Desktop Audio
+        /// and Mic sources)
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, string> GetSpecialSources()
+        {
+            var response = SendRequest("GetSpecialSources");
+            var sources = new Dictionary<string, string>();
+            foreach(KeyValuePair<string, JToken> x in response)
+            {
+                string key = x.Key;
+                string value = (string)x.Value;
+                if(key != "request-type" && key != "message-id")
+                {
+                    sources.Add(key, value);
+                }
+            }
+            return sources;
+        }
+
+        /// <summary>
+        /// Set current streaming settings
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="save"></param>
+        public void SetStreamingSettings(OBSStreamingService service, bool save)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("type", service.Type);
+            requestFields.Add("settings", service.Settings);
+            requestFields.Add("save", save);
+            SendRequest("SetStreamSettings", requestFields);
+        }
+
+        /// <summary>
+        /// Get current streaming settings
+        /// </summary>
+        /// <returns></returns>
+        public OBSStreamingService GetStreamSettings()
+        {
+            var response = SendRequest("GetStreamSettings");
+
+            var service = new OBSStreamingService();
+            service.Type = (string)response["type"];
+            service.Settings = (JObject)response["settings"];
+
+            return service;
         }
 
         /// <summary>
