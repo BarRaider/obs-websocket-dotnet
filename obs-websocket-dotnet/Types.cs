@@ -69,7 +69,7 @@ namespace OBSWebsocketDotNet
     public delegate void SourceOrderChangeCallback(OBSWebsocket sender, string sceneName);
 
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.OnSceneItemVisibilityChange"/>, <see cref="OBSWebsocket.OnSceneItemAdded"/> or <see cref="OBSWebsocket.OnSceneItemRemoved"/> 
+    /// Called by <see cref="OBSWebsocket.OnSceneItemVisibilityChange"/>, <see cref="OBSWebsocket.OnSceneItemAdded"/> or <see cref="OBSWebsocket.OnSceneItemRemoved"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="sceneName">Name of the scene where the item is</param>
@@ -77,7 +77,7 @@ namespace OBSWebsocketDotNet
     public delegate void SceneItemUpdateCallback(OBSWebsocket sender, string sceneName, string itemName);
 
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.OnTransitionChange"/> 
+    /// Called by <see cref="OBSWebsocket.OnTransitionChange"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="newTransitionName">Name of the new selected transition</param>
@@ -103,6 +103,13 @@ namespace OBSWebsocketDotNet
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="status">Stream status data</param>
     public delegate void StreamStatusCallback(OBSWebsocket sender, OBSStreamStatus status);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.OnStudioModeSwitched"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="enabled">New Studio Mode status</param>
+    public delegate void StudioModeChangeCallback(OBSWebsocket sender, bool enabled);
 
     /// <summary>
     /// Describes a scene in OBS, along with its items
@@ -283,7 +290,7 @@ namespace OBSWebsocketDotNet
         /// True if recording is started and running, false otherwise
         /// </summary>
         public readonly bool Recording;
-        
+
         /// <summary>
         /// Stream bitrate in bytes per second
         /// </summary>

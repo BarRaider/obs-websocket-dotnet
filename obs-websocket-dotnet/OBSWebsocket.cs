@@ -120,9 +120,35 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public StreamStatusCallback OnStreamStatus;
 
+        /// <summary>
+        /// Triggered when the preview scene selection changes (Studio Mode only)
+        /// </summary>
         public SceneChangeCallback OnPreviewSceneChanged;
 
-        public EventHandler OnStudioModeSwitched;
+        /// <summary>
+        /// Triggered when Studio Mode is turned on or off
+        /// </summary>
+        public StudioModeChangeCallback OnStudioModeSwitched;
+
+        /// <summary>
+        /// Triggered when the Replay Buffer is initializing
+        /// </summary>
+        public EventHandler OnReplayStarting;
+
+        /// <summary>
+        /// Triggered when the Replay Buffer started successfully
+        /// </summary>
+        public EventHandler OnReplayStarted;
+
+        /// <summary>
+        /// Triggered when the Replay Buffer is stopping
+        /// </summary>
+        public EventHandler OnReplayStopping;
+
+        /// <summary>
+        /// Triggered when the Replay Buffer stopped successfully
+        /// </summary>
+        public EventHandler OnReplayStopped;
 
         /// <summary>
         /// Triggered when OBS exits
@@ -447,7 +473,27 @@ namespace OBSWebsocketDotNet
 
                 case "StudioModeSwitched":
                     if (OnStudioModeSwitched != null)
-                        OnStudioModeSwitched(this, EventArgs.Empty); // TODO: New status info in event
+                        OnStudioModeSwitched(this, (bool)body["new-state"]);
+                    break;
+
+                case "ReplayStarting":
+                    if (OnReplayStarting != null)
+                        OnReplayStarting(this, EventArgs.Empty);
+                    break;
+
+                case "ReplayStarted":
+                    if (OnReplayStarted != null)
+                        OnReplayStarted(this, EventArgs.Empty);
+                    break;
+
+                case "ReplayStopping":
+                    if (OnReplayStopping != null)
+                        OnReplayStopping(this, EventArgs.Empty);
+                    break;
+
+                case "ReplayStopped":
+                    if (OnReplayStopped != null)
+                        OnReplayStopped(this, EventArgs.Empty);
                     break;
 
                 case "Exiting":
