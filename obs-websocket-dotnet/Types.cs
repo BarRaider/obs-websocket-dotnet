@@ -435,6 +435,110 @@ namespace OBSWebsocketDotNet
     }
 
     /// <summary>
+    /// Common RTMP settings (predefined streaming services list)
+    /// </summary>
+    public struct OBSCommonRTMPStreamingService
+    {
+        /// <summary>
+        /// Streaming provider name
+        /// </summary>
+        public string ServiceName;
+
+        /// <summary>
+        /// Streaming server URL;
+        /// </summary>
+        public string ServerUrl;
+
+        /// <summary>
+        /// Stream key
+        /// </summary>
+        public string StreamKey;
+
+        /// <summary>
+        /// Construct object from data provided by <see cref="OBSStreamingService.Settings"/>
+        /// </summary>
+        /// <param name="settings"></param>
+        public OBSCommonRTMPStreamingService(JObject settings)
+        {
+            ServiceName = (string)settings["service"];
+            ServerUrl = (string)settings["server"];
+            StreamKey = (string)settings["key"];
+        }
+
+        /// <summary>
+        /// Convert to JSON object
+        /// </summary>
+        /// <returns></returns>
+        public JObject ToJSON()
+        {
+            var obj = new JObject();
+            obj.Add("service", ServiceName);
+            obj.Add("server", ServerUrl);
+            obj.Add("key", StreamKey);
+            return obj;
+        }
+    }
+
+    /// <summary>
+    /// Custom RTMP settings (fully customizable RTMP credentials)
+    /// </summary>
+    public struct OBSCustomRTMPStreamingService
+    {
+        /// <summary>
+        /// RTMP server URL
+        /// </summary>
+        public string ServerAddress;
+
+        /// <summary>
+        /// RTMP stream key (URL suffix)
+        /// </summary>
+        public string StreamKey;
+
+        /// <summary>
+        /// Tell OBS' RTMP client to authenticate to the server
+        /// </summary>
+        public bool UseAuthentication;
+
+        /// <summary>
+        /// Username used if authentication is enabled
+        /// </summary>
+        public string AuthUsername;
+
+        /// <summary>
+        /// Password used if authentication is enabled
+        /// </summary>
+        public string AuthPassword;
+
+        /// <summary>
+        /// Construct object from data provided by <see cref="OBSStreamingService.Settings"/>
+        /// </summary>
+        /// <param name="settings"></param>
+        public OBSCustomRTMPStreamingService(JObject settings)
+        {
+            ServerAddress = (string)settings["server"];
+            StreamKey = (string)settings["key"];
+            UseAuthentication = (bool)settings["use_auth"];
+            AuthUsername = (string)settings["username"];
+            AuthPassword = (string)settings["password"];
+        }
+
+        /// <summary>
+        /// Convert to JSON object
+        /// </summary>
+        /// <returns></returns>
+        public JObject ToJSON()
+        {
+            var obj = new JObject();
+            obj.Add("server", ServerAddress);
+            obj.Add("key", StreamKey);
+            obj.Add("use_auth", UseAuthentication);
+            obj.Add("username", AuthUsername);
+            obj.Add("password", AuthPassword);
+            return obj;
+        }
+    }
+
+    /// <summary>
     /// Crop coordinates for a scene item
     /// </summary>
     public struct OBSItemCropInfo
