@@ -418,18 +418,45 @@ namespace OBSWebsocketDotNet
         }
     }
 
+    /// <summary>
+    /// Streaming settings
+    /// </summary>
     public struct OBSStreamingService
     {
+        /// <summary>
+        /// Type of streaming service
+        /// </summary>
         public string Type;
 
+        /// <summary>
+        /// Streaming service settings (JSON data)
+        /// </summary>
         public JObject Settings;
     }
 
+    /// <summary>
+    /// Crop coordinates for a scene item
+    /// </summary>
     public struct OBSItemCropInfo
     {
+        /// <summary>
+        /// Top crop (in pixels)
+        /// </summary>
         public int Top;
+
+        /// <summary>
+        /// Bottom crop (in pixels)
+        /// </summary>
         public int Bottom;
+
+        /// <summary>
+        /// Left crop (in pixels)
+        /// </summary>
         public int Left;
+
+        /// <summary>
+        /// Right crop (in pixels)
+        /// </summary>
         public int Right;
     }
 
