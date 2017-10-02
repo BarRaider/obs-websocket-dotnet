@@ -250,11 +250,6 @@ namespace OBSWebsocketDotNet
     public struct OBSVersion
     {
         /// <summary>
-        /// obs-websocket protocol version
-        /// </summary>
-        public readonly string APIVersion;
-
-        /// <summary>
         /// obs-websocket plugin version
         /// </summary>
         public readonly string PluginVersion;
@@ -270,7 +265,6 @@ namespace OBSWebsocketDotNet
         /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public OBSVersion(JObject data)
         {
-            APIVersion = (string)data["version"];
             PluginVersion = (string)data["obs-websocket-version"];
             OBSStudioVersion = (string)data["obs-studio-version"];
         }
