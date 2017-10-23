@@ -566,6 +566,44 @@ namespace OBSWebsocketDotNet
         public int Right;
     }
 
+    public struct BrowserSourceProperties
+    {
+        public string URL;
+        public bool IsLocalFile;
+        public string CustomCSS;
+        public int Width;
+        public int Height;
+        public int FPS;
+        public bool ShutdownWhenNotVisible;
+        public bool Visible;
+
+        public BrowserSourceProperties(JObject props)
+        {
+            URL = (string)props["url"];
+            IsLocalFile = (bool)props["is_local_file"];
+            CustomCSS = (string)props["css"];
+            Width = (int)props["width"];
+            Height = (int)props["height"];
+            FPS = (int)props["fps"];
+            ShutdownWhenNotVisible = (bool)props["shutdown"];
+            Visible = (bool)props["render"];
+        }
+
+        public JObject ToJSON()
+        {
+            var obj = new JObject();
+            obj.Add("url", URL);
+            obj.Add("is_local_file", IsLocalFile);
+            obj.Add("css", CustomCSS);
+            obj.Add("width", Width);
+            obj.Add("height", Height);
+            obj.Add("fps", FPS);
+            obj.Add("shutdown", ShutdownWhenNotVisible);
+            obj.Add("render", Visible);
+            return obj;
+        }
+    }
+
     /// <summary>
     /// Thrown if authentication fails
     /// </summary>

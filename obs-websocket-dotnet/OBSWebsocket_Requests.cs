@@ -667,5 +667,31 @@ namespace OBSWebsocketDotNet
         {
             SendRequest("SaveStreamSettings");
         }
+
+        public BrowserSourceProperties GetBrowserSourceProperties(string sourceName, string sceneName = null)
+        {
+            var request = new JObject();
+            request.Add("source", sourceName);
+            if (sceneName != null)
+                request.Add("scene-name", sourceName);
+
+            var response = SendRequest("GetBrowserSourceProperties", request);
+            return new BrowserSourceProperties(response);
+        }
+
+        public void SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
+        {
+            var request = new JObject();
+            request.Add("source", sourceName);
+            if (sceneName != null)
+                request.Add("scene-name", sourceName);
+
+            request.Merge(props.ToJSON(), new JsonMergeSettings()
+            {
+                MergeArrayHandling = MergeArrayHandling.Union
+            });
+
+            SendRequest("SetBrowserSourceProperties", request);
+        }
     }
 }
