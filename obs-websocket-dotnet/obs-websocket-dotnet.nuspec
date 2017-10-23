@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>obs-websocket-dotnet</id>
-		<version>4.2.0-beta2</version>
+		<version>4.2.0-beta3</version>
 
 		<authors>Stéphane Lepin</authors>
 		<owners>Palakis</owners>
@@ -18,7 +18,7 @@
 		<tags>obs studio websocket api</tags>
 
 		<dependencies>
-			<dependency id="Newtonsoft.Json" version="9.0.1" />
+			<dependency id="Newtonsoft.Json" version="10.0.3" />
 			<dependency id="WebSocketSharp" version="1.0.3-rc11" />
 		</dependencies>
 	</metadata>
