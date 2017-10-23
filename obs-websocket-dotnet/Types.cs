@@ -457,7 +457,7 @@ namespace OBSWebsocketDotNet
         public string StreamKey;
 
         /// <summary>
-        /// Construct object from data provided by <see cref="OBSStreamingService.Settings"/>
+        /// Construct object from data provided by <see cref="StreamingService.Settings"/>
         /// </summary>
         /// <param name="settings"></param>
         public CommonRTMPStreamingService(JObject settings)
@@ -512,7 +512,7 @@ namespace OBSWebsocketDotNet
         public string AuthPassword;
 
         /// <summary>
-        /// Construct object from data provided by <see cref="OBSStreamingService.Settings"/>
+        /// Construct object from data provided by <see cref="StreamingService.Settings"/>
         /// </summary>
         /// <param name="settings"></param>
         public CustomRTMPStreamingService(JObject settings)
@@ -566,17 +566,55 @@ namespace OBSWebsocketDotNet
         public int Right;
     }
 
+    /// <summary>
+    /// BrowserSource source properties
+    /// </summary>
     public struct BrowserSourceProperties
     {
+        /// <summary>
+        /// URL to load in the embedded browser
+        /// </summary>
         public string URL;
+
+        /// <summary>
+        /// true if the URL points to a local file, false otherwise.
+        /// </summary>
         public bool IsLocalFile;
+
+        /// <summary>
+        /// Additional CSS to apply to the page
+        /// </summary>
         public string CustomCSS;
+
+        /// <summary>
+        /// Embedded browser render (viewport) width
+        /// </summary>
         public int Width;
+
+        /// <summary>
+        /// Embedded browser render (viewport) height
+        /// </summary>
         public int Height;
+
+        /// <summary>
+        /// Embedded browser render frames per second
+        /// </summary>
         public int FPS;
+
+        /// <summary>
+        /// true if source should be disabled (inactive) when not visible, false otherwise
+        /// </summary>
         public bool ShutdownWhenNotVisible;
+
+        /// <summary>
+        /// true if source should be visible, false otherwise
+        /// </summary>
         public bool Visible;
 
+        /// <summary>
+        /// Construct the object from JSON response data
+        /// </summary>
+        /// <param name="props"></param>
         public BrowserSourceProperties(JObject props)
         {
             URL = (string)props["url"];
@@ -589,6 +627,10 @@ namespace OBSWebsocketDotNet
             Visible = (bool)props["render"];
         }
 
+        /// <summary>
+        /// Convert the object back to JSON
+        /// </summary>
+        /// <returns></returns>
         public JObject ToJSON()
         {
             var obj = new JObject();

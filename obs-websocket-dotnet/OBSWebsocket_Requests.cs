@@ -668,6 +668,12 @@ namespace OBSWebsocketDotNet
             SendRequest("SaveStreamSettings");
         }
 
+        /// <summary>
+        /// Get settings of the specified BrowserSource
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
+        /// <returns>BrowserSource properties</returns>
         public BrowserSourceProperties GetBrowserSourceProperties(string sourceName, string sceneName = null)
         {
             var request = new JObject();
@@ -679,6 +685,12 @@ namespace OBSWebsocketDotNet
             return new BrowserSourceProperties(response);
         }
 
+        /// <summary>
+        /// Set settings of the specified BrowserSource
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="props">BrowserSource properties</param>
+        /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
         public void SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
             var request = new JObject();
