@@ -38,122 +38,107 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when switching to another scene
         /// </summary>
-        public SceneChangeCallback OnSceneChange;
+        public event SceneChangeCallback SceneChanged;
 
         /// <summary>
         /// Triggered when a scene is created, deleted or renamed
         /// </summary>
-        public EventHandler OnSceneListChange;
+        public event EventHandler SceneListChanged;
 
         /// <summary>
         /// Triggered when the scene item list of the specified scene is reordered
         /// </summary>
-        public SourceOrderChangeCallback OnSourceOrderChange;
+        public event SourceOrderChangeCallback SourceOrderChanged;
 
         /// <summary>
         /// Triggered when a new item is added to the item list of the specified scene
         /// </summary>
-        public SceneItemUpdateCallback OnSceneItemAdded;
+        public event SceneItemUpdateCallback SceneItemAdded;
 
         /// <summary>
         /// Triggered when an item is removed from the item list of the specified scene
         /// </summary>
-        public SceneItemUpdateCallback OnSceneItemRemoved;
+        public event SceneItemUpdateCallback SceneItemRemoved;
 
         /// <summary>
         /// Triggered when the visibility of a scene item changes
         /// </summary>
-        public SceneItemUpdateCallback OnSceneItemVisibilityChange;
+        public event SceneItemUpdateCallback SceneItemVisibilityChanged;
 
         /// <summary>
         /// Triggered when switching to another scene collection
         /// </summary>
-        public EventHandler OnSceneCollectionChange;
+        public event EventHandler SceneCollectionChanged;
 
         /// <summary>
         /// Triggered when a scene collection is created, deleted or renamed
         /// </summary>
-        public EventHandler OnSceneCollectionListChange;
+        public event EventHandler SceneCollectionListChanged;
 
         /// <summary>
         /// Triggered when switching to another transition
         /// </summary>
-        public TransitionChangeCallback OnTransitionChange;
+        public event TransitionChangeCallback TransitionChanged;
 
         /// <summary>
         /// Triggered when the current transition duration is changed
         /// </summary>
-        public TransitionDurationChangeCallback OnTransitionDurationChange;
+        public event TransitionDurationChangeCallback TransitionDurationChanged;
 
         /// <summary>
         /// Triggered when a transition is created or removed
         /// </summary>
-        public EventHandler OnTransitionListChange;
+        public event EventHandler TransitionListChanged;
 
         /// <summary>
-        /// Triggered when a transition between two scenes starts. Followed by <see cref="OnSceneChange"/>
+        /// Triggered when a transition between two scenes starts. Followed by <see cref="SceneChanged"/>
         /// </summary>
-        public EventHandler OnTransitionBegin;
+        public event EventHandler TransitionBegin;
 
         /// <summary>
         /// Triggered when switching to another profile
         /// </summary>
-        public EventHandler OnProfileChange;
+        public event EventHandler ProfileChanged;
 
         /// <summary>
         /// Triggered when a profile is created, imported, removed or renamed
         /// </summary>
-        public EventHandler OnProfileListChange;
+        public event EventHandler ProfileListChanged;
 
         /// <summary>
         /// Triggered when the streaming output state changes
         /// </summary>
-        public OutputStateCallback OnStreamingStateChange;
+        public event OutputStateCallback StreamingStateChanged;
 
         /// <summary>
         /// Triggered when the recording output state changes
         /// </summary>
-        public OutputStateCallback OnRecordingStateChange;
+        public event OutputStateCallback RecordingStateChanged;
+
+        /// <summary>
+        /// Triggered when state of the replay buffer changes
+        /// </summary>
+        public event OutputStateCallback ReplayBufferStateChanged;
 
         /// <summary>
         /// Triggered every 2 seconds while streaming is active
         /// </summary>
-        public StreamStatusCallback OnStreamStatus;
+        public event StreamStatusCallback StreamStatus;
 
         /// <summary>
         /// Triggered when the preview scene selection changes (Studio Mode only)
         /// </summary>
-        public SceneChangeCallback OnPreviewSceneChanged;
+        public event SceneChangeCallback PreviewSceneChanged;
 
         /// <summary>
         /// Triggered when Studio Mode is turned on or off
         /// </summary>
-        public StudioModeChangeCallback OnStudioModeSwitched;
-
-        /// <summary>
-        /// Triggered when the Replay Buffer is initializing
-        /// </summary>
-        public EventHandler OnReplayStarting;
-
-        /// <summary>
-        /// Triggered when the Replay Buffer started successfully
-        /// </summary>
-        public EventHandler OnReplayStarted;
-
-        /// <summary>
-        /// Triggered when the Replay Buffer is stopping
-        /// </summary>
-        public EventHandler OnReplayStopping;
-
-        /// <summary>
-        /// Triggered when the Replay Buffer stopped successfully
-        /// </summary>
-        public EventHandler OnReplayStopped;
+        public event StudioModeChangeCallback StudioModeSwitched;
 
         /// <summary>
         /// Triggered when OBS exits
         /// </summary>
-        public EventHandler OnExit;
+        public event EventHandler OBSExit;
         #endregion
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
@@ -349,155 +334,156 @@ namespace OBSWebsocketDotNet
             switch (eventType)
             {
                 case "SwitchScenes":
-                    if(OnSceneChange != null)
-                        OnSceneChange(this, (string)body["scene-name"]);
+                    if(SceneChanged != null)
+                        SceneChanged(this, (string)body["scene-name"]);
                     break;
 
                 case "ScenesChanged":
-                    if (OnSceneListChange != null)
-                        OnSceneListChange(this, EventArgs.Empty);
+                    if (SceneListChanged != null)
+                        SceneListChanged(this, EventArgs.Empty);
                     break;
 
                 case "SourceOrderChanged":
-                    if (OnSourceOrderChange != null)
-                        OnSourceOrderChange(this, (string)body["scene-name"]);
+                    if (SourceOrderChanged != null)
+                        SourceOrderChanged(this, (string)body["scene-name"]);
                     break;
 
                 case "SceneItemAdded":
-                    if (OnSceneItemAdded != null)
-                        OnSceneItemAdded(this, (string)body["scene-name"], (string)body["item-name"]);
+                    if (SceneItemAdded != null)
+                        SceneItemAdded(this, (string)body["scene-name"], (string)body["item-name"]);
                     break;
 
                 case "SceneItemRemoved":
-                    if (OnSceneItemRemoved != null)
-                        OnSceneItemRemoved(this, (string)body["scene-name"], (string)body["item-name"]);
+                    if (SceneItemRemoved != null)
+                        SceneItemRemoved(this, (string)body["scene-name"], (string)body["item-name"]);
                     break;
 
                 case "SceneItemVisibilityChanged":
-                    if (OnSceneItemVisibilityChange != null)
-                        OnSceneItemVisibilityChange(this, (string)body["scene-name"], (string)body["item-name"]);
+                    if (SceneItemVisibilityChanged != null)
+                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"]);
                     break;
 
                 case "SceneCollectionChanged":
-                    if (OnSceneCollectionChange != null)
-                        OnSceneCollectionChange(this, EventArgs.Empty);
+                    if (SceneCollectionChanged != null)
+                        SceneCollectionChanged(this, EventArgs.Empty);
                     break;
 
                 case "SceneCollectionListChanged":
-                    if (OnSceneCollectionListChange != null)
-                        OnSceneCollectionListChange(this, EventArgs.Empty);
+                    if (SceneCollectionListChanged != null)
+                        SceneCollectionListChanged(this, EventArgs.Empty);
                     break;
 
                 case "SwitchTransition":
-                    if (OnTransitionChange != null)
-                        OnTransitionChange(this, (string)body["transition-name"]);
+                    if (TransitionChanged != null)
+                        TransitionChanged(this, (string)body["transition-name"]);
                     break;
 
                 case "TransitionDurationChanged":
-                    if (OnTransitionDurationChange != null)
-                        OnTransitionDurationChange(this, (int)body["new-duration"]);
+                    if (TransitionDurationChanged != null)
+                        TransitionDurationChanged(this, (int)body["new-duration"]);
                     break;
 
                 case "TransitionListChanged":
-                    if (OnTransitionListChange != null)
-                        OnTransitionListChange(this, EventArgs.Empty);
+                    if (TransitionListChanged != null)
+                        TransitionListChanged(this, EventArgs.Empty);
                     break;
 
                 case "TransitionBegin":
-                    if (OnTransitionBegin != null)
-                        OnTransitionBegin(this, EventArgs.Empty);
+                    if (TransitionBegin != null)
+                        TransitionBegin(this, EventArgs.Empty);
                     break;
 
                 case "ProfileChanged":
-                    if (OnProfileChange != null)
-                        OnProfileChange(this, EventArgs.Empty);
+                    if (ProfileChanged != null)
+                        ProfileChanged(this, EventArgs.Empty);
                     break;
 
                 case "ProfileListChanged":
-                    if (OnProfileListChange != null)
-                        OnProfileListChange(this, EventArgs.Empty);
+                    if (ProfileListChanged != null)
+                        ProfileListChanged(this, EventArgs.Empty);
                     break;
 
                 case "StreamStarting":
-                    if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputState.Starting);
+                    if (StreamingStateChanged != null)
+                        StreamingStateChanged(this, OutputState.Starting);
                     break;
 
                 case "StreamStarted":
-                    if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputState.Started);
+                    if (StreamingStateChanged != null)
+                        StreamingStateChanged(this, OutputState.Started);
                     break;
 
                 case "StreamStopping":
-                    if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputState.Stopping);
+                    if (StreamingStateChanged != null)
+                        StreamingStateChanged(this, OutputState.Stopping);
                     break;
 
                 case "StreamStopped":
-                    if (OnStreamingStateChange != null)
-                        OnStreamingStateChange(this, OutputState.Stopped);
+                    if (StreamingStateChanged != null)
+                        StreamingStateChanged(this, OutputState.Stopped);
                     break;
 
                 case "RecordingStarting":
-                    if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputState.Starting);
+                    if (RecordingStateChanged != null)
+                        RecordingStateChanged(this, OutputState.Starting);
                     break;
 
                 case "RecordingStarted":
-                    if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputState.Started);
+                    if (RecordingStateChanged != null)
+                        RecordingStateChanged(this, OutputState.Started);
                     break;
 
                 case "RecordingStopping":
-                    if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputState.Stopping);
+                    if (RecordingStateChanged != null)
+                        RecordingStateChanged(this, OutputState.Stopping);
                     break;
 
                 case "RecordingStopped":
-                    if (OnRecordingStateChange != null)
-                        OnRecordingStateChange(this, OutputState.Stopped);
+                    if (RecordingStateChanged != null)
+                        RecordingStateChanged(this, OutputState.Stopped);
                     break;
 
                 case "StreamStatus":
-                    if (OnStreamStatus != null)
+                    if (StreamStatus != null)
                     {
                         status = new OBSStreamStatus(body);
-                        OnStreamStatus(this, status);
+                        StreamStatus(this, status);
                     }
                     break;
 
                 case "PreviewSceneChanged":
-                    if(OnPreviewSceneChanged != null)
-                        OnPreviewSceneChanged(this, (string)body["scene-name"]);
+                    if(PreviewSceneChanged != null)
+                        PreviewSceneChanged(this, (string)body["scene-name"]);
                     break;
 
                 case "StudioModeSwitched":
-                    if (OnStudioModeSwitched != null)
-                        OnStudioModeSwitched(this, (bool)body["new-state"]);
+                    if (StudioModeSwitched != null)
+                        StudioModeSwitched(this, (bool)body["new-state"]);
                     break;
 
                 case "ReplayStarting":
-                    if (OnReplayStarting != null)
-                        OnReplayStarting(this, EventArgs.Empty);
+                    if (ReplayBufferStateChanged != null)
+                        ReplayBufferStateChanged(this, OutputState.Starting);
                     break;
 
                 case "ReplayStarted":
-                    if (OnReplayStarted != null)
-                        OnReplayStarted(this, EventArgs.Empty);
+                    if (ReplayBufferStateChanged != null)
+                        ReplayBufferStateChanged(this, OutputState.Started);
                     break;
 
                 case "ReplayStopping":
-                    if (OnReplayStopping != null)
-                        OnReplayStopping(this, EventArgs.Empty);
+                    if (ReplayBufferStateChanged != null)
+                        ReplayBufferStateChanged(this, OutputState.Stopping);
                     break;
 
                 case "ReplayStopped":
-                    if (OnReplayStopped != null)
-                        OnReplayStopped(this, EventArgs.Empty);
+                    if (ReplayBufferStateChanged != null)
+                        ReplayBufferStateChanged(this, OutputState.Stopped);
                     break;
 
                 case "Exiting":
-                    OnExit(this, EventArgs.Empty);
+                    if (OBSExit != null)
+                        OBSExit(this, EventArgs.Empty);
                     break;
             }
         }
