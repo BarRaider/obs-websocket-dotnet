@@ -31,16 +31,64 @@ namespace TestClient
             InitializeComponent();
             _obs = new OBSWebsocket();
 
-            _obs.OnSceneChange += onSceneChange;
-            _obs.OnSceneCollectionChange += onSceneColChange;
-            _obs.OnProfileChange += onProfileChange;
-            _obs.OnTransitionChange += onTransitionChange;
-            _obs.OnTransitionDurationChange += onTransitionDurationChange;
+            _obs.Connected += onConnect;
+            _obs.Disconnected += onDisconnect;
 
-            _obs.OnStreamingStateChange += onStreamingStateChange;
-            _obs.OnRecordingStateChange += onRecordingStateChange;
+            _obs.SceneChanged += onSceneChange;
+            _obs.SceneCollectionChanged += onSceneColChange;
+            _obs.ProfileChanged += onProfileChange;
+            _obs.TransitionChanged += onTransitionChange;
+            _obs.TransitionDurationChanged += onTransitionDurationChange;
 
-            _obs.OnStreamStatus += onStreamData;
+            _obs.StreamingStateChanged += onStreamingStateChange;
+            _obs.RecordingStateChanged += onRecordingStateChange;
+
+            _obs.StreamStatus += onStreamData;
+        }
+
+        private void onConnect(object sender, EventArgs e)
+        {
+            txtServerIP.Enabled = false;
+            txtServerPassword.Enabled = false;
+
+            gbControls.Enabled = true;
+
+            var versionInfo = _obs.GetVersion();
+            tbPluginVersion.Text = versionInfo.PluginVersion;
+            tbOBSVersion.Text = versionInfo.OBSStudioVersion;
+
+            btnListScenes.PerformClick();
+            btnGetCurrentScene.PerformClick();
+
+            btnListSceneCol.PerformClick();
+            btnGetCurrentSceneCol.PerformClick();
+
+            btnListProfiles.PerformClick();
+            btnGetCurrentProfile.PerformClick();
+
+            btnListTransitions.PerformClick();
+            btnGetCurrentTransition.PerformClick();
+
+            btnGetTransitionDuration.PerformClick();
+
+            var streamStatus = _obs.GetStreamingStatus();
+            if (streamStatus.IsStreaming)
+                onStreamingStateChange(_obs, OutputState.Started);
+            else
+                onStreamingStateChange(_obs, OutputState.Stopped);
+
+            if (streamStatus.IsRecording)
+                onRecordingStateChange(_obs, OutputState.Started);
+            else
+                onRecordingStateChange(_obs, OutputState.Stopped);
+        }
+
+        private void onDisconnect(object sender, EventArgs e)
+        {
+            gbControls.Enabled = false;
+
+            txtServerIP.Enabled = true;
+            txtServerPassword.Enabled = true;
         }
 
         private void onSceneChange(OBSWebsocket sender, string newSceneName)
@@ -171,54 +219,28 @@ namespace TestClient
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            try
+            if(!_obs.IsConnected)
             {
-                _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
-            }
-            catch(AuthFailureException)
+                try
+                {
+                    _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
+                    btnConnect.Text = "Disconnect";
+                }
+                catch (AuthFailureException)
+                {
+                    MessageBox.Show("Authentication failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+                catch (ErrorResponseException ex)
+                {
+                    MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+            } else
             {
-                MessageBox.Show("Authentication failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
+                _obs.Disconnect();
+                btnConnect.Text = "Connect";
             }
-            catch(ErrorResponseException ex)
-            {
-                MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            btnConnect.Enabled = false;
-            txtServerIP.Enabled = false;
-            txtServerPassword.Enabled = false;
-            gbControls.Enabled = true;
-
-            var versionInfo = _obs.GetVersion();
-            tbPluginVersion.Text = versionInfo.PluginVersion;
-            tbOBSVersion.Text = versionInfo.OBSStudioVersion;
-
-            btnListScenes.PerformClick();
-            btnGetCurrentScene.PerformClick();
-
-            btnListSceneCol.PerformClick();
-            btnGetCurrentSceneCol.PerformClick();
-
-            btnListProfiles.PerformClick();
-            btnGetCurrentProfile.PerformClick();
-
-            btnListTransitions.PerformClick();
-            btnGetCurrentTransition.PerformClick();
-
-            btnGetTransitionDuration.PerformClick();
-
-            var streamStatus = _obs.GetStreamingStatus();
-            if (streamStatus.IsStreaming)
-                onStreamingStateChange(_obs, OutputState.Started);
-            else
-                onStreamingStateChange(_obs, OutputState.Stopped);
-
-            if (streamStatus.IsRecording)
-                onRecordingStateChange(_obs, OutputState.Started);
-            else
-                onRecordingStateChange(_obs, OutputState.Stopped);
         }
 
         private void btnListScenes_Click(object sender, EventArgs e)
