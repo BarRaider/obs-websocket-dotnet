@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>obs-websocket-dotnet</id>
-		<version>4.2.0-beta</version>
+		<version>4.2.0-beta2</version>
 
 		<authors>Stéphane Lepin</authors>
 		<owners>Palakis</owners>
