@@ -139,11 +139,51 @@ namespace OBSWebsocketDotNet
         /// Triggered when OBS exits
         /// </summary>
         public event EventHandler OBSExit;
+
+        /// <summary>
+        /// Triggered when connected successfully to an obs-websocket server
+        /// </summary>
+        public event EventHandler Connected;
+
+        /// <summary>
+        /// Triggered when disconnected from an obs-websocket server
+        /// </summary>
+        public event EventHandler Disconnected;
         #endregion
 
-        private delegate void RequestCallback(OBSWebsocket sender, JObject body);
+        /// <summary>
+        /// WebSocket request timeout, represented as a TimeSpan object
+        /// </summary>
+        public TimeSpan WSTimeout
+        {
+            get
+            {
+                if (WSConnection != null)
+                    return WSConnection.WaitTime;
+                else
+                    return TimeSpan.Zero;
+            }
+            set
+            {
+                if (WSConnection != null)
+                    WSConnection.WaitTime = value;
+            }
+        }
 
-        private WebSocket _ws;
+        /// <summary>
+        /// Current connection state
+        /// </summary>
+        public bool IsConnected
+        {
+            get { return (WSConnection.IsAlive || false); }
+        }
+
+        /// <summary>
+        /// Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
+        /// </summary>
+        public WebSocket WSConnection { get; private set; }
+
+        private delegate void RequestCallback(OBSWebsocket sender, JObject body);
         private Dictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
 
         /// <summary>
@@ -161,17 +201,25 @@ namespace OBSWebsocketDotNet
         /// <param name="password">Server password</param>
         public void Connect(string url, string password)
         {
-            if (_ws != null && _ws.IsAlive)
+            if (WSConnection != null && WSConnection.IsAlive)
                 Disconnect();
 
-            _ws = new WebSocket(url);
-            _ws.OnMessage += WebsocketMessageHandler;
-            _ws.Connect();
+            WSConnection = new WebSocket(url);
+            WSConnection.OnMessage += WebsocketMessageHandler;
+            WSConnection.OnClose += (s, e) =>
+            {
+                if (Disconnected != null)
+                    Disconnected(this, e);
+            };
+            WSConnection.Connect();
 
             OBSAuthInfo authInfo = GetAuthInfo();
 
             if (authInfo.AuthRequired)
                 Authenticate(password, authInfo);
+
+            if (Connected != null)
+                Connected(this, null);
         }
 
         /// <summary>
@@ -179,10 +227,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public void Disconnect()
         {
-            if (_ws != null)
-                _ws.Close();
+            if (WSConnection != null)
+                WSConnection.Close();
 
-            _ws = null;
+            WSConnection = null;
 
             foreach (var cb in _responseHandlers)
             {
@@ -262,7 +310,7 @@ namespace OBSWebsocketDotNet
 
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
-            _ws.Send(body.ToString());
+            WSConnection.Send(body.ToString());
             tcs.Task.Wait();
 
             // Throw an exception if the server returned an error.
