@@ -386,7 +386,7 @@ namespace OBSWebsocketDotNet
         /// <param name="body">full JSON message body</param>
         protected void ProcessEventType(string eventType, JObject body)
         {
-            OBSStreamStatus status;
+            StreamStatus status;
 
             switch (eventType)
             {
@@ -503,7 +503,7 @@ namespace OBSWebsocketDotNet
                 case "StreamStatus":
                     if (StreamStatus != null)
                     {
-                        status = new OBSStreamStatus(body);
+                        status = new StreamStatus(body);
                         StreamStatus(this, status);
                     }
                     break;

@@ -209,7 +209,7 @@ namespace TestClient
             });
         }
 
-        private void onStreamData(OBSWebsocket sender, OBSStreamStatus data)
+        private void onStreamData(OBSWebsocket sender, StreamStatus data)
         {
             BeginInvoke((MethodInvoker)delegate
             {

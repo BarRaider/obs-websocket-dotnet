@@ -61,7 +61,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("cx", width);
             data.Add("cy", height);
 
-            var item = new OBSSceneItem(data);
+            var item = new SceneItem(data);
 
             Assert.AreEqual(name, item.SourceName);
             Assert.AreEqual(type, item.InternalType);
@@ -130,7 +130,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("num-dropped-frames", droppedFrames);
             data.Add("fps", fps);
 
-            var streamStatus = new OBSStreamStatus(data);
+            var streamStatus = new StreamStatus(data);
 
             Assert.IsTrue(streamStatus.Streaming);
             Assert.IsTrue(streamStatus.Recording);
@@ -150,7 +150,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("streaming", true);
             data.Add("recording", true);
 
-            var outputState = new OBSOutputStatus(data);
+            var outputState = new OutputStatus(data);
 
             Assert.IsTrue(outputState.IsStreaming);
             Assert.IsTrue(outputState.IsRecording);
@@ -166,7 +166,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("name", transitionName);
             data.Add("duration", duration);
 
-            var transitionInfo = new OBSCurrentTransitionInfo(data);
+            var transitionInfo = new TransitionSettings(data);
 
             Assert.AreEqual(transitionName, transitionInfo.Name);
             Assert.AreEqual(duration, transitionInfo.Duration);
@@ -181,7 +181,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("volume", volumeLevel);
             data.Add("muted", true);
 
-            var volumeInfo = new OBSVolumeInfo(data);
+            var volumeInfo = new VolumeInfo(data);
 
             Assert.AreEqual(volumeLevel, volumeInfo.Volume);
             Assert.IsTrue(volumeInfo.Muted);

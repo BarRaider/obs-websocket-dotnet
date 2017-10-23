@@ -110,11 +110,11 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the current status of the streaming and recording outputs
         /// </summary>
-        /// <returns>An <see cref="OBSOutputStatus"/> object describing the current outputs states</returns>
-        public OBSOutputStatus GetStreamingStatus()
+        /// <returns>An <see cref="OutputStatus"/> object describing the current outputs states</returns>
+        public OutputStatus GetStreamingStatus()
         {
             JObject response = SendRequest("GetStreamingStatus");
-            var outputStatus = new OBSOutputStatus(response);
+            var outputStatus = new OutputStatus(response);
             return outputStatus;
         }
 
@@ -139,11 +139,11 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the current transition name and duration
         /// </summary>
-        /// <returns>An <see cref="OBSCurrentTransitionInfo"/> object with the current transition name and duration</returns>
-        public OBSCurrentTransitionInfo GetCurrentTransition()
+        /// <returns>An <see cref="TransitionSettings"/> object with the current transition name and duration</returns>
+        public TransitionSettings GetCurrentTransition()
         {
             JObject respBody = SendRequest("GetCurrentTransition");
-            return new OBSCurrentTransitionInfo(respBody);
+            return new TransitionSettings(respBody);
         }
 
         /// <summary>
@@ -188,14 +188,14 @@ namespace OBSWebsocketDotNet
         /// Get the volume of the specified source
         /// </summary>
         /// <param name="sourceName">Source name</param>
-        /// <returns>An <see cref="OBSVolumeInfo"/> object containing the volume and mute state of the specified source</returns>
-        public OBSVolumeInfo GetVolume(string sourceName)
+        /// <returns>An <see cref="VolumeInfo"/> object containing the volume and mute state of the specified source</returns>
+        public VolumeInfo GetVolume(string sourceName)
         {
             var requestFields = new JObject();
             requestFields.Add("source", sourceName);
 
             var response = SendRequest("GetVolume", requestFields);
-            return new OBSVolumeInfo(response);
+            return new VolumeInfo(response);
         }
 
         /// <summary>
@@ -582,7 +582,7 @@ namespace OBSWebsocketDotNet
         /// <param name="cropInfo">Crop coordinates</param>
         /// <param name="sceneName">(optional) parent scene name of the specified source</param>
         public void SetSceneItemCrop(string sceneItemName,
-            OBSItemCropInfo cropInfo, string sceneName = null)
+            SceneItemCropInfo cropInfo, string sceneName = null)
         {
             var requestFields = new JObject();
 
@@ -604,8 +604,8 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItem">Scene item object</param>
         /// <param name="cropInfo">Crop coordinates</param>
         /// <param name="scene">Parent scene of scene item</param>
-        public void SetSceneItemCrop(OBSSceneItem sceneItem,
-            OBSItemCropInfo cropInfo, OBSScene scene)
+        public void SetSceneItemCrop(SceneItem sceneItem,
+            SceneItemCropInfo cropInfo, OBSScene scene)
         {
             SetSceneItemCrop(sceneItem.SourceName, cropInfo, scene.Name);
         }
@@ -636,7 +636,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="service"></param>
         /// <param name="save"></param>
-        public void SetStreamingSettings(OBSStreamingService service, bool save)
+        public void SetStreamingSettings(StreamingService service, bool save)
         {
             var requestFields = new JObject();
             requestFields.Add("type", service.Type);
@@ -649,11 +649,11 @@ namespace OBSWebsocketDotNet
         /// Get current streaming settings
         /// </summary>
         /// <returns></returns>
-        public OBSStreamingService GetStreamSettings()
+        public StreamingService GetStreamSettings()
         {
             var response = SendRequest("GetStreamSettings");
 
-            var service = new OBSStreamingService();
+            var service = new StreamingService();
             service.Type = (string)response["type"];
             service.Settings = (JObject)response["settings"];
 
