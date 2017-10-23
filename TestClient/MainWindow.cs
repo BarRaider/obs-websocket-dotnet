@@ -48,47 +48,53 @@ namespace TestClient
 
         private void onConnect(object sender, EventArgs e)
         {
-            txtServerIP.Enabled = false;
-            txtServerPassword.Enabled = false;
+            BeginInvoke((MethodInvoker)(() => {
+                txtServerIP.Enabled = false;
+                txtServerPassword.Enabled = false;
+                btnConnect.Text = "Disconnect";
 
-            gbControls.Enabled = true;
+                gbControls.Enabled = true;
 
-            var versionInfo = _obs.GetVersion();
-            tbPluginVersion.Text = versionInfo.PluginVersion;
-            tbOBSVersion.Text = versionInfo.OBSStudioVersion;
+                var versionInfo = _obs.GetVersion();
+                tbPluginVersion.Text = versionInfo.PluginVersion;
+                tbOBSVersion.Text = versionInfo.OBSStudioVersion;
 
-            btnListScenes.PerformClick();
-            btnGetCurrentScene.PerformClick();
+                btnListScenes.PerformClick();
+                btnGetCurrentScene.PerformClick();
 
-            btnListSceneCol.PerformClick();
-            btnGetCurrentSceneCol.PerformClick();
+                btnListSceneCol.PerformClick();
+                btnGetCurrentSceneCol.PerformClick();
 
-            btnListProfiles.PerformClick();
-            btnGetCurrentProfile.PerformClick();
+                btnListProfiles.PerformClick();
+                btnGetCurrentProfile.PerformClick();
 
-            btnListTransitions.PerformClick();
-            btnGetCurrentTransition.PerformClick();
+                btnListTransitions.PerformClick();
+                btnGetCurrentTransition.PerformClick();
 
-            btnGetTransitionDuration.PerformClick();
+                btnGetTransitionDuration.PerformClick();
 
-            var streamStatus = _obs.GetStreamingStatus();
-            if (streamStatus.IsStreaming)
-                onStreamingStateChange(_obs, OutputState.Started);
-            else
-                onStreamingStateChange(_obs, OutputState.Stopped);
+                var streamStatus = _obs.GetStreamingStatus();
+                if (streamStatus.IsStreaming)
+                    onStreamingStateChange(_obs, OutputState.Started);
+                else
+                    onStreamingStateChange(_obs, OutputState.Stopped);
 
-            if (streamStatus.IsRecording)
-                onRecordingStateChange(_obs, OutputState.Started);
-            else
-                onRecordingStateChange(_obs, OutputState.Stopped);
+                if (streamStatus.IsRecording)
+                    onRecordingStateChange(_obs, OutputState.Started);
+                else
+                    onRecordingStateChange(_obs, OutputState.Stopped);
+            }));
         }
 
         private void onDisconnect(object sender, EventArgs e)
         {
-            gbControls.Enabled = false;
+            BeginInvoke((MethodInvoker)(() => {
+                gbControls.Enabled = false;
 
-            txtServerIP.Enabled = true;
-            txtServerPassword.Enabled = true;
+                txtServerIP.Enabled = true;
+                txtServerPassword.Enabled = true;
+                btnConnect.Text = "Connect";
+            }));
         }
 
         private void onSceneChange(OBSWebsocket sender, string newSceneName)
@@ -224,7 +230,6 @@ namespace TestClient
                 try
                 {
                     _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
-                    btnConnect.Text = "Disconnect";
                 }
                 catch (AuthFailureException)
                 {
@@ -239,7 +244,6 @@ namespace TestClient
             } else
             {
                 _obs.Disconnect();
-                btnConnect.Text = "Connect";
             }
         }
 
