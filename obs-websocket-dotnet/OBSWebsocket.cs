@@ -161,21 +161,26 @@ namespace OBSWebsocketDotNet
                 if (WSConnection != null)
                     return WSConnection.WaitTime;
                 else
-                    return TimeSpan.Zero;
+                    return _pWSTimeout;
             }
             set
             {
+                _pWSTimeout = value;
+
                 if (WSConnection != null)
-                    WSConnection.WaitTime = value;
+                    WSConnection.WaitTime = _pWSTimeout;
             }
         }
+        private TimeSpan _pWSTimeout;
 
         /// <summary>
         /// Current connection state
         /// </summary>
         public bool IsConnected
         {
-            get { return (WSConnection.IsAlive || false); }
+            get {
+                return (WSConnection != null ? WSConnection.IsAlive : false);
+            }
         }
 
         /// <summary>
@@ -205,6 +210,7 @@ namespace OBSWebsocketDotNet
                 Disconnect();
 
             WSConnection = new WebSocket(url);
+            WSConnection.WaitTime = _pWSTimeout;
             WSConnection.OnMessage += WebsocketMessageHandler;
             WSConnection.OnClose += (s, e) =>
             {
@@ -312,6 +318,9 @@ namespace OBSWebsocketDotNet
             // (received and notified by the websocket response handler)
             WSConnection.Send(body.ToString());
             tcs.Task.Wait();
+
+            if (tcs.Task.IsCanceled)
+                throw new ErrorResponseException("Request canceled");
 
             // Throw an exception if the server returned an error.
             // An error occurs if authentication fails or one if the request body is invalid.
