@@ -387,7 +387,7 @@ namespace OBSWebsocketDotNet
         {
             var requestFields = new JObject();
             requestFields.Add("rec-folder", recFolder);
-            SendRequest("SetRecordingFolder");
+            SendRequest("SetRecordingFolder", requestFields);
         }
 
         /// <summary>
