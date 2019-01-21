@@ -622,7 +622,11 @@ namespace OBSWebsocketDotNet
             CustomCSS = (string)props["css"];
             Width = (int)props["width"];
             Height = (int)props["height"];
-            FPS = (int)props["fps"];
+
+            JToken fpsToken;
+            props.TryGetValue("fps", out fpsToken);
+            FPS = (fpsToken != null) ? (int)fpsToken : 0;
+
             ShutdownWhenNotVisible = (bool)props["shutdown"];
             Visible = (bool)props["render"];
         }
