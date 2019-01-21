@@ -221,11 +221,14 @@ namespace OBSWebsocketDotNet
 
             OBSAuthInfo authInfo = GetAuthInfo();
 
-            if (authInfo.AuthRequired)
-                Authenticate(password, authInfo);
+            if (WSConnection.IsAlive)
+            {
+                if (authInfo.AuthRequired)
+                    Authenticate(password, authInfo);
 
-            if (Connected != null)
-                Connected(this, null);
+                if (Connected != null)
+                    Connected(this, null);
+            }
         }
 
         /// <summary>
