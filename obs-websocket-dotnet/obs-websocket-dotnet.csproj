@@ -54,7 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OBSWebsocket_Requests.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="OBSWebsocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
