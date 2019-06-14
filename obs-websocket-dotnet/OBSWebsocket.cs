@@ -219,6 +219,8 @@ namespace OBSWebsocketDotNet
             };
             WSConnection.Connect();
 
+            if (!WSConnection.IsAlive) return;
+
             OBSAuthInfo authInfo = GetAuthInfo();
 
             if (authInfo.AuthRequired)
