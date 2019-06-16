@@ -22,7 +22,10 @@
     SOFTWARE.
 */
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OBSWebsocketDotNet.Types;
+using System;
 using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
@@ -89,6 +92,85 @@ namespace OBSWebsocketDotNet
                 requestFields.Add("scene-name", sceneName);
 
             SendRequest("SetSourceRender", requestFields);
+        }
+
+        /// <summary>
+        /// Apply settings to a source filter
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="filterName"></param>
+        /// <param name="filterSettings"></param>
+        public void SetSourceFilterSettings(string sourceName, string filterName, JObject filterSettings)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterName", filterName);
+            requestFields.Add("filterSettings", filterSettings);
+
+
+            SendRequest("SetSourceFilterSettings", requestFields);
+        }
+
+        /// <summary>
+        /// Return a list of all filters on a source
+        /// </summary>
+        /// <param name="sourceName"></param>
+        public List<FilterSettings> GetSourceFilters(string sourceName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            
+            JObject response = SendRequest("GetSourceFilters", requestFields);
+
+            List<FilterSettings> filters = new List<FilterSettings>();
+            JsonConvert.PopulateObject(response["filters"].ToString(), filters);
+            
+
+
+           //TODO - loop filter types and create them
+
+            return filters;
+        }
+
+        /// <summary>
+        /// Remove the filter from a source
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="filterName"></param>
+        public bool RemoveFilterFromSource(string sourceName, string filterName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterName", filterName);
+            try
+            {
+                SendRequest("RemoveFilterFromSource", requestFields);
+                return true;
+            } catch (Exception e)
+            {
+                //TODO exception handling
+                Console.WriteLine(e.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Add a filter to a source
+        /// </summary>
+        /// <param name="sourceName">Name of the source for the filter</param>
+        /// <param name="filterName">Name of the filter</param>
+        /// <param name="filterType">Type of filter</param>
+        /// <param name="filterSettings">Filter settings object</param>
+        public void AddFilterToSource(string sourceName, string filterName, string filterType, JObject filterSettings)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterType", filterType);
+            requestFields.Add("filterName", filterName);
+            requestFields.Add("filterSettings", filterSettings);
+
+
+            var result = SendRequest("AddFilterToSource", requestFields);
         }
 
         /// <summary>
@@ -638,9 +720,11 @@ namespace OBSWebsocketDotNet
         /// <param name="save"></param>
         public void SetStreamingSettings(StreamingService service, bool save)
         {
+            var jsonSettings = JsonConvert.SerializeObject(service.Settings);
+            
             var requestFields = new JObject();
             requestFields.Add("type", service.Type);
-            requestFields.Add("settings", service.Settings);
+            requestFields.Add("settings", jsonSettings);
             requestFields.Add("save", save);
             SendRequest("SetStreamSettings", requestFields);
         }
@@ -653,9 +737,9 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest("GetStreamSettings");
 
+
             var service = new StreamingService();
-            service.Type = (string)response["type"];
-            service.Settings = (JObject)response["settings"];
+            JsonConvert.PopulateObject(response.ToString(), service);
 
             return service;
         }
@@ -693,17 +777,63 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
         public void SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
+            //override sourcename in props with the name passed
+            props.Source = sourceName;
             var request = new JObject();
-            request.Add("source", sourceName);
-            if (sceneName != null)
-                request.Add("scene-name", sourceName);
-
-            request.Merge(props.ToJSON(), new JsonMergeSettings()
-            {
-                MergeArrayHandling = MergeArrayHandling.Union
-            });
-
+            var jsonString = JsonConvert.SerializeObject(request);
+            JsonConvert.PopulateObject(jsonString, request);
             SendRequest("SetBrowserSourceProperties", request);
+        }
+
+
+        /// <summary>
+        /// Enable/disable the heartbeat event
+        /// </summary>
+        /// <param name="enable"></param>
+        public void SetHeartbeat(bool enable)
+        {
+            var request = new JObject();
+            request.Add("enable", enable);
+
+            SendRequest("SetHeartbeat", request);
+        }
+
+        /// <summary>
+        /// Get the settings from a source item
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="sourceType">Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.</param>
+        /// <returns>settings</returns>
+        public SourceSettings GetSourceSettings(string sourceName, string sourceType = null)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+            if (sourceType != null)
+                request.Add("sourceType", sourceType);
+
+            JObject result = SendRequest("GetSourceSettings", request);
+            SourceSettings settings = new SourceSettings(result);
+
+            return settings;
+        }
+
+
+        /// <summary>
+        /// Set settings of the specified source.
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="settings">Settings for the source</param>
+        /// <param name="sourceType">Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.</param>
+        public void SetSourceSettings(string sourceName, JObject settings, string sourceType = null)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+            request.Add("sourceSettings", settings);
+            if (sourceType != null)
+                request.Add("sourceType", sourceType);
+
+
+            SendRequest("SetSourceSettings", request);
         }
     }
 }
