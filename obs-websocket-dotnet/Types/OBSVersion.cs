@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -16,13 +12,25 @@ namespace OBSWebsocketDotNet.Types
         /// obs-websocket plugin version
         /// </summary>
         [JsonProperty(PropertyName = "obs-websocket-version")]
-        public readonly string PluginVersion;
+        public string PluginVersion { get; internal set; }
 
         /// <summary>
         /// OBS Studio version
         /// </summary>
         [JsonProperty(PropertyName = "obs-studio-version")]
-        public readonly string OBSStudioVersion;
+        public string OBSStudioVersion { get; internal set; }
+
+        /// <summary>
+        /// OBSRemote compatible API version.Fixed to 1.1 for retrocompatibility.
+        /// </summary>
+        [JsonProperty(PropertyName = "version")]
+        public double Version { internal set; get; }
+
+        /// <summary>
+        /// List of available request types, formatted as a comma-separated list string (e.g. : "Method1,Method2,Method3").
+        /// </summary>
+        [JsonProperty(PropertyName = "available-requests")]
+        public string AvailableRequests { get; internal set; }
 
         /// <summary>
         /// Builds the object from the JSON response body
@@ -32,5 +40,11 @@ namespace OBSWebsocketDotNet.Types
         {
             JsonConvert.PopulateObject(data.ToString(), this);
         }
+
+        /// <summary>
+        /// Empty constructor for jsonconvert
+        /// </summary>
+        public OBSVersion() { }
+
     }
 }

@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -21,7 +18,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Scene item list
         /// </summary>
-        [JsonProperty(PropertyName = "source")]
+        [JsonProperty(PropertyName = "sources")]
         public List<SceneItem> Items;
 
         /// <summary>
@@ -30,7 +27,17 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="data">JSON scene description as a <see cref="JObject" /></param>
         public OBSScene(JObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ObjectCreationHandling = ObjectCreationHandling.Auto;
+            settings.NullValueHandling = NullValueHandling.Include;
+            JsonConvert.PopulateObject(data.ToString(), this, settings);
+        }
+
+        /// <summary>
+        /// Constructor used for jsonconverter
+        /// </summary>
+        public OBSScene()
+        {
         }
     }
 }

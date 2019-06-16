@@ -36,6 +36,5 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "password")]
         public string Password { set; get; }
-
     }
 }

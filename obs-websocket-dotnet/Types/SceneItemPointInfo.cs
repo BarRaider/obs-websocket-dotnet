@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -11,7 +7,6 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class SceneItemPointInfo
     {
-
         /// <summary>
         /// The x-scale factor of the scene item
         /// </summary>
@@ -23,6 +18,5 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "y")]
         public double Y { get; set; }
-
     }
 }

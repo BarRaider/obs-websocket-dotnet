@@ -177,7 +177,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Audio mixer routing changed on a source
         /// </summary>
-        public event SourceAudioMixerChangedCallback SourceAudioMixersChanged;
+        public event SourceAudioMixersChangedCallback SourceAudioMixersChanged;
 
         /// <summary>
         /// The audio sync offset of a source has changed
@@ -322,6 +322,8 @@ namespace OBSWebsocketDotNet
                 tcs.TrySetCanceled();
             }
         }
+
+
 
         // This callback handles incoming JSON messages and determines if it's
         // a request response or an event ("Update" in obs-websocket terminology)
@@ -635,7 +637,7 @@ namespace OBSWebsocketDotNet
                     break;
                 case "SceneItemTransformChanged":
                     if (SceneItemTransformChanged != null)
-                        SceneItemTransformChanged(this, new SceneItemTransform((JObject)body["transform"])); //requires custom object
+                        SceneItemTransformChanged(this, new SceneItemTransformInfo(body)); //requires custom object
                     break;
                 case "SourceAudioMixersChanged":
                     if (SourceAudioMixersChanged != null)
@@ -682,9 +684,10 @@ namespace OBSWebsocketDotNet
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
                 default:
-                    Console.WriteLine("S-----------" + eventType + "-------------");
+                    var header = "-----------" + eventType + "-------------";
+                    Console.WriteLine(header);
                     Console.WriteLine(body);
-                    Console.WriteLine("E------------------------");
+                    Console.WriteLine("".PadLeft(header.Length,'-'));
                     break;
             }
         }

@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -12,7 +8,6 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class BrowserSourceProperties
     {
-
         /// <summary>
         /// Source name for the browser properties
         /// </summary>

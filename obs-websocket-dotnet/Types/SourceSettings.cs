@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -18,13 +14,11 @@ namespace OBSWebsocketDotNet.Types
         [JsonProperty(PropertyName = "sourceName")]
         public string sourceName { set; get; }
 
-
         /// <summary>
         /// Kind of source
         /// </summary>
         [JsonProperty(PropertyName = "sourceKind")]
         public string SourceKind { set; get; }
-
 
         /// <summary>
         /// Type of the specified source. Useful for type-checking if you expect a specific settings schema.
@@ -37,7 +31,6 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "sourceSettings")]
         public JObject sourceSettings { set; get; }
-
 
         /// <summary>
         /// Builds the object from the JSON data

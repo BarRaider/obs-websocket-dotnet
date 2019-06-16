@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OBSWebsocketDotNet.Types
+﻿namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
     /// Describes the state of an output (streaming or recording)

@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -105,5 +102,11 @@ namespace OBSWebsocketDotNet.Types
             JsonConvert.PopulateObject(data.ToString(), this);
         }
 
+        /// <summary>
+        /// Empty constructor for JSON deserialization
+        /// </summary>
+        public SceneItem()
+        {
+        }
     }
 }

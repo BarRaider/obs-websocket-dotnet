@@ -65,12 +65,16 @@
     <Compile Include="Types\CommonRTMPStreamingService.cs" />
     <Compile Include="Types\CustomRTMPStreamingService.cs" />
     <Compile Include="Types\FilterReorderItem.cs" />
+    <Compile Include="Types\GetSceneListInfo.cs" />
+    <Compile Include="Types\GetTransitionListInfo.cs" />
     <Compile Include="Types\Heartbeat.cs" />
+    <Compile Include="Types\FilterMovementType.cs" />
     <Compile Include="Types\OBSScene.cs" />
     <Compile Include="Types\OBSStats.cs" />
     <Compile Include="Types\FilterSettings.cs" />
     <Compile Include="Types\OBSAuthInfo.cs" />
     <Compile Include="Types\OBSVersion.cs" />
+    <Compile Include="Types\OBSVideoInfo.cs" />
     <Compile Include="Types\OutputState.cs" />
     <Compile Include="Types\SceneItem.cs" />
     <Compile Include="Types\SceneItemBoundsInfo.cs" />
@@ -78,11 +82,19 @@
     <Compile Include="Types\SceneItemCropInfo.cs" />
     <Compile Include="Types\SceneItemPointInfo.cs" />
     <Compile Include="Types\SceneItemPositionInfo.cs" />
+    <Compile Include="Types\SceneItemStub.cs" />
     <Compile Include="Types\SceneItemTransform.cs" />
+    <Compile Include="Types\SceneItemTransformInfo.cs" />
+    <Compile Include="Types\SourceScreenshotResponse.cs" />
+    <Compile Include="Types\SourceTypeCapabilities.cs" />
+    <Compile Include="Types\SourceInfo.cs" />
     <Compile Include="Types\SourceSettings.cs" />
+    <Compile Include="Types\SourceType.cs" />
     <Compile Include="Types\StreamingService.cs" />
     <Compile Include="Types\StreamingServiceSettings.cs" />
     <Compile Include="Types\StreamStatus.cs" />
+    <Compile Include="Types\TextGDIPlusFont.cs" />
+    <Compile Include="Types\TextGDIPlusProperties.cs" />
     <Compile Include="Types\TransitionSettings.cs" />
     <Compile Include="Types\VolumeInfo.cs" />
   </ItemGroup>

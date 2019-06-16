@@ -119,15 +119,15 @@ namespace OBSWebsocketDotNet
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="transform">Transform data</param>
-    public delegate void SceneItemTransformCallback(OBSWebsocket sender, SceneItemTransform transform);
+    public delegate void SceneItemTransformCallback(OBSWebsocket sender, SceneItemTransformInfo transform);
 
 
     /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceAudioMixerChanged"/>
+    /// Callback by <see cref="OBSWebsocket.SourceAudioMixersChanged"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="mixerInfo">Mixer information that was updated</param>
-    public delegate void SourceAudioMixerChangedCallback(OBSWebsocket sender, AudioMixersChangedInfo mixerInfo);
+    public delegate void SourceAudioMixersChangedCallback(OBSWebsocket sender, AudioMixersChangedInfo mixerInfo);
 
 
 
