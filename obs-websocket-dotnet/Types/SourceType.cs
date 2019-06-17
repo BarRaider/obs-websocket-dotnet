@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace OBSWebsocketDotNet.Types
 {
-    /// <sumoary>
+    /// <summary>
     /// OBS SOurce Type definitions
     /// </summary>
     public class SourceType
