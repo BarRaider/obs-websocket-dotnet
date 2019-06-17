@@ -70,23 +70,5 @@ namespace OBSWebsocketDotNet.Types
         {
             JsonConvert.PopulateObject(props.ToString(), this);
         }
-
-        /// <summary>
-        /// Convert the object back to JSON
-        /// </summary>
-        /// <returns></returns>
-        public JObject ToJSONOLD()
-        {
-            var obj = new JObject();
-            obj.Add("url", URL);
-            obj.Add("is_local_file", IsLocalFile);
-            obj.Add("css", CustomCSS);
-            obj.Add("width", Width);
-            obj.Add("height", Height);
-            obj.Add("fps", FPS);
-            obj.Add("shutdown", ShutdownWhenNotVisible);
-            obj.Add("render", Visible);
-            return obj;
-        }
     }
 }

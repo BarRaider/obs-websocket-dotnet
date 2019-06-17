@@ -157,8 +157,6 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event HeartBeatCallback Heartbeat;
 
-
-
         /// <summary>
         /// A scene item is deselected
         /// </summary>
@@ -637,11 +635,11 @@ namespace OBSWebsocketDotNet
                     break;
                 case "SceneItemTransformChanged":
                     if (SceneItemTransformChanged != null)
-                        SceneItemTransformChanged(this, new SceneItemTransformInfo(body)); //requires custom object
+                        SceneItemTransformChanged(this, new SceneItemTransformInfo(body));
                     break;
                 case "SourceAudioMixersChanged":
                     if (SourceAudioMixersChanged != null)
-                        SourceAudioMixersChanged(this, new AudioMixersChangedInfo(body)); //requires custom object
+                        SourceAudioMixersChanged(this, new AudioMixersChangedInfo(body));
                     break;
                 case "SourceAudioSyncOffsetChanged":
                     if (SourceAudioSyncOffsetChanged != null)
@@ -683,12 +681,14 @@ namespace OBSWebsocketDotNet
                     if (SourceFiltersReordered != null)
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
+                /*
                 default:
                     var header = "-----------" + eventType + "-------------";
                     Console.WriteLine(header);
                     Console.WriteLine(body);
                     Console.WriteLine("".PadLeft(header.Length,'-'));
                     break;
+                 */
             }
         }
 

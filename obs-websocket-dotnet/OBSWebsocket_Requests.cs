@@ -139,17 +139,8 @@ namespace OBSWebsocketDotNet
         /// <returns>A <see cref="List{OBSScene}" /> of <see cref="OBSScene"/> objects describing each scene</returns>
         public List<OBSScene> ListScenes()
         {
-            JObject response = SendRequest("GetSceneList");
-            JArray items = (JArray)response["scenes"];
-
-            var scenes = new List<OBSScene>();
-            foreach (JObject sceneData in items)
-            {
-                OBSScene scene = new OBSScene(sceneData);
-                scenes.Add(scene);
-            }
-
-            return scenes;
+            var response = GetSceneList();
+            return response.Scenes;
         }
 
         /// <summary>

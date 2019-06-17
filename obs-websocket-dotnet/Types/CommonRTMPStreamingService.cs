@@ -34,18 +34,5 @@ namespace OBSWebsocketDotNet.Types
         {
             JsonConvert.PopulateObject(settings.ToString(), this);
         }
-
-        /// <summary>
-        /// Convert to JSON object
-        /// </summary>
-        /// <returns></returns>
-        public JObject ToJSONOLD()
-        {
-            var obj = new JObject();
-            obj.Add("service", ServiceName);
-            obj.Add("server", ServerUrl);
-            obj.Add("key", StreamKey);
-            return obj;
-        }
     }
 }
