@@ -42,7 +42,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Item source width, without scaling and transforms applied
         /// </summary>
-        [JsonProperty(PropertyName = "soruce_cx")]
+        [JsonProperty(PropertyName = "source_cx")]
         public int SourceWidth;
 
         /// <summary>
