@@ -12,55 +12,55 @@ namespace OBSWebsocketDotNet.Types
         /// True if streaming is started and running, false otherwise
         /// </summary>
         [JsonProperty(PropertyName = "streaming")]
-        public readonly bool Streaming;
+        public bool Streaming { internal set; get; }
 
         /// <summary>
         /// True if recording is started and running, false otherwise
         /// </summary>
         [JsonProperty(PropertyName = "recording")]
-        public readonly bool Recording;
+        public bool Recording { internal set; get; }
 
         /// <summary>
         /// Stream bitrate in bytes per second
         /// </summary>
         [JsonProperty(PropertyName = "bytes-per-sec")]
-        public readonly int BytesPerSec;
+        public int BytesPerSec { internal set; get; }
 
         /// <summary>
         /// Stream bitrate in kilobits per second
         /// </summary>
         [JsonProperty(PropertyName = "kbits-per-sec")]
-        public readonly int KbitsPerSec;
+        public int KbitsPerSec { internal set; get; }
 
         /// <summary>
         /// RTMP output strain
         /// </summary>
         [JsonProperty(PropertyName = "strain")]
-        public readonly float Strain;
+        public float Strain { internal set; get; }
 
         /// <summary>
         /// Total time since streaming start
         /// </summary>
         [JsonProperty(PropertyName = "total-stream-time")]
-        public readonly int TotalStreamTime;
+        public int TotalStreamTime { internal set; get; }
 
         /// <summary>
         /// Number of frames sent since streaming start
         /// </summary>
         [JsonProperty(PropertyName = "num-total-frames")]
-        public readonly int TotalFrames;
+        public int TotalFrames { internal set; get; }
 
         /// <summary>
         /// Overall number of frames dropped since streaming start
         /// </summary>
         [JsonProperty(PropertyName = "num-dropped-frames")]
-        public readonly int DroppedFrames;
+        public int DroppedFrames { internal set; get; }
 
         /// <summary>
         /// Current framerate in Frames Per Second
         /// </summary>
         [JsonProperty(PropertyName = "fps")]
-        public readonly float FPS;
+        public float FPS { internal set; get; }
 
         /// <summary>
         /// Builds the object from the JSON event body

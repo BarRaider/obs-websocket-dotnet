@@ -532,12 +532,14 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Option scene name</param>
         public void SetSceneItemProperties(SceneItemProperties props, string sceneName = null)
         {
-            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props));
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
 
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
 
-            SendRequest("SetSceneItemTransform", requestFields);
+            SendRequest("SetSceneItemProperties", requestFields);
         }
 
         /// <summary>

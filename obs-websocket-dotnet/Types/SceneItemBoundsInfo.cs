@@ -11,7 +11,7 @@ namespace OBSWebsocketDotNet.Types
         /// Alignment of the bounding box
         /// </summary>
         [JsonProperty(PropertyName = "alignment")]
-        public int Alingnment { set; get; }
+        public int Alignnment { set; get; }
 
         /// <summary>
         /// Type of bounding box

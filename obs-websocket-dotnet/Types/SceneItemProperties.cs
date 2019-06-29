@@ -55,6 +55,12 @@ namespace OBSWebsocketDotNet.Types
         public string ItemName { set; get; }
 
         /// <summary>
+        /// Scene item name, <i>populated from GetSceneItemProperites only</i>
+        /// </summary>
+        [JsonProperty(PropertyName = "item")]
+        public string Item { set; get; }
+
+        /// <summary>
         /// Scene item height (base source height multiplied by the vertical scaling factor)
         /// </summary>
         [JsonProperty(PropertyName = "height")]

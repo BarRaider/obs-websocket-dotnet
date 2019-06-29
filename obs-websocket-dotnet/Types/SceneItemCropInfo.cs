@@ -5,7 +5,7 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// Crop coordinates for a scene item
     /// </summary>
-    public struct SceneItemCropInfo
+    public class SceneItemCropInfo
     {
         /// <summary>
         /// Top crop (in pixels)
