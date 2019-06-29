@@ -83,7 +83,7 @@
     <Compile Include="Types\SceneItemPointInfo.cs" />
     <Compile Include="Types\SceneItemPositionInfo.cs" />
     <Compile Include="Types\SceneItemStub.cs" />
-    <Compile Include="Types\SceneItemTransform.cs" />
+    <Compile Include="Types\SceneItemProperties.cs" />
     <Compile Include="Types\SceneItemTransformInfo.cs" />
     <Compile Include="Types\SourceScreenshotResponse.cs" />
     <Compile Include="Types\SourceTypeCapabilities.cs" />
