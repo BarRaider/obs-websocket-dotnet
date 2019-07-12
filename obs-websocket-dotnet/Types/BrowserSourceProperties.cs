@@ -17,7 +17,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// URL to load in the embedded browser
         /// </summary>
-        [JsonProperty(PropertyName = "fps")]
+        [JsonProperty(PropertyName = "url")]
         public string URL;
 
         /// <summary>
