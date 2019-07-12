@@ -196,13 +196,13 @@ namespace OBSWebsocketDotNet
         public void SetSourceRender(string itemName, bool visible, string sceneName = null)
         {
             var requestFields = new JObject();
-            requestFields.Add("source", itemName);
-            requestFields.Add("render", visible);
+            requestFields.Add("item", itemName);
+            requestFields.Add("visible", visible);
 
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
 
-            SendRequest("SetSourceRender", requestFields);
+            SendRequest("SetSceneItemProperties", requestFields);
         }
 
         /// <summary>
