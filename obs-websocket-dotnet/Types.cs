@@ -323,6 +323,39 @@ namespace OBSWebsocketDotNet
         public readonly float FPS;
 
         /// <summary>
+        /// Current OBS CPU Usage
+        /// </summary>
+        public readonly double CPU;
+
+        /// <summary>
+        /// Current Bytes transmitted per second
+        /// </summary>
+        public readonly int BytesPerSecond;
+
+        /// <summary>
+        /// Current KBits transmitted per second
+        /// </summary>
+        public readonly int KiloBitsPerSecond;
+
+
+        /// <summary>
+        /// Total number of skipped frames
+        /// </summary>
+        public readonly int SkippedFrames;
+
+
+        /// <summary>
+        /// Total number of missed frames
+        /// </summary>
+        public readonly int RenderMissedFrames;
+
+        /// <summary>
+        /// Overall stream time
+        /// </summary>
+        public readonly string StreamTime;
+
+
+        /// <summary>
         /// Builds the object from the JSON event body
         /// </summary>
         /// <param name="data">JSON event body as a <see cref="JObject"/></param>
@@ -339,6 +372,15 @@ namespace OBSWebsocketDotNet
             TotalFrames = (int)data["num-total-frames"];
             DroppedFrames = (int)data["num-dropped-frames"];
             FPS = (float)data["fps"];
+
+
+
+            CPU = (double)data["cpu-usage"];
+            BytesPerSecond = (int)data["bytes-per-sec"];
+            KiloBitsPerSecond = (int)data["kbits-per-sec"];
+            SkippedFrames = (int)data["output-skipped-frames"];
+            RenderMissedFrames = (int)data["render-missed-frames"];
+            StreamTime = (string)data["stream-timecode"];
         }
     }
 
@@ -390,7 +432,14 @@ namespace OBSWebsocketDotNet
         public TransitionSettings(JObject data)
         {
             Name = (string)data["name"];
-            Duration = (int)data["duration"];
+            if (data["duration"] != null)
+            {
+                Duration = (int)data["duration"];
+            }
+            else
+            {
+                Duration = 0;
+            }
         }
     }
 
