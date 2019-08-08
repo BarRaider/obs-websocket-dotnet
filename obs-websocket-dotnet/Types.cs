@@ -354,6 +354,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly string StreamTime;
 
+        /// <summary>
+        /// Is replay buffer active
+        /// </summary>
+        public readonly bool ReplayBufferActive;
+
 
         /// <summary>
         /// Builds the object from the JSON event body
@@ -363,6 +368,7 @@ namespace OBSWebsocketDotNet
         {
             Streaming = (bool)data["streaming"];
             Recording = (bool)data["recording"];
+            ReplayBufferActive = false;
 
             BytesPerSec = (int)data["bytes-per-sec"];
             KbitsPerSec = (int)data["kbits-per-sec"];
@@ -373,14 +379,17 @@ namespace OBSWebsocketDotNet
             DroppedFrames = (int)data["num-dropped-frames"];
             FPS = (float)data["fps"];
 
-
-
             CPU = (double)data["cpu-usage"];
             BytesPerSecond = (int)data["bytes-per-sec"];
             KiloBitsPerSecond = (int)data["kbits-per-sec"];
             SkippedFrames = (int)data["output-skipped-frames"];
             RenderMissedFrames = (int)data["render-missed-frames"];
             StreamTime = (string)data["stream-timecode"];
+
+            if (data["replay-buffer-active"] != null)
+            {
+                ReplayBufferActive = (bool)data["replay-buffer-active"];
+            }
         }
     }
 
@@ -626,6 +635,11 @@ namespace OBSWebsocketDotNet
         public string URL;
 
         /// <summary>
+        /// File to load in embedded browser 
+        /// </summary>
+        public string LocalFile;
+
+        /// <summary>
         /// true if the URL points to a local file, false otherwise.
         /// </summary>
         public bool IsLocalFile;
@@ -651,6 +665,16 @@ namespace OBSWebsocketDotNet
         public int FPS;
 
         /// <summary>
+        /// Should we restart the video when visible
+        /// </summary>
+        public bool RestartWhenActive;
+
+        /// <summary>
+        /// Should set custom FPS
+        /// </summary>
+        public bool CustomFPS;
+
+        /// <summary>
         /// true if source should be disabled (inactive) when not visible, false otherwise
         /// </summary>
         public bool ShutdownWhenNotVisible;
@@ -667,13 +691,61 @@ namespace OBSWebsocketDotNet
         public BrowserSourceProperties(JObject props)
         {
             URL = (string)props["url"];
-            IsLocalFile = (bool)props["is_local_file"];
+            LocalFile = (string)props["local_file"];
+            IsLocalFile = false;
             CustomCSS = (string)props["css"];
-            Width = (int)props["width"];
-            Height = (int)props["height"];
-            FPS = (int)props["fps"];
-            ShutdownWhenNotVisible = (bool)props["shutdown"];
-            Visible = (bool)props["render"];
+            ShutdownWhenNotVisible = false;
+            Visible = false;
+            RestartWhenActive = true;
+            CustomFPS = false;
+            Width = 0;
+            Height = 0;
+            FPS = 0;
+
+            if (props["is_local_file"] != null)
+            {
+                IsLocalFile = (bool)props["is_local_file"];
+            }
+            
+            if (props["width"] != null)
+            {
+                Width = (int)props["width"];
+            }
+
+            if (props["height"] != null)
+            {
+                Height = (int)props["height"];
+            }
+
+            if (props["fps"] != null)
+            {
+                FPS = (int)props["fps"];
+            }
+
+            if (props["shutdown"] != null)
+            {
+                ShutdownWhenNotVisible = (bool)props["shutdown"];
+            }
+
+            if (props["render"] != null)
+            {
+                Visible = (bool)props["render"];
+            }
+
+            if (props["render"] != null)
+            {
+                Visible = (bool)props["render"];
+            }
+
+            if (props["restart_when_active"] != null)
+            {
+                RestartWhenActive = (bool)props["restart_when_active"];
+            }
+
+            if (props["fps_custom"] != null)
+            {
+                CustomFPS = (bool)props["fps_custom"];
+            }
         }
 
         /// <summary>
@@ -691,6 +763,10 @@ namespace OBSWebsocketDotNet
             obj.Add("fps", FPS);
             obj.Add("shutdown", ShutdownWhenNotVisible);
             obj.Add("render", Visible);
+            obj.Add("visible", Visible);
+            obj.Add("local_file", LocalFile);
+            obj.Add("restart_when_active", RestartWhenActive);
+            obj.Add("fps_custom", CustomFPS);
             return obj;
         }
     }

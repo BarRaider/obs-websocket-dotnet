@@ -705,5 +705,34 @@ namespace OBSWebsocketDotNet
 
             SendRequest("SetBrowserSourceProperties", request);
         }
+
+        /// <summary>
+        /// Gets settings for a media source
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <returns></returns>
+        public MediaSourceSettings GetMediaSourceSettings(string sourceName)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+            request.Add("sourceType", "ffmpeg_source");
+
+            var response = SendRequest("GetSourceSettings", request);
+            return response.ToObject<MediaSourceSettings>();
+        }
+
+        /// <summary>
+        /// Sets settings of a media source
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="sourceSettings"></param>
+        public void SetMediaSourceSettings(MediaSourceSettings sourceSettings)
+        {
+            if (sourceSettings.SourceType != "ffmpeg_source")
+            {
+                throw new System.Exception("Invalid SourceType");
+            }
+            SendRequest("SetSourceSettings", JObject.FromObject(sourceSettings));
+        }
     }
 }
