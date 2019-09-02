@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -17,6 +18,7 @@ namespace OBSWebsocketDotNet.Types
         /// Type of bounding box
         /// </summary>
         [JsonProperty(PropertyName = "type")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public SceneItemBoundsType Type { set; get; }
 
         /// <summary>
