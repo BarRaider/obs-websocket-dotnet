@@ -27,6 +27,12 @@ namespace OBSWebsocketDotNet.Types
         public bool IsLocalFile;
 
         /// <summary>
+        /// File to load in embedded browser 
+        /// </summary>
+        [JsonProperty(PropertyName = "local_file")]
+        public string LocalFile;
+
+        /// <summary>
         /// Additional CSS to apply to the page
         /// </summary>
         [JsonProperty(PropertyName = "css")]
@@ -51,10 +57,22 @@ namespace OBSWebsocketDotNet.Types
         public int FPS;
 
         /// <summary>
+        /// true if custom FPS is set
+        /// </summary>
+        [JsonProperty(PropertyName = "fps_custom")]
+        public bool CustomFPS;
+
+        /// <summary>
         /// true if source should be disabled (inactive) when not visible, false otherwise
         /// </summary>
         [JsonProperty(PropertyName = "shutdown")]
         public bool ShutdownWhenNotVisible;
+
+        /// <summary>
+        /// true if source should restart the video when visible
+        /// </summary>
+        [JsonProperty(PropertyName = "restart_when_active")]
+        public bool RestartWhenActive;
 
         /// <summary>
         /// true if source should be visible, false otherwise

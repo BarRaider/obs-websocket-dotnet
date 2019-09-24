@@ -63,6 +63,50 @@ namespace OBSWebsocketDotNet.Types
         public float FPS { internal set; get; }
 
         /// <summary>
+        /// Current OBS CPU Usage
+        /// </summary>
+        [JsonProperty(PropertyName = "cpu-usage")]
+        public double CPU { internal set; get; }
+
+        /// <summary>
+        /// Current Bytes transmitted per second
+        /// </summary>
+        [JsonProperty(PropertyName = "bytes-per-sec")]
+        public int BytesPerSecond { internal set; get; }
+
+        /// <summary>
+        /// Current KBits transmitted per second
+        /// </summary>
+        [JsonProperty(PropertyName = "kbits-per-sec")]
+        public int KiloBitsPerSecond { internal set; get; }
+
+
+        /// <summary>
+        /// Total number of skipped frames
+        /// </summary>
+        [JsonProperty(PropertyName = "output-skipped-frames")]
+        public int SkippedFrames { internal set; get; }
+
+
+        /// <summary>
+        /// Total number of missed frames
+        /// </summary>
+        [JsonProperty(PropertyName = "render-missed-frames")]
+        public int RenderMissedFrames { internal set; get; }
+
+        /// <summary>
+        /// Overall stream time
+        /// </summary>
+        [JsonProperty(PropertyName = "stream-timecode")]
+        public string StreamTime { internal set; get; }
+
+        /// <summary>
+        /// Is replay buffer active
+        /// </summary>
+        [JsonProperty(PropertyName = "replay-buffer-active")]
+        public bool ReplayBufferActive { internal set; get; }
+
+        /// <summary>
         /// Builds the object from the JSON event body
         /// </summary>
         /// <param name="data">JSON event body as a <see cref="JObject"/></param>
