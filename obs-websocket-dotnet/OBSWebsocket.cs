@@ -29,6 +29,8 @@ using System.Text;
 using WebSocketSharp;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using OBSWebsocketDotNet.Types;
+using Newtonsoft.Json;
 
 namespace OBSWebsocketDotNet
 {
@@ -149,6 +151,77 @@ namespace OBSWebsocketDotNet
         /// Triggered when disconnected from an obs-websocket server
         /// </summary>
         public event EventHandler Disconnected;
+
+        /// <summary>
+        /// Emitted every 2 seconds after enabling it by calling SetHeartbeat
+        /// </summary>
+        public event HeartBeatCallback Heartbeat;
+
+        /// <summary>
+        /// A scene item is deselected
+        /// </summary>
+        public event SceneItemDeselectedCallback SceneItemDeselected;
+
+        /// <summary>
+        /// A scene item is selected
+        /// </summary>
+        public event SceneItemSelectedCallback SceneItemSelected;
+
+        /// <summary>
+        /// A scene item transform has changed
+        /// </summary>
+        public event SceneItemTransformCallback SceneItemTransformChanged;
+
+        /// <summary>
+        /// Audio mixer routing changed on a source
+        /// </summary>
+        public event SourceAudioMixersChangedCallback SourceAudioMixersChanged;
+
+        /// <summary>
+        /// The audio sync offset of a source has changed
+        /// </summary>
+        public event SourceAudioSyncOffsetCallback SourceAudioSyncOffsetChanged;
+
+        /// <summary>
+        /// A source has been created. A source can be an input, a scene or a transition.
+        /// </summary>
+        public event SourceCreatedCallback SourceCreated;
+
+        /// <summary>
+        /// A source has been destroyed/removed. A source can be an input, a scene or a transition.
+        /// </summary>
+        public event SourceDestroyedCallback SourceDestroyed;
+
+        /// <summary>
+        /// A filter was added to a source
+        /// </summary>
+        public event SourceFilterAddedCallback SourceFilterAdded;
+
+        /// <summary>
+        /// A filter was removed from a source
+        /// </summary>
+        public event SourceFilterRemovedCallback SourceFilterRemoved;
+
+        /// <summary>
+        /// Filters in a source have been reordered
+        /// </summary>
+        public event SourceFiltersReorderedCallback SourceFiltersReordered;
+
+        /// <summary>
+        /// A source has been muted or unmuted
+        /// </summary>
+        public event SourceMuteStateChangedCallback SourceMuteStateChanged;
+
+        /// <summary>
+        /// A source has been renamed
+        /// </summary>
+        public event SourceRenamedCallback SourceRenamed;
+
+        /// <summary>
+        /// The volume of a source has changed
+        /// </summary>
+        public event SourceVolumeChangedCallback SourceVolumeChanged;
+
         #endregion
 
         /// <summary>
@@ -219,6 +292,9 @@ namespace OBSWebsocketDotNet
             };
             WSConnection.Connect();
 
+            if (!WSConnection.IsAlive)
+                return;
+
             OBSAuthInfo authInfo = GetAuthInfo();
 
             if (authInfo.AuthRequired)
@@ -244,6 +320,8 @@ namespace OBSWebsocketDotNet
                 tcs.TrySetCanceled();
             }
         }
+
+
 
         // This callback handles incoming JSON messages and determines if it's
         // a request response or an event ("Update" in obs-websocket terminology)
@@ -542,6 +620,75 @@ namespace OBSWebsocketDotNet
                     if (OBSExit != null)
                         OBSExit(this, EventArgs.Empty);
                     break;
+
+                case "Heartbeat":
+                    if (Heartbeat != null)
+                        Heartbeat(this, new Heartbeat(body));
+                    break;
+                case "SceneItemDeselected":
+                    if (SceneItemDeselected != null)
+                        SceneItemDeselected(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
+                    break;
+                case "SceneItemSelected":
+                    if (SceneItemSelected != null)
+                        SceneItemSelected(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
+                    break;
+                case "SceneItemTransformChanged":
+                    if (SceneItemTransformChanged != null)
+                        SceneItemTransformChanged(this, new SceneItemTransformInfo(body));
+                    break;
+                case "SourceAudioMixersChanged":
+                    if (SourceAudioMixersChanged != null)
+                        SourceAudioMixersChanged(this, new AudioMixersChangedInfo(body));
+                    break;
+                case "SourceAudioSyncOffsetChanged":
+                    if (SourceAudioSyncOffsetChanged != null)
+                        SourceAudioSyncOffsetChanged(this, (string)body["sourceName"], (int)body["syncOffset"]);
+                    break;
+                case "SourceCreated":
+                    if (SourceCreated != null)
+                        SourceCreated(this, new SourceSettings(body));
+                    break;
+                case "SourceDestroyed":
+                    if (SourceDestroyed != null)
+                        SourceDestroyed(this, (string)body["sourceName"], (string)body["sourceType"], (string)body["sourceKind"]);
+                    break;
+                case "SourceRenamed":
+                    if (SourceRenamed != null)
+                        SourceRenamed(this, (string)body["newName"], (string)body["previousName"]);
+                    break;
+
+                case "SourceMuteStateChanged":
+                    if (SourceMuteStateChanged != null)
+                        SourceMuteStateChanged(this, (string)body["sourceName"], (bool)body["muted"]);
+                    break;
+                case "SourceVolumeChanged":
+                    if (SourceVolumeChanged != null)
+                        SourceVolumeChanged(this, (string)body["sourceName"], (float)body["volume"]);
+                    break;
+                case "SourceFilterAdded":
+                    if (SourceFilterAdded != null)
+                        SourceFilterAdded(this, (string)body["sourceName"], (string)body["filterName"], (string)body["filterType"], (JObject)body["filterSettings"]);
+                    break;
+                case "SourceFilterRemoved":
+                    if (SourceFilterRemoved != null)
+                        SourceFilterRemoved(this, (string)body["sourceName"], (string)body["filterName"]);
+                    break;
+                case "SourceFiltersReordered":
+                    List<FilterReorderItem> filters = new List<FilterReorderItem>();
+                    JsonConvert.PopulateObject(body["filters"].ToString(), filters);
+
+                    if (SourceFiltersReordered != null)
+                        SourceFiltersReordered(this, (string)body["sourceName"], filters);
+                    break;
+                /*
+                default:
+                    var header = "-----------" + eventType + "-------------";
+                    Console.WriteLine(header);
+                    Console.WriteLine(body);
+                    Console.WriteLine("".PadLeft(header.Length,'-'));
+                    break;
+                 */
             }
         }
 
