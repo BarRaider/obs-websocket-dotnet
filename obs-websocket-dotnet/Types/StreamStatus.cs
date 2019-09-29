@@ -67,20 +67,7 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "cpu-usage")]
         public double CPU { internal set; get; }
-
-        /// <summary>
-        /// Current Bytes transmitted per second
-        /// </summary>
-        [JsonProperty(PropertyName = "bytes-per-sec")]
-        public int BytesPerSecond { internal set; get; }
-
-        /// <summary>
-        /// Current KBits transmitted per second
-        /// </summary>
-        [JsonProperty(PropertyName = "kbits-per-sec")]
-        public int KiloBitsPerSecond { internal set; get; }
-
-
+           
         /// <summary>
         /// Total number of skipped frames
         /// </summary>
