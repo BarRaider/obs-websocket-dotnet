@@ -298,6 +298,22 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Modify the Source Filter's visibility
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="filterName"></param>
+        /// <param name="filterEnabled"></param>
+        public void SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterName", filterName);
+            requestFields.Add("filterEnabled", filterEnabled);
+
+            SendRequest("SetSourceFilterVisibility", requestFields);
+        }
+
+        /// <summary>
         /// Return a list of all filters on a source
         /// </summary>
         /// <param name="sourceName"></param>
