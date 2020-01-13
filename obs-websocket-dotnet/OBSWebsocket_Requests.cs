@@ -921,7 +921,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             JObject minReqs = new JObject();
             if (sceneItem.SourceName != null)
@@ -944,7 +944,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             JObject minReqs = new JObject();
 
@@ -967,7 +967,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             requestFields.Add("item", sceneItemName);
             requestFields.Add("top", cropInfo.Top);
@@ -1001,7 +1001,7 @@ namespace OBSWebsocketDotNet
             requestFields.Add("item", itemName);
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             SendRequest("ResetSceneItem", requestFields);
         }
