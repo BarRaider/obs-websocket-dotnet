@@ -299,7 +299,17 @@ namespace OBSWebsocketDotNet
             OBSAuthInfo authInfo = await GetAuthInfo().ConfigureAwait(false);
 
             if (authInfo.AuthRequired)
-                Authenticate(password, authInfo);
+            {
+                try
+                {
+                    await Authenticate(password, authInfo).ConfigureAwait(false);
+                }
+                catch (AuthFailureException)
+                {
+                    WSConnection.Close();
+                    throw;
+                }
+            }
 
             if (Connected != null)
                 Connected(this, null);
@@ -440,7 +450,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="password">User password</param>
         /// <param name="authInfo">Authentication data</param>
-        /// <returns>true if authentication succeeds, false otherwise</returns>
+        /// <returns>true if authentication succeeds</returns>
+        /// <exception cref="AuthFailureException">Thrown if authentication fails.</exception>
         public async Task<bool> Authenticate(string password, OBSAuthInfo authInfo)
         {
             string secret = HashEncode(password + authInfo.PasswordSalt);
