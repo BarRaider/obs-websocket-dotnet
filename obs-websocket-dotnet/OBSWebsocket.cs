@@ -251,7 +251,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public bool IsConnected
         {
-            get {
+            get
+            {
                 return (WSConnection != null ? WSConnection.IsAlive : false);
             }
         }
@@ -277,7 +278,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format</param>
         /// <param name="password">Server password</param>
-        public void Connect(string url, string password)
+        public async Task<bool> Connect(string url, string password)
         {
             if (WSConnection != null && WSConnection.IsAlive)
                 Disconnect();
@@ -290,18 +291,19 @@ namespace OBSWebsocketDotNet
                 if (Disconnected != null)
                     Disconnected(this, e);
             };
-            WSConnection.Connect();
+            await Task.Run(() => WSConnection.Connect()).ConfigureAwait(false);
 
             if (!WSConnection.IsAlive)
-                return;
+                return false;
 
-            OBSAuthInfo authInfo = GetAuthInfo();
+            OBSAuthInfo authInfo = await GetAuthInfo().ConfigureAwait(false);
 
             if (authInfo.AuthRequired)
                 Authenticate(password, authInfo);
 
             if (Connected != null)
                 Connected(this, null);
+            return true;
         }
 
         /// <summary>
@@ -350,7 +352,7 @@ namespace OBSWebsocketDotNet
                     _responseHandlers.Remove(msgID);
                 }
             }
-            else if(body["update-type"] != null)
+            else if (body["update-type"] != null)
             {
                 // Handle an event
                 string eventType = body["update-type"].ToString();
@@ -364,7 +366,7 @@ namespace OBSWebsocketDotNet
         /// <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
         /// <param name="additionalFields">additional JSON fields if required by the request type</param>
         /// <returns>The server's JSON response as a JObject</returns>
-        public JObject SendRequest(string requestType, JObject additionalFields = null)
+        public async Task<JObject> SendRequest(string requestType, JObject additionalFields = null)
         {
             string messageID;
 
@@ -391,19 +393,22 @@ namespace OBSWebsocketDotNet
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
             _responseHandlers.Add(messageID, tcs);
-
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
             WSConnection.Send(body.ToString());
-            tcs.Task.Wait();
-
-            if (tcs.Task.IsCanceled)
+            JObject result = null;
+            try
+            {
+                result = await tcs.Task.ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
                 throw new ErrorResponseException("Request canceled");
+            }
+
 
             // Throw an exception if the server returned an error.
             // An error occurs if authentication fails or one if the request body is invalid.
-            var result = tcs.Task.Result;
-
             if ((string)result["status"] == "error")
                 throw new ErrorResponseException((string)result["error"]);
 
@@ -414,9 +419,9 @@ namespace OBSWebsocketDotNet
         /// Requests version info regarding obs-websocket, the API and OBS Studio
         /// </summary>
         /// <returns>Version info in an <see cref="OBSVersion"/> object</returns>
-        public OBSVersion GetVersion()
+        public async Task<OBSVersion> GetVersion()
         {
-            JObject response = SendRequest("GetVersion");
+            JObject response = await SendRequest("GetVersion").ConfigureAwait(false);
             return new OBSVersion(response);
         }
 
@@ -424,9 +429,9 @@ namespace OBSWebsocketDotNet
         /// Request authentication data. You don't have to call this manually.
         /// </summary>
         /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
-        public OBSAuthInfo GetAuthInfo()
+        public async Task<OBSAuthInfo> GetAuthInfo()
         {
-            JObject response = SendRequest("GetAuthRequired");
+            JObject response = await SendRequest("GetAuthRequired").ConfigureAwait(false);
             return new OBSAuthInfo(response);
         }
 
@@ -436,7 +441,7 @@ namespace OBSWebsocketDotNet
         /// <param name="password">User password</param>
         /// <param name="authInfo">Authentication data</param>
         /// <returns>true if authentication succeeds, false otherwise</returns>
-        public bool Authenticate(string password, OBSAuthInfo authInfo)
+        public async Task<bool> Authenticate(string password, OBSAuthInfo authInfo)
         {
             string secret = HashEncode(password + authInfo.PasswordSalt);
             string authResponse = HashEncode(secret + authInfo.Challenge);
@@ -447,9 +452,9 @@ namespace OBSWebsocketDotNet
             try
             {
                 // Throws ErrorResponseException if auth fails
-                SendRequest("Authenticate", requestFields);
+                await SendRequest("Authenticate", requestFields);
             }
-            catch(ErrorResponseException)
+            catch (ErrorResponseException)
             {
                 throw new AuthFailureException();
             }
@@ -469,7 +474,7 @@ namespace OBSWebsocketDotNet
             switch (eventType)
             {
                 case "SwitchScenes":
-                    if(SceneChanged != null)
+                    if (SceneChanged != null)
                         SceneChanged(this, (string)body["scene-name"]);
                     break;
 
@@ -587,7 +592,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "PreviewSceneChanged":
-                    if(PreviewSceneChanged != null)
+                    if (PreviewSceneChanged != null)
                         PreviewSceneChanged(this, (string)body["scene-name"]);
                     break;
 
@@ -681,14 +686,14 @@ namespace OBSWebsocketDotNet
                     if (SourceFiltersReordered != null)
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
-                /*
-                default:
-                    var header = "-----------" + eventType + "-------------";
-                    Console.WriteLine(header);
-                    Console.WriteLine(body);
-                    Console.WriteLine("".PadLeft(header.Length,'-'));
-                    break;
-                 */
+                    /*
+                    default:
+                        var header = "-----------" + eventType + "-------------";
+                        Console.WriteLine(header);
+                        Console.WriteLine(body);
+                        Console.WriteLine("".PadLeft(header.Length,'-'));
+                        break;
+                     */
             }
         }
 
