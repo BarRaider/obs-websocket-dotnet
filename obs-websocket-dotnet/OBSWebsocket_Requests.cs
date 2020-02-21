@@ -1166,11 +1166,11 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
         public void SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
-            //override sourcename in props with the name passed
             props.Source = sourceName;
-            var request = new JObject();
-            var jsonString = JsonConvert.SerializeObject(request);
-            JsonConvert.PopulateObject(jsonString, request);
+            var request = JObject.FromObject(props);
+            if (sceneName != null)
+                request.Add("scene-name", sourceName);
+
             SendRequest("SetBrowserSourceProperties", request);
         }
 
