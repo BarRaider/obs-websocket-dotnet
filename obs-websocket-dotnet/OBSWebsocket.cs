@@ -246,6 +246,9 @@ namespace OBSWebsocketDotNet
         }
         private TimeSpan _pWSTimeout;
 
+        // Random should never be created inside a function
+        private static Random random = new Random();
+
         /// <summary>
         /// Current connection state
         /// </summary>
@@ -715,7 +718,6 @@ namespace OBSWebsocketDotNet
         protected string NewMessageID(int length = 16)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var random = new Random();
 
             string result = "";
             for (int i = 0; i < length; i++)

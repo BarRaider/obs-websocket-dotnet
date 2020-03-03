@@ -62,7 +62,7 @@ namespace OBSWebsocketDotNet
             if (saveToFilePath != null)
                 requestFields.Add("saveToFilePath", saveToFilePath);
             if (width > -1)
-            requestFields.Add("height", width);
+                requestFields.Add("width", width);
             if (height > -1)
                 requestFields.Add("height", height);
 
@@ -79,7 +79,7 @@ namespace OBSWebsocketDotNet
         /// <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
         public SourceScreenshotResponse TakeSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null)
         {
-            return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath);
+            return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath, -1, -1);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName"></param>
         public SourceScreenshotResponse TakeSourceScreenshot(string sourceName)
         {
-            return TakeSourceScreenshot(sourceName);
+            return TakeSourceScreenshot(sourceName, null, null);
         }
 
         /// <summary>
