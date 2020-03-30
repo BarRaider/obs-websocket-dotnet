@@ -31,6 +31,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using OBSWebsocketDotNet.Types;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace OBSWebsocketDotNet
 {
@@ -266,6 +267,7 @@ namespace OBSWebsocketDotNet
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
         private Dictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        private readonly object _responseHandlersLock = new object();
 
         /// <summary>
         /// Constructor
@@ -317,10 +319,13 @@ namespace OBSWebsocketDotNet
 
             WSConnection = null;
 
-            foreach (var cb in _responseHandlers)
+            lock (_responseHandlersLock)
             {
-                var tcs = cb.Value;
-                tcs.TrySetCanceled();
+                foreach (var cb in _responseHandlers)
+                {
+                    var tcs = cb.Value;
+                    tcs.TrySetCanceled();
+                }
             }
         }
 
@@ -341,7 +346,12 @@ namespace OBSWebsocketDotNet
                 // Find the response handler based on
                 // its associated message ID
                 string msgID = (string)body["message-id"];
-                var handler = _responseHandlers[msgID];
+
+                TaskCompletionSource<JObject> handler = null;
+                lock (_responseHandlersLock)
+                {
+                    handler = _responseHandlers[msgID];
+                }
 
                 if (handler != null)
                 {
@@ -350,7 +360,10 @@ namespace OBSWebsocketDotNet
 
                     // The message with the given ID has been processed,
                     // so its handler can be discarded
-                    _responseHandlers.Remove(msgID);
+                    lock (_responseHandlersLock)
+                    {
+                        _responseHandlers.Remove(msgID);
+                    }
                 }
             }
             else if(body["update-type"] != null)
@@ -393,7 +406,10 @@ namespace OBSWebsocketDotNet
 
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
-            _responseHandlers.Add(messageID, tcs);
+            lock (_responseHandlersLock)
+            {
+                _responseHandlers.Add(messageID, tcs);
+            }
 
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
