@@ -272,7 +272,7 @@ namespace OBSWebsocketDotNet
         {
             _responseHandlers = new Dictionary<string, TaskCompletionSource<JObject>>();
         }
-
+        private static string lastWebsocketMessage = null;
         /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
         /// </summary>
@@ -284,12 +284,20 @@ namespace OBSWebsocketDotNet
                 Disconnect();
 
             WSConnection = new WebSocket(url);
+            WSConnection.Log.Output = (d, s) =>
+            {
+                if (lastWebsocketMessage != d.Message)
+                {
+                    OBSLogger.Debug($"[WSS] {d.Message}");
+                    lastWebsocketMessage = d.Message;
+                }
+            };
             WSConnection.WaitTime = _pWSTimeout;
             WSConnection.OnMessage += WebsocketMessageHandler;
             WSConnection.OnClose += (s, e) =>
             {
-                if (Disconnected != null)
-                    Disconnected(this, e);
+                EventHandler disconnectHandler = Disconnected;
+                disconnectHandler?.Invoke(this, e);
             };
             await Task.Run(() => WSConnection.Connect()).ConfigureAwait(false);
 

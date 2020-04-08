@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IOBSLogger.cs" />
+    <Compile Include="OBSLogger.cs" />
     <Compile Include="OBSWebsocket_Requests.cs" />
     <Compile Include="OutputStatus.cs" />
     <Compile Include="Types.cs" />

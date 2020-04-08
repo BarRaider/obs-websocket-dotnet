@@ -330,7 +330,8 @@ namespace OBSWebsocketDotNet
             catch (Exception e)
             {
                 //TODO exception handling
-                Console.WriteLine(e.Message);
+                OBSLogger.Error(e.Message);
+                OBSLogger.Debug(e);
             }
             return false;
         }
