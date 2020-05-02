@@ -8,6 +8,7 @@
     <Authors>Stéphane Lepin</Authors>
     <Company />
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
