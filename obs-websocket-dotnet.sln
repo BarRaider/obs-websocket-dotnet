@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obs-websocket-dotnet", "obs-websocket-dotnet\obs-websocket-dotnet.csproj", "{C8668815-F21E-49C0-8F1A-58BC698153AF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\TestClient.csproj", "{2CB2A741-4BFB-4AE8-894B-D6F146E6670F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obs-websocket-dotnet-tests", "obs-websocket-dotnet-tests\obs-websocket-dotnet-tests.csproj", "{107BEC4B-3EC4-4CA0-A53F-7D3678DC7017}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obs-websocket-dotnet", "obs-websocket-dotnet\obs-websocket-dotnet.csproj", "{3AE43F18-0844-4A6C-9918-0689F1C50FAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,14 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8668815-F21E-49C0-8F1A-58BC698153AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CB2A741-4BFB-4AE8-894B-D6F146E6670F}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CB2A741-4BFB-4AE8-894B-D6F146E6670F}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
 		{2CB2A741-4BFB-4AE8-894B-D6F146E6670F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -41,6 +33,14 @@ Global
 		{107BEC4B-3EC4-4CA0-A53F-7D3678DC7017}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
 		{107BEC4B-3EC4-4CA0-A53F-7D3678DC7017}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{107BEC4B-3EC4-4CA0-A53F-7D3678DC7017}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE43F18-0844-4A6C-9918-0689F1C50FAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,7 +18,7 @@
 		<tags>obs studio websocket api</tags>
 
 		<dependencies>
-			<dependency id="Newtonsoft.Json" version="10.0.3" />
+			<dependency id="Newtonsoft.Json" version="12.0.3" />
 			<dependency id="WebSocketSharp" version="1.0.3-rc11" />
 		</dependencies>
 	</metadata>
