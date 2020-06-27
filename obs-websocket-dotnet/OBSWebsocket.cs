@@ -31,6 +31,8 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using OBSWebsocketDotNet.Types;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
+using System.Linq;
 
 namespace OBSWebsocketDotNet
 {
@@ -263,14 +265,14 @@ namespace OBSWebsocketDotNet
         public WebSocket WSConnection { get; private set; }
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
-        private Dictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        private ConcurrentDictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public OBSWebsocket()
         {
-            _responseHandlers = new Dictionary<string, TaskCompletionSource<JObject>>();
+            _responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
         }
         private static string lastWebsocketMessage = null;
         /// <summary>
@@ -333,10 +335,10 @@ namespace OBSWebsocketDotNet
                 WSConnection.Close();
 
             WSConnection = null;
-
-            foreach (var cb in _responseHandlers)
+            var unusedHandlers = _responseHandlers.Values.ToArray();
+            _responseHandlers.Clear();
+            foreach (var tcs in unusedHandlers)
             {
-                var tcs = cb.Value;
                 tcs.TrySetCanceled();
             }
         }
@@ -358,16 +360,15 @@ namespace OBSWebsocketDotNet
                 // Find the response handler based on
                 // its associated message ID
                 string msgID = (string)body["message-id"];
-                var handler = _responseHandlers[msgID];
 
-                if (handler != null)
+                if (_responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
                 {
                     // Set the response body as Result and notify the request sender
                     handler.SetResult(body);
-
-                    // The message with the given ID has been processed,
-                    // so its handler can be discarded
-                    _responseHandlers.Remove(msgID);
+                }
+                else
+                {
+                    OBSLogger.Debug($"No handler for message-id. body is {body.ToString(Formatting.Indented)}");
                 }
             }
             else if (body["update-type"] != null)
@@ -388,15 +389,10 @@ namespace OBSWebsocketDotNet
         {
             string messageID;
 
-            // Generate a random message id and make sure it is unique within the handlers dictionary
-            do { messageID = NewMessageID(); }
-            while (_responseHandlers.ContainsKey(messageID));
-
             // Build the bare-minimum body for a request
             var body = new JObject();
             body.Add("request-type", requestType);
-            body.Add("message-id", messageID);
-
+            
             // Add optional fields if provided
             if (additionalFields != null)
             {
@@ -410,7 +406,16 @@ namespace OBSWebsocketDotNet
 
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
-            _responseHandlers.Add(messageID, tcs);
+            do
+            {
+                // Generate a random message id and make sure it is unique within the handlers dictionary
+                messageID = NewMessageID();
+                if (_responseHandlers.TryAdd(messageID, tcs))
+                {
+                    body.Add("message-id", messageID);
+                    break;
+                }
+            } while (true);
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
             WSConnection.Send(body.ToString());
