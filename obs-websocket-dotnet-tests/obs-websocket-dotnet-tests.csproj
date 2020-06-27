@@ -70,6 +70,12 @@
       <Version>1.0.3-rc11</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\obs-websocket-dotnet\obs-websocket-dotnet.csproj">
+      <Project>{3ae43f18-0844-4a6c-9918-0689f1c50fab}</Project>
+      <Name>obs-websocket-dotnet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

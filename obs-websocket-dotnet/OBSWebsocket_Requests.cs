@@ -435,25 +435,30 @@ namespace OBSWebsocketDotNet
         /// Change the volume of the specified source
         /// </summary>
         /// <param name="sourceName">Name of the source which volume will be changed</param>
-        /// <param name="volume">Desired volume in linear scale (0.0 to 1.0)</param>
-        public async Task SetVolume(string sourceName, float volume)
+        /// <param name="volume">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
+        /// <param name="useDecibel">Interperet `volume` data as decibels instead of amplitude/mul.</param>
+        public async Task SetVolume(string sourceName, float volume, bool useDecibel = false)
         {
             var requestFields = new JObject();
             requestFields.Add("source", sourceName);
             requestFields.Add("volume", volume);
+            requestFields.Add("useDecibel", useDecibel);
 
             await SendRequest("SetVolume", requestFields).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Get the volume of the specified source
+        /// Volume is between `0.0` and `1.0` if using amplitude/mul (useDecibel is false), under `0.0` if using dB (useDecibel is true).
         /// </summary>
         /// <param name="sourceName">Source name</param>
-        /// <returns>An <see cref="VolumeInfo"/> object containing the volume and mute state of the specified source</returns>
-        public async Task<VolumeInfo> GetVolume(string sourceName)
+        /// <param name="useDecibel">Output volume in decibels of attenuation instead of amplitude/mul.</param>
+        /// <returns>An <see cref="VolumeInfo"/>Object containing the volume and mute state of the specified source.</returns>
+        public async Task<VolumeInfo> GetVolume(string sourceName, bool useDecibel = false)
         {
             var requestFields = new JObject();
             requestFields.Add("source", sourceName);
+            requestFields.Add("useDecibel", useDecibel);
 
             var response = await SendRequest("GetVolume", requestFields).ConfigureAwait(false);
             return new VolumeInfo(response);
