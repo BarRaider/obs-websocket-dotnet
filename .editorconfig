@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# AsyncFixer01: Unnecessary async/await usage
+dotnet_diagnostic.AsyncFixer01.severity = none
