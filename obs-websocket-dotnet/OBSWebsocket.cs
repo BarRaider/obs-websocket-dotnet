@@ -316,7 +316,7 @@ namespace OBSWebsocketDotNet
                 }
                 catch (AuthFailureException)
                 {
-                    WSConnection.Close();
+                    WSConnection.Close(CloseStatusCode.PolicyViolation, "Authentication failed, incorrect password.");
                     throw;
                 }
             }
@@ -480,7 +480,7 @@ namespace OBSWebsocketDotNet
             }
             catch (ErrorResponseException)
             {
-                throw new AuthFailureException();
+                throw new AuthFailureException("Authentication failed.");
             }
 
             return true;
