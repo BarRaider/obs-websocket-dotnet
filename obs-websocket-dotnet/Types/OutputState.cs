@@ -23,6 +23,16 @@
         /// <summary>
         /// The output is completely stopped
         /// </summary>
-        Stopped
+        Stopped,
+
+        /// <summary>
+        /// The output is paused. Only used for recording.
+        /// </summary>
+        Paused,
+
+        /// <summary>
+        /// The output is resumed from pause. Only used for recording.
+        /// </summary>
+        Resumed
     }
 }

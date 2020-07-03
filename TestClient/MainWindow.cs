@@ -184,19 +184,21 @@ namespace TestClient
                 case OutputState.Starting:
                     state = "Recording starting...";
                     break;
-
                 case OutputState.Started:
                     state = "Stop recording";
                     break;
-
                 case OutputState.Stopping:
                     state = "Recording stopping...";
                     break;
-
                 case OutputState.Stopped:
                     state = "Start recording";
                     break;
-
+                case OutputState.Paused:
+                    state = "Recording paused...";
+                    break;
+                case OutputState.Resumed:
+                    state = "Stop recording";
+                    break;
                 default:
                     state = "State unknown";
                     break;

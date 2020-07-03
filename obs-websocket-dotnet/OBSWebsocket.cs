@@ -607,6 +607,16 @@ namespace OBSWebsocketDotNet
                         RecordingStateChanged(this, OutputState.Stopped);
                     break;
 
+                case "RecordingPaused":
+                    if (RecordingStateChanged != null)
+                        RecordingStateChanged(this, OutputState.Paused);
+                    break;
+
+                case "RecordingResumed":
+                    if (RecordingStateChanged != null)
+                        RecordingStateChanged(this, OutputState.Resumed);
+                    break;
+
                 case "StreamStatus":
                     if (StreamStatus != null)
                     {
