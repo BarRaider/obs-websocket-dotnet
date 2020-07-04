@@ -79,17 +79,7 @@ namespace OBSWebsocketDotNet
         /// <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
         public SourceScreenshotResponse TakeSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null)
         {
-            return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath);
-        }
-
-        /// <summary>
-        /// At least embedPictureFormat or saveToFilePath must be specified.
-        /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
-        /// </summary>
-        /// <param name="sourceName"></param>
-        public SourceScreenshotResponse TakeSourceScreenshot(string sourceName)
-        {
-            return TakeSourceScreenshot(sourceName);
+            return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath, -1, -1);
         }
 
         /// <summary>
