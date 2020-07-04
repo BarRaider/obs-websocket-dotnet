@@ -1174,6 +1174,7 @@ namespace OBSWebsocketDotNet
         /// <param name="props">BrowserSource properties</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
 #pragma warning disable AsyncFixer01 // Unnecessary async/await usage
+        [Obsolete("Deprecated in obs-websocket 4.8.0, use SetSourceSettings")]
         public async Task SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
             props.Source = sourceName;
