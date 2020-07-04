@@ -226,7 +226,6 @@ namespace OBSWebsocketDotNet
 
         #endregion
 
-        private TimeSpan _pWSTimeout;
 
         /// <summary>
         /// Current connection state
@@ -254,7 +253,7 @@ namespace OBSWebsocketDotNet
         {
             _responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
         }
-        private static string lastWebsocketMessage = null;
+
         /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
         /// </summary>
@@ -273,8 +272,15 @@ namespace OBSWebsocketDotNet
             {
                 EventHandler disconnectHandler = Disconnected;
                 disconnectHandler?.Invoke(this, e);
+                CancelAllHandlers();
             };
-            
+            WSConnection.Error += (s, e) =>
+            {
+                OBSLogger.Error(e?.Exception);
+                if (!IsConnected)
+                    CancelAllHandlers(e?.Exception);
+            };
+
             bool connected = await WSConnection.OpenAsync().ConfigureAwait(false);
 
             OBSAuthInfo authInfo = await GetAuthInfo().ConfigureAwait(false);
@@ -306,11 +312,21 @@ namespace OBSWebsocketDotNet
                 WSConnection.Close();
 
             WSConnection = null;
+            CancelAllHandlers();
+        }
+
+        protected void CancelAllHandlers(Exception exception = null)
+        {
             var unusedHandlers = _responseHandlers.Values.ToArray();
             _responseHandlers.Clear();
             foreach (var tcs in unusedHandlers)
             {
-                tcs.TrySetCanceled();
+                if (exception != null)
+                {
+                    tcs.TrySetException(new ErrorResponseException(exception.Message, exception));
+                }
+                else
+                    tcs.TrySetCanceled();
             }
         }
 
@@ -382,6 +398,11 @@ namespace OBSWebsocketDotNet
                 body.Merge(additionalFields);
             }
 
+            if (!IsConnected)
+            {
+                throw new ErrorResponseException("Not connected to OBS");
+            }
+
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
             do
@@ -396,6 +417,7 @@ namespace OBSWebsocketDotNet
             } while (true);
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
+
             WSConnection.Send(body.ToString());
             JObject result = null;
             try

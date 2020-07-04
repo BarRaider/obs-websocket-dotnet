@@ -233,8 +233,10 @@ namespace OBSWebsocketDotNet
         /// Constructor
         /// </summary>
         /// <param name="message"></param>
-        public ErrorResponseException(string message) : base(message)
-        {
-        }
+        public ErrorResponseException(string message)
+            : base(message) { }
+
+        public ErrorResponseException(string message, Exception innerException)
+            : base(message, innerException) { }
     }
 }
