@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-using WebSocketSharp;
+using WebSocket4Net;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using OBSWebsocketDotNet.Types;
@@ -226,26 +226,6 @@ namespace OBSWebsocketDotNet
 
         #endregion
 
-        /// <summary>
-        /// WebSocket request timeout, represented as a TimeSpan object
-        /// </summary>
-        public TimeSpan WSTimeout
-        {
-            get
-            {
-                if (WSConnection != null)
-                    return WSConnection.WaitTime;
-                else
-                    return _pWSTimeout;
-            }
-            set
-            {
-                _pWSTimeout = value;
-
-                if (WSConnection != null)
-                    WSConnection.WaitTime = _pWSTimeout;
-            }
-        }
         private TimeSpan _pWSTimeout;
 
         /// <summary>
@@ -255,7 +235,7 @@ namespace OBSWebsocketDotNet
         {
             get
             {
-                return (WSConnection != null ? WSConnection.IsAlive : false);
+                return (WSConnection != null ? WSConnection.State == WebSocketState.Open : false);
             }
         }
 
@@ -282,29 +262,20 @@ namespace OBSWebsocketDotNet
         /// <param name="password">Server password</param>
         public async Task<bool> Connect(string url, string password)
         {
-            if (WSConnection != null && WSConnection.IsAlive)
+            if (WSConnection != null
+                && (WSConnection.State == WebSocketState.Open
+                    || WSConnection.State == WebSocketState.Connecting))
                 Disconnect();
 
             WSConnection = new WebSocket(url);
-            WSConnection.Log.Output = (d, s) =>
-            {
-                if (lastWebsocketMessage != d.Message)
-                {
-                    OBSLogger.Debug($"[WSS] {d.Message}");
-                    lastWebsocketMessage = d.Message;
-                }
-            };
-            WSConnection.WaitTime = _pWSTimeout;
-            WSConnection.OnMessage += WebsocketMessageHandler;
-            WSConnection.OnClose += (s, e) =>
+            WSConnection.MessageReceived += WebsocketMessageHandler;
+            WSConnection.Closed += (s, e) =>
             {
                 EventHandler disconnectHandler = Disconnected;
                 disconnectHandler?.Invoke(this, e);
             };
-            await Task.Run(() => WSConnection.Connect()).ConfigureAwait(false);
-
-            if (!WSConnection.IsAlive)
-                return false;
+            
+            bool connected = await WSConnection.OpenAsync().ConfigureAwait(false);
 
             OBSAuthInfo authInfo = await GetAuthInfo().ConfigureAwait(false);
 
@@ -316,7 +287,7 @@ namespace OBSWebsocketDotNet
                 }
                 catch (AuthFailureException)
                 {
-                    WSConnection.Close(CloseStatusCode.PolicyViolation, "Authentication failed, incorrect password.");
+                    WSConnection.Close(1008, "Authentication failed, incorrect password.");
                     throw;
                 }
             }
@@ -347,12 +318,19 @@ namespace OBSWebsocketDotNet
 
         // This callback handles incoming JSON messages and determines if it's
         // a request response or an event ("Update" in obs-websocket terminology)
-        private void WebsocketMessageHandler(object sender, MessageEventArgs e)
+        private void WebsocketMessageHandler(object sender, MessageReceivedEventArgs e)
         {
-            if (!e.IsText)
+            JObject body;
+            try
+            {
+                body = JObject.Parse(e.Message);
+            }
+            catch (Exception ex)
+            {
+                OBSLogger.Error($"Error parsing received message: {ex.Message}.");
+                OBSLogger.Debug($"Invalid message: {e.Message}");
                 return;
-
-            JObject body = JObject.Parse(e.Data);
+            }
 
             if (body["message-id"] != null)
             {
@@ -392,7 +370,7 @@ namespace OBSWebsocketDotNet
             // Build the bare-minimum body for a request
             var body = new JObject();
             body.Add("request-type", requestType);
-            
+
             // Add optional fields if provided
             if (additionalFields != null)
             {
