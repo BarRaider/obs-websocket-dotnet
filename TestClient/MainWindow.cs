@@ -422,7 +422,7 @@ namespace TestClient
             }
         }
 
-        private async void btnToggleOutput_Click(object sender, EventArgs e)
+        private async void btnStartOutput_Click(object sender, EventArgs e)
         {
             string outputName = tbOutput.Text;
             if (!string.IsNullOrEmpty(outputName))
@@ -447,6 +447,25 @@ namespace TestClient
             {
                 tbOutput.Text = e.Node.Text;
             }
+        }
+
+        private async void btnStopOutput_Click(object sender, EventArgs e)
+        {
+            string outputName = tbOutput.Text;
+            if (!string.IsNullOrEmpty(outputName))
+            {
+                try
+                {
+                    await _obs.StopOutput(outputName);
+                    MessageBox.Show($"Stopped {outputName}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error in StartOutput: {ex.Message}");
+                }
+            }
+            else
+                MessageBox.Show("An output name must be specified.");
         }
     }
 }

@@ -58,6 +58,12 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnStartOutput = new System.Windows.Forms.Button();
+            this.btnGetOutput = new System.Windows.Forms.Button();
+            this.btnListOutputs = new System.Windows.Forms.Button();
+            this.tvOutputs = new System.Windows.Forms.TreeView();
+            this.tbOutput = new System.Windows.Forms.TextBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.btnSetTransitionDuration = new System.Windows.Forms.Button();
             this.btnGetTransitionDuration = new System.Windows.Forms.Button();
@@ -105,14 +111,10 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.btnToggleOutput = new System.Windows.Forms.Button();
-            this.btnGetOutput = new System.Windows.Forms.Button();
-            this.btnListOutputs = new System.Windows.Forms.Button();
-            this.tvOutputs = new System.Windows.Forms.TreeView();
-            this.tbOutput = new System.Windows.Forms.TextBox();
+            this.btnStopOutput = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).BeginInit();
             this.groupBox6.SuspendLayout();
@@ -123,7 +125,6 @@ namespace TestClient
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -262,6 +263,73 @@ namespace TestClient
             this.gbControls.Size = new System.Drawing.Size(713, 515);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.btnStopOutput);
+            this.groupBox8.Controls.Add(this.btnStartOutput);
+            this.groupBox8.Controls.Add(this.btnGetOutput);
+            this.groupBox8.Controls.Add(this.btnListOutputs);
+            this.groupBox8.Controls.Add(this.tvOutputs);
+            this.groupBox8.Controls.Add(this.tbOutput);
+            this.groupBox8.Location = new System.Drawing.Point(374, 261);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(150, 243);
+            this.groupBox8.TabIndex = 6;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Outputs";
+            // 
+            // btnStartOutput
+            // 
+            this.btnStartOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartOutput.Location = new System.Drawing.Point(78, 155);
+            this.btnStartOutput.Name = "btnStartOutput";
+            this.btnStartOutput.Size = new System.Drawing.Size(66, 35);
+            this.btnStartOutput.TabIndex = 1;
+            this.btnStartOutput.Text = "Start Output";
+            this.btnStartOutput.UseVisualStyleBackColor = true;
+            this.btnStartOutput.Click += new System.EventHandler(this.btnStartOutput_Click);
+            // 
+            // btnGetOutput
+            // 
+            this.btnGetOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnGetOutput.Location = new System.Drawing.Point(10, 173);
+            this.btnGetOutput.Name = "btnGetOutput";
+            this.btnGetOutput.Size = new System.Drawing.Size(62, 38);
+            this.btnGetOutput.TabIndex = 2;
+            this.btnGetOutput.Text = "Get Output";
+            this.btnGetOutput.UseVisualStyleBackColor = true;
+            this.btnGetOutput.Click += new System.EventHandler(this.btnGetOutput_Click);
+            // 
+            // btnListOutputs
+            // 
+            this.btnListOutputs.Location = new System.Drawing.Point(7, 20);
+            this.btnListOutputs.Name = "btnListOutputs";
+            this.btnListOutputs.Size = new System.Drawing.Size(75, 23);
+            this.btnListOutputs.TabIndex = 5;
+            this.btnListOutputs.Text = "List Outputs";
+            this.btnListOutputs.UseVisualStyleBackColor = true;
+            this.btnListOutputs.Click += new System.EventHandler(this.btnListOutputs_Click);
+            // 
+            // tvOutputs
+            // 
+            this.tvOutputs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvOutputs.Location = new System.Drawing.Point(6, 49);
+            this.tvOutputs.Name = "tvOutputs";
+            this.tvOutputs.Size = new System.Drawing.Size(138, 74);
+            this.tvOutputs.TabIndex = 4;
+            this.tvOutputs.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvOutputs_NodeMouseClick);
+            // 
+            // tbOutput
+            // 
+            this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbOutput.Location = new System.Drawing.Point(6, 129);
+            this.tbOutput.Name = "tbOutput";
+            this.tbOutput.Size = new System.Drawing.Size(138, 20);
+            this.tbOutput.TabIndex = 0;
             // 
             // groupBox7
             // 
@@ -828,71 +896,16 @@ namespace TestClient
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // groupBox8
+            // btnStopOutput
             // 
-            this.groupBox8.Controls.Add(this.btnToggleOutput);
-            this.groupBox8.Controls.Add(this.btnGetOutput);
-            this.groupBox8.Controls.Add(this.btnListOutputs);
-            this.groupBox8.Controls.Add(this.tvOutputs);
-            this.groupBox8.Controls.Add(this.tbOutput);
-            this.groupBox8.Location = new System.Drawing.Point(374, 261);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(150, 243);
-            this.groupBox8.TabIndex = 6;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Outputs";
-            // 
-            // btnToggleOutput
-            // 
-            this.btnToggleOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnToggleOutput.Location = new System.Drawing.Point(78, 199);
-            this.btnToggleOutput.Name = "btnToggleOutput";
-            this.btnToggleOutput.Size = new System.Drawing.Size(66, 38);
-            this.btnToggleOutput.TabIndex = 1;
-            this.btnToggleOutput.Text = "Start Output";
-            this.btnToggleOutput.UseVisualStyleBackColor = true;
-            this.btnToggleOutput.Click += new System.EventHandler(this.btnToggleOutput_Click);
-            // 
-            // btnGetOutput
-            // 
-            this.btnGetOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnGetOutput.Location = new System.Drawing.Point(6, 199);
-            this.btnGetOutput.Name = "btnGetOutput";
-            this.btnGetOutput.Size = new System.Drawing.Size(62, 38);
-            this.btnGetOutput.TabIndex = 2;
-            this.btnGetOutput.Text = "Get Output";
-            this.btnGetOutput.UseVisualStyleBackColor = true;
-            this.btnGetOutput.Click += new System.EventHandler(this.btnGetOutput_Click);
-            // 
-            // btnListOutputs
-            // 
-            this.btnListOutputs.Location = new System.Drawing.Point(7, 20);
-            this.btnListOutputs.Name = "btnListOutputs";
-            this.btnListOutputs.Size = new System.Drawing.Size(75, 23);
-            this.btnListOutputs.TabIndex = 5;
-            this.btnListOutputs.Text = "List Outputs";
-            this.btnListOutputs.UseVisualStyleBackColor = true;
-            this.btnListOutputs.Click += new System.EventHandler(this.btnListOutputs_Click);
-            // 
-            // tvOutputs
-            // 
-            this.tvOutputs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvOutputs.Location = new System.Drawing.Point(6, 49);
-            this.tvOutputs.Name = "tvOutputs";
-            this.tvOutputs.Size = new System.Drawing.Size(138, 118);
-            this.tvOutputs.TabIndex = 4;
-            this.tvOutputs.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvOutputs_NodeMouseClick);
-            // 
-            // tbOutput
-            // 
-            this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbOutput.Location = new System.Drawing.Point(6, 173);
-            this.tbOutput.Name = "tbOutput";
-            this.tbOutput.Size = new System.Drawing.Size(138, 20);
-            this.tbOutput.TabIndex = 0;
+            this.btnStopOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStopOutput.Location = new System.Drawing.Point(78, 202);
+            this.btnStopOutput.Name = "btnStopOutput";
+            this.btnStopOutput.Size = new System.Drawing.Size(66, 35);
+            this.btnStopOutput.TabIndex = 6;
+            this.btnStopOutput.Text = "Stop Output";
+            this.btnStopOutput.UseVisualStyleBackColor = true;
+            this.btnStopOutput.Click += new System.EventHandler(this.btnStopOutput_Click);
             // 
             // MainWindow
             // 
@@ -910,6 +923,8 @@ namespace TestClient
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbControls.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).EndInit();
             this.groupBox6.ResumeLayout(false);
@@ -925,8 +940,6 @@ namespace TestClient
             this.groupBox3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -993,11 +1006,12 @@ namespace TestClient
         private System.Windows.Forms.Button btnGetTransitionDuration;
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
         private System.Windows.Forms.GroupBox groupBox8;
-        private System.Windows.Forms.Button btnToggleOutput;
+        private System.Windows.Forms.Button btnStartOutput;
         private System.Windows.Forms.Button btnGetOutput;
         private System.Windows.Forms.Button btnListOutputs;
         private System.Windows.Forms.TreeView tvOutputs;
         private System.Windows.Forms.TextBox tbOutput;
+        private System.Windows.Forms.Button btnStopOutput;
     }
 }
 
