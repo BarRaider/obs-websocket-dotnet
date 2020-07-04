@@ -390,5 +390,63 @@ namespace TestClient
         {
             await _obs.SetTransitionDuration((int)tbTransitionDuration.Value);
         }
+
+        private async void btnGetOutput_Click(object sender, EventArgs e)
+        {
+            string outputName = tbOutput.Text;
+            if (!string.IsNullOrEmpty(outputName))
+            {
+                try
+                {
+                    var output = await _obs.GetOutput(outputName);
+                    MessageBox.Show($"Output: {output.Name} is {(output.Active ? "active." : "inactive.")}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error in GetOutput: {ex.Message}");
+                }
+            }
+            else
+                MessageBox.Show("An output name must be specified.");
+        }
+
+        private async void btnListOutputs_Click(object sender, EventArgs e)
+        {
+            var outputs = await _obs.ListOutputs();
+
+            tvOutputs.Nodes.Clear();
+            foreach (var scene in outputs)
+            {
+                var node = new TreeNode(scene.Name);
+                tvOutputs.Nodes.Add(node);
+            }
+        }
+
+        private async void btnToggleOutput_Click(object sender, EventArgs e)
+        {
+            string outputName = tbOutput.Text;
+            if (!string.IsNullOrEmpty(outputName))
+            {
+                try
+                {
+                    await _obs.StartOutput(outputName);
+                    MessageBox.Show($"Started {outputName}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error in StartOutput: {ex.Message}");
+                }
+            }
+            else
+                MessageBox.Show("An output name must be specified.");
+        }
+
+        private void tvOutputs_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                tbOutput.Text = e.Node.Text;
+            }
+        }
     }
 }
