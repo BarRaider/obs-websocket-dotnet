@@ -32,7 +32,6 @@ using System.Threading.Tasks;
 using OBSWebsocketDotNet.Types;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using System.Linq;
 
 namespace OBSWebsocketDotNet
 {
@@ -238,51 +237,58 @@ namespace OBSWebsocketDotNet
             }
         }
 
+        public string ConnectionUrl { get; protected set; }
+
         /// <summary>
         /// Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
         /// </summary>
         public WebSocket WSConnection { get; private set; }
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
-        private ConcurrentDictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        protected ConcurrentDictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        protected TaskCompletionSource<bool> ConnectingTaskSource;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
         public OBSWebsocket()
         {
             _responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public OBSWebsocket(string url)
+            : this()
+        {
+            WSConnection = new WebSocket(url);
+            SetEvents(WSConnection);
+        }
+
+
+        /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
         /// </summary>
         /// <param name="url">Server URL in standard URL format</param>
         /// <param name="password">Server password</param>
-        public async Task<bool> Connect(string url, string password)
+        public async Task<bool> Connect(string password = null)
         {
             if (WSConnection != null
                 && (WSConnection.State == WebSocketState.Open
                     || WSConnection.State == WebSocketState.Connecting))
                 Disconnect();
 
-            WSConnection = new WebSocket(url);
-            WSConnection.MessageReceived += WebsocketMessageHandler;
-            WSConnection.Closed += (s, e) =>
+            TaskCompletionSource<bool> tcs = ConnectingTaskSource;
+            ConnectingTaskSource = null;
+            if (tcs != null)
             {
-                EventHandler disconnectHandler = Disconnected;
-                disconnectHandler?.Invoke(this, e);
-                CancelAllHandlers();
-            };
-            WSConnection.Error += (s, e) =>
-            {
-                OBSLogger.Error(e?.Exception);
-                if (!IsConnected)
-                    CancelAllHandlers(e?.Exception);
-            };
-
-            bool connected = await WSConnection.OpenAsync().ConfigureAwait(false);
-
+                tcs.TrySetCanceled();
+            }
+            tcs = new TaskCompletionSource<bool>();
+            ConnectingTaskSource = tcs;
+            WSConnection.Open();
+            bool connected = await tcs.Task.ConfigureAwait(false); // Will throw exception if error occurs
+            if (!connected)
+                return false;
+            ConnectingTaskSource = null;
             OBSAuthInfo authInfo = await GetAuthInfo().ConfigureAwait(false);
 
             if (authInfo.AuthRequired)
@@ -297,10 +303,79 @@ namespace OBSWebsocketDotNet
                     throw;
                 }
             }
-
             if (Connected != null)
                 Connected(this, null);
             return true;
+        }
+
+        public Task<bool> Connect(string url, string password)
+        {
+            if (string.IsNullOrEmpty(url))
+                throw new ArgumentNullException(nameof(url), "url cannot be null in Connect.");
+            if (ConnectionUrl != url)
+            {
+                Disconnect();
+                WebSocket connection = WSConnection;
+                WSConnection = null;
+                if (connection != null)
+                {
+                    RemoveEvents(connection);
+                    connection?.Dispose();
+                }
+                connection = new WebSocket(url);
+                WSConnection = connection;
+                SetEvents(connection);
+            }
+            return Connect(password);
+        }
+
+        protected void SetEvents(WebSocket connection)
+        {
+            connection.MessageReceived -= WebsocketMessageHandler;
+            connection.MessageReceived += WebsocketMessageHandler;
+            connection.Opened -= OnConnectionOpened;
+            connection.Opened += OnConnectionOpened;
+            connection.Closed -= OnConnectionClosed;
+            connection.Closed += OnConnectionClosed;
+            connection.Error -= OnConnectionError;
+            connection.Error += OnConnectionError;
+        }
+
+        protected void RemoveEvents(WebSocket connection)
+        {
+            connection.MessageReceived -= WebsocketMessageHandler;
+            connection.Opened -= OnConnectionOpened;
+            connection.Closed -= OnConnectionClosed;
+            connection.Error -= OnConnectionError;
+        }
+
+        protected void OnConnectionOpened(object sender, EventArgs e)
+        {
+            TaskCompletionSource<bool> connectingTcs = ConnectingTaskSource;
+            if (connectingTcs != null)
+                connectingTcs.TrySetResult(true);
+        }
+
+        protected void OnConnectionClosed(object sender, EventArgs e)
+        {
+            EventHandler disconnectHandler = Disconnected;
+            disconnectHandler?.Invoke(this, e);
+            CancelAllHandlers();
+        }
+
+        protected void OnConnectionError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+        {
+            OBSLogger.Error(e?.Exception);
+            TaskCompletionSource<bool> connectingTcs = ConnectingTaskSource;
+            ConnectingTaskSource = null;
+            if (connectingTcs != null)
+            {
+                if (e?.Exception == null)
+                    connectingTcs.TrySetResult(false);
+                else
+                    connectingTcs.TrySetException(new ErrorResponseException(e.Exception.Message, e.Exception));
+            }
+            CancelAllHandlers(e?.Exception);
         }
 
         /// <summary>
@@ -308,25 +383,28 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public void Disconnect()
         {
-            if (WSConnection != null)
-                WSConnection.Close();
-
-            WSConnection = null;
+            WebSocket connection = WSConnection;
+            if (connection != null 
+                && (connection.State == WebSocketState.Open 
+                    || connection.State == WebSocketState.Connecting))
+            {
+                connection.Close();
+            }
             CancelAllHandlers();
         }
 
         protected void CancelAllHandlers(Exception exception = null)
         {
-            var unusedHandlers = _responseHandlers.Values.ToArray();
+            var unusedHandlers = _responseHandlers.ToArray();
             _responseHandlers.Clear();
-            foreach (var tcs in unusedHandlers)
+            foreach (var pair in unusedHandlers)
             {
                 if (exception != null)
                 {
-                    tcs.TrySetException(new ErrorResponseException(exception.Message, exception));
+                    pair.Value.TrySetException(new ErrorResponseException(exception.Message, exception));
                 }
                 else
-                    tcs.TrySetCanceled();
+                    pair.Value.TrySetCanceled();
             }
         }
 
