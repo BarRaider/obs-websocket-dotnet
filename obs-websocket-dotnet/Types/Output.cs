@@ -33,6 +33,10 @@ namespace obs_websocket_dotnet.Types
             {
                 return new FileOutput(response);
             }
+            else if (outputName.Contains("replay"))
+            {
+                return new ReplayOutput(response);
+            }
             else
             {
                 OBSLogger.Warning($"Received an unrecognized output name: {outputName}");
@@ -90,6 +94,16 @@ namespace obs_websocket_dotnet.Types
         public readonly FileOutputSettings Settings;
     }
 
+    public class ReplayOutput : Output
+    {
+        public readonly ReplayOutputSettings Settings;
+        public ReplayOutput(JObject response)
+            : base(response)
+        {
+            Settings = new ReplayOutputSettings(response["settings"] as JObject);
+        }
+    }
+
     public struct FileOutputSettings
     {
         public FileOutputSettings(JObject jObject)
@@ -97,8 +111,8 @@ namespace obs_websocket_dotnet.Types
             MuxerSettings = jObject["muxer_settings"]?.Value<string>();
             Path = jObject["path"]?.Value<string>();
         }
-        public string MuxerSettings;
-        public string Path;
+        public readonly string MuxerSettings;
+        public readonly string Path;
     }
 
     public struct StreamOutputSettings
@@ -110,10 +124,35 @@ namespace obs_websocket_dotnet.Types
             LowLatencyMode = jObject["low_latency_mode_enabled"]?.Value<bool>() ?? false;
             NewSocketLoopEnabled = jObject["new_socket_loop_enabled"]?.Value<bool>() ?? false;
         }
-        public string BindIP;
-        public bool DynamicBitrate;
-        public bool LowLatencyMode;
-        public bool NewSocketLoopEnabled;
+        public readonly string BindIP;
+        public readonly bool DynamicBitrate;
+        public readonly bool LowLatencyMode;
+        public readonly bool NewSocketLoopEnabled;
+    }
+
+    public struct ReplayOutputSettings
+    {
+        public ReplayOutputSettings(JObject jObject)
+        {
+            AllowSpaces = jObject["allow_spaces"]?.Value<bool>() ?? false;
+            Directory = jObject["directory"]?.Value<string>();
+            Extension = jObject["extension"]?.Value<string>();
+            Format = jObject["format"]?.Value<string>();
+            MaxSizeMB = jObject["max_size_mb"]?.Value<int>() ?? 0;
+            MaxTimeSecond = jObject["max_time_sec"]?.Value<int>() ?? 0;
+            MuxerSettings = jObject["muxer_settings"]?.Value<string>();
+            Path = jObject["path"]?.Value<string>();
+        }
+
+        public readonly bool AllowSpaces;
+        public readonly string Directory;
+        public readonly string Extension;
+        public readonly string Format;
+        public readonly int MaxSizeMB;
+        public readonly int MaxTimeSecond;
+        public readonly string MuxerSettings;
+        public readonly string Path;
+
     }
 
     [Flags]
