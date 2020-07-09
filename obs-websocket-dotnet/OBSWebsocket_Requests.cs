@@ -24,9 +24,11 @@
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using obs_websocket_dotnet.Types;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OBSWebsocketDotNet
@@ -45,6 +47,56 @@ namespace OBSWebsocketDotNet
             return JsonConvert.DeserializeObject<OBSVideoInfo>(response.ToString());
         }
 
+        public async Task<Output[]> ListOutputs()
+        {
+            JObject response = await SendRequest("ListOutputs").ConfigureAwait(false);
+            JObject[] jOutputs = response["outputs"]?.Children<JObject>().ToArray();
+            int outputCount = jOutputs?.Length ?? 0;
+            if (outputCount == 0)
+                return Array.Empty<Output>();
+            Output[] outputs = new Output[outputCount];
+
+            for (int i = 0; i < outputCount; i++)
+            {
+                try
+                {
+                    outputs[i] = Output.CreateOutput(jOutputs[i]);
+                }
+                catch (Exception ex)
+                {
+                    OBSLogger.Error(ex);
+                }
+            }
+            return outputs;
+        }
+
+        public async Task<Output> GetOutput(string outputName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("outputName", outputName);
+            JObject response = await SendRequest("GetOutputInfo", requestFields).ConfigureAwait(false);
+
+            return Output.CreateOutput(response["outputInfo"] as JObject);
+        }
+
+        public Task StartOutput(string outputName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("outputName", outputName);
+
+            return SendRequest("StartOutput", requestFields);
+        }
+
+        public Task StopOutput(string outputName, bool force = false)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("outputName", outputName);
+            requestFields.Add("force", force);
+
+            return SendRequest("StopOutput", requestFields);
+        }
+
+
         /// <summary>
         /// At least embedPictureFormat or saveToFilePath must be specified.
         /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
@@ -59,11 +111,11 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
             if (embedPictureFormat != null)
-            requestFields.Add("embedPictureFormat", embedPictureFormat);
+                requestFields.Add("embedPictureFormat", embedPictureFormat);
             if (saveToFilePath != null)
                 requestFields.Add("saveToFilePath", saveToFilePath);
             if (width > -1)
-            requestFields.Add("height", width);
+                requestFields.Add("height", width);
             if (height > -1)
                 requestFields.Add("height", height);
 
@@ -245,7 +297,7 @@ namespace OBSWebsocketDotNet
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(properties));
 
             await SendRequest("SetTextGDIPlusProperties", requestFields).ConfigureAwait(false);
-            
+
         }
 
 
@@ -388,11 +440,11 @@ namespace OBSWebsocketDotNet
         public async Task<List<string>> ListTransitions()
         {
             var transitions = await GetTransitionList().ConfigureAwait(false);
-            
+
             List<string> transitionNames = new List<string>();
             foreach (var item in transitions.Transitions)
                 transitionNames.Add(item.Name);
-            
+
 
             return transitionNames;
         }
