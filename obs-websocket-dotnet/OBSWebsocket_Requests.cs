@@ -58,13 +58,21 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
             if (embedPictureFormat != null)
-            requestFields.Add("embedPictureFormat", embedPictureFormat);
+            {
+                requestFields.Add("embedPictureFormat", embedPictureFormat);
+            }
             if (saveToFilePath != null)
+            {
                 requestFields.Add("saveToFilePath", saveToFilePath);
+            }
             if (width > -1)
+            {
                 requestFields.Add("width", width);
+            }
             if (height > -1)
+            {
                 requestFields.Add("height", height);
+            }
 
             var response = SendRequest("TakeSourceScreenshot", requestFields);
             return JsonConvert.DeserializeObject<SourceScreenshotResponse>(response.ToString());
@@ -212,14 +220,24 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
         public SceneItemProperties GetSceneItemProperties(string itemName, string sceneName = null)
         {
+            return JsonConvert.DeserializeObject<SceneItemProperties>(GetSceneItemPropertiesJson(itemName, sceneName).ToString());
+        }
+
+        /// <summary>
+        /// Gets the scene specific properties of the specified source item. Coordinates are relative to the item's parent (the scene or group it belongs to).
+        /// Response is a JObject
+        /// </summary>
+        /// <param name="itemName">The name of the source</param>
+        /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        public JObject GetSceneItemPropertiesJson(string itemName, string sceneName = null)
+        {
             var requestFields = new JObject();
             requestFields.Add("item", itemName);
 
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
 
-            JObject response = SendRequest("GetSceneItemProperties", requestFields);
-            return JsonConvert.DeserializeObject<SceneItemProperties>(response.ToString());
+            return SendRequest("GetSceneItemProperties", requestFields);
         }
 
         /// <summary>
@@ -244,7 +262,7 @@ namespace OBSWebsocketDotNet
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(properties));
 
             SendRequest("SetTextGDIPlusProperties", requestFields);
-            
+
         }
 
 
@@ -402,11 +420,11 @@ namespace OBSWebsocketDotNet
         public List<string> ListTransitions()
         {
             var transitions = GetTransitionList();
-            
+
             List<string> transitionNames = new List<string>();
             foreach (var item in transitions.Transitions)
                 transitionNames.Add(item.Name);
-            
+
 
             return transitionNames;
         }
@@ -450,11 +468,13 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Name of the source which volume will be changed</param>
         /// <param name="volume">Desired volume in linear scale (0.0 to 1.0)</param>
-        public void SetVolume(string sourceName, float volume)
+        /// /// <param name="useDecibel">Volume set in decibels</param>
+        public void SetVolume(string sourceName, float volume, bool useDecibel)
         {
             var requestFields = new JObject();
             requestFields.Add("source", sourceName);
             requestFields.Add("volume", volume);
+            requestFields.Add("useDecibel", useDecibel);
 
             SendRequest("SetVolume", requestFields);
         }
@@ -463,11 +483,13 @@ namespace OBSWebsocketDotNet
         /// Get the volume of the specified source
         /// </summary>
         /// <param name="sourceName">Source name</param>
+        /// /// <param name="useDecibel">Use decibel method</param>
         /// <returns>An <see cref="VolumeInfo"/> object containing the volume and mute state of the specified source</returns>
-        public VolumeInfo GetVolume(string sourceName)
+        public VolumeInfo GetVolume(string sourceName, bool useDecibel)
         {
             var requestFields = new JObject();
             requestFields.Add("source", sourceName);
+            requestFields.Add("useDecibel", useDecibel);
 
             var response = SendRequest("GetVolume", requestFields);
             return new VolumeInfo(response);
@@ -550,6 +572,28 @@ namespace OBSWebsocketDotNet
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.NullValueHandling = NullValueHandling.Ignore;
+            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
+
+            if (sceneName != null)
+                requestFields.Add("scene-name", sceneName);
+
+            SendRequest("SetSceneItemProperties", requestFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="sceneName"></param>
+        public void SetSceneItemProperties(JObject obj, string sceneName = null)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+
+            // Serialize object to SceneItemProperties (needed before proper deserialization)
+            var props = JsonConvert.DeserializeObject<SceneItemProperties>(obj.ToString(), settings);
+
+            // Deserialize object
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
 
             if (sceneName != null)
@@ -1182,7 +1226,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
         public void SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
-            
+
             //override sourcename in props with the name passed
             props.Source = sourceName;
             SendRequest("SetBrowserSourceProperties", JObject.FromObject(props));
