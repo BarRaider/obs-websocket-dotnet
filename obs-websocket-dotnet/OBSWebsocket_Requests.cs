@@ -58,13 +58,21 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
             if (embedPictureFormat != null)
-            requestFields.Add("embedPictureFormat", embedPictureFormat);
+            {
+                requestFields.Add("embedPictureFormat", embedPictureFormat);
+            }
             if (saveToFilePath != null)
+            {
                 requestFields.Add("saveToFilePath", saveToFilePath);
+            }
             if (width > -1)
-            requestFields.Add("height", width);
+            {
+                requestFields.Add("width", width);
+            }
             if (height > -1)
+            {
                 requestFields.Add("height", height);
+            }
 
             var response = SendRequest("TakeSourceScreenshot", requestFields);
             return JsonConvert.DeserializeObject<SourceScreenshotResponse>(response.ToString());
@@ -79,7 +87,7 @@ namespace OBSWebsocketDotNet
         /// <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
         public SourceScreenshotResponse TakeSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null)
         {
-            return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath);
+            return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath, -1, -1);
         }
 
         /// <summary>
@@ -89,7 +97,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName"></param>
         public SourceScreenshotResponse TakeSourceScreenshot(string sourceName)
         {
-            return TakeSourceScreenshot(sourceName);
+            return TakeSourceScreenshot(sourceName, null, null);
         }
 
         /// <summary>
@@ -212,14 +220,24 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
         public SceneItemProperties GetSceneItemProperties(string itemName, string sceneName = null)
         {
+            return JsonConvert.DeserializeObject<SceneItemProperties>(GetSceneItemPropertiesJson(itemName, sceneName).ToString());
+        }
+
+        /// <summary>
+        /// Gets the scene specific properties of the specified source item. Coordinates are relative to the item's parent (the scene or group it belongs to).
+        /// Response is a JObject
+        /// </summary>
+        /// <param name="itemName">The name of the source</param>
+        /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        public JObject GetSceneItemPropertiesJson(string itemName, string sceneName = null)
+        {
             var requestFields = new JObject();
             requestFields.Add("item", itemName);
 
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
 
-            JObject response = SendRequest("GetSceneItemProperties", requestFields);
-            return JsonConvert.DeserializeObject<SceneItemProperties>(response.ToString());
+            return SendRequest("GetSceneItemProperties", requestFields);
         }
 
         /// <summary>
@@ -244,7 +262,7 @@ namespace OBSWebsocketDotNet
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(properties));
 
             SendRequest("SetTextGDIPlusProperties", requestFields);
-            
+
         }
 
 
@@ -295,6 +313,22 @@ namespace OBSWebsocketDotNet
             requestFields.Add("filterSettings", filterSettings);
 
             SendRequest("SetSourceFilterSettings", requestFields);
+        }
+
+        /// <summary>
+        /// Modify the Source Filter's visibility
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="filterName"></param>
+        /// <param name="filterEnabled"></param>
+        public void SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterName", filterName);
+            requestFields.Add("filterEnabled", filterEnabled);
+
+            SendRequest("SetSourceFilterVisibility", requestFields);
         }
 
         /// <summary>
@@ -386,11 +420,11 @@ namespace OBSWebsocketDotNet
         public List<string> ListTransitions()
         {
             var transitions = GetTransitionList();
-            
+
             List<string> transitionNames = new List<string>();
             foreach (var item in transitions.Transitions)
                 transitionNames.Add(item.Name);
-            
+
 
             return transitionNames;
         }
@@ -539,6 +573,28 @@ namespace OBSWebsocketDotNet
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.NullValueHandling = NullValueHandling.Ignore;
+            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
+
+            if (sceneName != null)
+                requestFields.Add("scene-name", sceneName);
+
+            SendRequest("SetSceneItemProperties", requestFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="sceneName"></param>
+        public void SetSceneItemProperties(JObject obj, string sceneName = null)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+
+            // Serialize object to SceneItemProperties (needed before proper deserialization)
+            var props = JsonConvert.DeserializeObject<SceneItemProperties>(obj.ToString(), settings);
+
+            // Deserialize object
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
 
             if (sceneName != null)
@@ -1225,6 +1281,35 @@ namespace OBSWebsocketDotNet
                 request.Add("sourceType", sourceType);
 
             SendRequest("SetSourceSettings", request);
+        }
+
+        /// <summary>
+        /// Gets settings for a media source
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <returns></returns>
+        public MediaSourceSettings GetMediaSourceSettings(string sourceName)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+            request.Add("sourceType", "ffmpeg_source");
+
+            var response = SendRequest("GetSourceSettings", request);
+            return response.ToObject<MediaSourceSettings>();
+        }
+
+        /// <summary>
+        /// Sets settings of a media source
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="sourceSettings"></param>
+        public void SetMediaSourceSettings(MediaSourceSettings sourceSettings)
+        {
+            if (sourceSettings.SourceType != "ffmpeg_source")
+            {
+                throw new System.Exception("Invalid SourceType");
+            }
+            SendRequest("SetSourceSettings", JObject.FromObject(sourceSettings));
         }
     }
 }
