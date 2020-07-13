@@ -225,6 +225,8 @@ namespace OBSWebsocketDotNet
 
         #endregion
 
+        // Random should never be created inside a function
+        private static Random random = new Random();
 
         /// <summary>
         /// Current connection state
