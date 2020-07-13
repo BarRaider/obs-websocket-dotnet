@@ -797,7 +797,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="length">(optional) message ID length</param>
         /// <returns>A random string of alphanumerical characters</returns>
-        protected string NewMessageID(int length = 16)
+        protected static string NewMessageID(int length = 16)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

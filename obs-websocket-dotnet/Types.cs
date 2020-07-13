@@ -238,6 +238,9 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class ErrorResponseException : Exception
     {
+        private ErrorResponseException()
+            : base() { }
+
         /// <summary>
         /// Constructor
         /// </summary>
