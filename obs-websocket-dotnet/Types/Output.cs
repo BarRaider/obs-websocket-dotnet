@@ -19,7 +19,8 @@ namespace OBSWebsocketDotNet.Types
             string outputName = response["name"]?.Value<string>().ToLower();
             if (string.IsNullOrEmpty(outputName))
             {
-                OBSLogger.Warning($"Invalid output name from response: {response.ToString()}");
+                OBSLogger.Warning($"Invalid output name from response: {response.ToString(Newtonsoft.Json.Formatting.None)}");
+                // TODO: Should this throw an exception or return null?
             }
             else if (outputName.Contains("stream"))
             {
@@ -100,6 +101,7 @@ namespace OBSWebsocketDotNet.Types
         }
     }
 
+#pragma warning disable CA1815 // Override equals and operator equals on value types
     public struct FileOutputSettings
     {
         public FileOutputSettings(JObject jObject)
@@ -148,8 +150,8 @@ namespace OBSWebsocketDotNet.Types
         public readonly int MaxTimeSecond;
         public readonly string MuxerSettings;
         public readonly string Path;
-
     }
+#pragma warning restore CA1815 // Override equals and operator equals on value types
 
     [Flags]
     public enum OutputFlags
