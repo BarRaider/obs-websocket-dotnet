@@ -221,7 +221,8 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
         public async Task<SceneItemProperties> GetSceneItemProperties(string itemName, string sceneName = null)
         {
-            return JsonConvert.DeserializeObject<SceneItemProperties>(GetSceneItemPropertiesJson(itemName, sceneName).ToString());
+            var propertiesJson = await GetSceneItemPropertiesJson(itemName, sceneName).ConfigureAwait(false);
+            return propertiesJson.ToObject<SceneItemProperties>();
         }
 
         /// <summary>
@@ -230,7 +231,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="itemName">The name of the source</param>
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
-        public JObject GetSceneItemPropertiesJson(string itemName, string sceneName = null)
+        public async Task<JObject> GetSceneItemPropertiesJson(string itemName, string sceneName = null)
         {
             var requestFields = new JObject();
             requestFields.Add("item", itemName);
@@ -238,8 +239,7 @@ namespace OBSWebsocketDotNet
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
 
-            JObject response = await SendRequest("GetSceneItemProperties", requestFields).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<SceneItemProperties>(response.ToString());
+            return await SendRequest("GetSceneItemProperties", requestFields).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -323,14 +323,14 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName"></param>
         /// <param name="filterName"></param>
         /// <param name="filterEnabled"></param>
-        public void SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
+        public async Task SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
         {
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
             requestFields.Add("filterName", filterName);
             requestFields.Add("filterEnabled", filterEnabled);
 
-            SendRequest("SetSourceFilterVisibility", requestFields);
+            await SendRequest("SetSourceFilterVisibility", requestFields).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -589,7 +589,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="sceneName"></param>
-        public void SetSceneItemProperties(JObject obj, string sceneName = null)
+        public async Task SetSceneItemProperties(JObject obj, string sceneName = null)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.NullValueHandling = NullValueHandling.Ignore;
@@ -603,7 +603,7 @@ namespace OBSWebsocketDotNet
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
 
-            SendRequest("SetSceneItemProperties", requestFields);
+            await SendRequest("SetSceneItemProperties", requestFields).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1300,13 +1300,13 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName"></param>
         /// <returns></returns>
-        public MediaSourceSettings GetMediaSourceSettings(string sourceName)
+        public async Task<MediaSourceSettings> GetMediaSourceSettings(string sourceName)
         {
             var request = new JObject();
             request.Add("sourceName", sourceName);
             request.Add("sourceType", "ffmpeg_source");
 
-            var response = SendRequest("GetSourceSettings", request);
+            var response = await SendRequest("GetSourceSettings", request).ConfigureAwait(false);
             return response.ToObject<MediaSourceSettings>();
         }
 
@@ -1315,13 +1315,13 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName"></param>
         /// <param name="sourceSettings"></param>
-        public void SetMediaSourceSettings(MediaSourceSettings sourceSettings)
+        public async Task SetMediaSourceSettings(MediaSourceSettings sourceSettings)
         {
             if (sourceSettings.SourceType != "ffmpeg_source")
             {
                 throw new System.Exception("Invalid SourceType");
             }
-            SendRequest("SetSourceSettings", JObject.FromObject(sourceSettings));
+            await SendRequest("SetSourceSettings", JObject.FromObject(sourceSettings)).ConfigureAwait(false);
         }
     }
 }

@@ -341,7 +341,7 @@ namespace OBSWebsocketDotNet
             _responseHandlers.Clear();
             foreach (var cb in unusedHandlers)
             {
-                tcs.TrySetCanceled();
+                cb.Value.TrySetCanceled();
             }
         }
 
