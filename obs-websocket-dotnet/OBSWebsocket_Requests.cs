@@ -1272,7 +1272,6 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="service">Service settings</param>
         /// <param name="save">Save to disk</param>
-#pragma warning disable AsyncFixer01 // Unnecessary async/await usage
         public async Task SetStreamingSettings(StreamingService service, bool save)
         {
             var jsonSettings = JsonConvert.SerializeObject(service.Settings);
@@ -1285,7 +1284,6 @@ namespace OBSWebsocketDotNet
             };
             await SendRequest("SetStreamSettings", requestFields).ConfigureAwait(false);
         }
-#pragma warning restore AsyncFixer01 // Unnecessary async/await usage
 
         /// <summary>
         /// Get current streaming settings
@@ -1341,7 +1339,6 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="props">BrowserSource properties</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
-#pragma warning disable AsyncFixer01 // Unnecessary async/await usage
         [Obsolete("Deprecated in obs-websocket 4.8.0, use SetSourceSettings")]
         public async Task SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
@@ -1352,13 +1349,11 @@ namespace OBSWebsocketDotNet
 
             await SendRequest("SetBrowserSourceProperties", request).ConfigureAwait(false);
         }
-#pragma warning restore AsyncFixer01 // Unnecessary async/await usage
 
         /// <summary>
         /// Enable/disable the heartbeat event
         /// </summary>
         /// <param name="enable"></param>
-#pragma warning disable AsyncFixer01 // Unnecessary async/await usage
         public async Task SetHeartbeat(bool enable)
         {
             var request = new JObject
@@ -1368,7 +1363,6 @@ namespace OBSWebsocketDotNet
 
             await SendRequest("SetHeartbeat", request).ConfigureAwait(false);
         }
-#pragma warning restore AsyncFixer01 // Unnecessary async/await usage
 
         /// <summary>
         /// Get the settings from a source item
@@ -1397,7 +1391,6 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="settings">Settings for the source</param>
         /// <param name="sourceType">Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.</param>
-#pragma warning disable AsyncFixer01 // Unnecessary async/await usage
         public async Task SetSourceSettings(string sourceName, JObject settings, string sourceType = null)
         {
             var request = new JObject
@@ -1410,7 +1403,6 @@ namespace OBSWebsocketDotNet
 
             await SendRequest("SetSourceSettings", request).ConfigureAwait(false);
         }
-#pragma warning restore AsyncFixer01 // Unnecessary async/await usage
 
         /// <summary>
         /// Gets settings for a media source
