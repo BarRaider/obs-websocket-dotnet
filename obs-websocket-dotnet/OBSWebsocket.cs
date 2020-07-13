@@ -226,7 +226,7 @@ namespace OBSWebsocketDotNet
         #endregion
 
         // Random should never be created inside a function
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
 
         /// <summary>
         /// Current connection state
@@ -235,7 +235,7 @@ namespace OBSWebsocketDotNet
         {
             get
             {
-                return (WSConnection != null ? WSConnection.State == WebSocketState.Open : false);
+                return (WSConnection != null && WSConnection.State == WebSocketState.Open);
             }
         }
 
@@ -305,8 +305,7 @@ namespace OBSWebsocketDotNet
                     throw;
                 }
             }
-            if (Connected != null)
-                Connected(this, null);
+            Connected?.Invoke(this, null);
             return true;
         }
 
@@ -464,8 +463,10 @@ namespace OBSWebsocketDotNet
             string messageID;
 
             // Build the bare-minimum body for a request
-            var body = new JObject();
-            body.Add("request-type", requestType);
+            var body = new JObject
+            {
+                { "request-type", requestType }
+            };
 
             // Add optional fields if provided
             if (additionalFields != null)
@@ -475,7 +476,7 @@ namespace OBSWebsocketDotNet
                     MergeArrayHandling = MergeArrayHandling.Union
                 };
 
-                body.Merge(additionalFields);
+                body.Merge(additionalFields, mergeSettings);
             }
 
             if (!IsConnected)
@@ -500,7 +501,7 @@ namespace OBSWebsocketDotNet
             // (received and notified by the websocket response handler)
 
             WSConnection.Send(body.ToString());
-            JObject result = null;
+            JObject result;
             try
             {
                 result = await tcs.Task.ConfigureAwait(false);
@@ -551,8 +552,10 @@ namespace OBSWebsocketDotNet
             string secret = HashEncode(password + authInfo.PasswordSalt);
             string authResponse = HashEncode(secret + authInfo.Challenge);
 
-            var requestFields = new JObject();
-            requestFields.Add("auth", authResponse);
+            var requestFields = new JObject
+            {
+                { "auth", authResponse }
+            };
 
             try
             {
@@ -579,123 +582,99 @@ namespace OBSWebsocketDotNet
             switch (eventType)
             {
                 case "SwitchScenes":
-                    if (SceneChanged != null)
-                        SceneChanged(this, (string)body["scene-name"]);
+                    SceneChanged?.Invoke(this, (string)body["scene-name"]);
                     break;
 
                 case "ScenesChanged":
-                    if (SceneListChanged != null)
-                        SceneListChanged(this, EventArgs.Empty);
+                    SceneListChanged?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "SourceOrderChanged":
-                    if (SourceOrderChanged != null)
-                        SourceOrderChanged(this, (string)body["scene-name"]);
+                    SourceOrderChanged?.Invoke(this, (string)body["scene-name"]);
                     break;
 
                 case "SceneItemAdded":
-                    if (SceneItemAdded != null)
-                        SceneItemAdded(this, (string)body["scene-name"], (string)body["item-name"]);
+                    SceneItemAdded?.Invoke(this, (string)body["scene-name"], (string)body["item-name"]);
                     break;
 
                 case "SceneItemRemoved":
-                    if (SceneItemRemoved != null)
-                        SceneItemRemoved(this, (string)body["scene-name"], (string)body["item-name"]);
+                    SceneItemRemoved?.Invoke(this, (string)body["scene-name"], (string)body["item-name"]);
                     break;
 
                 case "SceneItemVisibilityChanged":
-                    if (SceneItemVisibilityChanged != null)
-                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
+                    SceneItemVisibilityChanged?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
                     break;
 
                 case "SceneCollectionChanged":
-                    if (SceneCollectionChanged != null)
-                        SceneCollectionChanged(this, EventArgs.Empty);
+                    SceneCollectionChanged?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "SceneCollectionListChanged":
-                    if (SceneCollectionListChanged != null)
-                        SceneCollectionListChanged(this, EventArgs.Empty);
+                    SceneCollectionListChanged?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "SwitchTransition":
-                    if (TransitionChanged != null)
-                        TransitionChanged(this, (string)body["transition-name"]);
+                    TransitionChanged?.Invoke(this, (string)body["transition-name"]);
                     break;
 
                 case "TransitionDurationChanged":
-                    if (TransitionDurationChanged != null)
-                        TransitionDurationChanged(this, (int)body["new-duration"]);
+                    TransitionDurationChanged?.Invoke(this, (int)body["new-duration"]);
                     break;
 
                 case "TransitionListChanged":
-                    if (TransitionListChanged != null)
-                        TransitionListChanged(this, EventArgs.Empty);
+                    TransitionListChanged?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "TransitionBegin":
-                    if (TransitionBegin != null)
-                        TransitionBegin(this, EventArgs.Empty);
+                    TransitionBegin?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "ProfileChanged":
-                    if (ProfileChanged != null)
-                        ProfileChanged(this, EventArgs.Empty);
+                    ProfileChanged?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "ProfileListChanged":
-                    if (ProfileListChanged != null)
-                        ProfileListChanged(this, EventArgs.Empty);
+                    ProfileListChanged?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "StreamStarting":
-                    if (StreamingStateChanged != null)
-                        StreamingStateChanged(this, OutputState.Starting);
+                    StreamingStateChanged?.Invoke(this, OutputState.Starting);
                     break;
 
                 case "StreamStarted":
-                    if (StreamingStateChanged != null)
-                        StreamingStateChanged(this, OutputState.Started);
+                    StreamingStateChanged?.Invoke(this, OutputState.Started);
                     break;
 
                 case "StreamStopping":
-                    if (StreamingStateChanged != null)
-                        StreamingStateChanged(this, OutputState.Stopping);
+                    StreamingStateChanged?.Invoke(this, OutputState.Stopping);
                     break;
 
                 case "StreamStopped":
-                    if (StreamingStateChanged != null)
-                        StreamingStateChanged(this, OutputState.Stopped);
+                    StreamingStateChanged?.Invoke(this, OutputState.Stopped);
                     break;
 
                 case "RecordingStarting":
-                    if (RecordingStateChanged != null)
-                        RecordingStateChanged(this, OutputState.Starting);
+                    RecordingStateChanged?.Invoke(this, OutputState.Starting);
                     break;
 
                 case "RecordingStarted":
-                    if (RecordingStateChanged != null)
-                        RecordingStateChanged(this, OutputState.Started);
+                    RecordingStateChanged?.Invoke(this, OutputState.Started);
                     break;
 
                 case "RecordingStopping":
-                    if (RecordingStateChanged != null)
-                        RecordingStateChanged(this, OutputState.Stopping);
+                    RecordingStateChanged?.Invoke(this, OutputState.Stopping);
                     break;
 
                 case "RecordingStopped":
-                    if (RecordingStateChanged != null)
-                        RecordingStateChanged(this, OutputState.Stopped);
+                    RecordingStateChanged?.Invoke(this, OutputState.Stopped);
                     break;
 
                 case "RecordingPaused":
-                    if (RecordingStateChanged != null)
-                        RecordingStateChanged(this, OutputState.Paused);
+                    RecordingStateChanged?.Invoke(this, OutputState.Paused);
                     break;
 
                 case "RecordingResumed":
-                    if (RecordingStateChanged != null)
-                        RecordingStateChanged(this, OutputState.Resumed);
+                    RecordingStateChanged?.Invoke(this, OutputState.Resumed);
                     break;
 
                 case "StreamStatus":
@@ -707,99 +686,78 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "PreviewSceneChanged":
-                    if (PreviewSceneChanged != null)
-                        PreviewSceneChanged(this, (string)body["scene-name"]);
+                    PreviewSceneChanged?.Invoke(this, (string)body["scene-name"]);
                     break;
 
                 case "StudioModeSwitched":
-                    if (StudioModeSwitched != null)
-                        StudioModeSwitched(this, (bool)body["new-state"]);
+                    StudioModeSwitched?.Invoke(this, (bool)body["new-state"]);
                     break;
 
                 case "ReplayStarting":
-                    if (ReplayBufferStateChanged != null)
-                        ReplayBufferStateChanged(this, OutputState.Starting);
+                    ReplayBufferStateChanged?.Invoke(this, OutputState.Starting);
                     break;
 
                 case "ReplayStarted":
-                    if (ReplayBufferStateChanged != null)
-                        ReplayBufferStateChanged(this, OutputState.Started);
+                    ReplayBufferStateChanged?.Invoke(this, OutputState.Started);
                     break;
 
                 case "ReplayStopping":
-                    if (ReplayBufferStateChanged != null)
-                        ReplayBufferStateChanged(this, OutputState.Stopping);
+                    ReplayBufferStateChanged?.Invoke(this, OutputState.Stopping);
                     break;
 
                 case "ReplayStopped":
-                    if (ReplayBufferStateChanged != null)
-                        ReplayBufferStateChanged(this, OutputState.Stopped);
+                    ReplayBufferStateChanged?.Invoke(this, OutputState.Stopped);
                     break;
 
                 case "Exiting":
-                    if (OBSExit != null)
-                        OBSExit(this, EventArgs.Empty);
+                    OBSExit?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case "Heartbeat":
-                    if (Heartbeat != null)
-                        Heartbeat(this, new Heartbeat(body));
+                    Heartbeat?.Invoke(this, new Heartbeat(body));
                     break;
                 case "SceneItemDeselected":
-                    if (SceneItemDeselected != null)
-                        SceneItemDeselected(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
+                    SceneItemDeselected?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
                     break;
                 case "SceneItemSelected":
-                    if (SceneItemSelected != null)
-                        SceneItemSelected(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
+                    SceneItemSelected?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
                     break;
                 case "SceneItemTransformChanged":
-                    if (SceneItemTransformChanged != null)
-                        SceneItemTransformChanged(this, new SceneItemTransformInfo(body));
+                    SceneItemTransformChanged?.Invoke(this, new SceneItemTransformInfo(body));
                     break;
                 case "SourceAudioMixersChanged":
-                    if (SourceAudioMixersChanged != null)
-                        SourceAudioMixersChanged(this, new AudioMixersChangedInfo(body));
+                    SourceAudioMixersChanged?.Invoke(this, new AudioMixersChangedInfo(body));
                     break;
                 case "SourceAudioSyncOffsetChanged":
-                    if (SourceAudioSyncOffsetChanged != null)
-                        SourceAudioSyncOffsetChanged(this, (string)body["sourceName"], (int)body["syncOffset"]);
+                    SourceAudioSyncOffsetChanged?.Invoke(this, (string)body["sourceName"], (int)body["syncOffset"]);
                     break;
                 case "SourceCreated":
-                    if (SourceCreated != null)
-                        SourceCreated(this, new SourceSettings(body));
+                    SourceCreated?.Invoke(this, new SourceSettings(body));
                     break;
                 case "SourceDestroyed":
-                    if (SourceDestroyed != null)
-                        SourceDestroyed(this, (string)body["sourceName"], (string)body["sourceType"], (string)body["sourceKind"]);
+                    SourceDestroyed?.Invoke(this, (string)body["sourceName"], (string)body["sourceType"], (string)body["sourceKind"]);
                     break;
                 case "SourceRenamed":
-                    if (SourceRenamed != null)
-                        SourceRenamed(this, (string)body["newName"], (string)body["previousName"]);
+                    SourceRenamed?.Invoke(this, (string)body["newName"], (string)body["previousName"]);
                     break;
 
                 case "SourceMuteStateChanged":
-                    if (SourceMuteStateChanged != null)
-                        SourceMuteStateChanged(this, (string)body["sourceName"], (bool)body["muted"]);
+                    SourceMuteStateChanged?.Invoke(this, (string)body["sourceName"], (bool)body["muted"]);
                     break;
                 case "SourceVolumeChanged":
-                    if (SourceVolumeChanged != null)
-                        SourceVolumeChanged(this, (string)body["sourceName"], (float)body["volume"]);
+                    SourceVolumeChanged?.Invoke(this, (string)body["sourceName"], (float)body["volume"]);
                     break;
                 case "SourceFilterAdded":
-                    if (SourceFilterAdded != null)
-                        SourceFilterAdded(this, (string)body["sourceName"], (string)body["filterName"], (string)body["filterType"], (JObject)body["filterSettings"]);
+                    SourceFilterAdded?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (string)body["filterType"], (JObject)body["filterSettings"]);
                     break;
                 case "SourceFilterRemoved":
-                    if (SourceFilterRemoved != null)
-                        SourceFilterRemoved(this, (string)body["sourceName"], (string)body["filterName"]);
+                    SourceFilterRemoved?.Invoke(this, (string)body["sourceName"], (string)body["filterName"]);
                     break;
                 case "SourceFiltersReordered":
                     List<FilterReorderItem> filters = new List<FilterReorderItem>();
                     JsonConvert.PopulateObject(body["filters"].ToString(), filters);
 
-                    if (SourceFiltersReordered != null)
-                        SourceFiltersReordered(this, (string)body["sourceName"], filters);
+                    SourceFiltersReordered?.Invoke(this, (string)body["sourceName"], filters);
                     break;
                     /*
                     default:
@@ -817,7 +775,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="input">source string</param>
         /// <returns></returns>
-        protected string HashEncode(string input)
+        protected static string HashEncode(string input)
         {
             var sha256 = new SHA256Managed();
 
