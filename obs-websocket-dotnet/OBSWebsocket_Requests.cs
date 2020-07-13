@@ -39,7 +39,6 @@ namespace OBSWebsocketDotNet
 
         private const string SOURCE_TYPE_JSON_FIELD = "sourceType";
         private const string SOURCE_TYPE_BROWSER_SOURCE = "browser_source";
-        private const string SOURCE_SETTINGS_PAYLOAD_FIELD = "sourceSettings";
 
         #endregion
 
@@ -1321,7 +1320,6 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Sets settings of a media source
         /// </summary>
-        /// <param name="sourceName"></param>
         /// <param name="sourceSettings"></param>
         public void SetMediaSourceSettings(MediaSourceSettings sourceSettings)
         {
