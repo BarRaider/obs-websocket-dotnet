@@ -22,13 +22,13 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Background color.
         /// </summary>
-        [JsonProperty(PropertyName = "bk-color")]
+        [JsonProperty(PropertyName = "bk_color")]
         public ulong BackgroundColor { set; get; }
 
         /// <summary>
         /// Background opacity (0-100).
         /// </summary>
-        [JsonProperty(PropertyName = "bk-opacity")]
+        [JsonProperty(PropertyName = "bk_opacity")]
         public int BackgroundOpacity { set; get; }
 
         /// <summary>

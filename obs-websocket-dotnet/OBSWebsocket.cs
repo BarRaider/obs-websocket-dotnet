@@ -66,7 +66,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when the visibility of a scene item changes
         /// </summary>
-        public event SceneItemUpdateCallback SceneItemVisibilityChanged;
+        public event SceneItemVisibilityChangedCallback SceneItemVisibilityChanged;
 
         /// <summary>
         /// Triggered when switching to another scene collection
@@ -514,7 +514,7 @@ namespace OBSWebsocketDotNet
 
                 case "SceneItemVisibilityChanged":
                     if (SceneItemVisibilityChanged != null)
-                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"]);
+                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
                     break;
 
                 case "SceneCollectionChanged":
