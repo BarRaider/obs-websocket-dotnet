@@ -45,7 +45,7 @@ namespace OBSWebsocketDotNet
     public delegate void SourceOrderChangeCallback(OBSWebsocket sender, string sceneName);
 
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemVisibilityChanged"/>, <see cref="OBSWebsocket.SceneItemAdded"/>
+    /// Called by <see cref="OBSWebsocket.SceneItemAdded"/>
     /// or <see cref="OBSWebsocket.SceneItemRemoved"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
@@ -53,6 +53,15 @@ namespace OBSWebsocketDotNet
     /// <param name="itemName">Name of the concerned item</param>
     public delegate void SceneItemUpdateCallback(OBSWebsocket sender, string sceneName, string itemName);
 
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.SceneItemVisibilityChanged"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sceneName">Name of the scene where the item is</param>
+    /// <param name="itemName">Name of the concerned item</param>
+    /// <param name="isVisible">Visibility of the item</param>
+    public delegate void SceneItemVisibilityChangedCallback(OBSWebsocket sender, string sceneName, string itemName, bool isVisible);
+    
     /// <summary>
     /// Called by <see cref="OBSWebsocket.TransitionChanged"/>
     /// </summary>

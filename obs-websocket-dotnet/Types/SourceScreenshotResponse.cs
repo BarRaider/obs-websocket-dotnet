@@ -7,7 +7,7 @@ using System.Text;
 namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
-    /// Respone from <see cref="OBSWebsocket.TakeSourceScreenshot(string)"/>
+    /// Response from <see cref="OBSWebsocket.TakeSourceScreenshot(string)"/>
     /// </summary>
     public class SourceScreenshotResponse
     {
@@ -26,7 +26,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Absolute path to the saved image file(if saveToFilePath was specified in the request)
         /// </summary>
-        [JsonProperty(PropertyName = "imgFile")]
+        [JsonProperty(PropertyName = "imageFile")]
         public string ImageFile { internal set; get; }
     }
 

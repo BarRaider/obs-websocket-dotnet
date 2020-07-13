@@ -66,7 +66,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when the visibility of a scene item changes
         /// </summary>
-        public event SceneItemUpdateCallback SceneItemVisibilityChanged;
+        public event SceneItemVisibilityChangedCallback SceneItemVisibilityChanged;
 
         /// <summary>
         /// Triggered when switching to another scene collection
@@ -485,13 +485,14 @@ namespace OBSWebsocketDotNet
             var tcs = new TaskCompletionSource<JObject>();
             do
             {
-                // Generate a random message id and make sure it is unique within the handlers dictionary
+                // Generate a random message id
                 messageID = NewMessageID();
                 if (_responseHandlers.TryAdd(messageID, tcs))
                 {
                     body.Add("message-id", messageID);
                     break;
                 }
+                // Message id already exists, retry with a new one.
             } while (true);
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
@@ -602,7 +603,7 @@ namespace OBSWebsocketDotNet
 
                 case "SceneItemVisibilityChanged":
                     if (SceneItemVisibilityChanged != null)
-                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"]);
+                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
                     break;
 
                 case "SceneCollectionChanged":
@@ -832,7 +833,6 @@ namespace OBSWebsocketDotNet
         protected string NewMessageID(int length = 16)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var random = new Random();
 
             string result = "";
             for (int i = 0; i < length; i++)
