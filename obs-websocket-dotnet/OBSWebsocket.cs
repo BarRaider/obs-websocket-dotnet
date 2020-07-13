@@ -37,6 +37,13 @@ namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
     {
+
+        protected static JsonSerializerSettings DefaultSerializerSettings = new JsonSerializerSettings()
+        {
+            ObjectCreationHandling = ObjectCreationHandling.Auto,
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
         #region Events
         /// <summary>
         /// Triggered when switching to another scene

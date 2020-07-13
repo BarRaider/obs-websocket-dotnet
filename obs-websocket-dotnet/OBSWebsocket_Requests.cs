@@ -626,9 +626,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Option scene name</param>
         public async Task SetSceneItemProperties(SceneItemProperties props, string sceneName = null)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.NullValueHandling = NullValueHandling.Ignore;
-            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
+            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, DefaultSerializerSettings));
 
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
@@ -643,14 +641,11 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName"></param>
         public async Task SetSceneItemProperties(JObject obj, string sceneName = null)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.NullValueHandling = NullValueHandling.Ignore;
-
             // Serialize object to SceneItemProperties (needed before proper deserialization)
-            var props = JsonConvert.DeserializeObject<SceneItemProperties>(obj.ToString(), settings);
+            var props = JsonConvert.DeserializeObject<SceneItemProperties>(obj.ToString(), DefaultSerializerSettings);
 
             // Deserialize object
-            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
+            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, DefaultSerializerSettings));
 
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
