@@ -31,7 +31,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using OBSWebsocketDotNet.Types;
 using Newtonsoft.Json;
-using System.Threading;
+using System.Collections.Concurrent;
 
 namespace OBSWebsocketDotNet
 {
@@ -255,7 +255,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public bool IsConnected
         {
-            get {
+            get
+            {
                 return (WSConnection != null ? WSConnection.IsAlive : false);
             }
         }
@@ -266,15 +267,14 @@ namespace OBSWebsocketDotNet
         public WebSocket WSConnection { get; private set; }
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
-        private Dictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
-        private readonly object _responseHandlersLock = new object();
+        private ConcurrentDictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public OBSWebsocket()
         {
-            _responseHandlers = new Dictionary<string, TaskCompletionSource<JObject>>();
+            _responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
         }
 
         /// <summary>
@@ -318,14 +318,12 @@ namespace OBSWebsocketDotNet
                 WSConnection.Close();
 
             WSConnection = null;
-
-            lock (_responseHandlersLock)
+            var unusedHandlers = _responseHandlers.ToArray();
+            _responseHandlers.Clear();
+            foreach (var cb in unusedHandlers)
             {
-                foreach (var cb in _responseHandlers)
-                {
-                    var tcs = cb.Value;
-                    tcs.TrySetCanceled();
-                }
+                var tcs = cb.Value;
+                tcs.TrySetCanceled();
             }
         }
 
@@ -347,26 +345,13 @@ namespace OBSWebsocketDotNet
                 // its associated message ID
                 string msgID = (string)body["message-id"];
 
-                TaskCompletionSource<JObject> handler = null;
-                lock (_responseHandlersLock)
-                {
-                    handler = _responseHandlers[msgID];
-                }
-
-                if (handler != null)
+                if (_responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
                 {
                     // Set the response body as Result and notify the request sender
                     handler.SetResult(body);
-
-                    // The message with the given ID has been processed,
-                    // so its handler can be discarded
-                    lock (_responseHandlersLock)
-                    {
-                        _responseHandlers.Remove(msgID);
-                    }
                 }
             }
-            else if(body["update-type"] != null)
+            else if (body["update-type"] != null)
             {
                 // Handle an event
                 string eventType = body["update-type"].ToString();
@@ -384,14 +369,9 @@ namespace OBSWebsocketDotNet
         {
             string messageID;
 
-            // Generate a random message id and make sure it is unique within the handlers dictionary
-            do { messageID = NewMessageID(); }
-            while (_responseHandlers.ContainsKey(messageID));
-
             // Build the bare-minimum body for a request
             var body = new JObject();
             body.Add("request-type", requestType);
-            body.Add("message-id", messageID);
 
             // Add optional fields if provided
             if (additionalFields != null)
@@ -406,11 +386,17 @@ namespace OBSWebsocketDotNet
 
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
-            lock (_responseHandlersLock)
+            do
             {
-                _responseHandlers.Add(messageID, tcs);
-            }
-
+                // Generate a random message id
+                messageID = NewMessageID();
+                if (_responseHandlers.TryAdd(messageID, tcs))
+                {
+                    body.Add("message-id", messageID);
+                    break;
+                }
+                // Message id already exists, retry with a new one.
+            } while (true);
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
             WSConnection.Send(body.ToString());
@@ -468,7 +454,7 @@ namespace OBSWebsocketDotNet
                 // Throws ErrorResponseException if auth fails
                 SendRequest("Authenticate", requestFields);
             }
-            catch(ErrorResponseException)
+            catch (ErrorResponseException)
             {
                 throw new AuthFailureException();
             }
@@ -488,7 +474,7 @@ namespace OBSWebsocketDotNet
             switch (eventType)
             {
                 case "SwitchScenes":
-                    if(SceneChanged != null)
+                    if (SceneChanged != null)
                         SceneChanged(this, (string)body["scene-name"]);
                     break;
 
@@ -606,7 +592,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "PreviewSceneChanged":
-                    if(PreviewSceneChanged != null)
+                    if (PreviewSceneChanged != null)
                         PreviewSceneChanged(this, (string)body["scene-name"]);
                     break;
 
@@ -700,14 +686,14 @@ namespace OBSWebsocketDotNet
                     if (SourceFiltersReordered != null)
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
-                /*
-                default:
-                    var header = "-----------" + eventType + "-------------";
-                    Console.WriteLine(header);
-                    Console.WriteLine(body);
-                    Console.WriteLine("".PadLeft(header.Length,'-'));
-                    break;
-                 */
+                    /*
+                    default:
+                        var header = "-----------" + eventType + "-------------";
+                        Console.WriteLine(header);
+                        Console.WriteLine(body);
+                        Console.WriteLine("".PadLeft(header.Length,'-'));
+                        break;
+                     */
             }
         }
 
