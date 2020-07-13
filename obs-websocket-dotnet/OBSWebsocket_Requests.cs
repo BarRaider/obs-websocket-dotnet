@@ -1149,7 +1149,7 @@ namespace OBSWebsocketDotNet
             {
                 string key = x.Key;
                 string value = (string)x.Value;
-                if (key != "request-type" && key != "message-id")
+                if (key != "request-type" && key != "message-id" && key != "status")
                 {
                     sources.Add(key, value);
                 }
