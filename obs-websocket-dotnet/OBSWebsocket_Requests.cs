@@ -24,7 +24,6 @@
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using obs_websocket_dotnet.Types;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;

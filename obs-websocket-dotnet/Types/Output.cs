@@ -1,11 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
-using OBSWebsocketDotNet;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
-namespace obs_websocket_dotnet.Types
+namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
     /// Describes an Output in OBS.

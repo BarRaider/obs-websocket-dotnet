@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>obs_websocket_dotnet</RootNamespace>
+    <RootNamespace>OBSWebsocketDotNet</RootNamespace>
     <Version>4.2.0.3</Version>
     <Copyright>Copyright © Stéphane Lepin 2017</Copyright>
     <Authors>Stéphane Lepin</Authors>
