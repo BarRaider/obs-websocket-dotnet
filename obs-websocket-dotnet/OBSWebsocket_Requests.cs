@@ -467,9 +467,9 @@ namespace OBSWebsocketDotNet
         /// Change the volume of the specified source
         /// </summary>
         /// <param name="sourceName">Name of the source which volume will be changed</param>
-        /// <param name="volume">Desired volume in linear scale (0.0 to 1.0)</param>
-        /// /// <param name="useDecibel">Volume set in decibels</param>
-        public void SetVolume(string sourceName, float volume, bool useDecibel)
+        /// <param name="volume">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
+        /// <param name="useDecibel">Interperet `volume` data as decibels instead of amplitude/mul.</param>
+        public void SetVolume(string sourceName, float volume, bool useDecibel = false)
         {
             var requestFields = new JObject();
             requestFields.Add("source", sourceName);
@@ -481,11 +481,12 @@ namespace OBSWebsocketDotNet
 
         /// <summary>
         /// Get the volume of the specified source
+        /// Volume is between `0.0` and `1.0` if using amplitude/mul (useDecibel is false), under `0.0` if using dB (useDecibel is true).
         /// </summary>
         /// <param name="sourceName">Source name</param>
-        /// /// <param name="useDecibel">Use decibel method</param>
-        /// <returns>An <see cref="VolumeInfo"/> object containing the volume and mute state of the specified source</returns>
-        public VolumeInfo GetVolume(string sourceName, bool useDecibel)
+        /// <param name="useDecibel">Output volume in decibels of attenuation instead of amplitude/mul.</param>
+        /// <returns>An <see cref="VolumeInfo"/>Object containing the volume and mute state of the specified source.</returns>
+        public VolumeInfo GetVolume(string sourceName, bool useDecibel = false)
         {
             var requestFields = new JObject();
             requestFields.Add("source", sourceName);
@@ -981,7 +982,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             JObject minReqs = new JObject();
             if (sceneItem.SourceName != null)
@@ -1004,7 +1005,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             JObject minReqs = new JObject();
 
@@ -1027,7 +1028,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             requestFields.Add("item", sceneItemName);
             requestFields.Add("top", cropInfo.Top);
@@ -1061,7 +1062,7 @@ namespace OBSWebsocketDotNet
             requestFields.Add("item", itemName);
 
             if (sceneName != null)
-                requestFields.Add("scene-name");
+                requestFields.Add("scene-name", sceneName);
 
             SendRequest("ResetSceneItem", requestFields);
         }
