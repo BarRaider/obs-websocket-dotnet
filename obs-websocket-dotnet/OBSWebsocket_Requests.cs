@@ -1145,11 +1145,11 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest("GetSpecialSources");
             var sources = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, JToken> x in response)
+            foreach (KeyValuePair<string, JToken> kvp in response)
             {
-                string key = x.Key;
-                string value = (string)x.Value;
-                if (key != "request-type" && key != "message-id")
+                string key = kvp.Key;
+                string value = (string)kvp.Value;
+                if (key != "request-type" && key != "message-id" && key != "status")
                 {
                     sources.Add(key, value);
                 }
