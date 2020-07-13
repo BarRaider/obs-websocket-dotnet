@@ -35,6 +35,14 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public partial class OBSWebsocket
     {
+        #region Private Members
+
+        private const string SOURCE_TYPE_JSON_FIELD = "sourceType";
+        private const string SOURCE_TYPE_BROWSER_SOURCE = "browser_source";
+        private const string SOURCE_SETTINGS_PAYLOAD_FIELD = "sourceSettings";
+
+        #endregion
+
         /// <summary>
         /// Get basic OBS video information
         /// </summary>
@@ -1211,11 +1219,17 @@ namespace OBSWebsocketDotNet
         public BrowserSourceProperties GetBrowserSourceProperties(string sourceName, string sceneName = null)
         {
             var request = new JObject();
-            request.Add("source", sourceName);
+            request.Add("sourceName", sourceName);
             if (sceneName != null)
+            {
                 request.Add("scene-name", sourceName);
+            }
+            var response = SendRequest("GetSourceSettings", request);
+            if (response[SOURCE_TYPE_JSON_FIELD].ToString() != SOURCE_TYPE_BROWSER_SOURCE)
+            {
+                throw new Exception($"Invalid source_type. Expected: {SOURCE_TYPE_BROWSER_SOURCE} Received: {response[SOURCE_TYPE_JSON_FIELD]}");
+            }
 
-            var response = SendRequest("GetBrowserSourceProperties", request);
             return new BrowserSourceProperties(response);
         }
 
@@ -1230,9 +1244,11 @@ namespace OBSWebsocketDotNet
             props.Source = sourceName;
             var request = JObject.FromObject(props);
             if (sceneName != null)
+            {
                 request.Add("scene-name", sourceName);
+            }
 
-            SendRequest("SetBrowserSourceProperties", request);
+            SetSourceSettings(sourceName, request, SOURCE_TYPE_BROWSER_SOURCE);
         }
 
         /// <summary>
@@ -1258,7 +1274,9 @@ namespace OBSWebsocketDotNet
             var request = new JObject();
             request.Add("sourceName", sourceName);
             if (sourceType != null)
+            {
                 request.Add("sourceType", sourceType);
+            }
 
             JObject result = SendRequest("GetSourceSettings", request);
             SourceSettings settings = new SourceSettings(result);
@@ -1278,7 +1296,9 @@ namespace OBSWebsocketDotNet
             request.Add("sourceName", sourceName);
             request.Add("sourceSettings", settings);
             if (sourceType != null)
+            {
                 request.Add("sourceType", sourceType);
+            }
 
             SendRequest("SetSourceSettings", request);
         }
