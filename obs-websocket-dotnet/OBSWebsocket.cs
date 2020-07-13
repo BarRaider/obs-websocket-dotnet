@@ -66,7 +66,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when the visibility of a scene item changes
         /// </summary>
-        public event SceneItemUpdateCallback SceneItemVisibilityChanged;
+        public event SceneItemVisibilityChangedCallback SceneItemVisibilityChanged;
 
         /// <summary>
         /// Triggered when switching to another scene collection
@@ -247,12 +247,16 @@ namespace OBSWebsocketDotNet
         }
         private TimeSpan _pWSTimeout;
 
+        // Random should never be created inside a function
+        private static Random random = new Random();
+
         /// <summary>
         /// Current connection state
         /// </summary>
         public bool IsConnected
         {
-            get {
+            get
+            {
                 return (WSConnection != null ? WSConnection.IsAlive : false);
             }
         }
@@ -347,7 +351,7 @@ namespace OBSWebsocketDotNet
                     handler.SetResult(body);
                 }
             }
-            else if(body["update-type"] != null)
+            else if (body["update-type"] != null)
             {
                 // Handle an event
                 string eventType = body["update-type"].ToString();
@@ -450,7 +454,7 @@ namespace OBSWebsocketDotNet
                 // Throws ErrorResponseException if auth fails
                 SendRequest("Authenticate", requestFields);
             }
-            catch(ErrorResponseException)
+            catch (ErrorResponseException)
             {
                 throw new AuthFailureException();
             }
@@ -470,7 +474,7 @@ namespace OBSWebsocketDotNet
             switch (eventType)
             {
                 case "SwitchScenes":
-                    if(SceneChanged != null)
+                    if (SceneChanged != null)
                         SceneChanged(this, (string)body["scene-name"]);
                     break;
 
@@ -496,7 +500,7 @@ namespace OBSWebsocketDotNet
 
                 case "SceneItemVisibilityChanged":
                     if (SceneItemVisibilityChanged != null)
-                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"]);
+                        SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
                     break;
 
                 case "SceneCollectionChanged":
@@ -588,7 +592,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "PreviewSceneChanged":
-                    if(PreviewSceneChanged != null)
+                    if (PreviewSceneChanged != null)
                         PreviewSceneChanged(this, (string)body["scene-name"]);
                     break;
 
@@ -682,14 +686,14 @@ namespace OBSWebsocketDotNet
                     if (SourceFiltersReordered != null)
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
-                /*
-                default:
-                    var header = "-----------" + eventType + "-------------";
-                    Console.WriteLine(header);
-                    Console.WriteLine(body);
-                    Console.WriteLine("".PadLeft(header.Length,'-'));
-                    break;
-                 */
+                    /*
+                    default:
+                        var header = "-----------" + eventType + "-------------";
+                        Console.WriteLine(header);
+                        Console.WriteLine(body);
+                        Console.WriteLine("".PadLeft(header.Length,'-'));
+                        break;
+                     */
             }
         }
 
@@ -716,7 +720,6 @@ namespace OBSWebsocketDotNet
         protected string NewMessageID(int length = 16)
         {
             const string pool = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var random = new Random();
 
             string result = "";
             for (int i = 0; i < length; i++)
