@@ -11,7 +11,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Source name for the browser properties
         /// </summary>
-        [JsonProperty(PropertyName = "source")]
+        [JsonProperty(PropertyName = "sourceName")]
         public string Source;
 
         /// <summary>
@@ -86,7 +86,8 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="props"></param>
         public BrowserSourceProperties(JObject props)
         {
-            JsonConvert.PopulateObject(props.ToString(), this);
+            JsonConvert.PopulateObject(props["sourceSettings"].ToString(), this);
+            Source = props["sourceName"].ToString();
         }
     }
 }
