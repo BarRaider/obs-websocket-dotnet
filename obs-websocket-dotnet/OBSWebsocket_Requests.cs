@@ -1329,8 +1329,10 @@ namespace OBSWebsocketDotNet
         /// <returns>BrowserSource properties</returns>
         public async Task<BrowserSourceProperties> GetBrowserSourceProperties(string sourceName, string sceneName = null)
         {
-            var request = new JObject();
-            request.Add("sourceName", sourceName);
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
             if (sceneName != null)
             {
                 request.Add("scene-name", sourceName);
