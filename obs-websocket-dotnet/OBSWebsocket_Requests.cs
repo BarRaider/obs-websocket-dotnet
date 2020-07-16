@@ -36,6 +36,13 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public partial class OBSWebsocket
     {
+        #region Private Members
+
+        private const string SOURCE_TYPE_JSON_FIELD = "sourceType";
+        private const string SOURCE_TYPE_BROWSER_SOURCE = "browser_source";
+
+        #endregion
+
         /// <summary>
         /// Get basic OBS video information
         /// </summary>
@@ -1216,11 +1223,17 @@ namespace OBSWebsocketDotNet
         public async Task<BrowserSourceProperties> GetBrowserSourceProperties(string sourceName, string sceneName = null)
         {
             var request = new JObject();
-            request.Add("source", sourceName);
+            request.Add("sourceName", sourceName);
             if (sceneName != null)
+            {
                 request.Add("scene-name", sourceName);
+            }
+            var response = await SendRequest("GetSourceSettings", request).ConfigureAwait(false);
+            if (response[SOURCE_TYPE_JSON_FIELD].ToString() != SOURCE_TYPE_BROWSER_SOURCE)
+            {
+                throw new Exception($"Invalid source_type. Expected: {SOURCE_TYPE_BROWSER_SOURCE} Received: {response[SOURCE_TYPE_JSON_FIELD]}");
+            }
 
-            var response = await SendRequest("GetBrowserSourceProperties", request).ConfigureAwait(false);
             return new BrowserSourceProperties(response);
         }
 
@@ -1237,9 +1250,11 @@ namespace OBSWebsocketDotNet
             props.Source = sourceName;
             var request = JObject.FromObject(props);
             if (sceneName != null)
+            {
                 request.Add("scene-name", sourceName);
+            }
 
-            await SendRequest("SetBrowserSourceProperties", request).ConfigureAwait(false);
+            await SetSourceSettings(sourceName, request, SOURCE_TYPE_BROWSER_SOURCE).ConfigureAwait(false);
         }
 #pragma warning restore AsyncFixer01 // Unnecessary async/await usage
 
@@ -1268,7 +1283,9 @@ namespace OBSWebsocketDotNet
             var request = new JObject();
             request.Add("sourceName", sourceName);
             if (sourceType != null)
+            {
                 request.Add("sourceType", sourceType);
+            }
 
             JObject result = await SendRequest("GetSourceSettings", request).ConfigureAwait(false);
             SourceSettings settings = new SourceSettings(result);
@@ -1289,7 +1306,9 @@ namespace OBSWebsocketDotNet
             request.Add("sourceName", sourceName);
             request.Add("sourceSettings", settings);
             if (sourceType != null)
+            {
                 request.Add("sourceType", sourceType);
+            }
 
             await SendRequest("SetSourceSettings", request).ConfigureAwait(false);
         }
@@ -1313,7 +1332,6 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Sets settings of a media source
         /// </summary>
-        /// <param name="sourceName"></param>
         /// <param name="sourceSettings"></param>
         public async Task SetMediaSourceSettings(MediaSourceSettings sourceSettings)
         {
