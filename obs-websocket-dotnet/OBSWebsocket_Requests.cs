@@ -63,7 +63,7 @@ namespace OBSWebsocketDotNet
         public SourceScreenshotResponse TakeSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null, int width = -1, int height = -1)
         {
             var requestFields = new JObject();
-                requestFields.Add("sourceName", sourceName);
+            requestFields.Add("sourceName", sourceName);
             if (embedPictureFormat != null)
             {
                 requestFields.Add("embedPictureFormat", embedPictureFormat);
