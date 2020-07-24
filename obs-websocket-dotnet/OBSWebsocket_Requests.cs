@@ -35,6 +35,13 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public partial class OBSWebsocket
     {
+        #region Private Members
+
+        private const string SOURCE_TYPE_JSON_FIELD = "sourceType";
+        private const string SOURCE_TYPE_BROWSER_SOURCE = "browser_source";
+
+        #endregion
+
         /// <summary>
         /// Get basic OBS video information
         /// </summary>
@@ -58,13 +65,21 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
                 requestFields.Add("sourceName", sourceName);
             if (embedPictureFormat != null)
+            {
                 requestFields.Add("embedPictureFormat", embedPictureFormat);
+            }
             if (saveToFilePath != null)
+            {
                 requestFields.Add("saveToFilePath", saveToFilePath);
+            }
             if (width > -1)
+            {
                 requestFields.Add("width", width);
+            }
             if (height > -1)
+            {
                 requestFields.Add("height", height);
+            }
 
             var response = SendRequest("TakeSourceScreenshot", requestFields);
             return JsonConvert.DeserializeObject<SourceScreenshotResponse>(response.ToString());
@@ -202,14 +217,24 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
         public SceneItemProperties GetSceneItemProperties(string itemName, string sceneName = null)
         {
+            return JsonConvert.DeserializeObject<SceneItemProperties>(GetSceneItemPropertiesJson(itemName, sceneName).ToString());
+        }
+
+        /// <summary>
+        /// Gets the scene specific properties of the specified source item. Coordinates are relative to the item's parent (the scene or group it belongs to).
+        /// Response is a JObject
+        /// </summary>
+        /// <param name="itemName">The name of the source</param>
+        /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        public JObject GetSceneItemPropertiesJson(string itemName, string sceneName = null)
+        {
             var requestFields = new JObject();
             requestFields.Add("item", itemName);
 
             if (sceneName != null)
                 requestFields.Add("scene-name", sceneName);
 
-            JObject response = SendRequest("GetSceneItemProperties", requestFields);
-            return JsonConvert.DeserializeObject<SceneItemProperties>(response.ToString());
+            return SendRequest("GetSceneItemProperties", requestFields);
         }
 
         /// <summary>
@@ -234,7 +259,7 @@ namespace OBSWebsocketDotNet
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(properties));
 
             SendRequest("SetTextGDIPlusProperties", requestFields);
-            
+
         }
 
 
@@ -285,6 +310,22 @@ namespace OBSWebsocketDotNet
             requestFields.Add("filterSettings", filterSettings);
 
             SendRequest("SetSourceFilterSettings", requestFields);
+        }
+
+        /// <summary>
+        /// Modify the Source Filter's visibility
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="filterName"></param>
+        /// <param name="filterEnabled"></param>
+        public void SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterName", filterName);
+            requestFields.Add("filterEnabled", filterEnabled);
+
+            SendRequest("SetSourceFilterVisibility", requestFields);
         }
 
         /// <summary>
@@ -376,11 +417,11 @@ namespace OBSWebsocketDotNet
         public List<string> ListTransitions()
         {
             var transitions = GetTransitionList();
-            
+
             List<string> transitionNames = new List<string>();
             foreach (var item in transitions.Transitions)
                 transitionNames.Add(item.Name);
-            
+
 
             return transitionNames;
         }
@@ -529,6 +570,28 @@ namespace OBSWebsocketDotNet
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.NullValueHandling = NullValueHandling.Ignore;
+            var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
+
+            if (sceneName != null)
+                requestFields.Add("scene-name", sceneName);
+
+            SendRequest("SetSceneItemProperties", requestFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="sceneName"></param>
+        public void SetSceneItemProperties(JObject obj, string sceneName = null)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+
+            // Serialize object to SceneItemProperties (needed before proper deserialization)
+            var props = JsonConvert.DeserializeObject<SceneItemProperties>(obj.ToString(), settings);
+
+            // Deserialize object
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
 
             if (sceneName != null)
@@ -1079,11 +1142,11 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest("GetSpecialSources");
             var sources = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, JToken> x in response)
+            foreach (KeyValuePair<string, JToken> kvp in response)
             {
-                string key = x.Key;
-                string value = (string)x.Value;
-                if (key != "request-type" && key != "message-id")
+                string key = kvp.Key;
+                string value = (string)kvp.Value;
+                if (key != "request-type" && key != "message-id" && key != "status")
                 {
                     sources.Add(key, value);
                 }
@@ -1145,11 +1208,17 @@ namespace OBSWebsocketDotNet
         public BrowserSourceProperties GetBrowserSourceProperties(string sourceName, string sceneName = null)
         {
             var request = new JObject();
-            request.Add("source", sourceName);
+            request.Add("sourceName", sourceName);
             if (sceneName != null)
+            {
                 request.Add("scene-name", sourceName);
+            }
+            var response = SendRequest("GetSourceSettings", request);
+            if (response[SOURCE_TYPE_JSON_FIELD].ToString() != SOURCE_TYPE_BROWSER_SOURCE)
+            {
+                throw new Exception($"Invalid source_type. Expected: {SOURCE_TYPE_BROWSER_SOURCE} Received: {response[SOURCE_TYPE_JSON_FIELD]}");
+            }
 
-            var response = SendRequest("GetBrowserSourceProperties", request);
             return new BrowserSourceProperties(response);
         }
 
@@ -1164,9 +1233,11 @@ namespace OBSWebsocketDotNet
             props.Source = sourceName;
             var request = JObject.FromObject(props);
             if (sceneName != null)
+            {
                 request.Add("scene-name", sourceName);
+            }
 
-            SendRequest("SetBrowserSourceProperties", request);
+            SetSourceSettings(sourceName, request, SOURCE_TYPE_BROWSER_SOURCE);
         }
 
         /// <summary>
@@ -1192,7 +1263,9 @@ namespace OBSWebsocketDotNet
             var request = new JObject();
             request.Add("sourceName", sourceName);
             if (sourceType != null)
+            {
                 request.Add("sourceType", sourceType);
+            }
 
             JObject result = SendRequest("GetSourceSettings", request);
             SourceSettings settings = new SourceSettings(result);
@@ -1212,9 +1285,39 @@ namespace OBSWebsocketDotNet
             request.Add("sourceName", sourceName);
             request.Add("sourceSettings", settings);
             if (sourceType != null)
+            {
                 request.Add("sourceType", sourceType);
+            }
 
             SendRequest("SetSourceSettings", request);
+        }
+
+        /// <summary>
+        /// Gets settings for a media source
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <returns></returns>
+        public MediaSourceSettings GetMediaSourceSettings(string sourceName)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+            request.Add("sourceType", "ffmpeg_source");
+
+            var response = SendRequest("GetSourceSettings", request);
+            return response.ToObject<MediaSourceSettings>();
+        }
+
+        /// <summary>
+        /// Sets settings of a media source
+        /// </summary>
+        /// <param name="sourceSettings"></param>
+        public void SetMediaSourceSettings(MediaSourceSettings sourceSettings)
+        {
+            if (sourceSettings.SourceType != "ffmpeg_source")
+            {
+                throw new System.Exception("Invalid SourceType");
+            }
+            SendRequest("SetSourceSettings", JObject.FromObject(sourceSettings));
         }
     }
 }
