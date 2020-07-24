@@ -3,4 +3,4 @@ A .NET library wrote in C# to communicate with an obs-websocket server. Depends 
 
 This library is available on the [NuGet gallery](https://www.nuget.org/packages/obs-websocket-dotnet). See the `TestClient` project for a working example.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/2mbqwwra6bhswvps)](https://ci.appveyor.com/project/Palakis/obs-websocket-dotnet)
+[![Build status](https://github.com/Palakis/obs-websocket-dotnet/workflows/obs-websocket-dotnet%20Tests/badge.svg)
