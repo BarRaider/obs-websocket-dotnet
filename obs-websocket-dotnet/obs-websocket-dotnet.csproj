@@ -82,6 +82,7 @@
     <Compile Include="Types\OBSVersion.cs" />
     <Compile Include="Types\OBSVideoInfo.cs" />
     <Compile Include="Types\OutputState.cs" />
+    <Compile Include="Types\RecordingStatus.cs" />
     <Compile Include="Types\SceneItem.cs" />
     <Compile Include="Types\SceneItemBoundsInfo.cs" />
     <Compile Include="Types\SceneItemBoundsType.cs" />

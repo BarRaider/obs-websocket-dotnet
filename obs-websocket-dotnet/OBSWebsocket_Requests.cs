@@ -149,6 +149,17 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Create a new scene
+        /// </summary>
+        /// <param name="sceneName">Name of new scene</param>
+        public void CreateScene(string sceneName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sceneName", sceneName);
+            SendRequest("CreateScene", requestFields);
+        }
+
+        /// <summary>
         /// List every available scene
         /// </summary>
         /// <returns>A <see cref="List{OBSScene}" /> of <see cref="OBSScene"/> objects describing each scene</returns>
@@ -734,6 +745,16 @@ namespace OBSWebsocketDotNet
         public void StartStopStreaming()
         {
             SendRequest("StartStopStreaming");
+        }
+
+        /// <summary>
+        /// Get current recording status.
+        /// </summary>
+        public RecordingStatus GetRecordingStatus()
+        {
+            var response = SendRequest("GetRecordingStatus");
+
+            return JsonConvert.DeserializeObject<RecordingStatus>(response.ToString());
         }
 
         /// <summary>
