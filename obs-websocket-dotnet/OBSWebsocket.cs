@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using OBSWebsocketDotNet.Types;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace OBSWebsocketDotNet
 {
@@ -127,6 +128,16 @@ namespace OBSWebsocketDotNet
         /// Triggered when the recording output state changes
         /// </summary>
         public event OutputStateCallback RecordingStateChanged;
+
+        /// <summary>
+        /// Triggered when the recording output is paused
+        /// </summary>
+        public event EventHandler RecordingPaused;
+
+        /// <summary>
+        /// Triggered when the recording output is resumed
+        /// </summary>
+        public event EventHandler RecordingResumed;
 
         /// <summary>
         /// Triggered when state of the replay buffer changes
@@ -599,7 +610,14 @@ namespace OBSWebsocketDotNet
                     if (RecordingStateChanged != null)
                         RecordingStateChanged(this, OutputState.Stopped);
                     break;
-
+                case "RecordingPaused":
+                    if (RecordingPaused != null)
+                        RecordingPaused(this, EventArgs.Empty);
+                    break;
+                case "RecordingResumed":
+                    if (RecordingResumed != null)
+                        RecordingResumed(this, EventArgs.Empty);
+                    break;
                 case "StreamStatus":
                     if (StreamStatus != null)
                     {
@@ -703,14 +721,11 @@ namespace OBSWebsocketDotNet
                     if (SourceFiltersReordered != null)
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
-                    /*
                     default:
-                        var header = "-----------" + eventType + "-------------";
-                        Console.WriteLine(header);
-                        Console.WriteLine(body);
-                        Console.WriteLine("".PadLeft(header.Length,'-'));
+                        var message = $"Unsupported Event: {eventType}\n{body}";
+                        Console.WriteLine(message);
+                        Debug.WriteLine(message);
                         break;
-                     */
             }
         }
 
