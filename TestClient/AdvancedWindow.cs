@@ -138,5 +138,21 @@ namespace TestClient
                 tbLog.AppendText($"{Environment.NewLine}{message}");
             }
         }
+
+        private void btnProjector_Click(object sender, EventArgs e)
+        {
+            const string SOURCE_NAME = "Live";
+            const string SCENE_NAME = "Webcam Full";
+            _obs.OpenProjector();
+            MessageBox.Show("Press Ok to continue");
+            _obs.OpenProjector("preview", 0);
+            MessageBox.Show("Press Ok to continue");
+            // Should not do anything as sceneName only works in "Source" and "Scene"
+            _obs.OpenProjector("preview", 0, null, SOURCE_NAME);
+            MessageBox.Show("Press Ok to continue");
+            _obs.OpenProjector("source", 0, null, SOURCE_NAME);
+            MessageBox.Show("Press Ok to continue");
+            _obs.OpenProjector("scene", 0, null, SCENE_NAME);
+        }
     }
 }

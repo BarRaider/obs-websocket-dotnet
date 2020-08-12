@@ -30,6 +30,7 @@
         {
             this.tbLog = new System.Windows.Forms.TextBox();
             this.btnEvents = new System.Windows.Forms.Button();
+            this.btnProjector = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbLog
@@ -53,11 +54,22 @@
             this.btnEvents.UseVisualStyleBackColor = true;
             this.btnEvents.Click += new System.EventHandler(this.btnEvents_Click);
             // 
+            // btnProjector
+            // 
+            this.btnProjector.Location = new System.Drawing.Point(691, 42);
+            this.btnProjector.Name = "btnProjector";
+            this.btnProjector.Size = new System.Drawing.Size(97, 23);
+            this.btnProjector.TabIndex = 2;
+            this.btnProjector.Text = "Projector";
+            this.btnProjector.UseVisualStyleBackColor = true;
+            this.btnProjector.Click += new System.EventHandler(this.btnProjector_Click);
+            // 
             // AdvancedWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnProjector);
             this.Controls.Add(this.btnEvents);
             this.Controls.Add(this.tbLog);
             this.MaximizeBox = false;
@@ -75,5 +87,6 @@
 
         private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.Button btnEvents;
+        private System.Windows.Forms.Button btnProjector;
     }
 }

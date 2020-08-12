@@ -1275,6 +1275,7 @@ namespace OBSWebsocketDotNet
         /// Enable/disable the heartbeat event
         /// </summary>
         /// <param name="enable"></param>
+        [Obsolete("Will be deprecated in v4.9 and completely removed in v5.0")]
         public void SetHeartbeat(bool enable)
         {
             var request = new JObject();
@@ -1349,6 +1350,32 @@ namespace OBSWebsocketDotNet
                 throw new System.Exception("Invalid SourceType");
             }
             SendRequest("SetSourceSettings", JObject.FromObject(sourceSettings));
+        }
+
+        /// <summary>
+        /// Open a projector window or create a projector on a monitor. Requires OBS v24.0.4 or newer.
+        /// </summary>
+        /// <param name="projectorType">Type of projector: "Preview" (default), "Source", "Scene", "StudioProgram", or "Multiview" (case insensitive)</param>
+        /// <param name="monitor">Monitor to open the projector on. If -1 or omitted, opens a window</param>
+        /// <param name="geometry">Size and position of the projector window (only if monitor is -1). Encoded in Base64 using Qt's geometry encoding. Corresponds to OBS's saved projectors</param>
+        /// <param name="name">Name of the source or scene to be displayed (ignored for other projector types)</param>
+        public void OpenProjector(string projectorType = "preview", int monitor = -1, string geometry = null, string name = null)
+        {
+            var request = new JObject();
+            request.Add("type", projectorType);
+            request.Add("monitor", monitor);
+
+            if (geometry != null)
+            {
+                request.Add("geometry", geometry);
+            }
+
+            if (name != null)
+            {
+                request.Add("name", name);
+            }
+
+            SendRequest("OpenProjector", request);
         }
     }
 }
