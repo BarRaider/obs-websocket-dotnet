@@ -389,5 +389,12 @@ namespace TestClient
         {
             _obs.SetTransitionDuration((int)tbTransitionDuration.Value);
         }
+
+        private void btnAdvanced_Click(object sender, EventArgs e)
+        {
+            AdvancedWindow advanced = new AdvancedWindow();
+            advanced.SetOBS(_obs);
+            advanced.ShowDialog();
+        }
     }
 }
