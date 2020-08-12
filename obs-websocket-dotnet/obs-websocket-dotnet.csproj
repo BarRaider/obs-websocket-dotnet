@@ -73,6 +73,8 @@
     <Compile Include="Types\GetTransitionListInfo.cs" />
     <Compile Include="Types\Heartbeat.cs" />
     <Compile Include="Types\FilterMovementType.cs" />
+    <Compile Include="Types\OBSOutputFlags.cs" />
+    <Compile Include="Types\OBSOutputInfo.cs" />
     <Compile Include="Types\OBSScene.cs" />
     <Compile Include="Types\OBSStats.cs" />
     <Compile Include="Types\FilterSettings.cs" />

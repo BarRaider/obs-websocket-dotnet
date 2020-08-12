@@ -1420,5 +1420,15 @@ namespace OBSWebsocketDotNet
 
             SendRequest("SetSourceName", request);
         }
+
+        /// <summary>
+        /// List existing outputs
+        /// </summary>
+        /// <returns>Array of OutputInfo</returns>
+        public List<OBSOutputInfo> ListOutputs()
+        {
+            var response = SendRequest("ListOutputs");
+            return response["outputs"].ToObject<List<OBSOutputInfo>>();
+        }
     }
 }
