@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet;
+using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,9 @@ namespace TestClient
 {
     public partial class AdvancedWindow : Form
     {
+        // Source to test on
+        private const string SOURCE_NAME = "BarRaider";
+
         protected OBSWebsocket _obs;
 
         public void SetOBS(OBSWebsocket obs)
@@ -147,7 +151,6 @@ namespace TestClient
 
         private void btnProjector_Click(object sender, EventArgs e)
         {
-            const string SOURCE_NAME = "Live";
             const string SCENE_NAME = "Webcam Full";
             _obs.OpenProjector();
             MessageBox.Show("Press Ok to continue");
@@ -163,7 +166,33 @@ namespace TestClient
 
         private void btnRename_Click(object sender, EventArgs e)
         {
-            _obs.SetSourceName("ChromaVVV", "ChromaVideo");
+            _obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
+        }
+
+        private void btnSourceFilters_Click(object sender, EventArgs e)
+        {
+            LogMessage("GetSourceFilters:");
+            var filters = _obs.GetSourceFilters(SOURCE_NAME);
+
+            foreach(var filter in filters)
+            {
+                LogFilter(filter);
+            }
+
+            var firstFilter = filters.FirstOrDefault();
+            if (firstFilter == null)
+            {
+                LogMessage("ERROR: No filters found");
+                return;
+            }
+
+            LogMessage("GetSourceFilterInfo:");
+            LogFilter(_obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
+        }
+
+        private void LogFilter(FilterSettings filter)
+        {
+            LogMessage($"Filter: {filter.Name} Type: {filter.Type} Enabled: {filter.IsEnabled}{Environment.NewLine}Settings: {filter.Settings}");
         }
     }
 }

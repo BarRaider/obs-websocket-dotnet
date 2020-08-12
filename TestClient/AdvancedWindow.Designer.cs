@@ -32,6 +32,7 @@
             this.btnEvents = new System.Windows.Forms.Button();
             this.btnProjector = new System.Windows.Forms.Button();
             this.btnRename = new System.Windows.Forms.Button();
+            this.btnSourceFilters = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbLog
@@ -75,11 +76,22 @@
             this.btnRename.UseVisualStyleBackColor = true;
             this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
             // 
+            // btnSourceFilters
+            // 
+            this.btnSourceFilters.Location = new System.Drawing.Point(691, 100);
+            this.btnSourceFilters.Name = "btnSourceFilters";
+            this.btnSourceFilters.Size = new System.Drawing.Size(97, 23);
+            this.btnSourceFilters.TabIndex = 4;
+            this.btnSourceFilters.Text = "Source Filters";
+            this.btnSourceFilters.UseVisualStyleBackColor = true;
+            this.btnSourceFilters.Click += new System.EventHandler(this.btnSourceFilters_Click);
+            // 
             // AdvancedWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnSourceFilters);
             this.Controls.Add(this.btnRename);
             this.Controls.Add(this.btnProjector);
             this.Controls.Add(this.btnEvents);
@@ -101,5 +113,6 @@
         private System.Windows.Forms.Button btnEvents;
         private System.Windows.Forms.Button btnProjector;
         private System.Windows.Forms.Button btnRename;
+        private System.Windows.Forms.Button btnSourceFilters;
     }
 }

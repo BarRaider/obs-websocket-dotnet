@@ -339,7 +339,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Return a list of all filters on a source
         /// </summary>
-        /// <param name="sourceName"></param>
+        /// <param name="sourceName">Source name</param>
         public List<FilterSettings> GetSourceFilters(string sourceName)
         {
             var requestFields = new JObject();
@@ -348,6 +348,22 @@ namespace OBSWebsocketDotNet
             JObject response = SendRequest("GetSourceFilters", requestFields);
 
             return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"].ToString());
+        }
+
+        /// <summary>
+        /// Return a list of all filters on a source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="filterName">Filter name</param>
+        public FilterSettings GetSourceFilterInfo(string sourceName, string filterName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterName", filterName);
+
+            JObject response = SendRequest("GetSourceFilterInfo", requestFields);
+
+            return JsonConvert.DeserializeObject<FilterSettings>(response.ToString());
         }
 
         /// <summary>
