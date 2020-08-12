@@ -580,8 +580,15 @@ namespace OBSWebsocketDotNet
             settings.NullValueHandling = NullValueHandling.Ignore;
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
 
+            if (requestFields["item"] == null)
+            {
+                requestFields["item"] = props.ItemName;
+            }
+
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             SendRequest("SetSceneItemProperties", requestFields);
         }
