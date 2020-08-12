@@ -1377,5 +1377,20 @@ namespace OBSWebsocketDotNet
 
             SendRequest("OpenProjector", request);
         }
+
+        /// <summary>
+        /// Renames a source.
+        /// Note: If the new name already exists as a source, obs-websocket will return an error.
+        /// </summary>
+        /// <param name="currentName">Current source name</param>
+        /// <param name="newName">New source name</param>
+        public void SetSourceName(string currentName, string newName)
+        {
+            var request = new JObject();
+            request.Add("sourceName", currentName);
+            request.Add("newName", newName);
+
+            SendRequest("SetSourceName", request);
+        }
     }
 }

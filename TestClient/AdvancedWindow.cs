@@ -52,7 +52,13 @@ namespace TestClient
             _obs.SourceFiltersReordered += _obs_SourceFiltersReordered;
             _obs.SceneItemLockChanged += _obs_SceneItemLockChanged;
             _obs.SceneItemVisibilityChanged += _obs_SceneItemVisibilityChanged;
+            _obs.SourceRenamed += _obs_SourceRenamed;
 
+        }
+
+        private void _obs_SourceRenamed(OBSWebsocket sender, string newName, string previousName)
+        {
+            LogMessage($"[SourceRenamed] Previous Name: {previousName} New Name: {newName}");
         }
 
         private void _obs_SceneItemVisibilityChanged(OBSWebsocket sender, string sceneName, string itemName, bool isVisible)
@@ -153,6 +159,11 @@ namespace TestClient
             _obs.OpenProjector("source", 0, null, SOURCE_NAME);
             MessageBox.Show("Press Ok to continue");
             _obs.OpenProjector("scene", 0, null, SCENE_NAME);
+        }
+
+        private void btnRename_Click(object sender, EventArgs e)
+        {
+            _obs.SetSourceName("ChromaVVV", "ChromaVideo");
         }
     }
 }
