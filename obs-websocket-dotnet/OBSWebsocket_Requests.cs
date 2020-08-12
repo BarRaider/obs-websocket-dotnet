@@ -1430,5 +1430,33 @@ namespace OBSWebsocketDotNet
             var response = SendRequest("ListOutputs");
             return response["outputs"].ToObject<List<OBSOutputInfo>>();
         }
+        /// <summary>
+        /// Get the audio monitoring type of the specified source.
+        /// Valid return values: none, monitorOnly, monitorAndOutput
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <returns>The monitor type in use</returns>
+        public string GetAudioMonitorType(string sourceName)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+
+            var response = SendRequest("GetAudioMonitorType", request);
+            return (string)response["monitorType"];
+        }
+
+        /// <summary>
+        /// Set the audio monitoring type of the specified source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="monitorType">The monitor type to use. Options: none, monitorOnly, monitorAndOutput</param>
+        public void SetAudioMonitorType(string sourceName, string monitorType)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+            request.Add("monitorType", monitorType);
+
+            SendRequest("SetAudioMonitorType", request);
+        }
     }
 }
