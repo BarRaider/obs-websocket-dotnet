@@ -790,7 +790,18 @@ namespace OBSWebsocketDotNet
                     SceneItemTransformChanged?.Invoke(this, new SceneItemTransformInfo(body));
                     break;
                 case "SourceAudioMixersChanged":
-                    SourceAudioMixersChanged?.Invoke(this, new AudioMixersChangedInfo(body));
+                    try
+                    {
+                        AudioMixersChangedInfo? info = body?.ToObject<AudioMixersChangedInfo>();
+                        if (info != null)
+                            SourceAudioMixersChanged?.Invoke(this, info);
+                        else
+                            OBSLogger.Warning($"Received '' event, but associated data was missing.");
+                    }
+                    catch (Exception ex)
+                    {
+                        OBSLogger.Error(ex);
+                    }
                     break;
                 case "SourceAudioSyncOffsetChanged":
                     SourceAudioSyncOffsetChanged?.Invoke(this,
@@ -840,8 +851,8 @@ namespace OBSWebsocketDotNet
                     if (filtersStr != null)
                         JsonConvert.PopulateObject(filtersStr, filters);
 
-                    SourceFiltersReordered?.Invoke(this, 
-                        (string?)body["sourceName"] ?? string.Empty, 
+                    SourceFiltersReordered?.Invoke(this,
+                        (string?)body["sourceName"] ?? string.Empty,
                         filters);
                     break;
                     /*

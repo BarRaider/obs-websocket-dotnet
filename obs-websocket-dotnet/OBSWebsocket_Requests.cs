@@ -287,7 +287,7 @@ namespace OBSWebsocketDotNet
         public async Task<SceneItemProperties> GetSceneItemProperties(string itemName, string? sceneName = null)
         {
             JObject response = await GetSceneItemPropertiesJson(itemName, sceneName).ConfigureAwait(false);
-            return response.ToObject<SceneItemProperties>() 
+            return response.ToObject<SceneItemProperties>()
                 ?? throw new ErrorResponseException("Response could not be parsed into SceneItemProperties.", response);
         }
 
@@ -424,7 +424,7 @@ namespace OBSWebsocketDotNet
 
             JObject response = await SendRequest("GetSourceFilters", requestFields).ConfigureAwait(false);
 
-            return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"]?.ToString() 
+            return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"]?.ToString()
                 ?? throw new ErrorResponseException("Response did not contain 'filters'.", response));
         }
 
@@ -524,7 +524,17 @@ namespace OBSWebsocketDotNet
         public async Task<TransitionSettings> GetCurrentTransition()
         {
             JObject respBody = await SendRequest("GetCurrentTransition").ConfigureAwait(false);
-            return new TransitionSettings(respBody);
+            try
+            {
+                TransitionSettings? settings = respBody.ToObject<TransitionSettings>();
+                if (settings != null)
+                    return settings;
+                throw new ErrorResponseException("Response body could not be parsed into 'TransitionSettings'.", respBody);
+            }
+            catch (JsonException ex)
+            {
+                throw new ErrorResponseException($"Invalid response body: {ex.Message}.", respBody, ex);
+            }
         }
 
         /// <summary>
@@ -1450,7 +1460,7 @@ namespace OBSWebsocketDotNet
             };
 
             JObject? response = await SendRequest("GetSourceSettings", request).ConfigureAwait(false);
-            return response.ToObject<MediaSourceSettings>() 
+            return response.ToObject<MediaSourceSettings>()
                 ?? throw new ErrorResponseException("Response could not be parsed into MediaSourceSettings.", response);
         }
 

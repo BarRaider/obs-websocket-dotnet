@@ -164,10 +164,11 @@ namespace OBSWebsocketDotNet.Tests
             int duration = 2000;
 
             var data = new JObject();
+            data.Add("messageID", "asdf89asdf");
             data.Add("name", transitionName);
             data.Add("duration", duration);
 
-            var transitionInfo = new TransitionSettings(data);
+            var transitionInfo = data.ToObject<TransitionSettings>();
 
             Assert.AreEqual(transitionName, transitionInfo.Name);
             Assert.AreEqual(duration, transitionInfo.Duration);
