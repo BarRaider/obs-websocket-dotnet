@@ -26,6 +26,7 @@ using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace OBSWebsocketDotNet
 {
@@ -249,6 +250,25 @@ namespace OBSWebsocketDotNet
             : base(message) { }
 
         public ErrorResponseException(string message, Exception innerException)
-            : base(message, innerException) { }
+            : base(message, innerException) 
+        { 
+            
+        }
+    }
+
+    public class SocketErrorResponseException : ErrorResponseException
+    {
+        public SocketError SocketErrorCode { get; }
+        public int ErrorCode => (int)SocketErrorCode;
+        public SocketErrorResponseException(string message, SocketException socketException)
+            : base(message, socketException)
+        {
+            SocketErrorCode = socketException.SocketErrorCode;
+        }
+        public SocketErrorResponseException(SocketException socketException)
+           : base(socketException.Message, socketException)
+        {
+            SocketErrorCode = socketException.SocketErrorCode;
+        }
     }
 }
