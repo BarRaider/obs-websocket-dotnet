@@ -323,9 +323,9 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Modify the Source Filter's visibility
         /// </summary>
-        /// <param name="sourceName"></param>
-        /// <param name="filterName"></param>
-        /// <param name="filterEnabled"></param>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="filterName">Source filter name</param>
+        /// <param name="filterEnabled">New filter state</param>
         public void SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
         {
             var requestFields = new JObject();
@@ -816,6 +816,18 @@ namespace OBSWebsocketDotNet
             var response = SendRequest("GetTransitionList");
 
             return JsonConvert.DeserializeObject<GetTransitionListInfo>(response.ToString());
+        }
+
+        /// <summary>
+        /// Get the position of the current transition. Value will be between 0.0 and 1.0.
+        /// Note: Returns 1.0 when not active.
+        /// </summary>
+        /// <returns></returns>
+        public double GetTransitionPosition()
+        {
+            var response = SendRequest("GetTransitionPosition");
+
+            return (double)response["position"];
         }
 
         /// <summary>
