@@ -101,6 +101,7 @@
     <Compile Include="Types\StreamStatus.cs" />
     <Compile Include="Types\TextGDIPlusFont.cs" />
     <Compile Include="Types\TextGDIPlusProperties.cs" />
+    <Compile Include="Types\TransitionOverrideInfo.cs" />
     <Compile Include="Types\TransitionSettings.cs" />
     <Compile Include="Types\VolumeInfo.cs" />
   </ItemGroup>

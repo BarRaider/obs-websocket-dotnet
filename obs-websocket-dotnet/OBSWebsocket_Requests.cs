@@ -185,6 +185,52 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Get the specified scene's transition override info
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to return the override info</param>
+        /// <returns>TransitionOverrideInfo</returns>
+        public TransitionOverrideInfo GetSceneTransitionOverride(string sceneName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sceneName", sceneName);
+            
+            JObject response = SendRequest("GetSceneTransitionOverride", requestFields);
+            return response.ToObject<TransitionOverrideInfo>();
+        }
+
+        /// <summary>
+        /// Set specific transition override for a scene
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to set the transition override</param>
+        /// <param name="transitionName">Name of the transition to use</param>
+        /// <param name="transitionDuration">Duration in milliseconds of the transition if transition is not fixed. Defaults to the current duration specified in the UI if there is no current override and this value is not given</param>
+        public void SetSceneTransitionOverride(string sceneName, string transitionName, int transitionDuration = -1)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sceneName", sceneName);
+            requestFields.Add("transitionName", transitionName);
+
+            if (transitionDuration >= 0)
+            {
+                requestFields.Add("transitionDuration", transitionDuration);
+            }
+
+            SendRequest("SetSceneTransitionOverride", requestFields);
+        }
+
+        /// <summary>
+        /// Remove any transition override from a specific scene
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to remove the transition override</param>
+        public void RemoveSceneTransitionOverride(string sceneName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sceneName", sceneName);
+
+            SendRequest("RemoveSceneTransitionOverride", requestFields);
+        }
+
+        /// <summary>
         /// List all sources available in the running OBS instance
         /// </summary>
         public List<SourceInfo> GetSourcesList()
