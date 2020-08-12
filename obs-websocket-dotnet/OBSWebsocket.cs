@@ -230,6 +230,11 @@ namespace OBSWebsocketDotNet
         public event SourceFiltersReorderedCallback SourceFiltersReordered;
 
         /// <summary>
+        /// Filters in a source have been reordered
+        /// </summary>
+        public event SourceFilterVisibilityChangedCallback SourceFilterVisibilityChanged;
+
+        /// <summary>
         /// A source has been muted or unmuted
         /// </summary>
         public event SourceMuteStateChangedCallback SourceMuteStateChanged;
@@ -721,7 +726,11 @@ namespace OBSWebsocketDotNet
                     if (SourceFiltersReordered != null)
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
-                    default:
+                case "SourceFilterVisibilityChanged":
+                    if (SourceFilterVisibilityChanged != null)
+                        SourceFilterVisibilityChanged(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);
+                    break;
+                default:
                         var message = $"Unsupported Event: {eventType}\n{body}";
                         Console.WriteLine(message);
                         Debug.WriteLine(message);

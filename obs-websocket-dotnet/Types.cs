@@ -248,6 +248,15 @@ namespace OBSWebsocketDotNet
     public delegate void SourceFiltersReorderedCallback(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters);
 
     /// <summary>
+    /// Callback by <see cref="OBSWebsocket.SourceFilterVisibilityChanged"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="filterName">Name of filter</param>
+    /// <param name="filterEnabled">New filter state</param>
+    public delegate void SourceFilterVisibilityChangedCallback(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled);
+
+    /// <summary>
     /// Thrown if authentication fails
     /// </summary>
     public class AuthFailureException : Exception
