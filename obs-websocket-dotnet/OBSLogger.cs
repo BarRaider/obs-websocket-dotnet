@@ -11,7 +11,7 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public static class OBSLogger
     {
-        internal static IOBSLogger logger;
+        internal static IOBSLogger? logger;
         /// <summary>
         /// Sets the <see cref="IOBSLogger"/> that will receive all log messages from <see cref="OBSWebsocketDotNet"/>.
         /// </summary>
