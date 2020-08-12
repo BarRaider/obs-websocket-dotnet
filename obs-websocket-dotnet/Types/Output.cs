@@ -16,8 +16,8 @@ namespace OBSWebsocketDotNet.Types
         /// <returns></returns>
         public static Output CreateOutput(JObject response)
         {
-            string outputName = response["name"]?.Value<string>().ToLower();
-            if (string.IsNullOrEmpty(outputName))
+            string outputName = response["name"]?.Value<string>().ToLower() ?? throw new ErrorResponseException("Output response did not contain 'name' for the Output", response);
+            if (outputName.Length == 0)
             {
                 OBSLogger.Warning($"Invalid output name from response: {response.ToString(Newtonsoft.Json.Formatting.None)}");
                 // TODO: Should this throw an exception or return null?
@@ -43,17 +43,17 @@ namespace OBSWebsocketDotNet.Types
 
         protected Output(JObject response)
         {
-            Name = response["name"].Value<string>();
-            Type = response["type"].Value<string>();
-            Width = response["width"].Value<int>();
-            Height = response["height"].Value<int>();
-            Flags = (OutputFlags)response["flags"]["rawValue"].Value<int>();
-            Active = response["active"].Value<bool>();
-            Reconnecting = response["reconnecting"].Value<bool>();
-            Congestion = response["congestion"].Value<double>();
-            TotalFrames = response["totalFrames"].Value<int>();
-            DroppedFrames = response["droppedFrames"].Value<int>();
-            TotalBytes = response["totalBytes"].Value<int>();
+            Name = response["name"]?.Value<string>() ?? throw new ErrorResponseException("Output response did not contain 'name'", response);
+            Type = response["type"]?.Value<string>() ?? throw new ErrorResponseException("Output response did not contain 'type'", response);
+            Width = response["width"]?.Value<int>() ?? -1;
+            Height = response["height"]?.Value<int>() ?? -1;
+            Flags = (OutputFlags)(response["flags"]?["rawValue"]?.Value<int>() ?? 0);
+            Active = response["active"]?.Value<bool>() ?? false;
+            Reconnecting = response["reconnecting"]?.Value<bool>() ?? false;
+            Congestion = response["congestion"]?.Value<double>() ?? 0;
+            TotalFrames = response["totalFrames"]?.Value<int>() ?? 0;
+            DroppedFrames = response["droppedFrames"]?.Value<int>() ?? 0;
+            TotalBytes = response["totalBytes"]?.Value<int>() ?? 0;
         }
         public readonly string Name;
         public readonly string Type;
@@ -73,8 +73,8 @@ namespace OBSWebsocketDotNet.Types
         public StreamOutput(JObject response)
             : base(response)
         {
-
-            Settings = new StreamOutputSettings(response["settings"] as JObject);
+            if (response["settings"] is JObject settings)
+                Settings = new StreamOutputSettings(settings);
         }
 
         public readonly StreamOutputSettings Settings;
@@ -85,7 +85,8 @@ namespace OBSWebsocketDotNet.Types
             : base(response)
         {
 
-            Settings = new FileOutputSettings(response["settings"] as JObject);
+            if (response["settings"] is JObject settings)
+                Settings = new FileOutputSettings(settings);
         }
 
         public readonly FileOutputSettings Settings;
@@ -97,7 +98,8 @@ namespace OBSWebsocketDotNet.Types
         public ReplayOutput(JObject response)
             : base(response)
         {
-            Settings = new ReplayOutputSettings(response["settings"] as JObject);
+            if (response["settings"] is JObject settings)
+                Settings = new ReplayOutputSettings(settings);
         }
     }
 
@@ -109,8 +111,8 @@ namespace OBSWebsocketDotNet.Types
             MuxerSettings = jObject["muxer_settings"]?.Value<string>();
             Path = jObject["path"]?.Value<string>();
         }
-        public readonly string MuxerSettings;
-        public readonly string Path;
+        public readonly string? MuxerSettings;
+        public readonly string? Path;
     }
 
     public struct StreamOutputSettings
@@ -122,7 +124,7 @@ namespace OBSWebsocketDotNet.Types
             LowLatencyMode = jObject["low_latency_mode_enabled"]?.Value<bool>() ?? false;
             NewSocketLoopEnabled = jObject["new_socket_loop_enabled"]?.Value<bool>() ?? false;
         }
-        public readonly string BindIP;
+        public readonly string? BindIP;
         public readonly bool DynamicBitrate;
         public readonly bool LowLatencyMode;
         public readonly bool NewSocketLoopEnabled;
@@ -143,13 +145,13 @@ namespace OBSWebsocketDotNet.Types
         }
 
         public readonly bool AllowSpaces;
-        public readonly string Directory;
-        public readonly string Extension;
-        public readonly string Format;
+        public readonly string? Directory;
+        public readonly string? Extension;
+        public readonly string? Format;
         public readonly int MaxSizeMB;
         public readonly int MaxTimeSecond;
-        public readonly string MuxerSettings;
-        public readonly string Path;
+        public readonly string? MuxerSettings;
+        public readonly string? Path;
     }
 #pragma warning restore CA1815 // Override equals and operator equals on value types
 

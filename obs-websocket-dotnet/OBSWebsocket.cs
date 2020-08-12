@@ -34,6 +34,7 @@ using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Threading;
+using System.Net;
 
 namespace OBSWebsocketDotNet
 {
@@ -50,187 +51,187 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when switching to another scene
         /// </summary>
-        public event SceneChangeCallback SceneChanged;
+        public event SceneChangeCallback? SceneChanged;
 
         /// <summary>
         /// Triggered when a scene is created, deleted or renamed
         /// </summary>
-        public event EventHandler SceneListChanged;
+        public event EventHandler? SceneListChanged;
 
         /// <summary>
         /// Triggered when the scene item list of the specified scene is reordered
         /// </summary>
-        public event SourceOrderChangeCallback SourceOrderChanged;
+        public event SourceOrderChangeCallback? SourceOrderChanged;
 
         /// <summary>
         /// Triggered when a new item is added to the item list of the specified scene
         /// </summary>
-        public event SceneItemUpdateCallback SceneItemAdded;
+        public event SceneItemUpdateCallback? SceneItemAdded;
 
         /// <summary>
         /// Triggered when an item is removed from the item list of the specified scene
         /// </summary>
-        public event SceneItemUpdateCallback SceneItemRemoved;
+        public event SceneItemUpdateCallback? SceneItemRemoved;
 
         /// <summary>
         /// Triggered when the visibility of a scene item changes
         /// </summary>
-        public event SceneItemVisibilityChangedCallback SceneItemVisibilityChanged;
+        public event SceneItemVisibilityChangedCallback? SceneItemVisibilityChanged;
 
         /// <summary>
         /// Triggered when switching to another scene collection
         /// </summary>
-        public event EventHandler SceneCollectionChanged;
+        public event EventHandler? SceneCollectionChanged;
 
         /// <summary>
         /// Triggered when a scene collection is created, deleted or renamed
         /// </summary>
-        public event EventHandler SceneCollectionListChanged;
+        public event EventHandler? SceneCollectionListChanged;
 
         /// <summary>
         /// Triggered when switching to another transition
         /// </summary>
-        public event TransitionChangeCallback TransitionChanged;
+        public event TransitionChangeCallback? TransitionChanged;
 
         /// <summary>
         /// Triggered when the current transition duration is changed
         /// </summary>
-        public event TransitionDurationChangeCallback TransitionDurationChanged;
+        public event TransitionDurationChangeCallback? TransitionDurationChanged;
 
         /// <summary>
         /// Triggered when a transition is created or removed
         /// </summary>
-        public event EventHandler TransitionListChanged;
+        public event EventHandler? TransitionListChanged;
 
         /// <summary>
         /// Triggered when a transition between two scenes starts. Followed by <see cref="SceneChanged"/>
         /// </summary>
-        public event EventHandler TransitionBegin;
+        public event EventHandler? TransitionBegin;
 
         /// <summary>
         /// Triggered when switching to another profile
         /// </summary>
-        public event EventHandler ProfileChanged;
+        public event EventHandler? ProfileChanged;
 
         /// <summary>
         /// Triggered when a profile is created, imported, removed or renamed
         /// </summary>
-        public event EventHandler ProfileListChanged;
+        public event EventHandler? ProfileListChanged;
 
         /// <summary>
         /// Triggered when the streaming output state changes
         /// </summary>
-        public event OutputStateCallback StreamingStateChanged;
+        public event OutputStateCallback? StreamingStateChanged;
 
         /// <summary>
         /// Triggered when the recording output state changes
         /// </summary>
-        public event OutputStateCallback RecordingStateChanged;
+        public event OutputStateCallback? RecordingStateChanged;
 
         /// <summary>
         /// Triggered when state of the replay buffer changes
         /// </summary>
-        public event OutputStateCallback ReplayBufferStateChanged;
+        public event OutputStateCallback? ReplayBufferStateChanged;
 
         /// <summary>
         /// Triggered every 2 seconds while streaming is active
         /// </summary>
-        public event StreamStatusCallback StreamStatus;
+        public event StreamStatusCallback? StreamStatus;
 
         /// <summary>
         /// Triggered when the preview scene selection changes (Studio Mode only)
         /// </summary>
-        public event SceneChangeCallback PreviewSceneChanged;
+        public event SceneChangeCallback? PreviewSceneChanged;
 
         /// <summary>
         /// Triggered when Studio Mode is turned on or off
         /// </summary>
-        public event StudioModeChangeCallback StudioModeSwitched;
+        public event StudioModeChangeCallback? StudioModeSwitched;
 
         /// <summary>
         /// Triggered when OBS exits
         /// </summary>
-        public event EventHandler OBSExit;
+        public event EventHandler? OBSExit;
 
         /// <summary>
         /// Triggered when connected successfully to an obs-websocket server
         /// </summary>
-        public event EventHandler Connected;
+        public event EventHandler? Connected;
 
         /// <summary>
         /// Triggered when disconnected from an obs-websocket server
         /// </summary>
-        public event EventHandler Disconnected;
+        public event EventHandler? Disconnected;
 
         /// <summary>
         /// Emitted every 2 seconds after enabling it by calling SetHeartbeat
         /// </summary>
-        public event HeartBeatCallback Heartbeat;
+        public event HeartBeatCallback? Heartbeat;
 
         /// <summary>
         /// A scene item is deselected
         /// </summary>
-        public event SceneItemDeselectedCallback SceneItemDeselected;
+        public event SceneItemDeselectedCallback? SceneItemDeselected;
 
         /// <summary>
         /// A scene item is selected
         /// </summary>
-        public event SceneItemSelectedCallback SceneItemSelected;
+        public event SceneItemSelectedCallback? SceneItemSelected;
 
         /// <summary>
         /// A scene item transform has changed
         /// </summary>
-        public event SceneItemTransformCallback SceneItemTransformChanged;
+        public event SceneItemTransformCallback? SceneItemTransformChanged;
 
         /// <summary>
         /// Audio mixer routing changed on a source
         /// </summary>
-        public event SourceAudioMixersChangedCallback SourceAudioMixersChanged;
+        public event SourceAudioMixersChangedCallback? SourceAudioMixersChanged;
 
         /// <summary>
         /// The audio sync offset of a source has changed
         /// </summary>
-        public event SourceAudioSyncOffsetCallback SourceAudioSyncOffsetChanged;
+        public event SourceAudioSyncOffsetCallback? SourceAudioSyncOffsetChanged;
 
         /// <summary>
         /// A source has been created. A source can be an input, a scene or a transition.
         /// </summary>
-        public event SourceCreatedCallback SourceCreated;
+        public event SourceCreatedCallback? SourceCreated;
 
         /// <summary>
         /// A source has been destroyed/removed. A source can be an input, a scene or a transition.
         /// </summary>
-        public event SourceDestroyedCallback SourceDestroyed;
+        public event SourceDestroyedCallback? SourceDestroyed;
 
         /// <summary>
         /// A filter was added to a source
         /// </summary>
-        public event SourceFilterAddedCallback SourceFilterAdded;
+        public event SourceFilterAddedCallback? SourceFilterAdded;
 
         /// <summary>
         /// A filter was removed from a source
         /// </summary>
-        public event SourceFilterRemovedCallback SourceFilterRemoved;
+        public event SourceFilterRemovedCallback? SourceFilterRemoved;
 
         /// <summary>
         /// Filters in a source have been reordered
         /// </summary>
-        public event SourceFiltersReorderedCallback SourceFiltersReordered;
+        public event SourceFiltersReorderedCallback? SourceFiltersReordered;
 
         /// <summary>
         /// A source has been muted or unmuted
         /// </summary>
-        public event SourceMuteStateChangedCallback SourceMuteStateChanged;
+        public event SourceMuteStateChangedCallback? SourceMuteStateChanged;
 
         /// <summary>
         /// A source has been renamed
         /// </summary>
-        public event SourceRenamedCallback SourceRenamed;
+        public event SourceRenamedCallback? SourceRenamed;
 
         /// <summary>
         /// The volume of a source has changed
         /// </summary>
-        public event SourceVolumeChangedCallback SourceVolumeChanged;
+        public event SourceVolumeChangedCallback? SourceVolumeChanged;
 
         #endregion
 
@@ -244,11 +245,13 @@ namespace OBSWebsocketDotNet
         {
             get
             {
-                return (WSConnection != null && WSConnection.State == WebSocketState.Open);
+                return (WSConnection != null && CheckConnection(WSConnection));
             }
         }
 
-        public string ConnectionUrl { get; protected set; }
+        protected static bool CheckConnection(WebSocket connection) => connection.State == WebSocketState.Open;
+
+        public string? ConnectionUrl { get; protected set; }
 
         /// <summary>
         /// Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
@@ -309,6 +312,7 @@ namespace OBSWebsocketDotNet
                 tcs.TrySetCanceled(cancellationToken);
             });
             ConnectingTaskSource = tcs;
+            if (WSConnection == null) throw new InvalidOperationException("A URL has not been specified for the connection.");
             WSConnection.Open();
             bool connected = await tcs.Task.ConfigureAwait(false); // Will throw exception if error occurs
             if (!connected)
@@ -320,7 +324,7 @@ namespace OBSWebsocketDotNet
             {
                 try
                 {
-                    await Authenticate(password, authInfo).ConfigureAwait(false);
+                    await Authenticate(password ?? string.Empty, authInfo).ConfigureAwait(false);
                 }
                 catch (AuthFailureException)
                 {
@@ -353,7 +357,7 @@ namespace OBSWebsocketDotNet
             if (ConnectionUrl != url)
             {
                 Disconnect();
-                WebSocket connection = WSConnection;
+                WebSocket? connection = WSConnection;
                 WSConnection = null;
                 if (connection != null)
                 {
@@ -386,25 +390,28 @@ namespace OBSWebsocketDotNet
 
         protected void OnConnectionOpened(object sender, EventArgs e)
         {
-            TaskCompletionSource<bool> connectingTcs = ConnectingTaskSource;
+            TaskCompletionSource<bool>? connectingTcs = ConnectingTaskSource;
             if (connectingTcs != null)
                 connectingTcs.TrySetResult(true);
         }
 
         protected void OnConnectionClosed(object sender, EventArgs e)
         {
-            TaskCompletionSource<bool> connectingTcs = ConnectingTaskSource;
+            TaskCompletionSource<bool>? connectingTcs = ConnectingTaskSource;
             if (connectingTcs != null)
                 connectingTcs.TrySetResult(false);
-            EventHandler disconnectHandler = Disconnected;
+            EventHandler? disconnectHandler = Disconnected;
             disconnectHandler?.Invoke(this, e);
             CancelAllHandlers();
         }
 
         protected void OnConnectionError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
-            OBSLogger.Error(e?.Exception);
-            TaskCompletionSource<bool> connectingTcs = ConnectingTaskSource;
+            if (e?.Exception != null)
+                OBSLogger.Error(e.Exception);
+            else
+                OBSLogger.Error("Unknown error in WebSocket connection.");
+            TaskCompletionSource<bool>? connectingTcs = ConnectingTaskSource;
             ConnectingTaskSource = null;
             if (connectingTcs != null)
             {
@@ -427,7 +434,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public void Disconnect()
         {
-            WebSocket connection = WSConnection;
+            WebSocket? connection = WSConnection;
             if (connection != null
                 && (connection.State == WebSocketState.Open
                     || connection.State == WebSocketState.Connecting))
@@ -437,7 +444,7 @@ namespace OBSWebsocketDotNet
             CancelAllHandlers();
         }
 
-        protected void CancelAllHandlers(Exception exception = null)
+        protected void CancelAllHandlers(Exception? exception = null)
         {
             var unusedHandlers = _responseHandlers.ToArray();
             _responseHandlers.Clear();
@@ -469,14 +476,10 @@ namespace OBSWebsocketDotNet
                 OBSLogger.Debug($"Invalid message: {e.Message}");
                 return;
             }
-
-            if (body["message-id"] != null)
+            string? msgID = (string?)body["message-id"];
+            string? eventType = body["update-type"]?.ToString();
+            if (msgID != null)
             {
-                // Handle a request :
-                // Find the response handler based on
-                // its associated message ID
-                string msgID = (string)body["message-id"];
-
                 if (_responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
                 {
                     // Set the response body as Result and notify the request sender
@@ -487,10 +490,9 @@ namespace OBSWebsocketDotNet
                     OBSLogger.Debug($"No handler for message-id. body is {body.ToString(Formatting.Indented)}");
                 }
             }
-            else if (body["update-type"] != null)
+            else if (eventType != null)
             {
                 // Handle an event
-                string eventType = body["update-type"].ToString();
                 ProcessEventType(eventType, body);
             }
         }
@@ -501,7 +503,7 @@ namespace OBSWebsocketDotNet
         /// <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
         /// <param name="additionalFields">additional JSON fields if required by the request type</param>
         /// <returns>The server's JSON response as a JObject</returns>
-        public async Task<JObject> SendRequest(string requestType, JObject additionalFields = null)
+        public async Task<JObject> SendRequest(string requestType, JObject? additionalFields = null)
         {
             string messageID;
 
@@ -521,8 +523,8 @@ namespace OBSWebsocketDotNet
 
                 body.Merge(additionalFields, mergeSettings);
             }
-
-            if (!IsConnected)
+            WebSocket? connection = WSConnection;
+            if (connection == null || !CheckConnection(connection))
             {
                 throw new ErrorResponseException("Not connected to OBS");
             }
@@ -543,7 +545,7 @@ namespace OBSWebsocketDotNet
             // Send the message and wait for a response
             // (received and notified by the websocket response handler)
 
-            WSConnection.Send(body.ToString());
+            connection.Send(body.ToString());
             JObject result;
             try
             {
@@ -557,8 +559,8 @@ namespace OBSWebsocketDotNet
 
             // Throw an exception if the server returned an error.
             // An error occurs if authentication fails or one if the request body is invalid.
-            if ((string)result["status"] == "error")
-                throw new ErrorResponseException((string)result["error"]);
+            if ((string?)result["status"] == "error")
+                throw new ErrorResponseException((string?)result["error"] ?? "Response indicated an error.", result);
 
             return result;
         }
@@ -625,7 +627,8 @@ namespace OBSWebsocketDotNet
             switch (eventType)
             {
                 case "SwitchScenes":
-                    SceneChanged?.Invoke(this, (string)body["scene-name"]);
+                    SceneChanged?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty);
                     break;
 
                 case "ScenesChanged":
@@ -633,19 +636,27 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "SourceOrderChanged":
-                    SourceOrderChanged?.Invoke(this, (string)body["scene-name"]);
+                    SourceOrderChanged?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty); // TODO: More info available.
                     break;
 
                 case "SceneItemAdded":
-                    SceneItemAdded?.Invoke(this, (string)body["scene-name"], (string)body["item-name"]);
+                    SceneItemAdded?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty,
+                        (string?)body["item-name"] ?? string.Empty); // TODO: int 'item-id' available.
                     break;
 
                 case "SceneItemRemoved":
-                    SceneItemRemoved?.Invoke(this, (string)body["scene-name"], (string)body["item-name"]);
+                    SceneItemRemoved?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty,
+                        (string?)body["item-name"] ?? string.Empty);
                     break;
 
                 case "SceneItemVisibilityChanged":
-                    SceneItemVisibilityChanged?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
+                    SceneItemVisibilityChanged?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty,
+                        (string?)body["item-name"] ?? string.Empty,
+                        (bool?)body["item-visible"] ?? false);
                     break;
 
                 case "SceneCollectionChanged":
@@ -657,11 +668,13 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "SwitchTransition":
-                    TransitionChanged?.Invoke(this, (string)body["transition-name"]);
+                    TransitionChanged?.Invoke(this,
+                        (string?)body["transition-name"] ?? string.Empty);
                     break;
 
                 case "TransitionDurationChanged":
-                    TransitionDurationChanged?.Invoke(this, (int)body["new-duration"]);
+                    TransitionDurationChanged?.Invoke(this,
+                        (int?)body["new-duration"] ?? -1);
                     break;
 
                 case "TransitionListChanged":
@@ -669,7 +682,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "TransitionBegin":
-                    TransitionBegin?.Invoke(this, EventArgs.Empty);
+                    TransitionBegin?.Invoke(this, EventArgs.Empty); // TODO: More info available.
                     break;
 
                 case "ProfileChanged":
@@ -689,7 +702,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "StreamStopping":
-                    StreamingStateChanged?.Invoke(this, OutputState.Stopping);
+                    StreamingStateChanged?.Invoke(this, OutputState.Stopping); // TODO: Undocumented 'stream-timecode' available. (TimeSpan?)
                     break;
 
                 case "StreamStopped":
@@ -705,7 +718,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "RecordingStopping":
-                    RecordingStateChanged?.Invoke(this, OutputState.Stopping);
+                    RecordingStateChanged?.Invoke(this, OutputState.Stopping); // TODO: Undocumented 'rec-timecode' available. (TimeSpan? ex: '00:00:02.183')
                     break;
 
                 case "RecordingStopped":
@@ -713,11 +726,11 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "RecordingPaused":
-                    RecordingStateChanged?.Invoke(this, OutputState.Paused);
+                    RecordingStateChanged?.Invoke(this, OutputState.Paused); // TODO: Undocumented 'rec-timecode' available. (TimeSpan?)
                     break;
 
                 case "RecordingResumed":
-                    RecordingStateChanged?.Invoke(this, OutputState.Resumed);
+                    RecordingStateChanged?.Invoke(this, OutputState.Resumed); // TODO: Undocumented 'rec-timecode' available. (TimeSpan?)
                     break;
 
                 case "StreamStatus":
@@ -729,11 +742,13 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "PreviewSceneChanged":
-                    PreviewSceneChanged?.Invoke(this, (string)body["scene-name"]);
+                    PreviewSceneChanged?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty); // TODO: 'sources' Array<SceneItem> available.
                     break;
 
                 case "StudioModeSwitched":
-                    StudioModeSwitched?.Invoke(this, (bool)body["new-state"]);
+                    StudioModeSwitched?.Invoke(this,
+                        (bool?)body["new-state"] ?? false);
                     break;
 
                 case "ReplayStarting":
@@ -760,10 +775,16 @@ namespace OBSWebsocketDotNet
                     Heartbeat?.Invoke(this, new Heartbeat(body));
                     break;
                 case "SceneItemDeselected":
-                    SceneItemDeselected?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
+                    SceneItemDeselected?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty,
+                        (string?)body["item-name"] ?? string.Empty,
+                        (string?)body["item-id"] ?? string.Empty);
                     break;
                 case "SceneItemSelected":
-                    SceneItemSelected?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
+                    SceneItemSelected?.Invoke(this,
+                        (string?)body["scene-name"] ?? string.Empty,
+                        (string?)body["item-name"] ?? string.Empty,
+                        (string?)body["item-id"] ?? string.Empty);
                     break;
                 case "SceneItemTransformChanged":
                     SceneItemTransformChanged?.Invoke(this, new SceneItemTransformInfo(body));
@@ -772,35 +793,56 @@ namespace OBSWebsocketDotNet
                     SourceAudioMixersChanged?.Invoke(this, new AudioMixersChangedInfo(body));
                     break;
                 case "SourceAudioSyncOffsetChanged":
-                    SourceAudioSyncOffsetChanged?.Invoke(this, (string)body["sourceName"], (int)body["syncOffset"]);
+                    SourceAudioSyncOffsetChanged?.Invoke(this,
+                        (string?)body["sourceName"] ?? string.Empty,
+                        (int?)body["syncOffset"] ?? 0);
                     break;
                 case "SourceCreated":
                     SourceCreated?.Invoke(this, new SourceSettings(body));
                     break;
                 case "SourceDestroyed":
-                    SourceDestroyed?.Invoke(this, (string)body["sourceName"], (string)body["sourceType"], (string)body["sourceKind"]);
+                    SourceDestroyed?.Invoke(this,
+                        (string?)body["sourceName"] ?? string.Empty,
+                        (string?)body["sourceType"] ?? string.Empty,
+                        (string?)body["sourceKind"] ?? string.Empty);
                     break;
                 case "SourceRenamed":
-                    SourceRenamed?.Invoke(this, (string)body["newName"], (string)body["previousName"]);
+                    SourceRenamed?.Invoke(this,
+                        (string?)body["newName"] ?? string.Empty,
+                        (string?)body["previousName"] ?? string.Empty);
                     break;
 
                 case "SourceMuteStateChanged":
-                    SourceMuteStateChanged?.Invoke(this, (string)body["sourceName"], (bool)body["muted"]);
+                    SourceMuteStateChanged?.Invoke(this,
+                        (string?)body["sourceName"] ?? string.Empty,
+                        (bool?)body["muted"] ?? false);
                     break;
                 case "SourceVolumeChanged":
-                    SourceVolumeChanged?.Invoke(this, (string)body["sourceName"], (float)body["volume"]);
+                    SourceVolumeChanged?.Invoke(this,
+                        (string?)body["sourceName"] ?? string.Empty,
+                        (float?)body["volume"] ?? -1f);
                     break;
                 case "SourceFilterAdded":
-                    SourceFilterAdded?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (string)body["filterType"], (JObject)body["filterSettings"]);
+                    SourceFilterAdded?.Invoke(this,
+                        (string?)body["sourceName"] ?? string.Empty,
+                        (string?)body["filterName"] ?? string.Empty,
+                        (string?)body["filterType"] ?? string.Empty,
+                        (JObject?)body["filterSettings"]);
                     break;
                 case "SourceFilterRemoved":
-                    SourceFilterRemoved?.Invoke(this, (string)body["sourceName"], (string)body["filterName"]);
+                    SourceFilterRemoved?.Invoke(this,
+                        (string?)body["sourceName"] ?? string.Empty,
+                        (string?)body["filterName"] ?? string.Empty);
                     break;
                 case "SourceFiltersReordered":
                     List<FilterReorderItem> filters = new List<FilterReorderItem>();
-                    JsonConvert.PopulateObject(body["filters"].ToString(), filters);
+                    string? filtersStr = body["filters"]?.ToString();
+                    if (filtersStr != null)
+                        JsonConvert.PopulateObject(filtersStr, filters);
 
-                    SourceFiltersReordered?.Invoke(this, (string)body["sourceName"], filters);
+                    SourceFiltersReordered?.Invoke(this, 
+                        (string?)body["sourceName"] ?? string.Empty, 
+                        filters);
                     break;
                     /*
                     default:

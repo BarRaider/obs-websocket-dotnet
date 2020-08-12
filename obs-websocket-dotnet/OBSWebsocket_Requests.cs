@@ -200,7 +200,7 @@ namespace OBSWebsocketDotNet
         public async Task<OBSStats> GetStats()
         {
             JObject response = await SendRequest("GetStats").ConfigureAwait(false);
-            return response["stats"]?.ToObject<OBSStats>() ?? throw new ErrorResponseException("Response did not contain the stats.");
+            return response["stats"]?.ToObject<OBSStats>() ?? throw new ErrorResponseException("Response did not contain the stats.", response);
         }
 
         /// <summary>
@@ -719,7 +719,7 @@ namespace OBSWebsocketDotNet
         public async Task<string> GetCurrentSceneCollection()
         {
             var response = await SendRequest("GetCurrentSceneCollection").ConfigureAwait(false);
-            return response["sc-name"]?.ToString() ?? throw new ErrorResponseException("Response did not contain 'sc-name'");
+            return response["sc-name"]?.ToString() ?? throw new ErrorResponseException("Response did not contain 'sc-name'", response);
         }
 
         /// <summary>
@@ -764,7 +764,7 @@ namespace OBSWebsocketDotNet
         public async Task<string> GetCurrentProfile()
         {
             var response = await SendRequest("GetCurrentProfile").ConfigureAwait(false);
-            return (string)response["profile-name"];
+            return (string?)response["profile-name"] ?? throw new ErrorResponseException("Response did not contain 'profile-name'.", response);
         }
 
         /// <summary>
@@ -774,12 +774,13 @@ namespace OBSWebsocketDotNet
         public async Task<List<string>> ListProfiles()
         {
             var response = await SendRequest("ListProfiles").ConfigureAwait(false);
-            var items = (JArray)response["profiles"];
-
+            var items = (JArray?)response["profiles"] ?? throw new ErrorResponseException("Response did not contain 'profiles'.", response);
             List<string> profiles = new List<string>();
             foreach (JObject item in items)
             {
-                profiles.Add((string)item["profile-name"]);
+                string? value = (string?)item["profile-name"];
+                if (value != null)
+                    profiles.Add(value);
             }
 
             return profiles;
@@ -854,7 +855,7 @@ namespace OBSWebsocketDotNet
         public async Task<string> GetRecordingFolder()
         {
             var response = await SendRequest("GetRecordingFolder").ConfigureAwait(false);
-            return (string)response["rec-folder"];
+            return (string?)response["rec-folder"] ?? throw new ErrorResponseException("Response did not contain 'rec-folder'", response);
         }
 
         /// <summary>
@@ -864,7 +865,7 @@ namespace OBSWebsocketDotNet
         public async Task<int> GetTransitionDuration()
         {
             var response = await SendRequest("GetTransitionDuration").ConfigureAwait(false);
-            return (int)response["transition-duration"];
+            return response["transition-duration"]?.Value<int>() ?? throw new ErrorResponseException("Response did not contain 'transition-duration'", response);
         }
 
         /// <summary>
@@ -885,7 +886,7 @@ namespace OBSWebsocketDotNet
         public async Task<bool> StudioModeEnabled()
         {
             var response = await SendRequest("GetStudioModeStatus").ConfigureAwait(false);
-            return (bool)response["studio-mode"];
+            return response["studio-mode"]?.Value<bool>() ?? throw new ErrorResponseException("Response did not contain 'studio-mode''", response);
         }
 
         /// <summary>
@@ -910,7 +911,7 @@ namespace OBSWebsocketDotNet
         public async Task<bool> GetStudioModeStatus()
         {
             var response = await SendRequest("GetStudioModeStatus").ConfigureAwait(false);
-            return (bool)response["studio-mode"];
+            return response["studio-mode"]?.Value<bool>() ?? throw new ErrorResponseException("Response did not contain 'studio-mode'", response);
         }
 
         /// <summary>
@@ -1081,7 +1082,7 @@ namespace OBSWebsocketDotNet
                 { "source", sourceName }
             };
             var response = await SendRequest("GetSyncOffset", requestFields).ConfigureAwait(false);
-            return (int)response["offset"];
+            return response["offset"]?.Value<int>() ?? throw new ErrorResponseException("Response did not contain 'offset'", response);
         }
 
         /// <summary>
@@ -1268,10 +1269,12 @@ namespace OBSWebsocketDotNet
         {
             var response = await SendRequest("GetSpecialSources").ConfigureAwait(false);
             var sources = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, JToken> kvp in response)
+            foreach (KeyValuePair<string, JToken?> kvp in response)
             {
-                string key = kvp.Key;
-                string value = (string)kvp.Value;
+                string? key = kvp.Key;
+                string? value = (string?)kvp.Value;
+                if (key == null || value == null)
+                    continue; // TODO: Is a null value ever valid?
                 if (key != "request-type" && key != "message-id" && key != "status")
                 {
                     sources.Add(key, value);

@@ -6,19 +6,21 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// BrowserSource source properties
     /// </summary>
-    public class BrowserSourceProperties
+    public class BrowserSourceProperties : IValidatedResponse
     {
+        [JsonIgnore]
+        public bool ResponseValid => Source != null && URL != null;
         /// <summary>
         /// Source name for the browser properties
         /// </summary>
         [JsonProperty(PropertyName = "sourceName")]
-        public string Source;
+        public string Source = null!;
 
         /// <summary>
         /// URL to load in the embedded browser
         /// </summary>
         [JsonProperty(PropertyName = "url")]
-        public string URL;
+        public string URL = null!;
 
         /// <summary>
         /// true if the URL points to a local file, false otherwise.
@@ -30,13 +32,13 @@ namespace OBSWebsocketDotNet.Types
         /// File to load in embedded browser 
         /// </summary>
         [JsonProperty(PropertyName = "local_file")]
-        public string LocalFile;
+        public string? LocalFile;
 
         /// <summary>
         /// Additional CSS to apply to the page
         /// </summary>
         [JsonProperty(PropertyName = "css")]
-        public string CustomCSS;
+        public string? CustomCSS;
 
         /// <summary>
         /// Embedded browser render (viewport) width
@@ -86,8 +88,13 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="props"></param>
         public BrowserSourceProperties(JObject props)
         {
-            JsonConvert.PopulateObject(props["sourceSettings"].ToString(), this);
-            Source = props["sourceName"].ToString();
+            string? settingsStr = props["sourceSettings"]?.ToString();
+            string? sourceString = props["sourceName"]?.ToString();
+            if (settingsStr != null)
+            {
+                JsonConvert.PopulateObject(settingsStr, this);
+                Source = sourceString ?? string.Empty;
+            }
         }
     }
 }

@@ -206,7 +206,7 @@ namespace OBSWebsocketDotNet
     /// <param name="filterName">Name of filter</param>
     /// <param name="filterType">Type of filter</param>
     /// <param name="filterSettings">Settings for filter</param>
-    public delegate void SourceFilterAddedCallback(OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject filterSettings);
+    public delegate void SourceFilterAddedCallback(OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject? filterSettings);
 
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceFiltersReordered"/>
@@ -239,6 +239,7 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class ErrorResponseException : Exception
     {
+        public readonly JToken? Response;
         private ErrorResponseException()
             : base() { }
 
@@ -248,6 +249,17 @@ namespace OBSWebsocketDotNet
         /// <param name="message"></param>
         public ErrorResponseException(string message)
             : base(message) { }
+
+        public ErrorResponseException(string message, JToken? response)
+            : base(message)
+        {
+            Response = response;
+        }
+        public ErrorResponseException(string message, JToken? response, Exception innerException)
+            : base(message, innerException)
+        {
+            Response = response;
+        }
 
         public ErrorResponseException(string message, Exception innerException)
             : base(message, innerException) 
