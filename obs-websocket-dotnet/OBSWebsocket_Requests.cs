@@ -272,8 +272,6 @@ namespace OBSWebsocketDotNet
 
         }
 
-
-
         /// <summary>
         /// Move a filter in the chain (relative positioning)
         /// </summary>
@@ -737,6 +735,22 @@ namespace OBSWebsocketDotNet
         public void StartStopRecording()
         {
             SendRequest("StartStopRecording");
+        }
+
+        /// <summary>
+        /// Pause the current recording. Returns an error if recording is not active or already paused.
+        /// </summary>
+        public void PauseRecording()
+        {
+            SendRequest("PauseRecording");
+        }
+
+        /// <summary>
+        /// Resume/unpause the current recording (if paused). Returns an error if recording is not active or not paused.
+        /// </summary>
+        public void ResumeRecording()
+        {
+            SendRequest("ResumeRecording");
         }
 
         /// <summary>
