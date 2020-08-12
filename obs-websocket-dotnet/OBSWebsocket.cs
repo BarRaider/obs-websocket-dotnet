@@ -70,6 +70,11 @@ namespace OBSWebsocketDotNet
         public event SceneItemVisibilityChangedCallback SceneItemVisibilityChanged;
 
         /// <summary>
+        /// Triggered when the lock status of a scene item changes
+        /// </summary>
+        public event SceneItemLockChangedCallback SceneItemLockChanged;      
+
+        /// <summary>
         /// Triggered when switching to another scene collection
         /// </summary>
         public event EventHandler SceneCollectionChanged;
@@ -230,7 +235,7 @@ namespace OBSWebsocketDotNet
         public event SourceFiltersReorderedCallback SourceFiltersReordered;
 
         /// <summary>
-        /// Filters in a source have been reordered
+        /// Triggered when the visibility of a filter has changed
         /// </summary>
         public event SourceFilterVisibilityChangedCallback SourceFilterVisibilityChanged;
 
@@ -528,7 +533,10 @@ namespace OBSWebsocketDotNet
                     if (SceneItemVisibilityChanged != null)
                         SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
                     break;
-
+                case "SceneItemLockChanged":
+                    if (SceneItemLockChanged != null)
+                        SceneItemLockChanged(this, (string)body["scene-name"], (string)body["item-name"], (int)body["item-id"], (bool)body["item-locked"]);
+                    break;
                 case "SceneCollectionChanged":
                     if (SceneCollectionChanged != null)
                         SceneCollectionChanged(this, EventArgs.Empty);

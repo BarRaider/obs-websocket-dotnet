@@ -61,7 +61,17 @@ namespace OBSWebsocketDotNet
     /// <param name="itemName">Name of the concerned item</param>
     /// <param name="isVisible">Visibility of the item</param>
     public delegate void SceneItemVisibilityChangedCallback(OBSWebsocket sender, string sceneName, string itemName, bool isVisible);
-    
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.SceneItemLockChanged"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sceneName">Name of the scene where the item is</param>
+    /// <param name="itemName">Name of the concerned item</param>
+    /// <param name="itemId">Id of the concerned item</param>
+    /// <param name="isLocked">Lock status of the item</param>
+    public delegate void SceneItemLockChangedCallback(OBSWebsocket sender, string sceneName, string itemName, int itemId, bool isLocked);
+
     /// <summary>
     /// Called by <see cref="OBSWebsocket.TransitionChanged"/>
     /// </summary>
