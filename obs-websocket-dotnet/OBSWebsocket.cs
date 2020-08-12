@@ -96,7 +96,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when a transition between two scenes starts. Followed by <see cref="SceneChanged"/>
         /// </summary>
-        public event EventHandler TransitionBegin;
+        public event TransitionBeginCallback TransitionBegin;
+
+        /// <summary>
+        /// Triggered when a transition (other than "cut") has ended. Please note that the from-scene field is not available in TransitionEnd
+        /// </summary>
+        public event TransitionEndCallback TransitionEnd;
+
+        /// <summary>
+        /// Triggered when a stinger transition has finished playing its video
+        /// </summary>
+        public event TransitionVideoEndCallback TransitionVideoEnd;
 
         /// <summary>
         /// Triggered when switching to another profile
@@ -530,9 +540,16 @@ namespace OBSWebsocketDotNet
 
                 case "TransitionBegin":
                     if (TransitionBegin != null)
-                        TransitionBegin(this, EventArgs.Empty);
+                        TransitionBegin(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
                     break;
-
+                case "TransitionEnd":
+                    if (TransitionEnd != null)
+                        TransitionEnd(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["to-scene"]);
+                    break;
+                case "TransitionVideoEnd":
+                    if (TransitionVideoEnd != null)
+                        TransitionVideoEnd(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
+                    break;
                 case "ProfileChanged":
                     if (ProfileChanged != null)
                         ProfileChanged(this, EventArgs.Empty);

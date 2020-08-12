@@ -77,6 +77,38 @@ namespace OBSWebsocketDotNet
     public delegate void TransitionDurationChangeCallback(OBSWebsocket sender, int newDuration);
 
     /// <summary>
+    /// Called by <see cref="OBSWebsocket.TransitionBegin"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="transitionName">Transition name</param>
+    /// <param name="transitionType">Transition type</param>
+    /// <param name="duration">Transition duration (in milliseconds). Will be -1 for any transition with a fixed duration, such as a Stinger, due to limitations of the OBS API</param>
+    /// <param name="fromScene">Source scene of the transition</param>
+    /// <param name="toScene">Destination scene of the transition</param>
+    public delegate void TransitionBeginCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.TransitionEnd"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="transitionName">Transition name</param>
+    /// <param name="transitionType">Transition type</param>
+    /// <param name="duration">Transition duration (in milliseconds).</param>
+    /// <param name="toScene">Destination scene of the transition</param>
+    public delegate void TransitionEndCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string toScene);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.TransitionVideoEnd"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="transitionName">Transition name</param>
+    /// <param name="transitionType">Transition type</param>
+    /// <param name="duration">Transition duration (in milliseconds).</param>
+    /// <param name="fromScene">Source scene of the transition</param>
+    /// <param name="toScene">Destination scene of the transition</param>
+    public delegate void TransitionVideoEndCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene);
+
+    /// <summary>
     /// Called by <see cref="OBSWebsocket.StreamingStateChanged"/>, <see cref="OBSWebsocket.RecordingStateChanged"/>
     /// or <see cref="OBSWebsocket.ReplayBufferStateChanged"/> 
     /// </summary>
