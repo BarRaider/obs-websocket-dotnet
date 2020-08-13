@@ -1504,5 +1504,19 @@ namespace OBSWebsocketDotNet
 
             SendRequest("SetAudioMonitorType", request);
         }
+
+        /// <summary>
+        /// Broadcast custom message to all connected WebSocket clients
+        /// </summary>
+        /// <param name="realm">Identifier to be choosen by the client</param>
+        /// <param name="data">User-defined data</param>
+        public void BroadcastCustomMessage(string realm, JObject data)
+        {
+            var request = new JObject();
+            request.Add("realm", realm);
+            request.Add("data", data);
+
+            SendRequest("BroadcastCustomMessage", request);
+        }
     }
 }

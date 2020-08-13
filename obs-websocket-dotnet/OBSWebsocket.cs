@@ -254,6 +254,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event SourceVolumeChangedCallback SourceVolumeChanged;
 
+        /// <summary>
+        /// A custom broadcast message was received
+        /// </summary>
+        public event BroadcastCustomMessageCallback BroadcastCustomMessageReceived;
+
         #endregion
 
         /// <summary>
@@ -737,6 +742,10 @@ namespace OBSWebsocketDotNet
                 case "SourceFilterVisibilityChanged":
                     if (SourceFilterVisibilityChanged != null)
                         SourceFilterVisibilityChanged(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);
+                    break;
+                case "BroadcastCustomMessage":
+                    if (BroadcastCustomMessageReceived != null)
+                        BroadcastCustomMessageReceived(this, (string)body["realm"], (JObject)body["data"]);
                     break;
                 default:
                         var message = $"Unsupported Event: {eventType}\n{body}";
