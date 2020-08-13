@@ -329,7 +329,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
             requestFields.Add("filterName", filterName);
-            requestFields.Add("movementType", movement.ToString().ToLower());
+            requestFields.Add("movementType", movement.ToString().ToLowerInvariant());
 
             SendRequest("MoveSourceFilter", requestFields);
         }
