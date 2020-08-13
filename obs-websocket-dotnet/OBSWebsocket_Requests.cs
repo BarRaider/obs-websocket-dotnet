@@ -73,7 +73,7 @@ namespace OBSWebsocketDotNet
 #pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception ex)
                 {
-                    OBSLogger.Error(ex);
+                    OBSError?.Invoke(this, new OBSErrorEventArgs("Error parsing an Output.", ex, jOutputs[i]));
                 }
 #pragma warning restore CA1031 // Do not catch general exception types
             }

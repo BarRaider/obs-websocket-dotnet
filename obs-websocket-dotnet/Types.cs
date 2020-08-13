@@ -217,6 +217,46 @@ namespace OBSWebsocketDotNet
     public delegate void SourceFiltersReorderedCallback(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters);
 
     /// <summary>
+    /// Holds data about an error from the OBS connection.
+    /// </summary>
+    public class OBSErrorEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Additional information about the error.
+        /// </summary>
+        public readonly string? Message;
+        /// <summary>
+        /// Exception associated with the error, if any.
+        /// </summary>
+        public readonly Exception? Exception;
+        /// <summary>
+        /// JSON data associated with the error, if any.
+        /// </summary>
+        public readonly JToken? Data;
+
+        public OBSErrorEventArgs(string? message, Exception? exception, JToken? data)
+        {
+            Message = message;
+            Exception = exception;
+            Data = data;
+        }
+        public OBSErrorEventArgs(Exception? exception)
+            : this(null, exception, null) { }
+
+        public OBSErrorEventArgs(string? message)
+            : this(message, null, null) { }
+        public OBSErrorEventArgs(string? message, Exception? exception)
+            : this(message, exception, null) { }
+
+        public OBSErrorEventArgs(string? message, JToken? data)
+            : this(message, null, data) { }
+
+        public OBSErrorEventArgs(Exception? exception, JToken? data)
+            : this(null, exception, data) { }
+
+    }
+
+    /// <summary>
     /// Thrown if authentication fails
     /// </summary>
     public class AuthFailureException : Exception

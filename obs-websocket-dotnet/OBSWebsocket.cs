@@ -49,6 +49,10 @@ namespace OBSWebsocketDotNet
 
         #region Events
         /// <summary>
+        /// Exceptions thrown that are not passed up to the caller will be passed through this event.
+        /// </summary>
+        public event EventHandler<OBSErrorEventArgs>? OBSError;
+        /// <summary>
         /// Triggered when switching to another scene
         /// </summary>
         public event SceneChangeCallback? SceneChanged;
@@ -408,9 +412,11 @@ namespace OBSWebsocketDotNet
         protected void OnConnectionError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             if (e?.Exception != null)
-                OBSLogger.Error(e.Exception);
+            {
+                OBSError?.Invoke(this, new OBSErrorEventArgs($"WebSocket connection error: {e.Exception.Message}", e.Exception));
+            }
             else
-                OBSLogger.Error("Unknown error in WebSocket connection.");
+                OBSError?.Invoke(this, new OBSErrorEventArgs("Unknown error in WebSocket connection."));
             TaskCompletionSource<bool>? connectingTcs = ConnectingTaskSource;
             ConnectingTaskSource = null;
             if (connectingTcs != null)
@@ -473,7 +479,7 @@ namespace OBSWebsocketDotNet
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
             {
-                OBSLogger.Error($"Error parsing received message: {ex.Message}.");
+                OBSError?.Invoke(this, new OBSErrorEventArgs($"Error parsing received message: {ex.Message}.", ex)); // TODO: Have OBSErrorEventArgs store raw string data?
                 OBSLogger.Debug($"Invalid message: {e.Message}");
                 return;
             }
@@ -750,12 +756,12 @@ namespace OBSWebsocketDotNet
                             if (info != null)
                                 StreamStatus?.Invoke(this, info);
                             else
-                                OBSLogger.Warning($"Received 'StreamStatus' event, but associated data was missing.");
+                                OBSError?.Invoke(this, new OBSErrorEventArgs($"Received 'StreamStatus' event, but associated data was missing.", body));
                         }
 #pragma warning disable CA1031 // Do not catch general exception types
                         catch (Exception ex)
                         {
-                            OBSLogger.Error(ex);
+                            OBSError?.Invoke(this, new OBSErrorEventArgs("Error on 'StreamStatus' event.", ex, body));
                         }
 #pragma warning restore CA1031 // Do not catch general exception types
                     }
@@ -798,12 +804,12 @@ namespace OBSWebsocketDotNet
                         if (info != null)
                             Heartbeat?.Invoke(this, info);
                         else
-                            OBSLogger.Warning($"Received 'Heartbeat' event, but associated data was missing.");
+                            OBSError?.Invoke(this, new OBSErrorEventArgs($"Received 'HeartBeat' event, but associated data was missing.", body));
                     }
 #pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception ex)
                     {
-                        OBSLogger.Error(ex);
+                        OBSError?.Invoke(this, new OBSErrorEventArgs("Error on 'HeartBeat' event.", ex, body));
                     }
 #pragma warning restore CA1031 // Do not catch general exception types
                     break;
@@ -829,12 +835,12 @@ namespace OBSWebsocketDotNet
                         if (info != null)
                             SourceAudioMixersChanged?.Invoke(this, info);
                         else
-                            OBSLogger.Warning($"Received 'SourceAudioMixersChanged' event, but associated data was missing.");
+                            OBSError?.Invoke(this, new OBSErrorEventArgs($"Received 'SourceAudioMixersChanged' event, but associated data was missing.", body));
                     }
 #pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception ex)
                     {
-                        OBSLogger.Error(ex);
+                        OBSError?.Invoke(this, new OBSErrorEventArgs("Error on 'SourceAudioMixersChanged' event.", ex, body));
                     }
 #pragma warning restore CA1031 // Do not catch general exception types
                     break;
@@ -846,14 +852,15 @@ namespace OBSWebsocketDotNet
                 case "SourceCreated":
                     try
                     {
-                        SourceSettings settings = body.ToObject<SourceSettings>() 
-                            ?? throw new ErrorResponseException("Could not parse body from event 'SourceCreated'.", body);
-
-                        SourceCreated?.Invoke(this, settings);
+                        SourceSettings? settings = body.ToObject<SourceSettings>();
+                        if (settings != null)
+                            SourceCreated?.Invoke(this, settings);
+                        else
+                            OBSError?.Invoke(this, new OBSErrorEventArgs($"Received 'HeartBeat' event, but associated data was missing.", body));
                     }
-                    catch (JsonException ex)
+                    catch (Exception ex)
                     {
-                        throw new ErrorResponseException("Could not parse body from event 'SourceCreated'.", body, ex);
+                        OBSError?.Invoke(this, new OBSErrorEventArgs("Error on 'SourceCreated' event.", ex, body));
                     }
                     break;
                 case "SourceDestroyed":
