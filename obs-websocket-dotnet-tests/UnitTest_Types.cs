@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
 
@@ -31,7 +32,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("name", sceneName);
             data.Add("sources", items);
 
-            var scene = new OBSScene(data);
+            var scene = data.ToObject<OBSScene>();
 
             Assert.AreEqual(sceneName, scene.Name);
             Assert.AreEqual(1, scene.Items.Count);
@@ -86,7 +87,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("challenge", challenge);
             data.Add("salt", salt);
 
-            var authInfo = new OBSAuthInfo(data);
+            var authInfo = data.ToObject<OBSAuthInfo>();
 
             Assert.IsTrue(authInfo.AuthRequired);
             Assert.AreEqual(challenge, authInfo.Challenge);
@@ -130,8 +131,7 @@ namespace OBSWebsocketDotNet.Tests
             data.Add("num-total-frames", totalFrames);
             data.Add("num-dropped-frames", droppedFrames);
             data.Add("fps", fps);
-
-            var streamStatus = new StreamStatus(data);
+            var streamStatus = data.ToObject<StreamStatus>();
 
             Assert.IsTrue(streamStatus.Streaming);
             Assert.IsTrue(streamStatus.Recording);

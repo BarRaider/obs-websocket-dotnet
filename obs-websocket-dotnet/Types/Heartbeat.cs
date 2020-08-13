@@ -9,31 +9,25 @@ namespace OBSWebsocketDotNet.Types
     public class Heartbeat
     {
         /// <summary>
-        /// Create a heartbeat
-        /// </summary>
-        /// <param name="body"></param>
-        public Heartbeat(JObject body)
-        {
-            JsonConvert.PopulateObject(body.ToString(), this);
-        }
-
-        /// <summary>
         /// Toggles between every JSON message as an "I am alive" indicator.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "pulse")]
         public bool Pulse { set; get; }
 
         /// <summary>
         /// Current active profile.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "current-profile")]
-        public string CurrentProfile { set; get; }
+        public string CurrentProfile { set; get; } = null!;
 
         /// <summary>
         /// Current active scene.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "current-scene")]
-        public string CurrentScene { set; get; }
+        public string CurrentScene { set; get; } = null!;
 
         /// <summary>
         /// Current streaming state.
@@ -86,7 +80,8 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// OBS Stats
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "stats")]
-        public OBSStats Stats { set; get; }
+        public OBSStats Stats { set; get; } = null!;
     }
 }

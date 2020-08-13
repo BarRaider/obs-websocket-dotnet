@@ -12,6 +12,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// RTMP server URL
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "server")]
         public string ServerAddress = null!;
 

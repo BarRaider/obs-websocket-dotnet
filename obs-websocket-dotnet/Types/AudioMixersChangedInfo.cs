@@ -13,6 +13,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Mixer source name
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "sourceName")]
         public string SourceName { set; get; } = null!;
 

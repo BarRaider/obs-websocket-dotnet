@@ -27,38 +27,42 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Crop Information
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "crop")]
-        public SceneItemCropInfo Crop { set; get; }
+        public SceneItemCropInfo Crop { set; get; } = null!;
 
         /// <summary>
         /// Bounds Information
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "bounds")]
-        public SceneItemBoundsInfo Bounds { set; get; }
+        public SceneItemBoundsInfo Bounds { set; get; } = null!;
 
         /// <summary>
         /// Scale Information
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "scale")]
-        public SceneItemPointInfo Scale { set; get; }
+        public SceneItemPointInfo Scale { set; get; } = null!;
 
         /// <summary>
         /// Position of the item
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "position")]
-        public SceneItemPositionInfo Position { set; get; }
+        public SceneItemPositionInfo Position { set; get; } = null!;
 
         /// <summary>
         /// Scene item name, <i>populated from GetSceneItemProperites only</i>
         /// </summary>
         [JsonProperty(PropertyName = "name")]
-        public string ItemName { set; get; }
+        public string? ItemName { set; get; }
 
         /// <summary>
         /// Scene item name, <i>populated from GetSceneItemProperites only</i>
         /// </summary>
         [JsonProperty(PropertyName = "item")]
-        public string Item { set; get; }
+        public string? Item { set; get; }
 
         /// <summary>
         /// Scene item height (base source height multiplied by the vertical scaling factor)
@@ -75,24 +79,28 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// If the scene item is locked in position
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "locked")]
         public bool Locked { set; get; }
 
         /// <summary>
         /// If the scene item is visible
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "visible")]
         public bool Visible { set; get; }
 
         /// <summary>
         /// Base height (without scaling) of the source
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "sourceHeight")]
         public int SourceHeight { set; get; }
 
         /// <summary>
         /// Base width (without scaling) of the source
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "sourceWidth")]
         public int SourceWidth { set; get; }
 

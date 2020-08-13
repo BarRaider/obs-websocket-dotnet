@@ -10,12 +10,14 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// The x-scale factor of the scene item
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "x")]
         public double X { get; set; }
 
         /// <summary>
         /// The y-scale factor of the scene item
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "y")]
         public double Y { get; set; }
     }

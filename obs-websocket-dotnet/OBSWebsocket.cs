@@ -336,7 +336,7 @@ namespace OBSWebsocketDotNet
             return true;
         }
 
-        public Task<bool> Connect(string url, string password) => Connect(url, password, CancellationToken.None);
+        public Task<bool> Connect(string url, string? password) => Connect(url, password, CancellationToken.None);
 
         /// <summary>
         /// Connect to the given URL and authenticate (if needed) with the specified password
@@ -349,7 +349,7 @@ namespace OBSWebsocketDotNet
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="SocketErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
-        public Task<bool> Connect(string url, string password, CancellationToken cancellationToken)
+        public Task<bool> Connect(string url, string? password, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(url))
@@ -582,7 +582,15 @@ namespace OBSWebsocketDotNet
         public async Task<OBSAuthInfo> GetAuthInfo()
         {
             JObject response = await SendRequest("GetAuthRequired").ConfigureAwait(false);
-            return new OBSAuthInfo(response);
+            try
+            {
+                OBSAuthInfo info = response?.ToObject<OBSAuthInfo>() ?? throw new ErrorResponseException($"Invalid response for 'GetAuthRequired'.", response);
+                return info;
+            }
+            catch (JsonException ex)
+            {
+                throw new ErrorResponseException($"Invalid response for 'GetAuthRequired': {ex.Message}", response, ex);
+            }
         }
 
         /// <summary>
@@ -622,8 +630,6 @@ namespace OBSWebsocketDotNet
         /// <param name="body">full JSON message body</param>
         protected void ProcessEventType(string eventType, JObject body)
         {
-            StreamStatus status;
-
             switch (eventType)
             {
                 case "SwitchScenes":
@@ -736,8 +742,18 @@ namespace OBSWebsocketDotNet
                 case "StreamStatus":
                     if (StreamStatus != null)
                     {
-                        status = new StreamStatus(body);
-                        StreamStatus(this, status);
+                        try
+                        {
+                            StreamStatus? info = body?.ToObject<StreamStatus>();
+                            if (info != null)
+                                StreamStatus?.Invoke(this, info);
+                            else
+                                OBSLogger.Warning($"Received 'StreamStatus' event, but associated data was missing.");
+                        }
+                        catch (Exception ex)
+                        {
+                            OBSLogger.Error(ex);
+                        }
                     }
                     break;
 
@@ -772,7 +788,18 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "Heartbeat":
-                    Heartbeat?.Invoke(this, new Heartbeat(body));
+                    try
+                    {
+                        Heartbeat? info = body?.ToObject<Heartbeat>();
+                        if (info != null)
+                            Heartbeat?.Invoke(this, info);
+                        else
+                            OBSLogger.Warning($"Received 'Heartbeat' event, but associated data was missing.");
+                    }
+                    catch (Exception ex)
+                    {
+                        OBSLogger.Error(ex);
+                    }
                     break;
                 case "SceneItemDeselected":
                     SceneItemDeselected?.Invoke(this,
@@ -796,7 +823,7 @@ namespace OBSWebsocketDotNet
                         if (info != null)
                             SourceAudioMixersChanged?.Invoke(this, info);
                         else
-                            OBSLogger.Warning($"Received '' event, but associated data was missing.");
+                            OBSLogger.Warning($"Received 'SourceAudioMixersChanged' event, but associated data was missing.");
                     }
                     catch (Exception ex)
                     {

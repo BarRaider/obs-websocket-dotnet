@@ -10,30 +10,35 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Current framerate.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "fps")]
         public double FPS { set; get; }
 
         /// <summary>
         /// Number of frames rendered
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "render-total-frames")]
         public int RenderTotalFrames { set; get; }
 
         /// <summary>
         /// Number of frames missed due to rendering lag
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "render-missed-frames")]
         public int RenderMissedFrames { set; get; }
 
         /// <summary>
         /// Number of frames outputted
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "output-total-frames")]
         public int OutputTotalFrames { set; get; }
 
         /// <summary>
         /// Number of frames skipped due to encoding lag
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "output-skipped-frames")]
         public int OutputSkippedFrames { set; get; }
 

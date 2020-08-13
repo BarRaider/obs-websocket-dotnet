@@ -13,12 +13,14 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Source name for the browser properties
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "sourceName")]
         public string Source = null!;
 
         /// <summary>
         /// URL to load in the embedded browser
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "url")]
         public string URL = null!;
 

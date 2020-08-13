@@ -11,19 +11,21 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Name of the filter
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "name")]
-        public string Name { set; get; }
+        public string Name { set; get; } = null!;
 
         /// <summary>
         /// Type of the specified filter
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "type")]
-        public string Type { set; get; }
+        public string Type { set; get; } = null!;
 
         /// <summary>
         /// Settings for the filter
         /// </summary>
         [JsonProperty(PropertyName = "settings")]
-        public JObject Settings { set; get; }
+        public JObject? Settings { set; get; }
     }
 }

@@ -12,12 +12,14 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Streaming provider name
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "service")]
         public string ServiceName = null!;
 
         /// <summary>
         /// Streaming server URL;
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "server")]
         public string ServerUrl = null!;
 

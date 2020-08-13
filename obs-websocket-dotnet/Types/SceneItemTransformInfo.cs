@@ -11,26 +11,30 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Name of the scene
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "scene-name")]
-        public string SceneName { internal set; get; }
+        public string SceneName { internal set; get; } = null!;
 
         /// <summary>
         /// Name of the item in the scene
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "item-name")]
-        public string ItemName { internal set; get; }
+        public string ItemName { internal set; get; } = null!;
 
         /// <summary>
         /// Scene Item ID
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "item-id")]
-        public string ItemID { internal set; get; }
+        public string ItemID { internal set; get; } = null!;
 
         /// <summary>
         /// Scene item transform properties
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "transform")]
-        public SceneItemProperties Transform { internal set; get; }
+        public SceneItemProperties Transform { internal set; get; } = null!;
 
         /// <summary>
         /// Initialize the scene item transform

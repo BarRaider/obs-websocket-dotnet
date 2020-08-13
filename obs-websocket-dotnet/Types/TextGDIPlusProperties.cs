@@ -10,14 +10,16 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Source name.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "source")]
-        public string SourceName { set; get; }
+        public string SourceName { set; get; } = null!;
 
         /// <summary>
         /// Text Alignment ("left", "center", "right").
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "align")]
-        public string Alignment { set; get; }
+        public string Alignment { set; get; } = null!;
 
         /// <summary>
         /// Background color.
@@ -71,7 +73,7 @@ namespace OBSWebsocketDotNet.Types
         /// File path name.
         /// </summary>
         [JsonProperty(PropertyName = "file")]
-        public string Filename { set; get; }
+        public string? Filename { set; get; }
 
         /// <summary>
         /// Read text from the specified file.
@@ -83,7 +85,7 @@ namespace OBSWebsocketDotNet.Types
         /// Holds data for the font. Ex: "font": { "face": "Arial", "flags": 0, "size": 150, "style": "" }
         /// </summary>
         [JsonProperty(PropertyName = "font")]
-        public TextGDIPlusFont Font { set; get; }
+        public TextGDIPlusFont? Font { set; get; }
 
         /// <summary>
         /// Gradient enabled.
@@ -136,14 +138,16 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Text content to be displayed.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "text")]
-        public string Text { set; get; }
+        public string Text { set; get; } = null!;
 
         /// <summary>
         /// Text vertical alignment ("top", "center", "bottom").
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "valign")]
-        public string VeritcalAslignment { set; get; }
+        public string VerticalAlignment { set; get; } = null!;
 
         /// <summary>
         /// Vertical text enabled.

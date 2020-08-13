@@ -15,7 +15,7 @@ namespace OBSWebsocketDotNet.Types
         /// Source name
         /// </summary>
         [JsonProperty(PropertyName = "name")]
-        public string SourceName;
+        public string? SourceName;
 
         /// <summary>
         /// Scene item ID

@@ -14,20 +14,22 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Source Name
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "sourceName")]
-        public string SourceName { get; set; }
+        public string SourceName { get; set; } = null!;
 
         /// <summary>
         /// Source Type
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "sourceType")]
-        public string SourceType { get; set; }
+        public string SourceType { get; set; } = null!;
 
         /// <summary>
         /// Media settings
         /// </summary>
         [JsonProperty(PropertyName = "sourceSettings")]
-        public FFMpegSourceSettings Media { get; set; }
+        public FFMpegSourceSettings? Media { get; set; }
 
 
     }

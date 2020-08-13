@@ -10,8 +10,9 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Font face.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "face")]
-        public string Face { set; get; }
+        public string Face { set; get; } = null!;
 
         /// <summary>
         /// Font text styling flag. Bold=1, Italic=2, Bold Italic=3, Underline=5, Strikeout=8
@@ -22,6 +23,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Font text size.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "size")]
         public int Size { set; get; }
 
@@ -29,6 +31,6 @@ namespace OBSWebsocketDotNet.Types
         /// Font Style (unknown function).
         /// </summary>
         [JsonProperty(PropertyName = "style")]
-        public string Style { set; get; }
+        public string? Style { set; get; }
     }
 }

@@ -11,6 +11,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// True if streaming is started and running, false otherwise
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "streaming")]
         public bool Streaming { internal set; get; }
 

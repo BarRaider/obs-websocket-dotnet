@@ -12,14 +12,16 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Source name
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "name")]
-        public string SourceName;
+        public string SourceName = null!;
 
         /// <summary>
         /// Source type. Value is one of the following: "input", "filter", "transition", "scene" or "unknown"
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "type")]
-        public string InternalType;
+        public string InternalType = null!;
 
         /// <summary>
         /// Source audio volume
@@ -85,13 +87,13 @@ namespace OBSWebsocketDotNet.Types
         /// Name of the item's parent (if this item belongs to a group)
         /// </summary>
         [JsonProperty(PropertyName = "parentGroupName")]
-        public string ParentGroupName { set; get; }
+        public string? ParentGroupName { set; get; }
 
         /// <summary>
         /// Name of the item's parent (if this item belongs to a group)
         /// </summary>
         [JsonProperty(PropertyName = "groupChildren")]
-        public List<SceneItem> GroupChildren { set; get; }
+        public List<SceneItem>? GroupChildren { set; get; }
 
         /// <summary>
         /// Builds the object from the JSON scene description

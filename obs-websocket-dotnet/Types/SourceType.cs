@@ -12,18 +12,21 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Non-unique internal source type ID
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "typeId")]
         public string TypeID { set; get; } = null!;
 
         /// <summary>
         /// Display name of the source type
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "displayName")]
         public string DisplayName { set; get; } = null!;
 
         /// <summary>
         /// Type.Value is one of the following: "input", "filter", "transition" or "other"
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "type")]
         public string Type { set; get; } = null!;
 

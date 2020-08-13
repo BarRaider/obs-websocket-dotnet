@@ -18,29 +18,15 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// OBS Scene name
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "name")]
-        public string Name;
+        public string Name { get; internal set; } = null!;
 
         /// <summary>
         /// Scene item list
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "sources")]
-        public List<SceneItem> Items;
-
-        /// <summary>
-        /// Builds the object from the JSON description
-        /// </summary>
-        /// <param name="data">JSON scene description as a <see cref="JObject" /></param>
-        public OBSScene(JObject data)
-        {
-            JsonConvert.PopulateObject(data.ToString(), this, DefaultSerializerSettings);
-        }
-
-        /// <summary>
-        /// Constructor used for jsonconverter
-        /// </summary>
-        public OBSScene()
-        {
-        }
+        public List<SceneItem> Items = null!;
     }
 }

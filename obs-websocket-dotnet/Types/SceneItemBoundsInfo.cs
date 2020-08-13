@@ -11,12 +11,14 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Alignment of the bounding box
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "alignment")]
         public int Alignnment { set; get; }
 
         /// <summary>
         /// Type of bounding box
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "type")]
         [JsonConverter(typeof(StringEnumConverter))]
         public SceneItemBoundsType Type { set; get; }
@@ -24,12 +26,14 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Width of the bounding box
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "x")]
         public double Width { set; get; }
 
         /// <summary>
         /// Height of the bounding box
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "y")]
         public double Height { set; get; }
     }

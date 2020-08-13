@@ -165,8 +165,16 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="OBSScene"/> object describing the current scene</returns>
         public async Task<OBSScene> GetCurrentScene()
         {
-            JObject response = await SendRequest("GetCurrentScene").ConfigureAwait(false);
-            return new OBSScene(response);
+            JObject response = await SendRequest("GetCurrentScene").ConfigureAwait(false); 
+            try
+            {
+                OBSScene info = response?.ToObject<OBSScene>() ?? throw new ErrorResponseException($"Invalid response for 'GetCurrentScene'.", response);
+                return info;
+            }
+            catch (JsonException ex)
+            {
+                throw new ErrorResponseException($"Invalid response for 'GetCurrentScene': {ex.Message}", response, ex);
+            }
         }
 
         /// <summary>
@@ -956,7 +964,15 @@ namespace OBSWebsocketDotNet
         public async Task<OBSScene> GetPreviewScene()
         {
             JObject? response = await SendRequest("GetPreviewScene").ConfigureAwait(false);
-            return new OBSScene(response);
+            try
+            {
+                OBSScene info = response?.ToObject<OBSScene>() ?? throw new ErrorResponseException($"Invalid response for 'GetPreviewScene'.", response);
+                return info;
+            }
+            catch (JsonException ex)
+            {
+                throw new ErrorResponseException($"Invalid response for 'GetPreviewScene': {ex.Message}", response, ex);
+            }
         }
 
         /// <summary>

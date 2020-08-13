@@ -11,6 +11,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// The publish URL
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "server")]
         public string Server { set; get; } = null!;
 

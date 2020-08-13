@@ -13,6 +13,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Transition name
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "name")]
         public string Name { get; internal set; } = null!;
 
