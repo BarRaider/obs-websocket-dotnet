@@ -57,7 +57,7 @@ namespace OBSWebsocketDotNet.Types
         /// Local filename
         /// </summary>
         [JsonProperty(PropertyName = "local_file")]
-        public string LocalFile { get; set; }
+        public string? LocalFile { get; set; }
 
         /// <summary>
         /// Speed percentage

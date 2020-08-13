@@ -809,7 +809,17 @@ namespace OBSWebsocketDotNet
                         (int?)body["syncOffset"] ?? 0);
                     break;
                 case "SourceCreated":
-                    SourceCreated?.Invoke(this, new SourceSettings(body));
+                    try
+                    {
+                        SourceSettings settings = body.ToObject<SourceSettings>() 
+                            ?? throw new ErrorResponseException("Could not parse body from event 'SourceCreated'.", body);
+
+                        SourceCreated?.Invoke(this, settings);
+                    }
+                    catch (JsonException ex)
+                    {
+                        throw new ErrorResponseException("Could not parse body from event 'SourceCreated'.", body, ex);
+                    }
                     break;
                 case "SourceDestroyed":
                     SourceDestroyed?.Invoke(this,

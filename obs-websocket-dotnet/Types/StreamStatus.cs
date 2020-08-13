@@ -85,7 +85,7 @@ namespace OBSWebsocketDotNet.Types
         /// Overall stream time
         /// </summary>
         [JsonProperty(PropertyName = "stream-timecode")]
-        public string StreamTime { internal set; get; }
+        public string StreamTime { internal set; get; } = null!;
 
         /// <summary>
         /// Is replay buffer active
@@ -93,13 +93,5 @@ namespace OBSWebsocketDotNet.Types
         [JsonProperty(PropertyName = "replay-buffer-active")]
         public bool ReplayBufferActive { internal set; get; }
 
-        /// <summary>
-        /// Builds the object from the JSON event body
-        /// </summary>
-        /// <param name="data">JSON event body as a <see cref="JObject"/></param>
-        public StreamStatus(JObject data)
-        {
-            JsonConvert.PopulateObject(data.ToString(), this);
-        }
     }
 }

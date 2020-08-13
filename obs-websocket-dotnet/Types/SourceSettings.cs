@@ -32,13 +32,5 @@ namespace OBSWebsocketDotNet.Types
         [JsonProperty(PropertyName = "sourceSettings")]
         public JObject sourceSettings { set; get; }
 
-        /// <summary>
-        /// Builds the object from the JSON data
-        /// </summary>
-        /// <param name="data">JSON item description as a <see cref="JObject"/></param>
-        public SourceSettings(JObject data)
-        {
-            JsonConvert.PopulateObject(data.ToString(), this);
-        }
     }
 }

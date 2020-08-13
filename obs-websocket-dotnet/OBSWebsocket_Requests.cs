@@ -1420,9 +1420,17 @@ namespace OBSWebsocketDotNet
             }
 
             JObject result = await SendRequest("GetSourceSettings", request).ConfigureAwait(false);
-            SourceSettings settings = new SourceSettings(result);
-
-            return settings;
+            try
+            {
+                SourceSettings settings = result?.ToObject<SourceSettings>()
+                    ?? throw new ErrorResponseException("Result body from 'GetSourceSettings' could not be parsed.", result);
+                
+                return settings;
+            }
+            catch (JsonException ex)
+            {
+                throw new ErrorResponseException($"Error deserializing response for 'GetSourceSettings': {ex.Message}.", result, ex);
+            }
         }
 
         /// <summary>
