@@ -22,6 +22,12 @@ namespace OBSWebsocketDotNet.Types
         public bool Recording { internal set; get; }
 
         /// <summary>
+        /// True if the replay buffer is active
+        /// </summary>
+        [JsonProperty(PropertyName = "replay-buffer-active")]
+        public bool ReplayBufferActive { internal set; get; }
+
+        /// <summary>
         /// Stream bitrate in bytes per second
         /// </summary>
         [JsonProperty(PropertyName = "bytes-per-sec")]
@@ -34,7 +40,7 @@ namespace OBSWebsocketDotNet.Types
         public int KbitsPerSec { internal set; get; }
 
         /// <summary>
-        /// RTMP output strain
+        /// Percentage of dropped frames
         /// </summary>
         [JsonProperty(PropertyName = "strain")]
         public float Strain { internal set; get; }
@@ -62,25 +68,54 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "fps")]
         public float FPS { internal set; get; }
+        /// <summary>
+        /// Number of frames rendered
+        /// </summary>
+        [JsonProperty(PropertyName = "render-total-frames")]
+        public int RenderTotalFrames { internal set; get; }
 
         /// <summary>
-        /// Current OBS CPU Usage
+        /// Number of frames missed due to rendering lag
         /// </summary>
-        [JsonProperty(PropertyName = "cpu-usage")]
-        public double CPU { internal set; get; }
-           
+        [JsonProperty(PropertyName = "render-missed-frames")]
+        public int RenderMissedFrames { internal set; get; }
+
+        /// <summary>
+        /// Number of frames outputted
+        /// </summary>
+        [JsonProperty(PropertyName = "output-total-frames")]
+        public int OutputTotalFrames { internal set; get; }
+
         /// <summary>
         /// Total number of skipped frames
         /// </summary>
         [JsonProperty(PropertyName = "output-skipped-frames")]
         public int SkippedFrames { internal set; get; }
 
+        /// <summary>
+        /// Average frame time (in milliseconds)
+        /// </summary>
+        [JsonProperty(PropertyName = "average-frame-time")]
+        public double AverageFrameTime { internal set; get; }
 
         /// <summary>
-        /// Total number of missed frames
+        /// Current CPU usage (percentage)
         /// </summary>
-        [JsonProperty(PropertyName = "render-missed-frames")]
-        public int RenderMissedFrames { internal set; get; }
+        [JsonProperty(PropertyName = "cpu-usage")]
+        public double CPU { internal set; get; }
+
+        /// <summary>
+        /// Current RAM usage (in megabytes)
+        /// </summary>
+        [JsonProperty(PropertyName = "memory-usage")]
+        public double MemoryUsage { internal set; get; }
+
+
+        /// <summary>
+        /// Free recording disk space (in megabytes)
+        /// </summary>
+        [JsonProperty(PropertyName = "free-disk-space")]
+        public double FreeDiskSpace { internal set; get; }
 
         /// <summary>
         /// Overall stream time
@@ -89,10 +124,9 @@ namespace OBSWebsocketDotNet.Types
         public string StreamTime { internal set; get; } = null!;
 
         /// <summary>
-        /// Is replay buffer active
+        /// True if recording is paused, false otherwise
         /// </summary>
-        [JsonProperty(PropertyName = "replay-buffer-active")]
-        public bool ReplayBufferActive { internal set; get; }
-
+        [JsonProperty(PropertyName = "recording-paused")]
+        public bool RecordingPaused { internal set; get; }
     }
 }
