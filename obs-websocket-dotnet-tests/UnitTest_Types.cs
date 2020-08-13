@@ -14,23 +14,29 @@ namespace OBSWebsocketDotNet.Tests
             string sceneName = "Scene name äëôû";
             string itemName = "First item name äëôû";
 
-            var itemData = new JObject();
-            itemData.Add("name", itemName);
-            itemData.Add("type", "dummy_source");
-            itemData.Add("volume", 1.0f);
-            itemData.Add("x", 0.0f);
-            itemData.Add("y", 0.0f);
-            itemData.Add("source_cx", 1280);
-            itemData.Add("source_cy", 720);
-            itemData.Add("cx", 1280.0f);
-            itemData.Add("cy", 720.0F);
+            var itemData = new JObject
+            {
+                { "name", itemName },
+                { "type", "dummy_source" },
+                { "volume", 1.0f },
+                { "x", 0.0f },
+                { "y", 0.0f },
+                { "source_cx", 1280 },
+                { "source_cy", 720 },
+                { "cx", 1280.0f },
+                { "cy", 720.0F }
+            };
 
-            var items = new JArray();
-            items.Add(itemData);
+            var items = new JArray
+            {
+                itemData
+            };
 
-            var data = new JObject();
-            data.Add("name", sceneName);
-            data.Add("sources", items);
+            var data = new JObject
+            {
+                { "name", sceneName },
+                { "sources", items }
+            };
 
             var scene = data.ToObject<OBSScene>();
 
@@ -52,16 +58,18 @@ namespace OBSWebsocketDotNet.Tests
             float width = sourceWidth * 2.002f;
             float height = sourceHeight * 2.002f;
 
-            var data = new JObject();
-            data.Add("name", name);
-            data.Add("type", type);
-            data.Add("volume", volume);
-            data.Add("x", x);
-            data.Add("y", y);
-            data.Add("source_cx", sourceWidth);
-            data.Add("source_cy", sourceHeight);
-            data.Add("cx", width);
-            data.Add("cy", height);
+            var data = new JObject
+            {
+                { "name", name },
+                { "type", type },
+                { "volume", volume },
+                { "x", x },
+                { "y", y },
+                { "source_cx", sourceWidth },
+                { "source_cy", sourceHeight },
+                { "cx", width },
+                { "cy", height }
+            };
 
             var item = new SceneItem(data);
 
@@ -82,10 +90,12 @@ namespace OBSWebsocketDotNet.Tests
             string challenge = "pBWv82hj";
             string salt = "B9fL8CF7";
 
-            var data = new JObject();
-            data.Add("authRequired", true);
-            data.Add("challenge", challenge);
-            data.Add("salt", salt);
+            var data = new JObject
+            {
+                { "authRequired", true },
+                { "challenge", challenge },
+                { "salt", salt }
+            };
 
             var authInfo = data.ToObject<OBSAuthInfo>();
 
@@ -100,9 +110,11 @@ namespace OBSWebsocketDotNet.Tests
             string pluginVersion = "4.0.0";
             string obsVersion = "18.0.1";
 
-            var data = new JObject();
-            data.Add("obs-websocket-version", pluginVersion);
-            data.Add("obs-studio-version", obsVersion);
+            var data = new JObject
+            {
+                { "obs-websocket-version", pluginVersion },
+                { "obs-studio-version", obsVersion }
+            };
 
             var version = new OBSVersion(data);
 
@@ -121,16 +133,18 @@ namespace OBSWebsocketDotNet.Tests
             int droppedFrames = 12;
             float fps = 29.97f;
 
-            var data = new JObject();
-            data.Add("streaming", true);
-            data.Add("recording", true);
-            data.Add("bytes-per-sec", bytesPerSec);
-            data.Add("kbits-per-sec", kbitsPerSec);
-            data.Add("strain", strain);
-            data.Add("total-stream-time", streamTime);
-            data.Add("num-total-frames", totalFrames);
-            data.Add("num-dropped-frames", droppedFrames);
-            data.Add("fps", fps);
+            var data = new JObject
+            {
+                { "streaming", true },
+                { "recording", true },
+                { "bytes-per-sec", bytesPerSec },
+                { "kbits-per-sec", kbitsPerSec },
+                { "strain", strain },
+                { "total-stream-time", streamTime },
+                { "num-total-frames", totalFrames },
+                { "num-dropped-frames", droppedFrames },
+                { "fps", fps }
+            };
             var streamStatus = data.ToObject<StreamStatus>();
 
             Assert.IsTrue(streamStatus.Streaming);
@@ -147,9 +161,11 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSOutputStatus_BuildFromJSON()
         {
-            var data = new JObject();
-            data.Add("streaming", true);
-            data.Add("recording", true);
+            var data = new JObject
+            {
+                { "streaming", true },
+                { "recording", true }
+            };
 
             var outputState = new OutputStatus(data);
 
@@ -163,10 +179,12 @@ namespace OBSWebsocketDotNet.Tests
             string transitionName = "Transition name éèïöü";
             int duration = 2000;
 
-            var data = new JObject();
-            data.Add("messageID", "asdf89asdf");
-            data.Add("name", transitionName);
-            data.Add("duration", duration);
+            var data = new JObject
+            {
+                { "messageID", "asdf89asdf" },
+                { "name", transitionName },
+                { "duration", duration }
+            };
 
             var transitionInfo = data.ToObject<TransitionSettings>();
 
@@ -179,9 +197,11 @@ namespace OBSWebsocketDotNet.Tests
         {
             float volumeLevel = 0.50f;
 
-            var data = new JObject();
-            data.Add("volume", volumeLevel);
-            data.Add("muted", true);
+            var data = new JObject
+            {
+                { "volume", volumeLevel },
+                { "muted", true }
+            };
 
             var volumeInfo = new VolumeInfo(data);
 

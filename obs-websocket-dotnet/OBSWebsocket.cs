@@ -470,12 +470,14 @@ namespace OBSWebsocketDotNet
             {
                 body = JObject.Parse(e.Message);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
             {
                 OBSLogger.Error($"Error parsing received message: {ex.Message}.");
                 OBSLogger.Debug($"Invalid message: {e.Message}");
                 return;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             string? msgID = (string?)body["message-id"];
             string? eventType = body["update-type"]?.ToString();
             if (msgID != null)
@@ -750,10 +752,12 @@ namespace OBSWebsocketDotNet
                             else
                                 OBSLogger.Warning($"Received 'StreamStatus' event, but associated data was missing.");
                         }
+#pragma warning disable CA1031 // Do not catch general exception types
                         catch (Exception ex)
                         {
                             OBSLogger.Error(ex);
                         }
+#pragma warning restore CA1031 // Do not catch general exception types
                     }
                     break;
 
@@ -796,10 +800,12 @@ namespace OBSWebsocketDotNet
                         else
                             OBSLogger.Warning($"Received 'Heartbeat' event, but associated data was missing.");
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception ex)
                     {
                         OBSLogger.Error(ex);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
                     break;
                 case "SceneItemDeselected":
                     SceneItemDeselected?.Invoke(this,
@@ -825,10 +831,12 @@ namespace OBSWebsocketDotNet
                         else
                             OBSLogger.Warning($"Received 'SourceAudioMixersChanged' event, but associated data was missing.");
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception ex)
                     {
                         OBSLogger.Error(ex);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
                     break;
                 case "SourceAudioSyncOffsetChanged":
                     SourceAudioSyncOffsetChanged?.Invoke(this,
