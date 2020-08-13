@@ -19,6 +19,7 @@ namespace TestClient
         private const string SOURCE_NAME = "BarRaider";
 
         protected OBSWebsocket _obs;
+        private Random random = new Random();
 
         public void SetOBS(OBSWebsocket obs)
         {
@@ -140,12 +141,12 @@ namespace TestClient
             {
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    tbLog.AppendText($"{Environment.NewLine}{message}");
+                    tbLog.AppendText($"{Environment.NewLine}[{DateTime.Now:HH:mm:ss}]{message}");
                 }));
             }
             else
             {
-                tbLog.AppendText($"{Environment.NewLine}{message}");
+                tbLog.AppendText($"{Environment.NewLine}[{DateTime.Now:HH:mm:ss}]{message}");
             }
         }
 
