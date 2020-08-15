@@ -31,7 +31,7 @@ namespace TestClient
         {
             InitializeComponent();
             _obs = new OBSWebsocket();
-
+            _obs.OBSError += OnError;
             _obs.Connected += onConnect;
             _obs.Disconnected += onDisconnect;
 
@@ -45,6 +45,11 @@ namespace TestClient
             _obs.RecordingStateChanged += onRecordingStateChange;
 
             _obs.StreamStatus += onStreamData;
+        }
+
+        private void OnError(object sender, OBSErrorEventArgs e)
+        {
+            string msg = string.Join("\n", e.Message, e.Data?.ToString(), e.Exception);
         }
 
         private void onConnect(object sender, EventArgs e)
