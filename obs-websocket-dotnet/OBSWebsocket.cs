@@ -505,14 +505,20 @@ namespace OBSWebsocketDotNet
             }
         }
 
+
+        public Task<JObject> SendRequest(string requestType, CancellationToken cancellationToken) => SendRequest(requestType, null, cancellationToken);
         /// <summary>
         /// Sends a message to the websocket API with the specified request type and optional parameters
         /// </summary>
         /// <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
         /// <param name="additionalFields">additional JSON fields if required by the request type</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>The server's JSON response as a JObject</returns>
-        public async Task<JObject> SendRequest(string requestType, JObject? additionalFields = null)
+        /// <exception cref="ErrorResponseException"></exception>
+        /// <exception cref="OperationCanceledException"></exception>
+        public async Task<JObject> SendRequest(string requestType, JObject? additionalFields, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             string messageID;
 
             // Build the bare-minimum body for a request
@@ -539,57 +545,61 @@ namespace OBSWebsocketDotNet
 
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
-            do
-            {
-                // Generate a random message id
-                messageID = NewMessageID();
-                if (_responseHandlers.TryAdd(messageID, tcs))
-                {
-                    body.Add("message-id", messageID);
-                    break;
-                }
-                // Message id already exists, retry with a new one.
-            } while (true);
-            // Send the message and wait for a response
-            // (received and notified by the websocket response handler)
-
-            connection.Send(body.ToString());
-            JObject result;
+            CancellationTokenRegistration tokenRegistration = cancellationToken.Register(() => tcs.TrySetCanceled(cancellationToken));
             try
             {
+                do
+                {
+                    // Generate a random message id
+                    messageID = NewMessageID();
+                    if (_responseHandlers.TryAdd(messageID, tcs))
+                    {
+                        body.Add("message-id", messageID);
+                        break;
+                    }
+                    // Message id already exists, retry with a new one.
+                } while (true);
+                // Send the message and wait for a response
+                // (received and notified by the websocket response handler)
+
+                connection.Send(body.ToString());
+                JObject result;
+
                 result = await tcs.Task.ConfigureAwait(false);
+
+                // Throw an exception if the server returned an error.
+                // An error occurs if authentication fails or one if the request body is invalid.
+                if ((string?)result["status"] == "error")
+                    throw new ErrorResponseException((string?)result["error"] ?? "Response indicated an error.", result);
+
+                return result;
             }
-            catch (TaskCanceledException)
+            finally
             {
-                throw new ErrorResponseException("Request canceled");
+                tokenRegistration.Dispose();
             }
-
-
-            // Throw an exception if the server returned an error.
-            // An error occurs if authentication fails or one if the request body is invalid.
-            if ((string?)result["status"] == "error")
-                throw new ErrorResponseException((string?)result["error"] ?? "Response indicated an error.", result);
-
-            return result;
         }
 
         /// <summary>
         /// Requests version info regarding obs-websocket, the API and OBS Studio
         /// </summary>
         /// <returns>Version info in an <see cref="OBSVersion"/> object</returns>
-        public async Task<OBSVersion> GetVersion()
+        public async Task<OBSVersion> GetVersion(CancellationToken cancellationToken)
         {
-            JObject response = await SendRequest("GetVersion").ConfigureAwait(false);
+            JObject response = await SendRequest("GetVersion", cancellationToken).ConfigureAwait(false);
             return new OBSVersion(response);
         }
+        public Task<OBSVersion> GetVersion() => GetVersion(CancellationToken.None);
 
         /// <summary>
         /// Request authentication data. You don't have to call this manually.
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
-        public async Task<OBSAuthInfo> GetAuthInfo()
+        /// <exception cref="ErrorResponseException"></exception>
+        public async Task<OBSAuthInfo> GetAuthInfo(CancellationToken cancellationToken)
         {
-            JObject response = await SendRequest("GetAuthRequired").ConfigureAwait(false);
+            JObject response = await SendRequest("GetAuthRequired", cancellationToken).ConfigureAwait(false);
             try
             {
                 OBSAuthInfo info = response?.ToObject<OBSAuthInfo>() ?? throw new ErrorResponseException($"Invalid response for 'GetAuthRequired'.", response);
@@ -602,13 +612,20 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Request authentication data. You don't have to call this manually.
+        /// </summary>
+        /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
+        /// <exception cref="ErrorResponseException"></exception>
+        public Task<OBSAuthInfo> GetAuthInfo() => GetAuthInfo(CancellationToken.None);
+
+        /// <summary>
         /// Authenticates to the Websocket server using the challenge and salt given in the passed <see cref="OBSAuthInfo"/> object
         /// </summary>
         /// <param name="password">User password</param>
         /// <param name="authInfo">Authentication data</param>
         /// <returns>true if authentication succeeds</returns>
         /// <exception cref="AuthFailureException">Thrown if authentication fails.</exception>
-        public async Task<bool> Authenticate(string password, OBSAuthInfo authInfo)
+        public async Task<bool> Authenticate(string password, OBSAuthInfo authInfo, CancellationToken cancellationToken)
         {
             string secret = HashEncode(password + authInfo.PasswordSalt);
             string authResponse = HashEncode(secret + authInfo.Challenge);
@@ -621,7 +638,7 @@ namespace OBSWebsocketDotNet
             try
             {
                 // Throws ErrorResponseException if auth fails
-                await SendRequest("Authenticate", requestFields).ConfigureAwait(false);
+                await SendRequest("Authenticate", requestFields, cancellationToken).ConfigureAwait(false);
             }
             catch (ErrorResponseException)
             {
@@ -630,7 +647,7 @@ namespace OBSWebsocketDotNet
 
             return true;
         }
-
+        public Task<bool> Authenticate(string password, OBSAuthInfo authInfo) => Authenticate(password, authInfo, CancellationToken.None);
         /// <summary>
         /// Update message handler
         /// </summary>
@@ -856,7 +873,7 @@ namespace OBSWebsocketDotNet
                         if (settings != null)
                             SourceCreated?.Invoke(this, settings);
                         else
-                            OBSError?.Invoke(this, new OBSErrorEventArgs($"Received 'HeartBeat' event, but associated data was missing.", body));
+                            OBSError?.Invoke(this, new OBSErrorEventArgs($"Received 'SourceCreated' event, but associated data was missing.", body));
                     }
                     catch (Exception ex)
                     {
