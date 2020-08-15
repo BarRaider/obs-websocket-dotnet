@@ -311,7 +311,7 @@ namespace OBSWebsocketDotNet
                 tcs.TrySetCanceled();
             }
             tcs = new TaskCompletionSource<bool>();
-            cancellationToken.Register(() =>
+            using CancellationTokenRegistration cancelRegistration = cancellationToken.Register(() =>
             {
                 tcs.TrySetCanceled(cancellationToken);
             });
@@ -545,39 +545,32 @@ namespace OBSWebsocketDotNet
 
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
-            CancellationTokenRegistration tokenRegistration = cancellationToken.Register(() => tcs.TrySetCanceled(cancellationToken));
-            try
+            using CancellationTokenRegistration tokenRegistration = cancellationToken.Register(() => tcs.TrySetCanceled(cancellationToken));
+            do
             {
-                do
+                // Generate a random message id
+                messageID = NewMessageID();
+                if (_responseHandlers.TryAdd(messageID, tcs))
                 {
-                    // Generate a random message id
-                    messageID = NewMessageID();
-                    if (_responseHandlers.TryAdd(messageID, tcs))
-                    {
-                        body.Add("message-id", messageID);
-                        break;
-                    }
-                    // Message id already exists, retry with a new one.
-                } while (true);
-                // Send the message and wait for a response
-                // (received and notified by the websocket response handler)
+                    body.Add("message-id", messageID);
+                    break;
+                }
+                // Message id already exists, retry with a new one.
+            } while (true);
+            // Send the message and wait for a response
+            // (received and notified by the websocket response handler)
 
-                connection.Send(body.ToString());
-                JObject result;
+            connection.Send(body.ToString());
+            JObject result;
 
-                result = await tcs.Task.ConfigureAwait(false);
+            result = await tcs.Task.ConfigureAwait(false);
 
-                // Throw an exception if the server returned an error.
-                // An error occurs if authentication fails or one if the request body is invalid.
-                if ((string?)result["status"] == "error")
-                    throw new ErrorResponseException((string?)result["error"] ?? "Response indicated an error.", result);
+            // Throw an exception if the server returned an error.
+            // An error occurs if authentication fails or one if the request body is invalid.
+            if ((string?)result["status"] == "error")
+                throw new ErrorResponseException((string?)result["error"] ?? "Response indicated an error.", result);
 
-                return result;
-            }
-            finally
-            {
-                tokenRegistration.Dispose();
-            }
+            return result;
         }
 
         /// <summary>

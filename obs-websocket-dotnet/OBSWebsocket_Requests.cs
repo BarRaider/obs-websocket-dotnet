@@ -245,7 +245,7 @@ namespace OBSWebsocketDotNet
         /// Set the current scene to the specified one
         /// </summary>
         /// <param name="sceneName">The desired scene name</param>
-        /// <exception cref="ErrorResponseException"></exception>
+        /// <exception cref="ErrorResponseException">Thrown if the requested scene does not exist.</exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetCurrentScene(string sceneName, CancellationToken cancellationToken = default)
         {
