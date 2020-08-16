@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+#if DISABLED
 namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
@@ -85,3 +86,4 @@ namespace OBSWebsocketDotNet.Types
         public OBSStats Stats { set; get; } = null!;
     }
 }
+#endif

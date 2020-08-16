@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+#if DISABLED
 namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
@@ -130,3 +130,4 @@ namespace OBSWebsocketDotNet.Types
         public bool RecordingPaused { internal set; get; }
     }
 }
+#endif
