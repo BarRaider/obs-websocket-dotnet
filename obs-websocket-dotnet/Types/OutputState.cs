@@ -6,6 +6,10 @@
     public enum OutputState
     {
         /// <summary>
+        /// OutputState could not be determined.
+        /// </summary>
+        Unknown,
+        /// <summary>
         /// The output is initializing and doesn't produces frames yet
         /// </summary>
         Starting,

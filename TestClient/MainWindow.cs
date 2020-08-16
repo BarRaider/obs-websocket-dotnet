@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Text;
 using System.Windows.Forms;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
@@ -34,6 +35,7 @@ namespace TestClient
             _obs.OBSError += OnError;
             _obs.Connected += onConnect;
             _obs.Disconnected += onDisconnect;
+            _obs.OnEvent += onEvent;
 
             _obs.SceneChanged += onSceneChange;
             _obs.SceneCollectionChanged += onSceneColChange;
@@ -46,10 +48,37 @@ namespace TestClient
 
             _obs.StreamStatus += onStreamData;
         }
+        readonly StringBuilder ConsoleBuilder = new StringBuilder();
+        bool ConsoleActive = true;
+        private void onEvent(object sender, Newtonsoft.Json.Linq.JObject e)
+        {
+            if (!ConsoleActive) return;
+            BeginInvoke((MethodInvoker)(() =>
+            {
+                ConsoleBuilder.Insert(0, $"'{e["update-type"]}' : {e.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                tbConsole.Text = ConsoleBuilder.ToString();
+            }));
+        }
+
+        private void btnToggleConsole_Click(object sender, EventArgs e)
+        {
+            ConsoleActive = !ConsoleActive;
+            if (ConsoleActive)
+                btnToggleConsole.Text = "Stop Console";
+            else
+                btnToggleConsole.Text = "Start Console";
+        }
+
+        private void btnClearConsole_Click(object sender, EventArgs e)
+        {
+            ConsoleBuilder.Clear();
+            tbConsole.Text = "";
+        }
 
         private void OnError(object sender, OBSErrorEventArgs e)
         {
             string msg = string.Join("\n", e.Message, e.Data?.ToString(), e.Exception);
+            MessageBox.Show(msg);
         }
 
         private void onConnect(object sender, EventArgs e)
@@ -82,14 +111,14 @@ namespace TestClient
 
                 var streamStatus = await _obs.GetStreamingStatus();
                 if (streamStatus.IsStreaming)
-                    onStreamingStateChange(_obs, OutputState.Started);
+                    onStreamingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Started });
                 else
-                    onStreamingStateChange(_obs, OutputState.Stopped);
+                    onStreamingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Stopped });
 
                 if (streamStatus.IsRecording)
-                    onRecordingStateChange(_obs, OutputState.Started);
+                    onRecordingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Started });
                 else
-                    onRecordingStateChange(_obs, OutputState.Stopped);
+                    onRecordingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Stopped });
             }));
         }
 
@@ -105,11 +134,11 @@ namespace TestClient
             }));
         }
 
-        private void onSceneChange(OBSWebsocket sender, string newSceneName)
+        private void onSceneChange(object sender, SceneChangeEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbCurrentScene.Text = newSceneName;
+                tbCurrentScene.Text = e.NewSceneName;
             });
         }
 
@@ -125,24 +154,25 @@ namespace TestClient
 
         }
 
-        private void onTransitionChange(OBSWebsocket sender, string newTransitionName)
+        private void onTransitionChange(object sender, TransitionChangeEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbTransition.Text = newTransitionName;
+                tbTransition.Text = e.NewTransitionName;
             });
         }
 
-        private void onTransitionDurationChange(OBSWebsocket sender, int newDuration)
+        private void onTransitionDurationChange(object sender, TransitionDurationChangeEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbTransitionDuration.Value = newDuration;
+                tbTransitionDuration.Value = e.NewDuration;
             });
         }
 
-        private void onStreamingStateChange(OBSWebsocket sender, OutputState newState)
+        private void onStreamingStateChange(object sender, OutputStateChangedEventArgs e)
         {
+            OutputState newState = e.OutputState;
             string state = "";
             switch (newState)
             {
@@ -181,8 +211,9 @@ namespace TestClient
             });
         }
 
-        private void onRecordingStateChange(OBSWebsocket sender, OutputState newState)
+        private void onRecordingStateChange(object sender, OutputStateChangedEventArgs e)
         {
+            OutputState newState = e.OutputState;
             string state = "";
             switch (newState)
             {
@@ -215,17 +246,17 @@ namespace TestClient
             });
         }
 
-        private void onStreamData(OBSWebsocket sender, StreamStatus data)
+        private void onStreamData(object sender, StreamStatusEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                txtStreamTime.Text = data.TotalStreamTime.ToString() + " sec";
-                txtKbitsSec.Text = data.KbitsPerSec.ToString() + " kbit/s";
-                txtBytesSec.Text = data.BytesPerSec.ToString() + " bytes/s";
-                txtFramerate.Text = data.FPS.ToString() + " FPS";
-                txtStrain.Text = (data.Strain * 100).ToString() + " %";
-                txtDroppedFrames.Text = data.DroppedFrames.ToString();
-                txtTotalFrames.Text = data.TotalFrames.ToString();
+                txtStreamTime.Text = e.TotalStreamTime.ToString() + " sec";
+                txtKbitsSec.Text = e.KbitsPerSec.ToString() + " kbit/s";
+                txtBytesSec.Text = e.BytesPerSec.ToString() + " bytes/s";
+                txtFramerate.Text = e.FPS.ToString() + " FPS";
+                txtStrain.Text = (e.Strain * 100).ToString() + " %";
+                txtDroppedFrames.Text = e.DroppedFrames.ToString();
+                txtTotalFrames.Text = e.TotalFrames.ToString();
             });
         }
 
@@ -273,12 +304,53 @@ namespace TestClient
 
         private async void btnGetCurrentScene_Click(object sender, EventArgs e)
         {
+            if (SceneListener != null)
+                SceneListener.Cancel();
             tbCurrentScene.Text = (await _obs.GetCurrentScene()).Name;
         }
 
+        AsyncEventListener<bool, SceneChangeEventArgs> SceneListener;
+
         private async void btnSetCurrentScene_Click(object sender, EventArgs e)
         {
-            await _obs.SetCurrentScene(tbCurrentScene.Text);
+            btnSetCurrentScene.Enabled = false;
+            try
+            {
+                if (SceneListener == null)
+                {
+                    SceneListener = new AsyncEventListener<bool, SceneChangeEventArgs>((s, args) =>
+                    {
+                        bool sceneResult = tbCurrentScene.Text == args.NewSceneName;
+                        return new EventListenerResult<bool>(sceneResult, true);
+                    }, 5000);
+                    _obs.SceneChanged += SceneListener.OnEvent;
+                }
+                else
+                    SceneListener.Reset();
+                SceneListener.StartListening();
+                string currentScene = (await _obs.GetCurrentScene()).Name;
+                await _obs.SetCurrentScene(tbCurrentScene.Text);
+                if (currentScene == tbCurrentScene.Text)
+                {
+                    SceneListener.SetResult(true);
+                }
+                bool result = await SceneListener.Task;
+                if (!result)
+                    MessageBox.Show("Scene change failed.");
+            }
+            catch (TimeoutException ex)
+            {
+                MessageBox.Show($"Timed out: {ex.Message}");
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageBox.Show($"Canceled: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+            btnSetCurrentScene.Enabled = true;
         }
 
         private void tvScenes_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -307,7 +379,9 @@ namespace TestClient
 
         private async void btnSetCurrentSceneCol_Click(object sender, EventArgs e)
         {
+
             await _obs.SetCurrentSceneCollection(tbSceneCol.Text);
+
         }
 
         private void tvSceneCols_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -347,9 +421,48 @@ namespace TestClient
             }
         }
 
+        AsyncEventListener<OutputState, OutputStateChangedEventArgs> StreamListener;
+
         private async void btnToggleStreaming_Click(object sender, EventArgs e)
         {
-            await _obs.ToggleStreaming();
+            btnToggleStreaming.Enabled = false;
+            try
+            {
+                if (StreamListener == null)
+                {
+                    StreamListener = new AsyncEventListener<OutputState, OutputStateChangedEventArgs>((s, state) =>
+                    {
+                        bool finished = state.OutputState == OutputState.Started;
+                        return new EventListenerResult<OutputState>(state.OutputState, finished);
+                    }, 5000);
+                    _obs.StreamingStateChanged += StreamListener.OnEvent;
+                }
+                else
+                    StreamListener.Reset();
+                StreamListener.StartListening();
+                bool isStreaming = (await _obs.GetStreamingStatus()).IsStreaming;
+                await _obs.ToggleStreaming();
+                if (isStreaming)
+                {
+                    StreamListener.SetResult(OutputState.Started);
+                }
+                OutputState result = await StreamListener.Task;
+                if (result != OutputState.Started)
+                    MessageBox.Show("StartStreaming failed.");
+            }
+            catch (TimeoutException ex)
+            {
+                MessageBox.Show($"Timed out: {ex.Message}");
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageBox.Show($"Canceled: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+            btnToggleStreaming.Enabled = true;
         }
 
         private async void btnToggleRecording_Click(object sender, EventArgs e)
