@@ -369,7 +369,7 @@ namespace OBSWebsocketDotNet
         /// Total time (in seconds) since the stream started.
         /// </summary>
         [JsonProperty(PropertyName = "total-stream-time")]
-        public int totalStreamTime { set; get; }
+        public int TotalStreamTime { set; get; }
 
         [JsonProperty("stream-timecode")]
         public TimeSpan StreamTime { get; set; } = TimeSpan.Zero;
@@ -408,7 +408,7 @@ namespace OBSWebsocketDotNet
         /// Total bytes recorded since the recording started.
         /// </summary>
         [JsonProperty(PropertyName = "total-record-bytes")]
-        public int TotalTecordBytes { set; get; }
+        public int TotalRecordBytes { set; get; }
 
         /// <summary>
         /// Total frames recorded since the recording started.

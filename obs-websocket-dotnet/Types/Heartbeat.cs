@@ -1,89 +1,49 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;using Newtonsoft.Json.Linq;using System;using System.Collections.Generic;
+namespace OBSWebsocketDotNet.Types{
+    /// <summary>    /// Immutable class to be created from HeartBeatEventArgs.    /// </summary>    public class HeartBeat    {
 
-#if DISABLED
-namespace OBSWebsocketDotNet.Types
-{
-    /// <summary>
-    /// Heartbeat response
-    /// </summary>
-    public class Heartbeat
-    {
-        /// <summary>
-        /// Toggles between every JSON message as an "I am alive" indicator.
-        /// </summary>
-        [JsonRequired]
-        [JsonProperty(PropertyName = "pulse")]
-        public bool Pulse { set; get; }
+        /// <summary>        /// Toggles between every JSON message as an "I am alive" indicator.        /// </summary>        public readonly bool Pulse;
 
-        /// <summary>
-        /// Current active profile.
-        /// </summary>
-        [JsonRequired]
-        [JsonProperty(PropertyName = "current-profile")]
-        public string CurrentProfile { set; get; } = null!;
+        /// <summary>        /// Current active profile.        /// </summary>        public readonly string CurrentProfile;
 
-        /// <summary>
-        /// Current active scene.
-        /// </summary>
-        [JsonRequired]
-        [JsonProperty(PropertyName = "current-scene")]
-        public string CurrentScene { set; get; } = null!;
+        /// <summary>        /// Current active scene.        /// </summary>        public readonly string CurrentScene;
 
-        /// <summary>
-        /// Current streaming state.
-        /// </summary>
-        [JsonProperty(PropertyName = "streaming")]
-        public bool Streaming { set; get; }
+        /// <summary>        /// Current streaming state.        /// </summary>        public readonly bool Streaming;
 
-        /// <summary>
-        /// Total time (in seconds) since the stream started.
-        /// </summary>
-        [JsonProperty(PropertyName = "total-stream-time")]
-        public int totalStreamTime { set; get; }
+        /// <summary>        /// Total time (in seconds) since the stream started.        /// </summary>        public readonly int TotalStreamTime;        /// <summary>
+        /// Total time since the stream started.
+        /// </summary>        public readonly TimeSpan StreamTime;
 
-        /// <summary>
-        /// Total bytes sent since the stream started.
-        /// </summary>
-        [JsonProperty(PropertyName = "total-stream-bytes")]
-        public ulong TotalStreamBytes { set; get; }
+        /// <summary>        /// Total bytes sent since the stream started.        /// </summary>        public readonly ulong TotalStreamBytes;
 
-        /// <summary>
-        /// Total frames streamed since the stream started.
-        /// </summary>
-        [JsonProperty(PropertyName = "total-stream-frames")]
-        public ulong TotalStreamFrames { set; get; }
+        /// <summary>        /// Total frames streamed since the stream started.        /// </summary>        public readonly ulong TotalStreamFrames;
 
-        /// <summary>
-        /// Current recording state.
-        /// </summary>
-        [JsonProperty(PropertyName = "recording")]
-        public bool Recording { set; get; }
+        /// <summary>        /// Current recording state.        /// </summary>        public readonly bool Recording;        /// <summary>
+        /// True if recording is paused.
+        /// </summary>        public readonly bool RecordingPaused;
 
-        /// <summary>
-        /// Total time (in seconds) since recording started.
-        /// </summary>
-        [JsonProperty(PropertyName = "total-record-time")]
-        public int TotalRecordTime { set; get; }
+        /// <summary>        /// Total time (in seconds) since recording started.        /// </summary>        public readonly int TotalRecordTime;        /// <summary>
+        /// Total time since recording started.
+        /// </summary>        public readonly TimeSpan RecordTime;
 
-        /// <summary>
-        /// Total bytes recorded since the recording started.
-        /// </summary>
-        [JsonProperty(PropertyName = "total-record-bytes")]
-        public int TotalTecordBytes { set; get; }
+        /// <summary>        /// Total bytes recorded since the recording started.        /// </summary>        public readonly int TotalRecordBytes;
 
-        /// <summary>
-        /// Total frames recorded since the recording started.
-        /// </summary>
-        [JsonProperty(PropertyName = "total-record-frames")]
-        public int TotalRecordFrames { set; get; }
+        /// <summary>        /// Total frames recorded since the recording started.        /// </summary>        public readonly int TotalRecordFrames;
 
-        /// <summary>
-        /// OBS Stats
-        /// </summary>
-        [JsonRequired]
-        [JsonProperty(PropertyName = "stats")]
-        public OBSStats Stats { set; get; } = null!;
-    }
-}
-#endif
+        /// <summary>        /// Current framerate.        /// </summary>        public readonly double FPS;
+
+        /// <summary>        /// Number of frames rendered        /// </summary>        public readonly int RenderTotalFrames;
+
+        /// <summary>        /// Number of frames missed due to rendering lag        /// </summary>        public readonly int RenderMissedFrames;
+
+        /// <summary>        /// Number of frames outputted        /// </summary>        public readonly int OutputTotalFrames;
+
+        /// <summary>        /// Number of frames skipped due to encoding lag        /// </summary>        public readonly int OutputSkippedFrames;
+
+        /// <summary>        /// Average frame render time (in milliseconds)        /// </summary>        public readonly double AverageFrameTime;
+
+        /// <summary>        /// Current CPU usage (percentage)        /// </summary>        public readonly double CpuUsage;
+
+        /// <summary>        /// Current RAM usage (in megabytes)        /// </summary>        public readonly double MemoryUsage;
+
+        /// <summary>        /// Free recording disk space (in megabytes)        /// </summary>        public readonly double FreeDiskSpace;        public HeartBeat(HeartBeatEventArgs args)        {            Pulse = args.Pulse;            CurrentProfile = args.CurrentProfile;            CurrentScene = args.CurrentScene;            Streaming = args.Streaming;            TotalStreamTime = args.TotalStreamTime;            StreamTime = args.StreamTime;            TotalStreamBytes = args.TotalStreamBytes;            TotalStreamFrames = args.TotalStreamFrames;            Recording = args.Recording;            RecordingPaused = args.RecordingPaused;            TotalRecordTime = args.TotalRecordTime;            RecordTime = args.RecordTime;            TotalRecordBytes = args.TotalRecordBytes;            TotalRecordFrames = args.TotalRecordFrames;            FPS = args.Stats.FPS;            RenderTotalFrames = args.Stats.RenderTotalFrames;            RenderMissedFrames = args.Stats.RenderMissedFrames;            OutputTotalFrames = args.Stats.OutputTotalFrames;            OutputSkippedFrames = args.Stats.OutputSkippedFrames;            AverageFrameTime = args.Stats.AverageFrameTime;            CpuUsage = args.Stats.CpuUsage;            MemoryUsage = args.Stats.MemoryUsage;            FreeDiskSpace = args.Stats.FreeDiskSpace;        }    }}
