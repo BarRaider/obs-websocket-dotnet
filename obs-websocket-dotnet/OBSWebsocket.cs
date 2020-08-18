@@ -855,8 +855,6 @@ namespace OBSWebsocketDotNet
                         {
                             if (TryCreateEventArgs(eventType, body, out StreamStatusEventArgs args))
                                 StreamStatus?.Invoke(this, args);
-
-
                             break;
                         }
                     case "PreviewSceneChanged":

@@ -145,7 +145,7 @@ namespace OBSWebsocketDotNet.Tests
                 { "num-dropped-frames", droppedFrames },
                 { "fps", fps }
             };
-            var streamStatus = data.ToObject<StreamStatus>();
+            var streamStatus = data.ToObject<StreamStatusEventArgs>();
 
             Assert.IsTrue(streamStatus.Streaming);
             Assert.IsTrue(streamStatus.Recording);
