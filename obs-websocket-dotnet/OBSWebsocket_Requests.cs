@@ -452,7 +452,7 @@ namespace OBSWebsocketDotNet
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<SceneItemProperties> GetSceneItemProperties(string itemName, string? sceneName = null, CancellationToken cancellationToken = default)
         {
-            JObject response = await GetSceneItemPropertiesJson(itemName, sceneName).ConfigureAwait(false);
+            JObject response = await GetSceneItemPropertiesJson(itemName, sceneName, cancellationToken).ConfigureAwait(false);
             return response.ToObject<SceneItemProperties>()
                 ?? throw new ErrorResponseException("Response could not be parsed into SceneItemProperties.", response);
         }
@@ -732,7 +732,7 @@ namespace OBSWebsocketDotNet
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<List<string>> ListTransitions(CancellationToken cancellationToken = default)
         {
-            GetTransitionListInfo? transitions = await GetTransitionList().ConfigureAwait(false);
+            GetTransitionListInfo? transitions = await GetTransitionList(cancellationToken).ConfigureAwait(false);
 
             List<string> transitionNames = new List<string>();
             foreach (TransitionSettings? item in transitions.Transitions)
@@ -1358,9 +1358,9 @@ namespace OBSWebsocketDotNet
         public async Task SetStudioMode(bool enable, CancellationToken cancellationToken = default)
         {
             if (enable)
-                await EnableStudioMode().ConfigureAwait(false);
+                await EnableStudioMode(cancellationToken).ConfigureAwait(false);
             else
-                await DisableStudioMode().ConfigureAwait(false);
+                await DisableStudioMode(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

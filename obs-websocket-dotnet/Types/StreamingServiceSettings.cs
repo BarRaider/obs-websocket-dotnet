@@ -7,6 +7,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class StreamingServiceSettings : IValidatedResponse
     {
+        /// <inheritdoc/>
         public bool ResponseValid => !string.IsNullOrEmpty(Server);
         /// <summary>
         /// The publish URL

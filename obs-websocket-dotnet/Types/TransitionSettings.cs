@@ -8,6 +8,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class TransitionSettings : IValidatedResponse
     {
+        /// <inheritdoc/>
         [JsonIgnore]
         public bool ResponseValid => !string.IsNullOrEmpty(Name);
         /// <summary>

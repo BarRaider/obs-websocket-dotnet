@@ -40,7 +40,9 @@ namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
     {
-
+        /// <summary>
+        /// Default <see cref="JsonSerializerSettings"/>.
+        /// </summary>
         protected static JsonSerializerSettings DefaultSerializerSettings = new JsonSerializerSettings()
         {
             ObjectCreationHandling = ObjectCreationHandling.Auto,
@@ -54,6 +56,9 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<OBSErrorEventArgs>? OBSError;
 
+        /// <summary>
+        /// Raised when a request is sent.
+        /// </summary>
         public event EventHandler<RequestData>? RequestSent;
 
         /// <summary>
@@ -296,8 +301,16 @@ namespace OBSWebsocketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns true if the connection is open.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
         protected static bool CheckConnection(WebSocket connection) => connection.State == WebSocketState.Open;
 
+        /// <summary>
+        /// URL used to connect to the server.
+        /// </summary>
         public string? ConnectionUrl { get; protected set; }
 
         /// <summary>
@@ -306,9 +319,18 @@ namespace OBSWebsocketDotNet
         protected WebSocket? WSConnection { get; private set; }
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
+        /// <summary>
+        /// Dictionary of response handlers waiting for a response.
+        /// </summary>
         protected ConcurrentDictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        /// <summary>
+        /// <see cref="TaskCompletionSource{TResult}"/> used to wait for a connection.
+        /// </summary>
         protected TaskCompletionSource<bool>? ConnectingTaskSource;
 
+        /// <summary>
+        /// Creates a new <see cref="OBSWebsocket"/>. A URL must be set before connecting.
+        /// </summary>
         public OBSWebsocket()
         {
             _responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
@@ -339,7 +361,7 @@ namespace OBSWebsocketDotNet
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="SocketErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
-        public async Task<bool> Connect(string? password, CancellationToken cancellationToken)
+        public async Task<bool> Connect(string? password, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (WSConnection != null
@@ -383,8 +405,6 @@ namespace OBSWebsocketDotNet
             return true;
         }
 
-        public Task<bool> Connect(string url, string? password) => Connect(url, password, CancellationToken.None);
-
         /// <summary>
         /// Connect to the given URL and authenticate (if needed) with the specified password
         /// </summary>
@@ -396,7 +416,7 @@ namespace OBSWebsocketDotNet
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="SocketErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
-        public Task<bool> Connect(string url, string? password, CancellationToken cancellationToken)
+        public Task<bool> Connect(string url, string? password, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(url))
@@ -418,6 +438,10 @@ namespace OBSWebsocketDotNet
             return Connect(password, cancellationToken);
         }
 
+        /// <summary>
+        /// Sets events used by obs-websocket-dotnet on a <see cref="WebSocket"/> connection.
+        /// </summary>
+        /// <param name="connection"></param>
         protected void SetEvents(WebSocket connection)
         {
             RemoveEvents(connection);
@@ -427,6 +451,10 @@ namespace OBSWebsocketDotNet
             connection.Error += OnConnectionError;
         }
 
+        /// <summary>
+        /// Removes events used by obs-websocket-dotnet on a <see cref="WebSocket"/> connection.
+        /// </summary>
+        /// <param name="connection"></param>
         protected void RemoveEvents(WebSocket connection)
         {
             connection.MessageReceived -= WebsocketMessageHandler;
@@ -435,14 +463,14 @@ namespace OBSWebsocketDotNet
             connection.Error -= OnConnectionError;
         }
 
-        protected void OnConnectionOpened(object sender, EventArgs e)
+        private void OnConnectionOpened(object sender, EventArgs e)
         {
             TaskCompletionSource<bool>? connectingTcs = ConnectingTaskSource;
             if (connectingTcs != null)
                 connectingTcs.TrySetResult(true);
         }
 
-        protected void OnConnectionClosed(object sender, EventArgs e)
+        private void OnConnectionClosed(object sender, EventArgs e)
         {
             TaskCompletionSource<bool>? connectingTcs = ConnectingTaskSource;
             if (connectingTcs != null)
@@ -452,7 +480,7 @@ namespace OBSWebsocketDotNet
             CancelAllHandlers();
         }
 
-        protected void OnConnectionError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+        private void OnConnectionError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             if (e?.Exception != null)
             {
@@ -493,6 +521,10 @@ namespace OBSWebsocketDotNet
             CancelAllHandlers();
         }
 
+        /// <summary>
+        /// Cancels all waiting response handlers. Optionally, sets an <see cref="Exception"/> on them.
+        /// </summary>
+        /// <param name="exception"></param>
         protected void CancelAllHandlers(Exception? exception = null)
         {
             KeyValuePair<string, TaskCompletionSource<JObject>>[]? unusedHandlers = _responseHandlers.ToArray();
@@ -556,7 +588,14 @@ namespace OBSWebsocketDotNet
         }
 #pragma warning restore CA1031 // Do not catch general exception types
 
-
+        /// <summary>
+        /// Sends a message to the websocket API with the specified request type.
+        /// </summary>
+        /// <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The server's JSON response as a JObject</returns>
+        /// <exception cref="ErrorResponseException"></exception>
+        /// <exception cref="OperationCanceledException"></exception>
         public Task<JObject> SendRequest(string requestType, CancellationToken cancellationToken) => SendRequest(requestType, null, cancellationToken);
         /// <summary>
         /// Sends a message to the websocket API with the specified request type and optional parameters
@@ -629,12 +668,11 @@ namespace OBSWebsocketDotNet
         /// Requests version info regarding obs-websocket, the API and OBS Studio
         /// </summary>
         /// <returns>Version info in an <see cref="OBSVersion"/> object</returns>
-        public async Task<OBSVersion> GetVersion(CancellationToken cancellationToken)
+        public async Task<OBSVersion> GetVersion(CancellationToken cancellationToken = default)
         {
             JObject response = await SendRequest("GetVersion", cancellationToken).ConfigureAwait(false);
             return new OBSVersion(response);
         }
-        public Task<OBSVersion> GetVersion() => GetVersion(CancellationToken.None);
 
         /// <summary>
         /// Request authentication data. You don't have to call this manually.
@@ -642,7 +680,7 @@ namespace OBSWebsocketDotNet
         /// <param name="cancellationToken"></param>
         /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
         /// <exception cref="ErrorResponseException"></exception>
-        public async Task<OBSAuthInfo> GetAuthInfo(CancellationToken cancellationToken)
+        public async Task<OBSAuthInfo> GetAuthInfo(CancellationToken cancellationToken = default)
         {
             JObject response = await SendRequest("GetAuthRequired", cancellationToken).ConfigureAwait(false);
             try
@@ -657,13 +695,6 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Request authentication data. You don't have to call this manually.
-        /// </summary>
-        /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
-        /// <exception cref="ErrorResponseException"></exception>
-        public Task<OBSAuthInfo> GetAuthInfo() => GetAuthInfo(CancellationToken.None);
-
-        /// <summary>
         /// Authenticates to the Websocket server using the challenge and salt given in the passed <see cref="OBSAuthInfo"/> object
         /// </summary>
         /// <param name="password">User password</param>
@@ -671,7 +702,7 @@ namespace OBSWebsocketDotNet
         /// <param name="cancellationToken"></param>
         /// <returns>true if authentication succeeds</returns>
         /// <exception cref="AuthFailureException">Thrown if authentication fails.</exception>
-        public async Task<bool> Authenticate(string password, OBSAuthInfo authInfo, CancellationToken cancellationToken)
+        public async Task<bool> Authenticate(string password, OBSAuthInfo authInfo, CancellationToken cancellationToken = default)
         {
             string secret = HashEncode(password + authInfo.PasswordSalt);
             string authResponse = HashEncode(secret + authInfo.Challenge);
@@ -693,7 +724,7 @@ namespace OBSWebsocketDotNet
 
             return true;
         }
-        public Task<bool> Authenticate(string password, OBSAuthInfo authInfo) => Authenticate(password, authInfo, CancellationToken.None);
+
         /// <summary>
         /// Update message handler
         /// </summary>
@@ -1032,6 +1063,14 @@ namespace OBSWebsocketDotNet
 #pragma warning restore CA1031 // Do not catch general exception types
         }
 
+        /// <summary>
+        /// Attempts to create <see cref="EventArgs"/> of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="eventName"></param>
+        /// <param name="body"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         protected bool TryCreateEventArgs<T>(string eventName, JObject body, out T args) where T : EventArgs, new()
         {
             args = null!;

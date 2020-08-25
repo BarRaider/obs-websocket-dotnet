@@ -8,6 +8,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class CommonRTMPStreamingService : IValidatedResponse
     {
+        /// <inheritdoc/>
         public bool ResponseValid => !string.IsNullOrEmpty(ServiceName) && ServerUrl != null;
         /// <summary>
         /// Streaming provider name

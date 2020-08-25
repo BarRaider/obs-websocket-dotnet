@@ -8,6 +8,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class BrowserSourceProperties : IValidatedResponse
     {
+        /// <inheritdoc/>
         [JsonIgnore]
         public bool ResponseValid => Source != null && URL != null;
         /// <summary>
