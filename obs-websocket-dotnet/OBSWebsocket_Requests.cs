@@ -64,22 +64,22 @@ namespace OBSWebsocketDotNet
         /// <exception cref="ErrorResponseException"></exception>
         /// <returns></returns>
         /// <exception cref="OperationCanceledException"></exception>
-        public async Task<Output[]> ListOutputs(CancellationToken cancellationToken = default)
+        public async Task<OBSOutputInfo[]> ListOutputs(CancellationToken cancellationToken = default)
         {
             JObject response = await SendRequest("ListOutputs", cancellationToken).ConfigureAwait(false);
             JObject[]? jOutputs = response["outputs"]?.Children<JObject>().ToArray();
             if (jOutputs == null)
-                return Array.Empty<Output>();
+                return Array.Empty<OBSOutputInfo>();
             int outputCount = jOutputs.Length;
             if (outputCount == 0)
-                return Array.Empty<Output>();
-            Output[] outputs = new Output[outputCount];
+                return Array.Empty<OBSOutputInfo>();
+            OBSOutputInfo[] outputs = new OBSOutputInfo[outputCount];
 
             for (int i = 0; i < outputCount; i++)
             {
                 try
                 {
-                    outputs[i] = Output.CreateOutput(jOutputs[i]);
+                    outputs[i] = OBSOutputInfo.CreateOutput(jOutputs[i]);
                 }
 #pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception ex)
@@ -99,7 +99,7 @@ namespace OBSWebsocketDotNet
         /// <returns></returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
-        public async Task<Output> GetOutput(string outputName, CancellationToken cancellationToken = default)
+        public async Task<OBSOutputInfo> GetOutput(string outputName, CancellationToken cancellationToken = default)
         {
             JObject? requestFields = new JObject
             {
@@ -107,7 +107,7 @@ namespace OBSWebsocketDotNet
             };
             JObject response = await SendRequest("GetOutputInfo", requestFields, cancellationToken).ConfigureAwait(false);
 
-            return Output.CreateOutput(response["outputInfo"] as JObject 
+            return OBSOutputInfo.CreateOutput(response["outputInfo"] as JObject 
                 ?? throw ErrorResponseException.FromMissingProperty("outputInfo", response));
         }
 

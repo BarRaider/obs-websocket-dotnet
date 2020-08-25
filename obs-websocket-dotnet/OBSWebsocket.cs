@@ -36,7 +36,6 @@ using System.Threading.Tasks;
 using WebSocket4Net;
 using System.Diagnostics;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
@@ -55,7 +54,17 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<OBSErrorEventArgs>? OBSError;
 
-        public event EventHandler<JObject>? OnEvent;
+        public event EventHandler<RequestData>? RequestSent;
+
+        /// <summary>
+        /// Raised when any "update-type" event is received.
+        /// </summary>
+        public event EventHandler<JObject>? EventReceived;
+
+        /// <summary>
+        /// Raised when a request's response is received.
+        /// </summary>
+        public event EventHandler<JObject>? ResponseReceived;
 
         /// <summary>
         /// Triggered when switching to another scene
@@ -68,7 +77,7 @@ namespace OBSWebsocketDotNet
         public event EventHandler? SceneListChanged;
 
         /// <summary>
-        /// Triggered when the scene item list of the specified scene is reordered
+        /// Scene items within a scene have been reordered.
         /// </summary>
         public event EventHandler<SourceOrderChangedEventArgs>? SourceOrderChanged;
 
@@ -151,16 +160,6 @@ namespace OBSWebsocketDotNet
         /// Triggered when the recording output state changes
         /// </summary>
         public event EventHandler<OutputStateChangedEventArgs>? RecordingStateChanged;
-
-        /// <summary>
-        /// Triggered when the recording output is paused
-        /// </summary>
-        public event EventHandler? RecordingPaused;
-
-        /// <summary>
-        /// Triggered when the recording output is resumed
-        /// </summary>
-        public event EventHandler? RecordingResumed;
 
         /// <summary>
         /// Triggered when state of the replay buffer changes
@@ -392,7 +391,7 @@ namespace OBSWebsocketDotNet
         /// <param name="url"></param>
         /// <param name="password">Server password</param>
         /// <param name="cancellationToken"></param>
-        /// <exception cref="ArgumentNullException"
+        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="AuthFailureException"></exception>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="SocketErrorResponseException"></exception>
@@ -510,24 +509,22 @@ namespace OBSWebsocketDotNet
         }
 
 
-
         // This callback handles incoming JSON messages and determines if it's
         // a request response or an event ("Update" in obs-websocket terminology)
+#pragma warning disable CA1031 // Do not catch general exception types
         private void WebsocketMessageHandler(object sender, MessageReceivedEventArgs e)
         {
-            JObject body;
+            JObject? body = null;
             try
             {
                 body = JObject.Parse(e.Message);
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
             {
-                OBSError?.Invoke(this, new OBSErrorEventArgs($"Error parsing received message: {ex.Message}.", ex)); // TODO: Have OBSErrorEventArgs store raw string data?
+                OBSError?.Invoke(this, new OBSErrorEventArgs($"Error parsing received message: {ex.Message}.", ex, body));
                 OBSLogger.Debug($"Invalid message: {e.Message}");
                 return;
             }
-#pragma warning restore CA1031 // Do not catch general exception types
             string? msgID = (string?)body["message-id"];
             string? eventType = body["update-type"]?.ToString();
             if (msgID != null)
@@ -536,6 +533,15 @@ namespace OBSWebsocketDotNet
                 {
                     // Set the response body as Result and notify the request sender
                     handler.SetResult(body);
+                    try
+                    {
+                        ResponseReceived?.Invoke(this, body);
+                    }
+                    catch (Exception ex)
+                    {
+                        OBSLogger.Error($"Error in {nameof(ResponseReceived)} handler: {ex.Message}");
+                        OBSLogger.Debug(ex);
+                    }
                 }
                 else
                 {
@@ -548,6 +554,7 @@ namespace OBSWebsocketDotNet
                 ProcessEventType(eventType, body);
             }
         }
+#pragma warning restore CA1031 // Do not catch general exception types
 
 
         public Task<JObject> SendRequest(string requestType, CancellationToken cancellationToken) => SendRequest(requestType, null, cancellationToken);
@@ -605,6 +612,7 @@ namespace OBSWebsocketDotNet
             // (received and notified by the websocket response handler)
 
             connection.Send(body.ToString());
+            RequestSent?.Invoke(this, new RequestData(requestType, messageID, body));
             JObject result;
 
             result = await tcs.Task.ConfigureAwait(false);
@@ -695,7 +703,7 @@ namespace OBSWebsocketDotNet
         {
             try
             {
-                OnEvent?.Invoke(this, body);
+                EventReceived?.Invoke(this, body);
             }
             catch (Exception ex)
             {
@@ -724,7 +732,7 @@ namespace OBSWebsocketDotNet
                         {
                             if (TryCreateEventArgs(eventType, body, out SceneItemUpdatedEventArgs args))
                             {
-                                args.ChangeType = ChangeType.Added;
+                                args.ChangeType = SceneItemChangeType.Added;
                                 SceneItemAdded?.Invoke(this, args);
                             }
                             break;
@@ -733,7 +741,7 @@ namespace OBSWebsocketDotNet
                         {
                             if (TryCreateEventArgs(eventType, body, out SceneItemUpdatedEventArgs args))
                             {
-                                args.ChangeType = ChangeType.Removed;
+                                args.ChangeType = SceneItemChangeType.Removed;
                                 SceneItemRemoved?.Invoke(this, args);
                             }
                             break;

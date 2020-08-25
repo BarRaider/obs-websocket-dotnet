@@ -31,7 +31,37 @@ using System.Net.Sockets;
 namespace OBSWebsocketDotNet
 {
     /// <summary>
-    /// Holds data about an error from the OBS connection.
+    /// Struct containing info about requests made. Used for <see cref="OBSWebsocket.RequestSent"/>.
+    /// </summary>
+    public struct RequestData
+    {
+        /// <summary>
+        /// Request type
+        /// </summary>
+        public readonly string RequestType;
+        /// <summary>
+        /// Message ID
+        /// </summary>
+        public readonly string MessageId;
+        /// <summary>
+        /// Request body JSON.
+        /// </summary>
+        public readonly JObject? RequestBody;
+        /// <summary>
+        /// Creates a new <see cref="RequestData"/>.
+        /// </summary>
+        /// <param name="requestType"></param>
+        /// <param name="messageId"></param>
+        /// <param name="requestBody"></param>
+        public RequestData(string requestType, string messageId, JObject requestBody)
+        {
+            RequestType = requestType;
+            MessageId = messageId;
+            RequestBody = requestBody;
+        }
+    }
+    /// <summary>
+    /// Holds data about an error from the OBS connection. Used by <see cref="OBSWebsocket.OBSError"/>.
     /// </summary>
     public class OBSErrorEventArgs : EventArgs
     {
@@ -48,23 +78,57 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public readonly JToken? Data;
 
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message, <see cref="System.Exception"/>, and <see cref="JToken"/> data.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="exception"></param>
+        /// <param name="data"></param>
         public OBSErrorEventArgs(string? message, Exception? exception, JToken? data)
         {
             Message = message;
             Exception = exception;
             Data = data;
         }
+
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with an <see cref="System.Exception"/>.
+        /// </summary>
+        /// <param name="exception"></param>
         public OBSErrorEventArgs(Exception? exception)
             : this(null, exception, null) { }
 
+
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message.
+        /// </summary>
+        /// <param name="message"></param>
         public OBSErrorEventArgs(string? message)
             : this(message, null, null) { }
+
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message and <see cref="System.Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="exception"></param>
         public OBSErrorEventArgs(string? message, Exception? exception)
             : this(message, exception, null) { }
 
+
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message and <see cref="JToken"/> data.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="data"></param>
         public OBSErrorEventArgs(string? message, JToken? data)
             : this(message, null, data) { }
 
+
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with an <see cref="System.Exception"/> and <see cref="JToken"/> data.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="data"></param>
         public OBSErrorEventArgs(Exception? exception, JToken? data)
             : this(null, exception, data) { }
 
@@ -75,14 +139,24 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class AuthFailureException : Exception
     {
+        /// <summary>
+        /// Creates an empty <see cref="AuthFailureException"/>.
+        /// </summary>
         public AuthFailureException()
         {
         }
-
+        /// <summary>
+        /// Creates an <see cref="AuthFailureException"/> with a message.
+        /// </summary>
+        /// <param name="message"></param>
         public AuthFailureException(string message) : base(message)
         {
         }
-
+        /// <summary>
+        /// Creates an <see cref="AuthFailureException"/> with a message and inner <see cref="System.Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         public AuthFailureException(string message, Exception innerException) : base(message, innerException)
         {
         }
@@ -112,9 +186,8 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Returns a standard <see cref="ErrorResponseException"/> for a response missing a required property.
+        /// Returns a standard <see cref="ErrorResponseException"/> for a null response object.
         /// </summary>
-        /// <param name="propertyName"></param>
         /// <param name="response"></param>
         /// <returns></returns>
         public static ErrorResponseException FromNullResponseObject<T>(JObject? response)
@@ -123,7 +196,7 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Returns a standard <see cref="ErrorResponseException"/> for a response missing a required property.
+        /// Returns a standard <see cref="ErrorResponseException"/> for a null response object created from a property.
         /// </summary>
         /// <param name="propertyName"></param>
         /// <param name="response"></param>
@@ -175,15 +248,33 @@ namespace OBSWebsocketDotNet
         }
     }
 
+    /// <summary>
+    /// An <see cref="ErrorResponseException"/> for WebSocket errors.
+    /// </summary>
     public class SocketErrorResponseException : ErrorResponseException
     {
+        /// <summary>
+        /// WebSocket error code.
+        /// </summary>
         public SocketError SocketErrorCode { get; }
+        /// <summary>
+        /// WebSocket error code as an integer.
+        /// </summary>
         public int ErrorCode => (int)SocketErrorCode;
+        /// <summary>
+        /// Creates a new <see cref="SocketErrorResponseException"/> with a message and <see cref="SocketException"/>
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="socketException"></param>
         public SocketErrorResponseException(string message, SocketException socketException)
             : base(message, socketException)
         {
             SocketErrorCode = socketException.SocketErrorCode;
         }
+        /// <summary>
+        /// Creates a new <see cref="SocketErrorResponseException"/> from a <see cref="SocketException"/>
+        /// </summary>
+        /// <param name="socketException"></param>
         public SocketErrorResponseException(SocketException socketException)
            : base(socketException.Message, socketException)
         {
