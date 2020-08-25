@@ -245,34 +245,85 @@ namespace OBSWebsocketDotNet.Types
             AllowSpaces = jObject["allow_spaces"]?.Value<bool>() ?? false;
             Directory = jObject["directory"]?.Value<string>();
             Extension = jObject["extension"]?.Value<string>();
-            Format = jObject["format"]?.Value<string>();
+            FileFormat = jObject["format"]?.Value<string>();
             MaxSizeMB = jObject["max_size_mb"]?.Value<int>() ?? 0;
             MaxTimeSecond = jObject["max_time_sec"]?.Value<int>() ?? 0;
             MuxerSettings = jObject["muxer_settings"]?.Value<string>();
             Path = jObject["path"]?.Value<string>();
         }
 
+        /// <summary>
+        /// True if spaces are allowed in the file name?
+        /// </summary>
         public readonly bool AllowSpaces;
+        /// <summary>
+        /// Directory replays will be saved to.
+        /// </summary>
         public readonly string? Directory;
+        /// <summary>
+        /// Replay file extension.
+        /// </summary>
         public readonly string? Extension;
-        public readonly string? Format;
+        /// <summary>
+        /// Filename format for saved replays.
+        /// </summary>
+        public readonly string? FileFormat;
+        /// <summary>
+        /// Maximum replay file size.
+        /// </summary>
         public readonly int MaxSizeMB;
+        /// <summary>
+        /// Maximum replay length (seconds).
+        /// </summary>
         public readonly int MaxTimeSecond;
+        /// <summary>
+        /// Muxer settings for replays.
+        /// </summary>
         public readonly string? MuxerSettings;
+        /// <summary>
+        /// Seems to be the same as <see cref="Directory"/> right now.
+        /// </summary>
         public readonly string? Path;
     }
 #pragma warning restore CA1815 // Override equals and operator equals on value types
 
+    /// <summary>
+    /// Flags describing the output.
+    /// </summary>
     [Flags]
     public enum OutputFlags
     {
+        /// <summary>
+        /// None.
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// Output has video.
+        /// </summary>
         Video = 1 << 0,
+        /// <summary>
+        /// Output has audio.
+        /// </summary>
         Audio = 1 << 1,
+        /// <summary>
+        /// Output has video and audio.
+        /// </summary>
         AV = Video | Audio,
+        /// <summary>
+        /// Output is encoded.
+        /// </summary>
         Encoded = 1 << 2,
+        /// <summary>
+        /// Output uses a service.
+        /// </summary>
         UsesService = 1 << 3,
+        /// <summary>
+        /// Output has multiple tracks.
+        /// </summary>
         Multitrack = 1 << 4,
+        /// <summary>
+        /// Output can be paused.
+        /// </summary>
         CanPause = 1 << 5
     }
 }
