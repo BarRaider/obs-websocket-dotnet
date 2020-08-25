@@ -585,5 +585,12 @@ namespace TestClient
             else
                 MessageBox.Show("An output name must be specified.");
         }
+
+        private void btnAdvanced_Click(object sender, EventArgs e)
+        {
+            AdvancedWindow advanced = new AdvancedWindow();
+            advanced.SetOBS(_obs);
+            advanced.ShowDialog();
+        }
     }
 }

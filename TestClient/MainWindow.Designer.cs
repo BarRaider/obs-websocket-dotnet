@@ -112,6 +112,8 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.btnStopOutput = new System.Windows.Forms.Button();
+            this.btnAdvanced = new System.Windows.Forms.Button();
             this.tbConsole = new System.Windows.Forms.TextBox();
             this.btnClearConsole = new System.Windows.Forms.Button();
             this.btnToggleConsole = new System.Windows.Forms.Button();
@@ -251,6 +253,7 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.btnToggleConsole);
             this.gbControls.Controls.Add(this.btnClearConsole);
             this.gbControls.Controls.Add(this.tbConsole);
@@ -917,6 +920,27 @@ namespace TestClient
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // btnAdvanced
+            // 
+            this.btnAdvanced.Location = new System.Drawing.Point(492, 486);
+            this.btnAdvanced.Name = "btnAdvanced";
+            this.btnAdvanced.Size = new System.Drawing.Size(75, 23);
+            this.btnAdvanced.TabIndex = 13;
+            this.btnAdvanced.Text = "Advanced";
+            this.btnAdvanced.UseVisualStyleBackColor = true;
+            this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
+            // 
+            // btnStopOutput
+			// 
+            this.btnStopOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStopOutput.Location = new System.Drawing.Point(78, 202);
+            this.btnStopOutput.Name = "btnStopOutput";
+            this.btnStopOutput.Size = new System.Drawing.Size(66, 35);
+            this.btnStopOutput.TabIndex = 6;
+            this.btnStopOutput.Text = "Stop Output";
+            this.btnStopOutput.UseVisualStyleBackColor = true;
+            this.btnStopOutput.Click += new System.EventHandler(this.btnStopOutput_Click);
+            // 
             // tbConsole
             // 
             this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1050,6 +1074,7 @@ namespace TestClient
         private System.Windows.Forms.Button btnSetTransitionDuration;
         private System.Windows.Forms.Button btnGetTransitionDuration;
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
+        private System.Windows.Forms.Button btnAdvanced;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Button btnStartOutput;
         private System.Windows.Forms.Button btnGetOutput;
