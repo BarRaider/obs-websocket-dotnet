@@ -1969,7 +1969,7 @@ namespace OBSWebsocketDotNet
         /// <returns>settings</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
-        public async Task<SourceSettings> GetSourceSettings(string sourceName, string? sourceType = null, CancellationToken cancellationToken = default)
+        public async Task<SourceSettings> GetSourceSettings(string sourceName, string? sourceType, CancellationToken cancellationToken = default)
         {
             JObject? requestFields = new JObject
             {
