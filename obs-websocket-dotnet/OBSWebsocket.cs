@@ -648,8 +648,7 @@ namespace OBSWebsocketDotNet
                     SceneItemVisibilityChanged?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
                     break;
                 case "SceneItemLockChanged":
-                    if (SceneItemLockChanged != null)
-                        SceneItemLockChanged(this, (string)body["scene-name"], (string)body["item-name"], (int)body["item-id"], (bool)body["item-locked"]);
+                    SceneItemLockChanged?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (int)body["item-id"], (bool)body["item-locked"]);
                     break;
                 case "SceneCollectionChanged":
                     SceneCollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -672,16 +671,13 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "TransitionBegin":
-                    if (TransitionBegin != null)
-                        TransitionBegin(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
+                    TransitionBegin?.Invoke(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
                     break;
                 case "TransitionEnd":
-                    if (TransitionEnd != null)
-                        TransitionEnd(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["to-scene"]);
+                    TransitionEnd?.Invoke(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["to-scene"]);
                     break;
                 case "TransitionVideoEnd":
-                    if (TransitionVideoEnd != null)
-                        TransitionVideoEnd(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
+                    TransitionVideoEnd?.Invoke(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
                     break;
                 case "ProfileChanged":
                     ProfileChanged?.Invoke(this, EventArgs.Empty);
@@ -814,12 +810,10 @@ namespace OBSWebsocketDotNet
                     SourceFiltersReordered?.Invoke(this, (string)body["sourceName"], filters);
                     break;
                 case "SourceFilterVisibilityChanged":
-                    if (SourceFilterVisibilityChanged != null)
-                        SourceFilterVisibilityChanged(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);
+                    SourceFilterVisibilityChanged?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);
                     break;
                 case "BroadcastCustomMessage":
-                    if (BroadcastCustomMessageReceived != null)
-                        BroadcastCustomMessageReceived(this, (string)body["realm"], (JObject)body["data"]);
+                    BroadcastCustomMessageReceived?.Invoke(this, (string)body["realm"], (JObject)body["data"]);
                     break;
                 default:
                         var message = $"Unsupported Event: {eventType}\n{body}";

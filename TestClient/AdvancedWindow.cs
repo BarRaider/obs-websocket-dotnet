@@ -170,10 +170,10 @@ namespace TestClient
             _obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
         }
 
-        private void btnSourceFilters_Click(object sender, EventArgs e)
+        private async void btnSourceFilters_Click(object sender, EventArgs e)
         {
             LogMessage("GetSourceFilters:");
-            var filters = _obs.GetSourceFilters(SOURCE_NAME);
+            var filters = await _obs.GetSourceFilters(SOURCE_NAME);
 
             foreach(var filter in filters)
             {
@@ -188,7 +188,7 @@ namespace TestClient
             }
 
             LogMessage("GetSourceFilterInfo:");
-            LogFilter(_obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
+            LogFilter(await _obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
         }
 
         private void LogFilter(FilterSettings filter)
