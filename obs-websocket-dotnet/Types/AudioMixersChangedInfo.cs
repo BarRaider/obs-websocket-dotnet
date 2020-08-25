@@ -9,6 +9,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class AudioMixersChangedInfo : IValidatedResponse
     {
+        /// <inheritdoc/>
         public bool ResponseValid => !string.IsNullOrEmpty(SourceName) && Mixers != null;
         /// <summary>
         /// Mixer source name

@@ -9,18 +9,31 @@ using System.Text;
 
 namespace OBSWebsocketDotNet
 {
-    public class JsonEventArgs : EventArgs
+    /// <summary>
+    /// Base class for OBSWebsocket <see cref="EventArgs"/>.
+    /// </summary>
+    public abstract class JsonEventArgs : EventArgs
     {
+        /// <summary>
+        /// Event type.
+        /// </summary>
         [JsonProperty("update-type")]
         protected string UpdateType = null!;
 
+        /// <summary>
+        /// Additional data not deserialized into the object.
+        /// </summary>
         [JsonExtensionData(ReadData = true)]
         public Dictionary<string, JToken>? ExtensionData;
 
+        /// <summary>
+        /// Logs the unhandled properties if enabled by the <see cref="IOBSLogger"/>.
+        /// </summary>
+        /// <param name="context"></param>
         [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
+        private void OnDeserialized(StreamingContext context)
         {
-            if (ExtensionData != null)
+            if (ExtensionData != null && ExtensionData.Count > 0)
             {
                 KeyValuePair<string, JToken>[] missedData = ExtensionData.Where(p => p.Key != "preview-only").ToArray();
                 if (OBSLogger.LoggerSettings.HasFlag(OBSLoggerSettings.LogExtraEventData) && missedData.Length > 0)
@@ -31,11 +44,26 @@ namespace OBSWebsocketDotNet
         }
     }
 
-    public enum ChangeType
+    /// <summary>
+    /// Type of change made to a SceneItem. Used in <see cref="SceneItemUpdatedEventArgs"/>
+    /// </summary>
+    public enum SceneItemChangeType
     {
+        /// <summary>
+        /// No change or change type could not be determined.
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// Scene item was added.
+        /// </summary>
         Added = 1,
+        /// <summary>
+        /// Scene item was removed.
+        /// </summary>
         Removed = 2,
+        /// <summary>
+        /// Scene item was updated.
+        /// </summary>
         Updated = 3
     }
 
@@ -44,18 +72,34 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class SourceOrderChangedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the scene where items have been reordered.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("scene-name")]
         public string SceneName = null!;
+        /// <summary>
+        /// Array of scene items in their new order.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("scene-items")]
         public SourceOrderChangedSceneItem[] SceneItems = null!;
     }
+
+    /// <summary>
+    /// Used in <see cref="SourceOrderChangedEventArgs"/> to describe a scene item.
+    /// </summary>
     public class SourceOrderChangedSceneItem
     {
+        /// <summary>
+        /// Name of the source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("source-name")]
-        public string ItemSourceName = null!;
+        public string SourceName = null!;
+        /// <summary>
+        /// Source's ID.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-id")]
         public int ItemId;
@@ -66,17 +110,29 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class SceneItemUpdatedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the scene affected.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("scene-name")]
         public string SceneName = null!;
+        /// <summary>
+        /// Name of the item.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-name")]
         public string ItemName = null!;
+        /// <summary>
+        /// ID of the item.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-id")]
         public int ItemId;
+        /// <summary>
+        /// Type of change applied to the item.
+        /// </summary>
         [JsonIgnore]
-        public ChangeType ChangeType;
+        public SceneItemChangeType ChangeType;
     }
 
     /// <summary>
@@ -84,9 +140,15 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class SceneChangeEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the scene that was switched to.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("scene-name")]
         public string NewSceneName = null!;
+        /// <summary>
+        /// Array of sources in the scene.
+        /// </summary>
         [JsonProperty("sources")]
         public SceneItem[]? SceneItems;
     }
@@ -94,33 +156,73 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Called by <see cref="OBSWebsocket.SceneItemVisibilityChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene where the item is</param>
-    /// <param name="itemName">Name of the concerned item</param>
-    /// <param name="isVisible">Visibility of the item</param>
     public class SceneItemVisibilityChangedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the scene where the item is.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("scene-name")]
         public string SceneName = null!;
+        /// <summary>
+        /// Name of the concerned item.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-name")]
         public string ItemName = null!;
+        /// <summary>
+        /// ID of the concerned item.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-id")]
         public int ItemId;
+        /// <summary>
+        /// True if the item is visible.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-visible")]
         public bool IsVisible;
     }
 
     /// <summary>
+    /// Called by <see cref="OBSWebsocket.SceneItemLockChanged"/>
+    /// </summary>
+    public class SceneItemLockChangedEventArgs : JsonEventArgs
+    {
+        /// <summary>
+        /// Name of the scene where the item is.
+        /// </summary>
+        [JsonRequired]
+        [JsonProperty("scene-name")]
+        public string SceneName = null!;
+        /// <summary>
+        /// Name of the concerned item.
+        /// </summary>
+        [JsonRequired]
+        [JsonProperty("item-name")]
+        public string ItemName = null!;
+        /// <summary>
+        /// ID of the concerned item.
+        /// </summary>
+        [JsonRequired]
+        [JsonProperty("item-id")]
+        public int ItemId;
+        /// <summary>
+        /// True if the item is locked.
+        /// </summary>
+        [JsonRequired]
+        [JsonProperty("item-locked")]
+        public bool IsLocked;
+    }
+
+    /// <summary>
     /// Called by <see cref="OBSWebsocket.TransitionChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newTransitionName">Name of the new selected transition</param>
     public class TransitionChangeEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the new selected transition
+        /// </summary>
         [JsonRequired]
         [JsonProperty("transition-name")]
         public string NewTransitionName = null!;
@@ -129,10 +231,11 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Called by <see cref="OBSWebsocket.TransitionDurationChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newDuration">Name of the new transition duration (in milliseconds)</param>
-    public class TransitionDurationChangeEventArgs : JsonEventArgs //OBSWebsocket sender, int newDuration);
+    public class TransitionDurationChangeEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Value of the new transition duration (in milliseconds)
+        /// </summary>
         [JsonRequired]
         [JsonProperty("new-duration")]
         public int NewDuration;
@@ -142,16 +245,28 @@ namespace OBSWebsocketDotNet
     /// Called by <see cref="OBSWebsocket.StreamingStateChanged"/>, <see cref="OBSWebsocket.RecordingStateChanged"/>
     /// or <see cref="OBSWebsocket.ReplayBufferStateChanged"/> 
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="type">New output state</param>
-    public class OutputStateChangedEventArgs : JsonEventArgs //OBSWebsocket sender, OutputState type);
+    public class OutputStateChangedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// New output state
+        /// </summary>
         [JsonIgnore]
         public OutputState OutputState;
+        /// <summary>
+        /// Length of the current recording, <see cref="TimeSpan.Zero"/> if not recording.
+        /// </summary>
         [JsonProperty("rec-timecode")]
         public TimeSpan RecordingTime = TimeSpan.Zero;
+
+        /// <summary>
+        /// Length of the current stream, <see cref="TimeSpan.Zero"/> if not streaming.
+        /// </summary>
         [JsonProperty("stream-timecode")]
         public TimeSpan StreamingTime = TimeSpan.Zero;
+
+        /// <summary>
+        /// Setter for the <see cref="OutputState"/>.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("update-type")]
         protected string EventType
@@ -160,20 +275,20 @@ namespace OBSWebsocketDotNet
             {
                 OutputState = value switch
                 {
-                    "StreamStarting" =>     OutputState.Starting,
-                    "StreamStarted" =>      OutputState.Started,
-                    "StreamStopping" =>     OutputState.Stopping,
-                    "StreamStopped" =>      OutputState.Stopped,
-                    "RecordingStarting" =>  OutputState.Starting,
-                    "RecordingStarted" =>   OutputState.Started,
-                    "RecordingStopping" =>  OutputState.Stopping,
-                    "RecordingStopped" =>   OutputState.Stopped,
-                    "RecordingPaused" =>    OutputState.Paused,
-                    "RecordingResumed" =>   OutputState.Resumed,
-                    "ReplayStarting" =>     OutputState.Starting,
-                    "ReplayStarted" =>      OutputState.Started,
-                    "ReplayStopping" =>     OutputState.Stopping,
-                    "ReplayStopped" =>      OutputState.Stopped,
+                    "StreamStarting" => OutputState.Starting,
+                    "StreamStarted" => OutputState.Started,
+                    "StreamStopping" => OutputState.Stopping,
+                    "StreamStopped" => OutputState.Stopped,
+                    "RecordingStarting" => OutputState.Starting,
+                    "RecordingStarted" => OutputState.Started,
+                    "RecordingStopping" => OutputState.Stopping,
+                    "RecordingStopped" => OutputState.Stopped,
+                    "RecordingPaused" => OutputState.Paused,
+                    "RecordingResumed" => OutputState.Resumed,
+                    "ReplayStarting" => OutputState.Starting,
+                    "ReplayStarted" => OutputState.Started,
+                    "ReplayStopping" => OutputState.Stopping,
+                    "ReplayStopped" => OutputState.Stopped,
                     _ => OutputState.Unknown
                 };
                 if (OutputState == OutputState.Unknown)
@@ -186,9 +301,7 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Called by <see cref="OBSWebsocket.StreamStatus"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="status">Stream status data</param>
-    public class StreamStatusEventArgs : JsonEventArgs //OBSWebsocket sender, StreamStatus status);
+    public class StreamStatusEventArgs : JsonEventArgs
     {
         /// <summary>
         /// True if streaming is started and running, false otherwise
@@ -300,13 +413,13 @@ namespace OBSWebsocketDotNet
         public double FreeDiskSpace { internal set; get; }
 
         /// <summary>
-        /// Overall stream time
+        /// Length of the current stream, <see cref="TimeSpan.Zero"/> if not streaming.
         /// </summary>
         [JsonProperty(PropertyName = "stream-timecode")]
         public TimeSpan StreamTime { internal set; get; } = TimeSpan.Zero;
 
         /// <summary>
-        /// Length of the current recording.
+        /// Length of the current recording, <see cref="TimeSpan.Zero"/> if not recording.
         /// </summary>
         [JsonProperty(PropertyName = "rec-timecode")]
         public TimeSpan? RecordingTime { internal set; get; } = TimeSpan.Zero;
@@ -321,10 +434,11 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Called by <see cref="OBSWebsocket.StudioModeSwitched"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="enabled">New Studio Mode status</param>
-    public class StudioModeChangeEventArgs : JsonEventArgs //OBSWebsocket sender, bool enabled);
+    public class StudioModeChangeEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// New Studio Mode status
+        /// </summary>
         [JsonRequired]
         [JsonProperty("new-state")]
         public bool StudioModeEnabled;
@@ -333,9 +447,7 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Called by <see cref="OBSWebsocket.Heartbeat"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="heatbeat">heartbeat data</param>
-    public class HeartBeatEventArgs : JsonEventArgs //OBSWebsocket sender, Heartbeat heatbeat);
+    public class HeartBeatEventArgs : JsonEventArgs
     {
         /// <summary>
         /// Toggles between every JSON message as an "I am alive" indicator.
@@ -370,6 +482,9 @@ namespace OBSWebsocketDotNet
         [JsonProperty(PropertyName = "total-stream-time")]
         public int TotalStreamTime { set; get; }
 
+        /// <summary>
+        /// Length of the current stream, <see cref="TimeSpan.Zero"/> if not streaming.
+        /// </summary>
         [JsonProperty("stream-timecode")]
         public TimeSpan StreamTime { get; set; } = TimeSpan.Zero;
 
@@ -391,6 +506,9 @@ namespace OBSWebsocketDotNet
         [JsonProperty(PropertyName = "recording")]
         public bool Recording { set; get; }
 
+        /// <summary>
+        /// True if recording is paused.
+        /// </summary>
         [JsonProperty(PropertyName = "recording-paused")]
         public bool RecordingPaused { set; get; }
 
@@ -400,6 +518,9 @@ namespace OBSWebsocketDotNet
         [JsonProperty(PropertyName = "total-record-time")]
         public int TotalRecordTime { set; get; }
 
+        /// <summary>
+        /// Length of the current recording, <see cref="TimeSpan.Zero"/> if not recording.
+        /// </summary>
         [JsonProperty("rec-timecode")]
         public TimeSpan RecordTime { get; set; } = TimeSpan.Zero;
 
@@ -426,18 +547,23 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SceneItemDeselected"/> and <see cref="OBSWebsocket.SceneItemSelected"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene item was in</param>
-    /// <param name="itemName">Name of the item deselected</param>
-    /// <param name="itemId">Id of the item deselected</param>
-    public class SceneItemSelectionEventArgs : JsonEventArgs //OBSWebsocket sender, string sceneName, string itemName, string itemId);
+    public class SceneItemSelectionEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the scene the item is in.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("scene-name")]
         public string SceneName = null!;
+        /// <summary>
+        /// Name of the item selected
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-name")]
         public string ItemName = null!;
+        /// <summary>
+        /// Id of the item selected
+        /// </summary>
         [JsonRequired]
         [JsonProperty("item-id")]
         public int ItemId;
@@ -446,9 +572,7 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SceneItemTransformChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transform">Transform data</param>
-    public class SceneItemTransformEventArgs : JsonEventArgs //OBSWebsocket sender, SceneItemTransformInfo transform);
+    public class SceneItemTransformEventArgs : JsonEventArgs
     {
         /// <summary>
         /// Name of the scene
@@ -478,6 +602,9 @@ namespace OBSWebsocketDotNet
         [JsonProperty(PropertyName = "transform")]
         public SceneItemProperties Transform { internal set; get; } = null!;
 
+        /// <summary>
+        /// Creates an empty <see cref="SceneItemTransformEventArgs"/>.
+        /// </summary>
         public SceneItemTransformEventArgs()
         { }
 
@@ -495,9 +622,7 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceAudioMixersChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="mixerInfo">Mixer information that was updated</param>
-    public class SourceAudioMixersChangedEventArgs : JsonEventArgs //OBSWebsocket sender, AudioMixersChangedInfo mixerInfo);
+    public class SourceAudioMixersChangedEventArgs : JsonEventArgs
     {
         /// <summary>
         /// Mixer source name
@@ -518,6 +643,9 @@ namespace OBSWebsocketDotNet
         [JsonProperty(PropertyName = "hexMixersValue")]
         public string? HexMixersValue { set; get; }
 
+        /// <summary>
+        /// Creates an empty <see cref="SourceAudioMixersChangedEventArgs"/>.
+        /// </summary>
         public SourceAudioMixersChangedEventArgs() { }
         /// <summary>
         /// Create mixer response
@@ -533,14 +661,17 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceAudioSyncOffsetChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of the source for the offset change</param>
-    /// <param name="syncOffset">Sync offset value</param>
-    public class SourceAudioSyncOffsetEventArgs : JsonEventArgs //OBSWebsocket sender, string sourceName, int syncOffset);
+    public class SourceAudioSyncOffsetEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the source for the offset change.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Sync offset value.
+        /// </summary>
         [JsonProperty("syncOffset")]
         public int SyncOffset;
     }
@@ -549,19 +680,29 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceCreated"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="settings">Newly created source settings</param>
-    public class SourceCreatedEventArgs : JsonEventArgs //OBSWebsocket sender, SourceSettings settings);
+    public class SourceCreatedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the created source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Source type. Can be "input", "scene", "transition" or "filter".
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceType")]
         public string SourceType = null!;
+        /// <summary>
+        /// Source kind.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceKind")]
         public string SourceKind = null!;
+        /// <summary>
+        /// Settings for the source.
+        /// </summary>
         [JsonProperty("sourceSettings", NullValueHandling = NullValueHandling.Ignore, IsReference = true)]
         public SourceSettings? Settings = null;
     }
@@ -569,18 +710,23 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceDestroyed"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Newly destroyed source information</param>
-    /// <param name="sourceKind">Kind of source destroyed</param>
-    /// <param name="sourceType">Type of source destroyed</param>
-    public class SourceDestroyedEventArgs : JsonEventArgs //OBSWebsocket sender, string sourceName, string sourceType, string sourceKind);
+    public class SourceDestroyedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the destroyed source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Source type. Can be "input", "scene", "transition" or "filter".
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceType")]
         public string SourceType = null!;
+        /// <summary>
+        /// Source kind.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceKind")]
         public string SourceKind = null!;
@@ -589,17 +735,23 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceRenamed"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newName">New name of source</param>
-    /// <param name="previousName">Previous name of source</param>
-    public class SourceRenamedEventArgs : JsonEventArgs //OBSWebsocket sender, string newName, string previousName);
+    public class SourceRenamedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// New name of source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("newName")]
         public string NewName = null!;
+        /// <summary>
+        /// Previous name of source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("previousName")]
         public string PreviousName = null!;
+        /// <summary>
+        /// Source type. Can be "input", "scene", "transition" or "filter".
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceType")]
         public string sourceType = null!;
@@ -608,14 +760,17 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceMuteStateChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="muted">Current mute state of source</param>
-    public class SourceMuteStateChangedEventArgs : JsonEventArgs //OBSWebsocket sender, string sourceName, bool muted);
+    public class SourceMuteStateChangedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Current mute state of source
+        /// </summary>
         [JsonRequired]
         [JsonProperty("muted")]
         public bool Muted;
@@ -624,14 +779,17 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceVolumeChanged"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="volume">Current volume level of source</param>
-    public class SourceVolumeChangedEventArgs : JsonEventArgs //OBSWebsocket sender, string sourceName, float volume);
+    public class SourceVolumeChangedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Current volume level of source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("volume")]
         public float Volume;
@@ -640,17 +798,23 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceFilterRemoved"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="filterName">Name of removed filter</param>
-    public class SourceFilterRemovedEventArgs : JsonEventArgs //OBSWebsocket sender, string sourceName, string filterName);
+    public class SourceFilterRemovedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Name of the removed filter
+        /// </summary>
         [JsonRequired]
         [JsonProperty("filterName")]
         public string FilterName = null!;
+        /// <summary>
+        /// Type of the removed filter.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("filterType")]
         public string FilterType = null!;
@@ -659,22 +823,29 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceFilterAdded"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="filterName">Name of filter</param>
-    /// <param name="filterType">Type of filter</param>
-    /// <param name="filterSettings">Settings for filter</param>
-    public class SourceFilterAddedEventArgs : JsonEventArgs //OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject? filterSettings);
+    public class SourceFilterAddedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Name of the added filter
+        /// </summary>
         [JsonRequired]
         [JsonProperty("filterName")]
         public string FilterName = null!;
+        /// <summary>
+        /// Type of the added filter.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("filterType")]
         public string FilterType = null!;
+        /// <summary>
+        /// Settings for the filter, may be null.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("filterSettings")]
         public JObject? FilterSettings;
@@ -683,69 +854,130 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceFiltersReordered"/>
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="filters">Current order of filters for source</param>
-    public class SourceFiltersReorderedEventArgs : JsonEventArgs //OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters);
+    public class SourceFiltersReorderedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the source.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("sourceName")]
         public string SourceName = null!;
+        /// <summary>
+        /// Array of Filters in their new order.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("filters")]
         public FilterReorderItem[] Filters = null!;
     }
 
-    public class TransitionBeginEventArgs : JsonEventArgs
+    /// <summary>
+    /// The visibility/enabled state of a filter changed.
+    /// Used by <see cref="OBSWebsocket.SourceFilterVisibilityChanged"/>.
+    /// </summary>
+    public class SourceFilterVisibilityChangedEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the source the filter is in.
+        /// </summary>
         [JsonRequired]
-        [JsonProperty("name")]
-        public string TransitionName = null!;
+        [JsonProperty("sourceName")]
+        public string SourceName = null!;
+
+        /// <summary>
+        /// Name of the filter.
+        /// </summary>
         [JsonRequired]
-        [JsonProperty("type")]
-        public string TransitionType = null!;
+        [JsonProperty("filterName")]
+        public string FilterName = null!;
+
+        /// <summary>
+        /// True if the filter is enabled (visible).
+        /// </summary>
         [JsonRequired]
-        [JsonProperty("duration")]
-        public int Duration;
-        [JsonRequired]
-        [JsonProperty("from-scene")]
-        public string FromScene = null!;
-        [JsonRequired]
-        [JsonProperty("to-scene")]
-        public string ToScene = null!;
-    }
-    public class TransitionEndEventArgs : JsonEventArgs
-    {
-        [JsonRequired]
-        [JsonProperty("to-scene")]
-        public string ToScene = null!;
-        [JsonRequired]
-        [JsonProperty("name")]
-        public string TransitionName = null!;
-        [JsonRequired]
-        [JsonProperty("type")]
-        public string TransitionType = null!;
-        [JsonRequired]
-        [JsonProperty("duration")]
-        public int Duration;
+        [JsonProperty("filterEnabled")]
+        public bool FilterEnabled;
     }
 
-    public class TransitionVideoEndEventArgs : JsonEventArgs
+    /// <summary>
+    /// Base class for transition events.
+    /// </summary>
+    public abstract class TransitionEventArgs : JsonEventArgs
     {
+        /// <summary>
+        /// Name of the transition.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("name")]
         public string TransitionName = null!;
+        /// <summary>
+        /// Type of the transition.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("type")]
         public string TransitionType = null!;
+        /// <summary>
+        /// Duration of the transition.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("duration")]
         public int Duration;
-        [JsonRequired]
-        [JsonProperty("from-scene")]
-        public string FromScene = null!;
+        /// <summary>
+        /// Scene that was transitioned into.
+        /// </summary>
         [JsonRequired]
         [JsonProperty("to-scene")]
         public string ToScene = null!;
+    }
+
+    /// <summary>
+    /// Used by <see cref="OBSWebsocket.TransitionBegin"/>
+    /// </summary>
+    public class TransitionBeginEventArgs : TransitionEventArgs
+    {
+        /// <summary>
+        /// Scene being transitioned out of.
+        /// </summary>
+        [JsonRequired]
+        [JsonProperty("from-scene")]
+        public string FromScene = null!;
+    }
+    /// <summary>
+    /// Used by <see cref="OBSWebsocket.TransitionEnd"/>.
+    /// </summary>
+    public class TransitionEndEventArgs : TransitionEventArgs
+    {
+    }
+
+    /// <summary>
+    /// Used by <see cref="OBSWebsocket.TransitionVideoEnd"/>.
+    /// </summary>
+    public class TransitionVideoEndEventArgs : TransitionEventArgs
+    {
+        /// <summary>
+        /// Scene being transitioned out of.
+        /// </summary>
+        [JsonRequired]
+        [JsonProperty("from-scene")]
+        public string FromScene = null!;
+    }
+
+    /// <summary>
+    /// Used by <see cref="OBSWebsocket.BroadcastCustomMessageReceived"/>.
+    /// </summary>
+    public class BroadcastCustomMessageReceivedEventArgs : JsonEventArgs
+    {
+        /// <summary>
+        /// Identifier chosen by the client sending the broadcast. 
+        /// </summary>
+        [JsonRequired]
+        [JsonProperty("realm")]
+        public string Realm = null!;
+
+        /// <summary>
+        /// Data defined by the client sending the broadcast.
+        /// </summary>
+        [JsonProperty("data")]
+        public JObject? Data;
+
     }
 }

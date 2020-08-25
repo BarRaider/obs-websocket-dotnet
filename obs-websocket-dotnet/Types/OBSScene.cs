@@ -9,12 +9,6 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class OBSScene
     {
-        protected static JsonSerializerSettings DefaultSerializerSettings = new JsonSerializerSettings()
-        {
-            ObjectCreationHandling = ObjectCreationHandling.Auto,
-            NullValueHandling = NullValueHandling.Ignore
-        };
-
         /// <summary>
         /// OBS Scene name
         /// </summary>

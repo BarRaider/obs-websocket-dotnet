@@ -8,6 +8,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class CustomRTMPStreamingService : IValidatedResponse
     {
+        /// <inheritdoc/>
         public bool ResponseValid => !string.IsNullOrEmpty(ServerAddress);
         /// <summary>
         /// RTMP server URL

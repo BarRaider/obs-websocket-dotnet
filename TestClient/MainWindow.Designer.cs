@@ -58,6 +58,10 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.btnAdvanced = new System.Windows.Forms.Button();
+            this.btnToggleConsole = new System.Windows.Forms.Button();
+            this.btnClearConsole = new System.Windows.Forms.Button();
+            this.tbConsole = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.btnStopOutput = new System.Windows.Forms.Button();
             this.btnStartOutput = new System.Windows.Forms.Button();
@@ -112,9 +116,7 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.tbConsole = new System.Windows.Forms.TextBox();
-            this.btnClearConsole = new System.Windows.Forms.Button();
-            this.btnToggleConsole = new System.Windows.Forms.Button();
+            this.btnGetStats = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -251,6 +253,8 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbControls.Controls.Add(this.btnGetStats);
+            this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.btnToggleConsole);
             this.gbControls.Controls.Add(this.btnClearConsole);
             this.gbControls.Controls.Add(this.tbConsole);
@@ -269,6 +273,51 @@ namespace TestClient
             this.gbControls.Size = new System.Drawing.Size(871, 515);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
+            // 
+            // btnAdvanced
+            // 
+            this.btnAdvanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdvanced.Location = new System.Drawing.Point(796, 486);
+            this.btnAdvanced.Name = "btnAdvanced";
+            this.btnAdvanced.Size = new System.Drawing.Size(75, 23);
+            this.btnAdvanced.TabIndex = 13;
+            this.btnAdvanced.Text = "Advanced";
+            this.btnAdvanced.UseVisualStyleBackColor = true;
+            this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
+            // 
+            // btnToggleConsole
+            // 
+            this.btnToggleConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnToggleConsole.Location = new System.Drawing.Point(244, 235);
+            this.btnToggleConsole.Name = "btnToggleConsole";
+            this.btnToggleConsole.Size = new System.Drawing.Size(75, 23);
+            this.btnToggleConsole.TabIndex = 15;
+            this.btnToggleConsole.Text = "Stop";
+            this.btnToggleConsole.UseVisualStyleBackColor = true;
+            this.btnToggleConsole.Click += new System.EventHandler(this.btnToggleConsole_Click);
+            // 
+            // btnClearConsole
+            // 
+            this.btnClearConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnClearConsole.Location = new System.Drawing.Point(163, 235);
+            this.btnClearConsole.Name = "btnClearConsole";
+            this.btnClearConsole.Size = new System.Drawing.Size(75, 23);
+            this.btnClearConsole.TabIndex = 14;
+            this.btnClearConsole.Text = "Clear";
+            this.btnClearConsole.UseVisualStyleBackColor = true;
+            this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
+            // 
+            // tbConsole
+            // 
+            this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbConsole.Location = new System.Drawing.Point(163, 12);
+            this.tbConsole.Multiline = true;
+            this.tbConsole.Name = "tbConsole";
+            this.tbConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbConsole.Size = new System.Drawing.Size(467, 216);
+            this.tbConsole.TabIndex = 13;
             // 
             // groupBox8
             // 
@@ -917,39 +966,16 @@ namespace TestClient
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // tbConsole
+            // btnGetStats
             // 
-            this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbConsole.Location = new System.Drawing.Point(163, 12);
-            this.tbConsole.Multiline = true;
-            this.tbConsole.Name = "tbConsole";
-            this.tbConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbConsole.Size = new System.Drawing.Size(467, 216);
-            this.tbConsole.TabIndex = 13;
-            // 
-            // btnClearConsole
-            // 
-            this.btnClearConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearConsole.Location = new System.Drawing.Point(163, 235);
-            this.btnClearConsole.Name = "btnClearConsole";
-            this.btnClearConsole.Size = new System.Drawing.Size(75, 23);
-            this.btnClearConsole.TabIndex = 14;
-            this.btnClearConsole.Text = "Clear";
-            this.btnClearConsole.UseVisualStyleBackColor = true;
-            this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
-            // 
-            // btnToggleConsole
-            // 
-            this.btnToggleConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnToggleConsole.Location = new System.Drawing.Point(244, 235);
-            this.btnToggleConsole.Name = "btnToggleConsole";
-            this.btnToggleConsole.Size = new System.Drawing.Size(75, 23);
-            this.btnToggleConsole.TabIndex = 15;
-            this.btnToggleConsole.Text = "Stop";
-            this.btnToggleConsole.UseVisualStyleBackColor = true;
-            this.btnToggleConsole.Click += new System.EventHandler(this.btnToggleConsole_Click);
+            this.btnGetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetStats.Location = new System.Drawing.Point(695, 486);
+            this.btnGetStats.Name = "btnGetStats";
+            this.btnGetStats.Size = new System.Drawing.Size(75, 23);
+            this.btnGetStats.TabIndex = 16;
+            this.btnGetStats.Text = "Get Stats";
+            this.btnGetStats.UseVisualStyleBackColor = true;
+            this.btnGetStats.Click += new System.EventHandler(this.btnGetStats_Click);
             // 
             // MainWindow
             // 
@@ -1050,6 +1076,7 @@ namespace TestClient
         private System.Windows.Forms.Button btnSetTransitionDuration;
         private System.Windows.Forms.Button btnGetTransitionDuration;
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
+        private System.Windows.Forms.Button btnAdvanced;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Button btnStartOutput;
         private System.Windows.Forms.Button btnGetOutput;
@@ -1060,6 +1087,7 @@ namespace TestClient
         private System.Windows.Forms.Button btnClearConsole;
         private System.Windows.Forms.TextBox tbConsole;
         private System.Windows.Forms.Button btnToggleConsole;
+        private System.Windows.Forms.Button btnGetStats;
     }
 }
 

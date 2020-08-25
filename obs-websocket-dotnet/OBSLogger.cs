@@ -13,6 +13,9 @@ namespace OBSWebsocketDotNet
     {
         internal static IOBSLogger? logger;
 
+        /// <summary>
+        /// Settings used by the logger.
+        /// </summary>
         public static OBSLoggerSettings LoggerSettings => logger?.LoggerSettings ?? OBSLoggerSettings.None;
 
         /// <summary>

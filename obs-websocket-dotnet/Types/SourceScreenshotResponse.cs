@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 
 namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
-    /// Response from <see cref="OBSWebsocket.TakeSourceScreenshot(string, string, string, int, int)"/>
+    /// Response from <see cref="OBSWebsocket.TakeSourceScreenshot(string, string, string, int, int, CancellationToken)"/>
     /// </summary>
     public class SourceScreenshotResponse
     {

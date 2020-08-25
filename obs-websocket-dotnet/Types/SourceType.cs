@@ -8,6 +8,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class SourceType : IValidatedResponse
     {
+        /// <inheritdoc/>
         public bool ResponseValid => !string.IsNullOrEmpty(TypeID) && DisplayName != null;
         /// <summary>
         /// Non-unique internal source type ID

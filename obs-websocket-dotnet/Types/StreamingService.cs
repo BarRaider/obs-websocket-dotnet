@@ -7,6 +7,7 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class StreamingService : IValidatedResponse
     {
+        /// <inheritdoc/>
         public bool ResponseValid => !string.IsNullOrEmpty(Type) && Settings != null;
         /// <summary>
         /// Type of streaming service

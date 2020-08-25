@@ -28,6 +28,7 @@ using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,6 +49,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get basic OBS video information
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<OBSVideoInfo> GetVideoInfo(CancellationToken cancellationToken = default)
@@ -56,28 +58,28 @@ namespace OBSWebsocketDotNet
             return JsonConvert.DeserializeObject<OBSVideoInfo>(response.ToString());
         }
         /// <summary>
-        /// 
+        /// List existing outputs
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
         /// <exception cref="ErrorResponseException"></exception>
+        /// <returns></returns>
         /// <exception cref="OperationCanceledException"></exception>
-        public async Task<Output[]> ListOutputs(CancellationToken cancellationToken = default)
+        public async Task<OBSOutputInfo[]> ListOutputs(CancellationToken cancellationToken = default)
         {
             JObject response = await SendRequest("ListOutputs", cancellationToken).ConfigureAwait(false);
             JObject[]? jOutputs = response["outputs"]?.Children<JObject>().ToArray();
             if (jOutputs == null)
-                return Array.Empty<Output>();
+                return Array.Empty<OBSOutputInfo>();
             int outputCount = jOutputs.Length;
             if (outputCount == 0)
-                return Array.Empty<Output>();
-            Output[] outputs = new Output[outputCount];
+                return Array.Empty<OBSOutputInfo>();
+            OBSOutputInfo[] outputs = new OBSOutputInfo[outputCount];
 
             for (int i = 0; i < outputCount; i++)
             {
                 try
                 {
-                    outputs[i] = Output.CreateOutput(jOutputs[i]);
+                    outputs[i] = OBSOutputInfo.CreateOutput(jOutputs[i]);
                 }
 #pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception ex)
@@ -97,7 +99,7 @@ namespace OBSWebsocketDotNet
         /// <returns></returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
-        public async Task<Output> GetOutput(string outputName, CancellationToken cancellationToken = default)
+        public async Task<OBSOutputInfo> GetOutput(string outputName, CancellationToken cancellationToken = default)
         {
             JObject? requestFields = new JObject
             {
@@ -105,7 +107,8 @@ namespace OBSWebsocketDotNet
             };
             JObject response = await SendRequest("GetOutputInfo", requestFields, cancellationToken).ConfigureAwait(false);
 
-            return Output.CreateOutput(response["outputInfo"] as JObject ?? throw new ErrorResponseException("Response did not contain 'outputInfo'.", response));
+            return OBSOutputInfo.CreateOutput(response["outputInfo"] as JObject 
+                ?? throw ErrorResponseException.FromMissingProperty("outputInfo", response));
         }
 
         /// <summary>
@@ -156,7 +159,7 @@ namespace OBSWebsocketDotNet
         public Task StopOutput(string outputName, CancellationToken cancellationToken = default) => StopOutput(outputName, false, cancellationToken);
 
         /// <summary>
-        /// At least embedPictureFormat or saveToFilePath must be specified.
+        /// Request a screenshot from the specified source. An <paramref name="embedPictureFormat"/> or <paramref name="saveToFilePath"/> must be specified.
         /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
         /// </summary>
         /// <param name="sourceName"></param>
@@ -164,6 +167,7 @@ namespace OBSWebsocketDotNet
         /// <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
         /// <param name="width">Screenshot width. Defaults to the source's base width.</param>
         /// <param name="height">Screenshot height. Defaults to the source's base height.</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<SourceScreenshotResponse> TakeSourceScreenshot(string sourceName, string? embedPictureFormat,
@@ -190,12 +194,13 @@ namespace OBSWebsocketDotNet
                 requestFields.Add("height", height);
             }
 
-            JObject? response = await SendRequest("TakeSourceScreenshot", requestFields, cancellationToken).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<SourceScreenshotResponse>(response.ToString());
+            JObject response = await SendRequest("TakeSourceScreenshot", requestFields, cancellationToken).ConfigureAwait(false);
+            return ParseObject<SourceScreenshotResponse>(response);
         }
 
         /// <summary>
-        /// 
+        /// Request a screenshot from the specified source. An <paramref name="embedPictureFormat"/> or <paramref name="saveToFilePath"/> must be specified.
+        /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
         /// </summary>
         /// <param name="sourceName"></param>
         /// <param name="embedPictureFormat"></param>
@@ -208,12 +213,12 @@ namespace OBSWebsocketDotNet
             => TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath, -1, -1, cancellationToken);
 
         /// <summary>
-        /// At least embedPictureFormat or saveToFilePath must be specified.
+        /// Request a screenshot from the specified source embedded in the response.
         /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
         /// </summary>
         /// <param name="sourceName"></param>
         /// <param name="embedPictureFormat">Format of the Data URI encoded picture. Can be "png", "jpg", "jpeg" or "bmp" (or any other value supported by Qt's Image module)</param>
-        /// <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task<SourceScreenshotResponse> TakeSourceScreenshot(string sourceName, string embedPictureFormat, CancellationToken cancellationToken = default)
@@ -224,27 +229,21 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the current scene info along with its items
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>An <see cref="OBSScene"/> object describing the current scene</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<OBSScene> GetCurrentScene(CancellationToken cancellationToken = default)
         {
             JObject response = await SendRequest("GetCurrentScene", cancellationToken).ConfigureAwait(false);
-            try
-            {
-                OBSScene info = response?.ToObject<OBSScene>() ?? throw new ErrorResponseException($"Invalid response for 'GetCurrentScene'.", response);
-                return info;
-            }
-            catch (JsonException ex)
-            {
-                throw new ErrorResponseException($"Invalid response for 'GetCurrentScene': {ex.Message}", response, ex);
-            }
+            return ParseObject<OBSScene>(response);
         }
 
         /// <summary>
         /// Set the current scene to the specified one
         /// </summary>
         /// <param name="sceneName">The desired scene name</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException">Thrown if the requested scene does not exist.</exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetCurrentScene(string sceneName, CancellationToken cancellationToken = default)
@@ -260,30 +259,34 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the filename formatting string
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Current filename formatting string</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<string?> GetFilenameFormatting(CancellationToken cancellationToken = default)
         {
             JObject response = await SendRequest("GetFilenameFormatting", cancellationToken).ConfigureAwait(false);
-            JToken? format = response["filename-formatting"];
-            return format?.ToString();
+            return response["filename-formatting"]?.Value<string>() 
+                ?? throw ErrorResponseException.FromMissingProperty("filename-formatting", response);
         }
 
         /// <summary>
         /// Get OBS stats (almost the same info as provided in OBS' stats window)
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<OBSStats> GetStats(CancellationToken cancellationToken = default)
         {
             JObject response = await SendRequest("GetStats", cancellationToken).ConfigureAwait(false);
-            return response["stats"]?.ToObject<OBSStats>() ?? throw new ErrorResponseException("Response did not contain the stats.", response);
+            JObject prop = response["stats"] as JObject ?? throw ErrorResponseException.FromMissingProperty("stats", response);
+            return ParseObject<OBSStats>(prop);
         }
 
         /// <summary>
         /// List every available scene
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>A <see cref="List{OBSScene}" /> of <see cref="OBSScene"/> objects describing each scene</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -296,6 +299,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get a list of scenes in the currently active profile
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<GetSceneListInfo> GetSceneList(CancellationToken cancellationToken = default)
@@ -309,6 +313,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the scene to reorder (defaults to current)</param>
         /// <param name="sceneItems">List of items to reorder, only ID or Name required</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ReorderSceneItems(List<SceneItemStub> sceneItems, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -324,8 +329,74 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Get the specified scene's transition override info
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to return the override info</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>TransitionOverrideInfo</returns>
+        public async Task<TransitionOverrideInfo> GetSceneTransitionOverride(string sceneName, CancellationToken cancellationToken)
+        {
+            var requestFields = new JObject
+            {
+                { "sceneName", sceneName }
+            };
+
+            JObject response = await SendRequest("GetSceneTransitionOverride", requestFields, cancellationToken).ConfigureAwait(false);
+            return response.ToObject<TransitionOverrideInfo>() ?? throw ErrorResponseException.FromNullResponseObject<TransitionOverrideInfo>(response);
+        }
+
+        /// <summary>
+        /// Set specific transition override for a scene
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to set the transition override</param>
+        /// <param name="transitionName">Name of the transition to use</param>
+        /// <param name="transitionDuration">Duration in milliseconds of the transition if transition is not fixed. Defaults to the current duration specified in the UI if there is no current override and this value is not given</param>
+        /// <param name="cancellationToken"></param>
+        public async Task SetSceneTransitionOverride(string sceneName, string transitionName, int transitionDuration = -1,
+            CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "sceneName", sceneName },
+                { "transitionName", transitionName }
+            };
+
+            if (transitionDuration >= 0)
+            {
+                requestFields.Add("transitionDuration", transitionDuration);
+            }
+
+            await SendRequest("SetSceneTransitionOverride", requestFields, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Set specific transition override for a scene with the existing duration.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to set the transition override</param>
+        /// <param name="transitionName">Name of the transition to use</param>
+        /// <param name="cancellationToken"></param>
+        public Task SetSceneTransitionOverride(string sceneName, string transitionName, CancellationToken cancellationToken = default)
+            => SetSceneTransitionOverride(sceneName, transitionName, -1, cancellationToken);
+
+        /// <summary>
+        /// Remove any transition override from a specific scene
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to remove the transition override</param>
+        /// <param name="cancellationToken"></param>
+        public async Task RemoveSceneTransitionOverride(string sceneName, CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "sceneName", sceneName }
+            };
+
+            await SendRequest("RemoveSceneTransitionOverride", requestFields, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// List all sources available in the running OBS instance
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<List<SourceInfo>> GetSourcesList(CancellationToken cancellationToken = default)
@@ -338,6 +409,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all sources available in the running OBS instance
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<List<SourceType>> GetSourceTypesList(CancellationToken cancellationToken = default)
@@ -353,6 +425,7 @@ namespace OBSWebsocketDotNet
         /// <param name="itemName">Scene item which visiblity will be changed</param>
         /// <param name="visible">Desired visiblity</param>
         /// <param name="sceneName">Scene name of the specified item</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSourceRender(string itemName, bool visible, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -374,11 +447,12 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="itemName">The name of the source</param>
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<SceneItemProperties> GetSceneItemProperties(string itemName, string? sceneName = null, CancellationToken cancellationToken = default)
         {
-            JObject response = await GetSceneItemPropertiesJson(itemName, sceneName).ConfigureAwait(false);
+            JObject response = await GetSceneItemPropertiesJson(itemName, sceneName, cancellationToken).ConfigureAwait(false);
             return response.ToObject<SceneItemProperties>()
                 ?? throw new ErrorResponseException("Response could not be parsed into SceneItemProperties.", response);
         }
@@ -389,6 +463,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="itemName">The name of the source</param>
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<JObject> GetSceneItemPropertiesJson(string itemName, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -408,6 +483,7 @@ namespace OBSWebsocketDotNet
         /// Get the current properties of a Text GDI Plus source.
         /// </summary>
         /// <param name="sourceName">The name of the source</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<TextGDIPlusProperties> GetTextGDIPlusProperties(string sourceName, CancellationToken cancellationToken = default)
@@ -425,6 +501,7 @@ namespace OBSWebsocketDotNet
         /// Set the current properties of a Text GDI Plus source.
         /// </summary>
         /// <param name="properties">properties for the source</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetTextGDIPlusProperties(TextGDIPlusProperties properties, CancellationToken cancellationToken = default)
@@ -435,14 +512,13 @@ namespace OBSWebsocketDotNet
 
         }
 
-
-
         /// <summary>
         /// Move a filter in the chain (relative positioning)
         /// </summary>
         /// <param name="sourceName">Scene Name</param>
         /// <param name="filterName">Filter Name</param>
         /// <param name="movement">Direction to move</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task MoveSourceFilter(string sourceName, string filterName, FilterMovementType movement, CancellationToken cancellationToken = default)
@@ -451,7 +527,7 @@ namespace OBSWebsocketDotNet
             {
                 { "sourceName", sourceName },
                 { "filterName", filterName },
-                { "movementType", movement.ToString().ToLower() }
+                { "movementType", movement.ToString().ToLowerInvariant() }
             };
 
             await SendRequest("MoveSourceFilter", requestFields, cancellationToken).ConfigureAwait(false);
@@ -463,6 +539,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Scene Name</param>
         /// <param name="filterName">Filter Name</param>
         /// <param name="newIndex">Desired position of the filter in the chain</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ReorderSourceFilter(string sourceName, string filterName, int newIndex, CancellationToken cancellationToken = default)
@@ -483,6 +560,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source with filter</param>
         /// <param name="filterName">Filter name</param>
         /// <param name="filterSettings">Filter settings</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSourceFilterSettings(string sourceName, string filterName, JObject filterSettings, CancellationToken cancellationToken = default)
@@ -500,9 +578,10 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Modify the Source Filter's visibility
         /// </summary>
-        /// <param name="sourceName"></param>
-        /// <param name="filterName"></param>
-        /// <param name="filterEnabled"></param>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="filterName">Source filter name</param>
+        /// <param name="filterEnabled">New filter state</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled, CancellationToken cancellationToken = default)
@@ -520,10 +599,11 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Return a list of all filters on a source
         /// </summary>
-        /// <param name="sourceName"></param>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
-        public async Task<List<FilterSettings>> GetSourceFilters(string sourceName, CancellationToken cancellationToken = default)
+        public async Task<FilterSettings[]> GetSourceFilters(string sourceName, CancellationToken cancellationToken = default)
         {
             JObject? requestFields = new JObject
             {
@@ -532,8 +612,27 @@ namespace OBSWebsocketDotNet
 
             JObject response = await SendRequest("GetSourceFilters", requestFields, cancellationToken).ConfigureAwait(false);
 
-            return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"]?.ToString()
-                ?? throw new ErrorResponseException("Response did not contain 'filters'.", response));
+            return response["filters"]?.ToObject<FilterSettings[]>()
+                ?? throw new ErrorResponseException("Response did not contain 'filters'.", response);
+        }
+
+        /// <summary>
+        /// Return a list of all filters on a source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="filterName">Filter name</param>
+        /// <param name="cancellationToken"></param>
+        public async Task<FilterSettings> GetSourceFilterInfo(string sourceName, string filterName, CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "sourceName", sourceName },
+                { "filterName", filterName }
+            };
+
+            JObject response = await SendRequest("GetSourceFilterInfo", requestFields, cancellationToken);
+
+            return response.ToObject<FilterSettings>() ?? throw ErrorResponseException.FromNullResponseObject<FilterSettings>(response);
         }
 
         /// <summary>
@@ -541,6 +640,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName"></param>
         /// <param name="filterName"></param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<bool> RemoveFilterFromSource(string sourceName, string filterName, CancellationToken cancellationToken = default)
@@ -571,6 +671,7 @@ namespace OBSWebsocketDotNet
         /// <param name="filterName">Name of the filter</param>
         /// <param name="filterType">Type of filter</param>
         /// <param name="filterSettings">Filter settings object</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task AddFilterToSource(string sourceName, string filterName, string filterType, JObject filterSettings, CancellationToken cancellationToken = default)
@@ -589,6 +690,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Start/Stop the streaming output
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ToggleStreaming(CancellationToken cancellationToken = default)
@@ -599,6 +701,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Start/Stop the recording output
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ToggleRecording(CancellationToken cancellationToken = default)
@@ -609,6 +712,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the current status of the streaming and recording outputs
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>An <see cref="OutputStatus"/> object describing the current outputs states</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -622,12 +726,13 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all transitions
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>A <see cref="List{T}"/> of all transition names</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<List<string>> ListTransitions(CancellationToken cancellationToken = default)
         {
-            GetTransitionListInfo? transitions = await GetTransitionList().ConfigureAwait(false);
+            GetTransitionListInfo? transitions = await GetTransitionList(cancellationToken).ConfigureAwait(false);
 
             List<string> transitionNames = new List<string>();
             foreach (TransitionSettings? item in transitions.Transitions)
@@ -640,6 +745,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the current transition name and duration
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>An <see cref="TransitionSettings"/> object with the current transition name and duration</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -663,6 +769,7 @@ namespace OBSWebsocketDotNet
         /// Set the current transition to the specified one
         /// </summary>
         /// <param name="transitionName">Desired transition name</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetCurrentTransition(string transitionName, CancellationToken cancellationToken = default)
@@ -679,6 +786,7 @@ namespace OBSWebsocketDotNet
         /// Change the transition's duration
         /// </summary>
         /// <param name="duration">Desired transition duration (in milliseconds)</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetTransitionDuration(int duration, CancellationToken cancellationToken = default)
@@ -697,6 +805,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Name of the source which volume will be changed</param>
         /// <param name="volume">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
         /// <param name="useDecibel">Interperet `volume` data as decibels instead of amplitude/mul.</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetVolume(string sourceName, float volume, bool useDecibel = false, CancellationToken cancellationToken = default)
@@ -710,6 +819,15 @@ namespace OBSWebsocketDotNet
 
             await SendRequest("SetVolume", requestFields, cancellationToken).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Change the volume of the specified source
+        /// </summary>
+        /// <param name="sourceName">Name of the source which volume will be changed</param>
+        /// <param name="volume">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul</param>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="ErrorResponseException"></exception>
+        /// <exception cref="OperationCanceledException"></exception>
         public Task SetVolume(string sourceName, float volume, CancellationToken cancellationToken = default) => SetVolume(sourceName, volume, false, cancellationToken);
 
         /// <summary>
@@ -718,6 +836,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="useDecibel">Output volume in decibels of attenuation instead of amplitude/mul.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>An <see cref="VolumeInfo"/>Object containing the volume and mute state of the specified source.</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -738,6 +857,7 @@ namespace OBSWebsocketDotNet
         /// Volume is between `0.0` and `1.0` using amplitude/mul.
         /// </summary>
         /// <param name="sourceName">Source name</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>An <see cref="VolumeInfo"/>Object containing the volume and mute state of the specified source.</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -748,6 +868,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Name of the source which mute state will be changed</param>
         /// <param name="mute">Desired mute state</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetMute(string sourceName, bool mute, CancellationToken cancellationToken = default)
@@ -765,6 +886,7 @@ namespace OBSWebsocketDotNet
         /// Toggle the mute state of the specified source
         /// </summary>
         /// <param name="sourceName">Name of the source which mute state will be toggled</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ToggleMute(string sourceName, CancellationToken cancellationToken = default)
@@ -783,6 +905,7 @@ namespace OBSWebsocketDotNet
         /// <param name="itemName">Name of the scene item which position will be changed</param>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
+        /// <param name="cancellationToken"></param>
         /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -806,6 +929,7 @@ namespace OBSWebsocketDotNet
         /// <param name="itemName">Name of the scene item which position will be changed</param>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task SetSceneItemPosition(string itemName, float x, float y, CancellationToken cancellationToken = default) => SetSceneItemPosition(itemName, x, y, null, cancellationToken);
@@ -818,6 +942,7 @@ namespace OBSWebsocketDotNet
         /// <param name="xScale">Horizontal scale factor</param>
         /// <param name="yScale">Vertical scale factor</param>
         /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSceneItemTransform(string itemName, float rotation = 0, float xScale = 1, float yScale = 1, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -843,6 +968,7 @@ namespace OBSWebsocketDotNet
         /// <param name="rotation">Rotation in Degrees</param>
         /// <param name="xScale">Horizontal scale factor</param>
         /// <param name="yScale">Vertical scale factor</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task SetSceneItemTransform(string itemName, float rotation = 0, float xScale = 1, float yScale = 1, CancellationToken cancellationToken = default)
@@ -853,14 +979,22 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="props">Object containing changes</param>
         /// <param name="sceneName">Option scene name</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSceneItemProperties(SceneItemProperties props, string? sceneName = null, CancellationToken cancellationToken = default)
         {
-            JObject? requestFields = JObject.Parse(JsonConvert.SerializeObject(props, DefaultSerializerSettings));
+            var requestFields = JObject.FromObject(props);
+
+            if (requestFields["item"] == null)
+            {
+                requestFields["item"] = props.ItemName;
+            }
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             await SendRequest("SetSceneItemProperties", requestFields, cancellationToken).ConfigureAwait(false);
         }
@@ -869,6 +1003,7 @@ namespace OBSWebsocketDotNet
         /// Unspecified properties will remain unchanged. Coordinates are relative to the item's parent (the scene or group it belongs to).
         /// </summary>
         /// <param name="props">Object containing changes</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task SetSceneItemProperties(SceneItemProperties props, CancellationToken cancellationToken = default)
@@ -879,6 +1014,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="sceneName"></param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSceneItemProperties(JObject obj, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -909,6 +1045,7 @@ namespace OBSWebsocketDotNet
         /// Set the current scene collection to the specified one
         /// </summary>
         /// <param name="scName">Desired scene collection name</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetCurrentSceneCollection(string scName, CancellationToken cancellationToken = default)
@@ -924,6 +1061,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the name of the current scene collection
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Name of the current scene collection</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -936,6 +1074,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all scene collections
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>A <see cref="List{T}"/> of the names of all scene collections</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -960,6 +1099,7 @@ namespace OBSWebsocketDotNet
         /// Set the current profile to the specified one
         /// </summary>
         /// <param name="profileName">Name of the desired profile</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetCurrentProfile(string profileName, CancellationToken cancellationToken = default)
@@ -975,6 +1115,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the name of the current profile
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Name of the current profile</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -987,6 +1128,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all profiles
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>A <see cref="List{T}"/> of the names of all profiles</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1005,10 +1147,11 @@ namespace OBSWebsocketDotNet
             return profiles;
         }
 
-        // TODO: needs updating
+        // TODO: needs updating, could include stream settings (https://github.com/Palakis/obs-websocket/blob/4.x-current/docs/generated/protocol.md#startstreaming).
         /// <summary>
         /// Start streaming. Will trigger an error if streaming is already active
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StartStreaming(CancellationToken cancellationToken = default)
@@ -1019,6 +1162,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Stop streaming. Will trigger an error if streaming is not active.
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StopStreaming(CancellationToken cancellationToken = default)
@@ -1029,6 +1173,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Toggle Streaming
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StartStopStreaming(CancellationToken cancellationToken = default)
@@ -1039,6 +1184,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Start recording. Will trigger an error if recording is already active.
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StartRecording(CancellationToken cancellationToken = default)
@@ -1049,6 +1195,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Stop recording. Will trigger an error if recording is not active.
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StopRecording(CancellationToken cancellationToken = default)
@@ -1059,6 +1206,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Toggle recording
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StartStopRecording(CancellationToken cancellationToken = default)
@@ -1067,8 +1215,27 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Pause the current recording. Returns an error if recording is not active or already paused.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        public async Task PauseRecording(CancellationToken cancellationToken = default)
+        {
+            await SendRequest("PauseRecording", cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Resume/unpause the current recording (if paused). Returns an error if recording is not active or not paused.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        public async Task ResumeRecording(CancellationToken cancellationToken = default)
+        {
+            await SendRequest("ResumeRecording", cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Change the current recording folder
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <param name="recFolder">Recording folder path</param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1084,30 +1251,33 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the path of the current recording folder
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Current recording folder path</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<string> GetRecordingFolder(CancellationToken cancellationToken = default)
         {
             JObject? response = await SendRequest("GetRecordingFolder", cancellationToken).ConfigureAwait(false);
-            return (string?)response["rec-folder"] ?? throw new ErrorResponseException("Response did not contain 'rec-folder'", response);
+            return response["rec-folder"]?.Value<string>() ?? throw ErrorResponseException.FromMissingProperty("rec-folder", response);
         }
 
         /// <summary>
         /// Get duration of the currently selected transition (if supported)
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Current transition duration (in milliseconds)</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<int> GetTransitionDuration(CancellationToken cancellationToken = default)
         {
             JObject? response = await SendRequest("GetTransitionDuration", cancellationToken).ConfigureAwait(false);
-            return response["transition-duration"]?.Value<int>() ?? throw new ErrorResponseException("Response did not contain 'transition-duration'", response);
+            return response["transition-duration"]?.Value<int>() ?? throw ErrorResponseException.FromMissingProperty("transition-duration", response);
         }
 
         /// <summary>
         /// Get duration of the currently selected transition (if supported)
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Current transition duration (in milliseconds)</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1115,24 +1285,39 @@ namespace OBSWebsocketDotNet
         {
             JObject? response = await SendRequest("GetTransitionList", cancellationToken).ConfigureAwait(false);
 
-            return JsonConvert.DeserializeObject<GetTransitionListInfo>(response.ToString());
+            return response.ToObject<GetTransitionListInfo>() ?? throw ErrorResponseException.FromNullResponseObject<GetTransitionListInfo>(response);
+        }
+
+        /// <summary>
+        /// Get the position of the current transition. Value will be between 0.0 and 1.0.
+        /// Note: Returns 1.0 when not active.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<double> GetTransitionPosition(CancellationToken cancellationToken = default)
+        {
+            var response = await SendRequest("GetTransitionPosition", cancellationToken).ConfigureAwait(false);
+
+            return response["position"]?.Value<double>() ?? throw ErrorResponseException.FromMissingProperty("position", response);
         }
 
         /// <summary>
         /// Get status of Studio Mode
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Studio Mode status (on/off)</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<bool> StudioModeEnabled(CancellationToken cancellationToken = default)
         {
-            JObject? response = await SendRequest("GetStudioModeStatus", cancellationToken).ConfigureAwait(false);
-            return response["studio-mode"]?.Value<bool>() ?? throw new ErrorResponseException("Response did not contain 'studio-mode''", response);
+            var response = await SendRequest("GetStudioModeStatus", cancellationToken).ConfigureAwait(false);
+            return response["studio-mode"]?.Value<bool>() ?? throw ErrorResponseException.FromMissingProperty("studio-mode", response);
         }
 
         /// <summary>
         /// Disable Studio Mode
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task DisableStudioMode(CancellationToken cancellationToken = default)
@@ -1143,6 +1328,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Enable Studio Mode
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task EnableStudioMode(CancellationToken cancellationToken = default)
@@ -1153,31 +1339,34 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Enable Studio Mode
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<bool> GetStudioModeStatus(CancellationToken cancellationToken = default)
         {
             JObject? response = await SendRequest("GetStudioModeStatus", cancellationToken).ConfigureAwait(false);
-            return response["studio-mode"]?.Value<bool>() ?? throw new ErrorResponseException("Response did not contain 'studio-mode'", response);
+            return response["studio-mode"]?.Value<bool>() ?? throw ErrorResponseException.FromMissingProperty("studio-mode", response);
         }
 
         /// <summary>
         /// Enable/disable Studio Mode
         /// </summary>
         /// <param name="enable">Desired Studio Mode status</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetStudioMode(bool enable, CancellationToken cancellationToken = default)
         {
             if (enable)
-                await EnableStudioMode().ConfigureAwait(false);
+                await EnableStudioMode(cancellationToken).ConfigureAwait(false);
             else
-                await DisableStudioMode().ConfigureAwait(false);
+                await DisableStudioMode(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Toggle Studio Mode status (on to off or off to on)
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ToggleStudioMode(CancellationToken cancellationToken = default)
@@ -1189,21 +1378,16 @@ namespace OBSWebsocketDotNet
         /// Get the currently selected preview scene. Triggers an error
         /// if Studio Mode is disabled
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>Preview scene object</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task<OBSScene> GetPreviewScene(CancellationToken cancellationToken = default)
         {
             JObject? response = await SendRequest("GetPreviewScene", cancellationToken).ConfigureAwait(false);
-            try
-            {
-                OBSScene info = response?.ToObject<OBSScene>() ?? throw new ErrorResponseException($"Invalid response for 'GetPreviewScene'.", response);
-                return info;
-            }
-            catch (JsonException ex)
-            {
-                throw new ErrorResponseException($"Invalid response for 'GetPreviewScene': {ex.Message}", response, ex);
-            }
+            OBSScene info = response?.ToObject<OBSScene>()
+                ?? throw ErrorResponseException.FromNullResponseObject<OBSScene>(response);
+            return info;
         }
 
         /// <summary>
@@ -1211,6 +1395,7 @@ namespace OBSWebsocketDotNet
         /// Triggers an error if Studio Mode is disabled
         /// </summary>
         /// <param name="previewScene">Preview scene name</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetPreviewScene(string previewScene, CancellationToken cancellationToken = default)
@@ -1227,11 +1412,12 @@ namespace OBSWebsocketDotNet
         /// Triggers an error if Studio Mode is disabled.
         /// </summary>
         /// <param name="previewScene">Preview scene object</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetPreviewScene(OBSScene previewScene, CancellationToken cancellationToken = default)
         {
-            await SetPreviewScene(previewScene.Name).ConfigureAwait(false);
+            await SetPreviewScene(previewScene.Name, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1239,6 +1425,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="transitionDuration">(optional) Transition duration</param>
         /// <param name="transitionName">(optional) Name of transition to use</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task TransitionToProgram(int transitionDuration = -1, string? transitionName = null, CancellationToken cancellationToken = default)
@@ -1265,6 +1452,7 @@ namespace OBSWebsocketDotNet
         /// Get if the specified source is muted
         /// </summary>
         /// <param name="sourceName">Source name</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Source mute status (on/off)</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1282,6 +1470,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Toggle the Replay Buffer on/off
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ToggleReplayBuffer(CancellationToken cancellationToken = default)
@@ -1294,6 +1483,7 @@ namespace OBSWebsocketDotNet
         /// if the Replay Buffer is already active, or if the "Save Replay Buffer"
         /// hotkey is not set in OBS' settings
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StartReplayBuffer(CancellationToken cancellationToken = default)
@@ -1305,6 +1495,7 @@ namespace OBSWebsocketDotNet
         /// Stop recording into the Replay Buffer. Triggers an error if the
         /// Replay Buffer is not active.
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StopReplayBuffer(CancellationToken cancellationToken = default)
@@ -1315,6 +1506,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Toggle replay buffer
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task StartStopReplayBuffer(CancellationToken cancellationToken = default)
@@ -1327,6 +1519,7 @@ namespace OBSWebsocketDotNet
         /// the same as triggering the "Save Replay Buffer" hotkey in OBS.
         /// Triggers an error if Replay Buffer is not active.
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SaveReplayBuffer(CancellationToken cancellationToken = default)
@@ -1339,6 +1532,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="syncOffset">Audio offset (in nanoseconds) for the specified source</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSyncOffset(string sourceName, int syncOffset, CancellationToken cancellationToken = default)
@@ -1355,6 +1549,7 @@ namespace OBSWebsocketDotNet
         /// Get the audio sync offset of the specified source
         /// </summary>
         /// <param name="sourceName">Source name</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Audio offset (in nanoseconds) of the specified source</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1365,7 +1560,7 @@ namespace OBSWebsocketDotNet
                 { "source", sourceName }
             };
             JObject? response = await SendRequest("GetSyncOffset", requestFields, cancellationToken).ConfigureAwait(false);
-            return response["offset"]?.Value<int>() ?? throw new ErrorResponseException("Response did not contain 'offset'", response);
+            return response["offset"]?.Value<int>() ?? throw ErrorResponseException.FromMissingProperty("offset", response);
         }
 
         /// <summary>
@@ -1373,6 +1568,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneItem">Scene item, requires name or id of item</param>
         /// /// <param name="sceneName">Scene name to delete item from (optional)</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task DeleteSceneItem(SceneItemStub sceneItem, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -1392,19 +1588,23 @@ namespace OBSWebsocketDotNet
 
             await SendRequest("DeleteSceneItem", requestFields, cancellationToken).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Deletes a scene item from the current scene.
         /// </summary>
         /// <param name="sceneItem">Scene item, requires name or id of item</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task DeleteSceneItem(SceneItemStub sceneItem, CancellationToken cancellationToken = default)
             => DeleteSceneItem(sceneItem, null, cancellationToken);
+
         /// <summary>
         /// Deletes a scene item
         /// </summary>
         /// <param name="sceneItemId">Scene item id</param>
         /// <param name="sceneName">Scene name to delete item from (optional)</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task DeleteSceneItem(int sceneItemId, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -1427,6 +1627,7 @@ namespace OBSWebsocketDotNet
         /// Deletes a scene item from the current scene.
         /// </summary>
         /// <param name="sceneItemId">Scene item id</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task DeleteSceneItem(int sceneItemId, CancellationToken cancellationToken = default)
@@ -1438,6 +1639,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemName">Name of the scene item</param>
         /// <param name="cropInfo">Crop coordinates</param>
         /// <param name="sceneName">(optional) parent scene name of the specified source</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSceneItemCrop(string sceneItemName, SceneItemCropInfo cropInfo, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -1460,7 +1662,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneItemName">Name of the scene item</param>
         /// <param name="cropInfo">Crop coordinates</param>
-        /// <param name="sceneName">(optional) parent scene name of the specified source</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task SetSceneItemCrop(string sceneItemName, SceneItemCropInfo cropInfo, CancellationToken cancellationToken = default)
@@ -1472,6 +1674,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItem">Scene item object</param>
         /// <param name="cropInfo">Crop coordinates</param>
         /// <param name="scene">Parent scene of scene item</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSceneItemCrop(SceneItem sceneItem, SceneItemCropInfo cropInfo, OBSScene scene, CancellationToken cancellationToken = default)
@@ -1484,6 +1687,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="itemName">Name of the source item</param>
         /// <param name="sceneName">Name of the scene the source belongs to. Defaults to the current scene.</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task ResetSceneItem(string itemName, string? sceneName = null, CancellationToken cancellationToken = default)
@@ -1502,6 +1706,7 @@ namespace OBSWebsocketDotNet
         /// Reset a scene item in the current scene.
         /// </summary>
         /// <param name="itemName">Name of the source item</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task ResetSceneItem(string itemName, CancellationToken cancellationToken = default) => ResetSceneItem(itemName, null, cancellationToken);
@@ -1510,6 +1715,7 @@ namespace OBSWebsocketDotNet
         /// Send the provided text as embedded CEA-608 caption data. As of OBS Studio 23.1, captions are not yet available on Linux.
         /// </summary>
         /// <param name="text">Captions text</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SendCaptions(string text, CancellationToken cancellationToken = default)
@@ -1526,6 +1732,7 @@ namespace OBSWebsocketDotNet
         /// Set the filename formatting string
         /// </summary>
         /// <param name="filenameFormatting">Filename formatting string to set</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetFilenameFormatting(string filenameFormatting, CancellationToken cancellationToken = default)
@@ -1544,6 +1751,7 @@ namespace OBSWebsocketDotNet
         /// <param name="fromSceneName">Source of the scene item</param>
         /// <param name="toSceneName">Destination for the scene item</param>
         /// <param name="sceneItem">Scene item, requires name or id</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task DuplicateSceneItem(string fromSceneName, string toSceneName, SceneItem sceneItem, CancellationToken cancellationToken = default)
@@ -1571,6 +1779,7 @@ namespace OBSWebsocketDotNet
         /// <param name="fromSceneName">Source of the scene item</param>
         /// <param name="toSceneName">Destination for the scene item</param>
         /// <param name="sceneItemID">Scene item id to duplicate</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task DuplicateSceneItem(string fromSceneName, string toSceneName, int sceneItemID, CancellationToken cancellationToken = default)
@@ -1595,6 +1804,7 @@ namespace OBSWebsocketDotNet
         /// Get names of configured special sources (like Desktop Audio
         /// and Mic sources)
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1621,6 +1831,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="service">Service settings</param>
         /// <param name="save">Save to disk</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetStreamingSettings(StreamingService service, bool save, CancellationToken cancellationToken = default)
@@ -1639,6 +1850,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get current streaming settings
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1652,6 +1864,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Save current Streaming settings to disk
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task SaveStreamSettings(CancellationToken cancellationToken = default)
@@ -1664,6 +1877,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>BrowserSource properties</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1689,6 +1903,7 @@ namespace OBSWebsocketDotNet
         /// Get settings of the specified BrowserSource in the current scene.
         /// </summary>
         /// <param name="sourceName">Source name</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>BrowserSource properties</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1701,6 +1916,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="props">BrowserSource properties</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         [Obsolete("Deprecated in obs-websocket 4.8.0, use SetSourceSettings")]
@@ -1721,15 +1937,19 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="props">BrowserSource properties</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         [Obsolete("Deprecated in obs-websocket 4.8.0, use SetSourceSettings")]
         public Task SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, CancellationToken cancellationToken = default)
             => SetBrowserSourceProperties(sourceName, props, null, cancellationToken);
+
         /// <summary>
         /// Enable/disable the heartbeat event
         /// </summary>
         /// <param name="enable"></param>
+        /// <param name="cancellationToken"></param>
+        [Obsolete("Will be deprecated in v4.9 and completely removed in v5.0")]
         public async Task SetHeartbeat(bool enable, CancellationToken cancellationToken = default)
         {
             JObject? requestFields = new JObject
@@ -1745,6 +1965,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="sourceType">Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>settings</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1763,7 +1984,7 @@ namespace OBSWebsocketDotNet
             try
             {
                 SourceSettings settings = result?.ToObject<SourceSettings>()
-                    ?? throw new ErrorResponseException("Result body from 'GetSourceSettings' could not be parsed.", result);
+                    ?? throw ErrorResponseException.FromNullResponseObject<SourceSettings>(result);
 
                 return settings;
             }
@@ -1772,10 +1993,12 @@ namespace OBSWebsocketDotNet
                 throw new ErrorResponseException($"Error deserializing response for 'GetSourceSettings': {ex.Message}.", result, ex);
             }
         }
+
         /// <summary>
         /// Get the settings from a source item in the current scene.
         /// </summary>
         /// <param name="sourceName">Source name</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>settings</returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1787,6 +2010,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="settings">Settings for the source</param>
         /// <param name="sourceType">Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetSourceSettings(string sourceName, JObject settings, string? sourceType = null, CancellationToken cancellationToken = default)
@@ -1808,6 +2032,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="settings">Settings for the source</param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public Task SetSourceSettings(string sourceName, JObject settings, CancellationToken cancellationToken = default)
@@ -1817,6 +2042,7 @@ namespace OBSWebsocketDotNet
         /// Gets settings for a media source
         /// </summary>
         /// <param name="sourceName"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
@@ -1837,6 +2063,7 @@ namespace OBSWebsocketDotNet
         /// Sets settings of a media source
         /// </summary>
         /// <param name="sourceSettings"></param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ErrorResponseException"></exception>
         /// <exception cref="OperationCanceledException"></exception>
         public async Task SetMediaSourceSettings(MediaSourceSettings sourceSettings, CancellationToken cancellationToken = default)
@@ -1847,6 +2074,134 @@ namespace OBSWebsocketDotNet
             }
             JObject? requestFields = JObject.FromObject(sourceSettings);
             await SendRequest("SetSourceSettings", requestFields, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Open a projector window or create a projector on a monitor. Requires OBS v24.0.4 or newer.
+        /// </summary>
+        /// <param name="projectorType">Type of projector: "Preview" (default), "Source", "Scene", "StudioProgram", or "Multiview" (case insensitive)</param>
+        /// <param name="monitor">Monitor to open the projector on. If -1 or omitted, opens a window</param>
+        /// <param name="geometry">Size and position of the projector window (only if monitor is -1). Encoded in Base64 using Qt's geometry encoding. Corresponds to OBS's saved projectors</param>
+        /// <param name="name">Name of the source or scene to be displayed (ignored for other projector types)</param>
+        /// <param name="cancellationToken"></param>
+        public async Task OpenProjector(string projectorType = "preview", int monitor = -1, string? geometry = null,
+            string? name = null, CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "type", projectorType },
+                { "monitor", monitor }
+            };
+
+            if (geometry != null)
+            {
+                requestFields.Add("geometry", geometry);
+            }
+
+            if (name != null)
+            {
+                requestFields.Add("name", name);
+            }
+
+            await SendRequest("OpenProjector", requestFields, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Renames a source.
+        /// Note: If the new name already exists as a source, obs-websocket will return an error.
+        /// </summary>
+        /// <param name="currentName">Current source name</param>
+        /// <param name="newName">New source name</param>
+        /// <param name="cancellationToken"></param>
+        public async Task SetSourceName(string currentName, string newName, CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "sourceName", currentName },
+                { "newName", newName }
+            };
+
+            await SendRequest("SetSourceName", requestFields, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get the audio monitoring type of the specified source.
+        /// Valid return values: none, monitorOnly, monitorAndOutput
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The monitor type in use</returns>
+        public async Task<string> GetAudioMonitorType(string sourceName, CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = await SendRequest("GetAudioMonitorType", requestFields, cancellationToken).ConfigureAwait(false);
+            return response["monitorType"]?.Value<string>() ?? throw ErrorResponseException.FromMissingProperty("monitorType", response);
+        }
+
+        /// <summary>
+        /// Set the audio monitoring type of the specified source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="monitorType">The monitor type to use. Options: none, monitorOnly, monitorAndOutput</param>
+        /// <param name="cancellationToken"></param>
+        public async Task SetAudioMonitorType(string sourceName, string monitorType, CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "sourceName", sourceName },
+                { "monitorType", monitorType }
+            };
+
+            await SendRequest("SetAudioMonitorType", requestFields, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Broadcast custom message to all connected WebSocket clients
+        /// </summary>
+        /// <param name="realm">Identifier to be choosen by the client</param>
+        /// <param name="data">User-defined data</param>
+        /// <param name="cancellationToken"></param>
+        public async Task BroadcastCustomMessage(string realm, JObject data, CancellationToken cancellationToken = default)
+        {
+            var requestFields = new JObject
+            {
+                { "realm", realm },
+                { "data", data }
+            };
+
+            await SendRequest("BroadcastCustomMessage", requestFields, cancellationToken).ConfigureAwait(false);
+        }
+
+
+
+        /// <summary>
+        /// Deserializes a <see cref="JObject"/> into <typeparamref name="T"/>. Throws an appropriate <see cref="ErrorResponseException"/> for errors.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jObject"></param>
+        /// <param name="sourceName"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorResponseException"></exception>
+        public static T ParseObject<T>(JObject jObject, [CallerMemberName] string? sourceName = null)
+        {
+            try
+            {
+                T obj = jObject.ToObject<T>()
+                    ?? throw ErrorResponseException.FromNullResponseObject<T>(jObject);
+
+                return obj;
+            }
+            catch (JsonException ex)
+            {
+                if (sourceName != null)
+                    throw new ErrorResponseException($"Error deserializing JSON for '{sourceName}' into '{typeof(T).Name}': {ex.Message}.", jObject, ex);
+                else
+                    throw new ErrorResponseException($"Error deserializing JSON into '{typeof(T).Name}': {ex.Message}.", jObject, ex);
+            }
         }
     }
 }
