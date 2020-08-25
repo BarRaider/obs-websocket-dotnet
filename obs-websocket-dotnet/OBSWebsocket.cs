@@ -250,6 +250,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<SourceVolumeChangedEventArgs>? SourceVolumeChanged;
 
+        /// <summary>
+        /// An event was received that obs-websocket-dotnet does not have a defined event handler for.
+        /// </summary>
+        public event EventHandler<JObject>? UnhandledEvent;
         #endregion
 
         // Random should never be created inside a function
@@ -960,9 +964,9 @@ namespace OBSWebsocketDotNet
                             break;
                         }
                     default:
-#if DEBUG
-                        OBSError?.Invoke(this, new OBSErrorEventArgs($"Unhandled event '{eventType}'", body));
-#endif
+                        {
+                            UnhandledEvent?.Invoke(this, body);
+                        }
                         break;
 
                 }
@@ -985,10 +989,12 @@ namespace OBSWebsocketDotNet
                     return true;
                 OBSError?.Invoke(this, new OBSErrorEventArgs($"Received '{eventName}' event, but associated data was missing.", body));
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
             {
                 OBSError?.Invoke(this, new OBSErrorEventArgs($"Error on '{eventName}' event.", ex, body));
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             return false;
         }
 

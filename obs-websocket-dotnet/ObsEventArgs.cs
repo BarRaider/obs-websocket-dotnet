@@ -16,20 +16,19 @@ namespace OBSWebsocketDotNet
 
         [JsonExtensionData(ReadData = true)]
         public Dictionary<string, JToken>? ExtensionData;
-#if DEBUG
+
         [OnDeserialized]
         public void OnDeserialized(StreamingContext context)
         {
             if (ExtensionData != null)
             {
                 KeyValuePair<string, JToken>[] missedData = ExtensionData.Where(p => p.Key != "preview-only").ToArray();
-                if (missedData.Length > 0)
+                if (OBSLogger.LoggerSettings.HasFlag(OBSLoggerSettings.LogExtraEventData) && missedData.Length > 0)
                 {
-                    OBSLogger.Warning($"Data not taken in '{UpdateType}': {string.Join("\n", missedData.Select(p => $"\"{p.Key}\" : \"{p.Value}\""))}");
+                    OBSLogger.Debug($"Data not taken in '{UpdateType}': {string.Join("\n", missedData.Select(p => $"\"{p.Key}\" : \"{p.Value}\""))}");
                 }
             }
         }
-#endif
     }
 
     public enum ChangeType
