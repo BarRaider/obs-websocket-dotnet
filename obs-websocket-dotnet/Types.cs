@@ -298,6 +298,16 @@ namespace OBSWebsocketDotNet
     public class ErrorResponseException : Exception
     {
         /// <summary>
+        /// Returns a standard <see cref="ErrorResponseException"/> for a response missing a required property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ErrorResponseException FromMissingProperty(string propertyName, JObject response)
+        {
+            return new ErrorResponseException($"Response missing '{propertyName}' property.");
+        }
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="message"></param>
