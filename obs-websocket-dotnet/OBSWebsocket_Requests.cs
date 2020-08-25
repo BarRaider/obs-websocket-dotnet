@@ -186,6 +186,52 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Get the specified scene's transition override info
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to return the override info</param>
+        /// <returns>TransitionOverrideInfo</returns>
+        public TransitionOverrideInfo GetSceneTransitionOverride(string sceneName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sceneName", sceneName);
+            
+            JObject response = SendRequest("GetSceneTransitionOverride", requestFields);
+            return response.ToObject<TransitionOverrideInfo>();
+        }
+
+        /// <summary>
+        /// Set specific transition override for a scene
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to set the transition override</param>
+        /// <param name="transitionName">Name of the transition to use</param>
+        /// <param name="transitionDuration">Duration in milliseconds of the transition if transition is not fixed. Defaults to the current duration specified in the UI if there is no current override and this value is not given</param>
+        public void SetSceneTransitionOverride(string sceneName, string transitionName, int transitionDuration = -1)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sceneName", sceneName);
+            requestFields.Add("transitionName", transitionName);
+
+            if (transitionDuration >= 0)
+            {
+                requestFields.Add("transitionDuration", transitionDuration);
+            }
+
+            SendRequest("SetSceneTransitionOverride", requestFields);
+        }
+
+        /// <summary>
+        /// Remove any transition override from a specific scene
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to remove the transition override</param>
+        public void RemoveSceneTransitionOverride(string sceneName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sceneName", sceneName);
+
+            SendRequest("RemoveSceneTransitionOverride", requestFields);
+        }
+
+        /// <summary>
         /// List all sources available in the running OBS instance
         /// </summary>
         public async Task<List<SourceInfo>> GetSourcesList()
@@ -274,8 +320,6 @@ namespace OBSWebsocketDotNet
             
         }
 
-
-
         /// <summary>
         /// Move a filter in the chain (relative positioning)
         /// </summary>
@@ -287,7 +331,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
             requestFields.Add("filterName", filterName);
-            requestFields.Add("movementType", movement.ToString().ToLower());
+            requestFields.Add("movementType", movement.ToString().ToLowerInvariant());
 
             await SendRequest("MoveSourceFilter", requestFields).ConfigureAwait(false);
         }
@@ -327,10 +371,10 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Modify the Source Filter's visibility
         /// </summary>
-        /// <param name="sourceName"></param>
-        /// <param name="filterName"></param>
-        /// <param name="filterEnabled"></param>
-        public async Task SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
+        /// <param name="sourceName">Source name</param>
+        /// <param name="filterName">Source filter name</param>
+        /// <param name="filterEnabled">New filter state</param>
+        public void SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
         {
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
@@ -343,8 +387,8 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Return a list of all filters on a source
         /// </summary>
-        /// <param name="sourceName"></param>
-        public async Task<List<FilterSettings>> GetSourceFilters(string sourceName)
+        /// <param name="sourceName">Source name</param>
+        public List<FilterSettings> GetSourceFilters(string sourceName)
         {
             var requestFields = new JObject();
             requestFields.Add("sourceName", sourceName);
@@ -352,6 +396,22 @@ namespace OBSWebsocketDotNet
             JObject response = await SendRequest("GetSourceFilters", requestFields).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"].ToString());
+        }
+
+        /// <summary>
+        /// Return a list of all filters on a source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="filterName">Filter name</param>
+        public FilterSettings GetSourceFilterInfo(string sourceName, string filterName)
+        {
+            var requestFields = new JObject();
+            requestFields.Add("sourceName", sourceName);
+            requestFields.Add("filterName", filterName);
+
+            JObject response = SendRequest("GetSourceFilterInfo", requestFields);
+
+            return JsonConvert.DeserializeObject<FilterSettings>(response.ToString());
         }
 
         /// <summary>
@@ -585,8 +645,15 @@ namespace OBSWebsocketDotNet
             settings.NullValueHandling = NullValueHandling.Ignore;
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, settings));
 
+            if (requestFields["item"] == null)
+            {
+                requestFields["item"] = props.ItemName;
+            }
+
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             await SendRequest("SetSceneItemProperties", requestFields).ConfigureAwait(false);
         }
@@ -743,6 +810,22 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Pause the current recording. Returns an error if recording is not active or already paused.
+        /// </summary>
+        public void PauseRecording()
+        {
+            SendRequest("PauseRecording");
+        }
+
+        /// <summary>
+        /// Resume/unpause the current recording (if paused). Returns an error if recording is not active or not paused.
+        /// </summary>
+        public void ResumeRecording()
+        {
+            SendRequest("ResumeRecording");
+        }
+
+        /// <summary>
         /// Change the current recording folder
         /// </summary>
         /// <param name="recFolder">Recording folder path</param>
@@ -782,6 +865,18 @@ namespace OBSWebsocketDotNet
             var response = await SendRequest("GetTransitionList").ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<GetTransitionListInfo>(response.ToString());
+        }
+
+        /// <summary>
+        /// Get the position of the current transition. Value will be between 0.0 and 1.0.
+        /// Note: Returns 1.0 when not active.
+        /// </summary>
+        /// <returns></returns>
+        public double GetTransitionPosition()
+        {
+            var response = SendRequest("GetTransitionPosition");
+
+            return (double)response["position"];
         }
 
         /// <summary>
@@ -1262,8 +1357,8 @@ namespace OBSWebsocketDotNet
         /// Enable/disable the heartbeat event
         /// </summary>
         /// <param name="enable"></param>
-#pragma warning disable AsyncFixer01 // Unnecessary async/await usage
-        public async Task SetHeartbeat(bool enable)
+        [Obsolete("Will be deprecated in v4.9 and completely removed in v5.0")]
+        public void SetHeartbeat(bool enable)
         {
             var request = new JObject();
             request.Add("enable", enable);
@@ -1340,6 +1435,99 @@ namespace OBSWebsocketDotNet
                 throw new System.Exception("Invalid SourceType");
             }
             await SendRequest("SetSourceSettings", JObject.FromObject(sourceSettings)).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Open a projector window or create a projector on a monitor. Requires OBS v24.0.4 or newer.
+        /// </summary>
+        /// <param name="projectorType">Type of projector: "Preview" (default), "Source", "Scene", "StudioProgram", or "Multiview" (case insensitive)</param>
+        /// <param name="monitor">Monitor to open the projector on. If -1 or omitted, opens a window</param>
+        /// <param name="geometry">Size and position of the projector window (only if monitor is -1). Encoded in Base64 using Qt's geometry encoding. Corresponds to OBS's saved projectors</param>
+        /// <param name="name">Name of the source or scene to be displayed (ignored for other projector types)</param>
+        public void OpenProjector(string projectorType = "preview", int monitor = -1, string geometry = null, string name = null)
+        {
+            var request = new JObject();
+            request.Add("type", projectorType);
+            request.Add("monitor", monitor);
+
+            if (geometry != null)
+            {
+                request.Add("geometry", geometry);
+            }
+
+            if (name != null)
+            {
+                request.Add("name", name);
+            }
+
+            SendRequest("OpenProjector", request);
+        }
+
+        /// <summary>
+        /// Renames a source.
+        /// Note: If the new name already exists as a source, obs-websocket will return an error.
+        /// </summary>
+        /// <param name="currentName">Current source name</param>
+        /// <param name="newName">New source name</param>
+        public void SetSourceName(string currentName, string newName)
+        {
+            var request = new JObject();
+            request.Add("sourceName", currentName);
+            request.Add("newName", newName);
+
+            SendRequest("SetSourceName", request);
+        }
+
+        /// <summary>
+        /// List existing outputs
+        /// </summary>
+        /// <returns>Array of OutputInfo</returns>
+        public List<OBSOutputInfo> ListOutputs()
+        {
+            var response = SendRequest("ListOutputs");
+            return response["outputs"].ToObject<List<OBSOutputInfo>>();
+        }
+        /// <summary>
+        /// Get the audio monitoring type of the specified source.
+        /// Valid return values: none, monitorOnly, monitorAndOutput
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <returns>The monitor type in use</returns>
+        public string GetAudioMonitorType(string sourceName)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+
+            var response = SendRequest("GetAudioMonitorType", request);
+            return (string)response["monitorType"];
+        }
+
+        /// <summary>
+        /// Set the audio monitoring type of the specified source
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="monitorType">The monitor type to use. Options: none, monitorOnly, monitorAndOutput</param>
+        public void SetAudioMonitorType(string sourceName, string monitorType)
+        {
+            var request = new JObject();
+            request.Add("sourceName", sourceName);
+            request.Add("monitorType", monitorType);
+
+            SendRequest("SetAudioMonitorType", request);
+        }
+
+        /// <summary>
+        /// Broadcast custom message to all connected WebSocket clients
+        /// </summary>
+        /// <param name="realm">Identifier to be choosen by the client</param>
+        /// <param name="data">User-defined data</param>
+        public void BroadcastCustomMessage(string realm, JObject data)
+        {
+            var request = new JObject();
+            request.Add("realm", realm);
+            request.Add("data", data);
+
+            SendRequest("BroadcastCustomMessage", request);
         }
     }
 }

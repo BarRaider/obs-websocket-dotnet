@@ -1,26 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>obs_websocket_dotnet</RootNamespace>
-    <Version>4.2.0.3</Version>
-    <Copyright>Copyright © Stéphane Lepin 2017</Copyright>
-    <Authors>Stéphane Lepin</Authors>
+    <TargetFramework>net46</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>4.8.0-Beta1</Version>
+    <Copyright>Copyright © Stéphane Lepin 2020</Copyright>
+    <AssemblyVersion>4.8.0.1</AssemblyVersion>
+    <FileVersion>4.8.0.1</FileVersion>
+    <Authors />
     <Company />
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>bin\Debug\obs-websocket-dotnet.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>bin\Release\obs-websocket-dotnet.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <Folder Include="Properties\" />
   </ItemGroup>
-
 </Project>

@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using OBSWebsocketDotNet.Types;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace OBSWebsocketDotNet
 {
@@ -69,6 +70,11 @@ namespace OBSWebsocketDotNet
         public event SceneItemVisibilityChangedCallback SceneItemVisibilityChanged;
 
         /// <summary>
+        /// Triggered when the lock status of a scene item changes
+        /// </summary>
+        public event SceneItemLockChangedCallback SceneItemLockChanged;      
+
+        /// <summary>
         /// Triggered when switching to another scene collection
         /// </summary>
         public event EventHandler SceneCollectionChanged;
@@ -96,7 +102,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when a transition between two scenes starts. Followed by <see cref="SceneChanged"/>
         /// </summary>
-        public event EventHandler TransitionBegin;
+        public event TransitionBeginCallback TransitionBegin;
+
+        /// <summary>
+        /// Triggered when a transition (other than "cut") has ended. Please note that the from-scene field is not available in TransitionEnd
+        /// </summary>
+        public event TransitionEndCallback TransitionEnd;
+
+        /// <summary>
+        /// Triggered when a stinger transition has finished playing its video
+        /// </summary>
+        public event TransitionVideoEndCallback TransitionVideoEnd;
 
         /// <summary>
         /// Triggered when switching to another profile
@@ -117,6 +133,16 @@ namespace OBSWebsocketDotNet
         /// Triggered when the recording output state changes
         /// </summary>
         public event OutputStateCallback RecordingStateChanged;
+
+        /// <summary>
+        /// Triggered when the recording output is paused
+        /// </summary>
+        public event EventHandler RecordingPaused;
+
+        /// <summary>
+        /// Triggered when the recording output is resumed
+        /// </summary>
+        public event EventHandler RecordingResumed;
 
         /// <summary>
         /// Triggered when state of the replay buffer changes
@@ -209,6 +235,11 @@ namespace OBSWebsocketDotNet
         public event SourceFiltersReorderedCallback SourceFiltersReordered;
 
         /// <summary>
+        /// Triggered when the visibility of a filter has changed
+        /// </summary>
+        public event SourceFilterVisibilityChangedCallback SourceFilterVisibilityChanged;
+
+        /// <summary>
         /// A source has been muted or unmuted
         /// </summary>
         public event SourceMuteStateChangedCallback SourceMuteStateChanged;
@@ -222,6 +253,11 @@ namespace OBSWebsocketDotNet
         /// The volume of a source has changed
         /// </summary>
         public event SourceVolumeChangedCallback SourceVolumeChanged;
+
+        /// <summary>
+        /// A custom broadcast message was received
+        /// </summary>
+        public event BroadcastCustomMessageCallback BroadcastCustomMessageReceived;
 
         #endregion
 
@@ -529,7 +565,10 @@ namespace OBSWebsocketDotNet
                     if (SceneItemVisibilityChanged != null)
                         SceneItemVisibilityChanged(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
                     break;
-
+                case "SceneItemLockChanged":
+                    if (SceneItemLockChanged != null)
+                        SceneItemLockChanged(this, (string)body["scene-name"], (string)body["item-name"], (int)body["item-id"], (bool)body["item-locked"]);
+                    break;
                 case "SceneCollectionChanged":
                     if (SceneCollectionChanged != null)
                         SceneCollectionChanged(this, EventArgs.Empty);
@@ -557,9 +596,16 @@ namespace OBSWebsocketDotNet
 
                 case "TransitionBegin":
                     if (TransitionBegin != null)
-                        TransitionBegin(this, EventArgs.Empty);
+                        TransitionBegin(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
                     break;
-
+                case "TransitionEnd":
+                    if (TransitionEnd != null)
+                        TransitionEnd(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["to-scene"]);
+                    break;
+                case "TransitionVideoEnd":
+                    if (TransitionVideoEnd != null)
+                        TransitionVideoEnd(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
+                    break;
                 case "ProfileChanged":
                     if (ProfileChanged != null)
                         ProfileChanged(this, EventArgs.Empty);
@@ -723,14 +769,19 @@ namespace OBSWebsocketDotNet
                     if (SourceFiltersReordered != null)
                         SourceFiltersReordered(this, (string)body["sourceName"], filters);
                     break;
-                    /*
-                    default:
-                        var header = "-----------" + eventType + "-------------";
-                        Console.WriteLine(header);
-                        Console.WriteLine(body);
-                        Console.WriteLine("".PadLeft(header.Length,'-'));
+                case "SourceFilterVisibilityChanged":
+                    if (SourceFilterVisibilityChanged != null)
+                        SourceFilterVisibilityChanged(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);
+                    break;
+                case "BroadcastCustomMessage":
+                    if (BroadcastCustomMessageReceived != null)
+                        BroadcastCustomMessageReceived(this, (string)body["realm"], (JObject)body["data"]);
+                    break;
+                default:
+                        var message = $"Unsupported Event: {eventType}\n{body}";
+                        Console.WriteLine(message);
+                        Debug.WriteLine(message);
                         break;
-                     */
             }
         }
 
