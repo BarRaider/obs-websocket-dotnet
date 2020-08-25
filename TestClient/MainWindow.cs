@@ -35,7 +35,9 @@ namespace TestClient
             _obs.OBSError += OnError;
             _obs.Connected += onConnect;
             _obs.Disconnected += onDisconnect;
-            _obs.OnEvent += onEvent;
+            _obs.EventReceived += onEvent;
+            _obs.RequestSent += onRequest;
+            _obs.ResponseReceived += onResponse;
 
             _obs.SceneChanged += onSceneChange;
             _obs.SceneCollectionChanged += onSceneColChange;
@@ -53,12 +55,50 @@ namespace TestClient
         private void onEvent(object sender, Newtonsoft.Json.Linq.JObject e)
         {
             if (!ConsoleActive) return;
+            lock (_consoleBuilderLock)
+            {
+                ConsoleBuilder.Insert(0, $"Event '{e["update-type"]}' <<{Environment.NewLine}{e.ToString(Newtonsoft.Json.Formatting.Indented)}{Environment.NewLine}");
+            }
             BeginInvoke((MethodInvoker)(() =>
             {
-                ConsoleBuilder.Insert(0, $"'{e["update-type"]}' : {e.ToString(Newtonsoft.Json.Formatting.Indented)}");
-                tbConsole.Text = ConsoleBuilder.ToString();
+                lock (_consoleBuilderLock)
+                {
+                    tbConsole.Text = ConsoleBuilder.ToString();
+                }
             }));
         }
+        private void onResponse(object sender, Newtonsoft.Json.Linq.JObject e)
+        {
+            if (!ConsoleActive) return; 
+            lock (_consoleBuilderLock)
+            {
+                ConsoleBuilder.Insert(0, $"Response <<{Environment.NewLine}{e.ToString(Newtonsoft.Json.Formatting.Indented)}{Environment.NewLine}");
+            }
+            BeginInvoke((MethodInvoker)(() =>
+            {
+                lock (_consoleBuilderLock)
+                {
+                    tbConsole.Text = ConsoleBuilder.ToString();
+                }
+            }));
+        }
+        private void onRequest(object sender, RequestData e)
+        {
+            if (!ConsoleActive) return;
+            lock (_consoleBuilderLock)
+            {
+                ConsoleBuilder.Insert(0, $"Request '{e.RequestType}' >>{Environment.NewLine}{e.RequestBody.ToString(Newtonsoft.Json.Formatting.Indented)}{Environment.NewLine}");
+            }
+            BeginInvoke((MethodInvoker)(() =>
+            {
+                lock (_consoleBuilderLock)
+                {
+                    tbConsole.Text = ConsoleBuilder.ToString();
+                }
+            }));
+        }
+
+        private object _consoleBuilderLock = new object();
 
         private void btnToggleConsole_Click(object sender, EventArgs e)
         {

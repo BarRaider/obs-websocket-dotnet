@@ -48,8 +48,6 @@ namespace TestClient
             _obs.TransitionBegin += _obs_TransitionBegin;
             _obs.TransitionEnd += _obs_TransitionEnd;
             _obs.TransitionVideoEnd += _obs_TransitionVideoEnd;
-            _obs.RecordingPaused += _obs_RecordingPaused;
-            _obs.RecordingResumed += _obs_RecordingResumed;
             _obs.SourceFilterAdded += _obs_SourceFilterAdded;
             _obs.SourceFilterRemoved += _obs_SourceFilterRemoved;
             _obs.SourceFilterVisibilityChanged += _obs_SourceFilterVisibilityChanged;
@@ -79,7 +77,7 @@ namespace TestClient
         private void _obs_SourceFiltersReordered(object sender, SourceFiltersReorderedEventArgs e)
         {
             LogMessage($"[SourceFiltersReordered] Source: {e.SourceName}");
-            foreach(var filter in e.Filters)
+            foreach (var filter in e.Filters)
             {
                 LogMessage($"\t{filter.Name}");
             }
@@ -103,16 +101,6 @@ namespace TestClient
         private void _obs_SourceFilterAdded(object sender, SourceFilterAddedEventArgs e)
         {
             LogMessage($"[SourceFilterAdded] Source: {e.SourceName} Filter: {e.FilterName} FilterType: {e.FilterType}{Environment.NewLine}\tSettings: {e.FilterSettings}");
-        }
-
-        private void _obs_RecordingResumed(object sender, EventArgs e)
-        {
-            LogMessage($"[RecordingResumed]");
-        }
-
-        private void _obs_RecordingPaused(object sender, EventArgs e)
-        {
-            LogMessage($"[RecordingPaused]");
         }
 
         private void _obs_TransitionVideoEnd(object sender, TransitionVideoEndEventArgs e)
@@ -150,45 +138,67 @@ namespace TestClient
             }
         }
 
-        private void btnProjector_Click(object sender, EventArgs e)
+        private async void btnProjector_Click(object sender, EventArgs e)
         {
-            const string SCENE_NAME = "Webcam Full";
-            _obs.OpenProjector();
-            MessageBox.Show("Press Ok to continue");
-            _obs.OpenProjector("preview", 0);
-            MessageBox.Show("Press Ok to continue");
-            // Should not do anything as sceneName only works in "Source" and "Scene"
-            _obs.OpenProjector("preview", 0, null, SOURCE_NAME);
-            MessageBox.Show("Press Ok to continue");
-            _obs.OpenProjector("source", 0, null, SOURCE_NAME);
-            MessageBox.Show("Press Ok to continue");
-            _obs.OpenProjector("scene", 0, null, SCENE_NAME);
+            try
+            {
+                const string SCENE_NAME = "Webcam Full";
+                await _obs.OpenProjector();
+                MessageBox.Show("Press Ok to continue");
+                await _obs.OpenProjector("preview", 0);
+                MessageBox.Show("Press Ok to continue");
+                // Should not do anything as sceneName only works in "Source" and "Scene"
+                await _obs.OpenProjector("preview", 0, null, SOURCE_NAME);
+                MessageBox.Show("Press Ok to continue");
+                await _obs.OpenProjector("source", 0, null, SOURCE_NAME);
+                MessageBox.Show("Press Ok to continue");
+                await _obs.OpenProjector("scene", 0, null, SCENE_NAME);
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"OpenProjector: Error - {ex.Message}");
+            }
         }
 
-        private void btnRename_Click(object sender, EventArgs e)
+        private async void btnRename_Click(object sender, EventArgs e)
         {
-            _obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
+            try
+            {
+                await _obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
+            }
+            catch (Exception ex)
+            {
+
+                LogMessage($"SetSourceName: Error - {ex.Message}");
+            }
         }
 
         private async void btnSourceFilters_Click(object sender, EventArgs e)
         {
-            LogMessage("GetSourceFilters:");
-            var filters = await _obs.GetSourceFilters(SOURCE_NAME);
-
-            foreach(var filter in filters)
+            try
             {
-                LogFilter(filter);
-            }
+                LogMessage("GetSourceFilters:");
+                var filters = await _obs.GetSourceFilters(SOURCE_NAME);
 
-            var firstFilter = filters.FirstOrDefault();
-            if (firstFilter == null)
+                foreach (var filter in filters)
+                {
+                    LogFilter(filter);
+                }
+
+                var firstFilter = filters.FirstOrDefault();
+                if (firstFilter == null)
+                {
+                    LogMessage("ERROR: No filters found");
+                    return;
+                }
+
+                LogMessage("GetSourceFilterInfo:");
+                LogFilter(await _obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
+            }
+            catch (Exception ex)
             {
-                LogMessage("ERROR: No filters found");
-                return;
+                LogMessage($"GetSourceFilterInfo: Error - {ex.Message}");
             }
-
-            LogMessage("GetSourceFilterInfo:");
-            LogFilter(await _obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
         }
 
         private void LogFilter(FilterSettings filter)

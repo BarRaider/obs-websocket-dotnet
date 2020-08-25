@@ -968,6 +968,7 @@ namespace TestClient
             // 
             // btnGetStats
             // 
+            this.btnGetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGetStats.Location = new System.Drawing.Point(695, 486);
             this.btnGetStats.Name = "btnGetStats";
             this.btnGetStats.Size = new System.Drawing.Size(75, 23);
