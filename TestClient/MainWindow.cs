@@ -397,5 +397,12 @@ namespace TestClient
             advanced.SetOBS(_obs);
             advanced.ShowDialog();
         }
+
+        private void btnAdvanced_Click(object sender, EventArgs e)
+        {
+            AdvancedWindow advanced = new AdvancedWindow();
+            advanced.SetOBS(_obs);
+            advanced.ShowDialog();
+        }
     }
 }
