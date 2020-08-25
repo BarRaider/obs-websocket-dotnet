@@ -69,7 +69,7 @@ namespace TestClient
         }
         private void onResponse(object sender, Newtonsoft.Json.Linq.JObject e)
         {
-            if (!ConsoleActive) return; 
+            if (!ConsoleActive) return;
             lock (_consoleBuilderLock)
             {
                 ConsoleBuilder.Insert(0, $"Response <<{Environment.NewLine}{e.ToString(Newtonsoft.Json.Formatting.Indented)}{Environment.NewLine}");
@@ -184,13 +184,20 @@ namespace TestClient
 
         private async void onSceneColChange(object sender, EventArgs e)
         {
-            tbSceneCol.Text = await _obs.GetCurrentSceneCollection();
+            string currentCollection = await _obs.GetCurrentSceneCollection();
+            BeginInvoke((MethodInvoker)delegate
+            {
+                tbSceneCol.Text = currentCollection;
+            });
         }
 
         private async void onProfileChange(object sender, EventArgs e)
         {
-
-            tbProfile.Text = await _obs.GetCurrentProfile();
+            string currentProfile = await _obs.GetCurrentProfile();
+            BeginInvoke((MethodInvoker)delegate
+            {
+                tbSceneCol.Text = currentProfile;
+            });
 
         }
 
@@ -639,6 +646,21 @@ namespace TestClient
             {
                 OBSStats stats = await _obs.GetStats();
                 MessageBox.Show($"RenderTotalFrames: {stats.RenderTotalFrames}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error getting stats: {ex.Message}");
+            }
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var sourceList = await _obs.GetSourcesList();
+                SourceSettings settings = await _obs.GetSourceSettings("Desktop Audio", "wasapi_output_capture");
+                var thing = await _obs.GetSpecialSources();
+                await _obs.GetAudioMonitorType("Desktop Audio");
             }
             catch (Exception ex)
             {

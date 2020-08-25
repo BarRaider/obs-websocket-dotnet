@@ -58,6 +58,7 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.btnGetStats = new System.Windows.Forms.Button();
             this.btnAdvanced = new System.Windows.Forms.Button();
             this.btnToggleConsole = new System.Windows.Forms.Button();
             this.btnClearConsole = new System.Windows.Forms.Button();
@@ -116,7 +117,7 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnGetStats = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -253,6 +254,7 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbControls.Controls.Add(this.button1);
             this.gbControls.Controls.Add(this.btnGetStats);
             this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.btnToggleConsole);
@@ -273,6 +275,17 @@ namespace TestClient
             this.gbControls.Size = new System.Drawing.Size(871, 515);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
+            // 
+            // btnGetStats
+            // 
+            this.btnGetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetStats.Location = new System.Drawing.Point(695, 486);
+            this.btnGetStats.Name = "btnGetStats";
+            this.btnGetStats.Size = new System.Drawing.Size(75, 23);
+            this.btnGetStats.TabIndex = 16;
+            this.btnGetStats.Text = "Get Stats";
+            this.btnGetStats.UseVisualStyleBackColor = true;
+            this.btnGetStats.Click += new System.EventHandler(this.btnGetStats_Click);
             // 
             // btnAdvanced
             // 
@@ -966,16 +979,16 @@ namespace TestClient
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // btnGetStats
+            // button1
             // 
-            this.btnGetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGetStats.Location = new System.Drawing.Point(695, 486);
-            this.btnGetStats.Name = "btnGetStats";
-            this.btnGetStats.Size = new System.Drawing.Size(75, 23);
-            this.btnGetStats.TabIndex = 16;
-            this.btnGetStats.Text = "Get Stats";
-            this.btnGetStats.UseVisualStyleBackColor = true;
-            this.btnGetStats.Click += new System.EventHandler(this.btnGetStats_Click);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(325, 235);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 17;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainWindow
             // 
@@ -1088,6 +1101,7 @@ namespace TestClient
         private System.Windows.Forms.TextBox tbConsole;
         private System.Windows.Forms.Button btnToggleConsole;
         private System.Windows.Forms.Button btnGetStats;
+        private System.Windows.Forms.Button button1;
     }
 }
 
