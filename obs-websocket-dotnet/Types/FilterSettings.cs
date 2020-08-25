@@ -21,6 +21,12 @@ namespace OBSWebsocketDotNet.Types
         public string Type { set; get; }
 
         /// <summary>
+        /// Status of the specified filter
+        /// </summary>
+        [JsonProperty(PropertyName = "enabled")]
+        public bool IsEnabled { set; get; }
+
+        /// <summary>
         /// Settings for the filter
         /// </summary>
         [JsonProperty(PropertyName = "settings")]

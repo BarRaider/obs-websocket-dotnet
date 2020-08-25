@@ -61,7 +61,17 @@ namespace OBSWebsocketDotNet
     /// <param name="itemName">Name of the concerned item</param>
     /// <param name="isVisible">Visibility of the item</param>
     public delegate void SceneItemVisibilityChangedCallback(OBSWebsocket sender, string sceneName, string itemName, bool isVisible);
-    
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.SceneItemLockChanged"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sceneName">Name of the scene where the item is</param>
+    /// <param name="itemName">Name of the concerned item</param>
+    /// <param name="itemId">Id of the concerned item</param>
+    /// <param name="isLocked">Lock status of the item</param>
+    public delegate void SceneItemLockChangedCallback(OBSWebsocket sender, string sceneName, string itemName, int itemId, bool isLocked);
+
     /// <summary>
     /// Called by <see cref="OBSWebsocket.TransitionChanged"/>
     /// </summary>
@@ -75,6 +85,38 @@ namespace OBSWebsocketDotNet
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="newDuration">Name of the new transition duration (in milliseconds)</param>
     public delegate void TransitionDurationChangeCallback(OBSWebsocket sender, int newDuration);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.TransitionBegin"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="transitionName">Transition name</param>
+    /// <param name="transitionType">Transition type</param>
+    /// <param name="duration">Transition duration (in milliseconds). Will be -1 for any transition with a fixed duration, such as a Stinger, due to limitations of the OBS API</param>
+    /// <param name="fromScene">Source scene of the transition</param>
+    /// <param name="toScene">Destination scene of the transition</param>
+    public delegate void TransitionBeginCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.TransitionEnd"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="transitionName">Transition name</param>
+    /// <param name="transitionType">Transition type</param>
+    /// <param name="duration">Transition duration (in milliseconds).</param>
+    /// <param name="toScene">Destination scene of the transition</param>
+    public delegate void TransitionEndCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string toScene);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.TransitionVideoEnd"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="transitionName">Transition name</param>
+    /// <param name="transitionType">Transition type</param>
+    /// <param name="duration">Transition duration (in milliseconds).</param>
+    /// <param name="fromScene">Source scene of the transition</param>
+    /// <param name="toScene">Destination scene of the transition</param>
+    public delegate void TransitionVideoEndCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene);
 
     /// <summary>
     /// Called by <see cref="OBSWebsocket.StreamingStateChanged"/>, <see cref="OBSWebsocket.RecordingStateChanged"/>
@@ -216,6 +258,23 @@ namespace OBSWebsocketDotNet
     public delegate void SourceFiltersReorderedCallback(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters);
 
     /// <summary>
+    /// Callback by <see cref="OBSWebsocket.SourceFilterVisibilityChanged"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="filterName">Name of filter</param>
+    /// <param name="filterEnabled">New filter state</param>
+    public delegate void SourceFilterVisibilityChangedCallback(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.BroadcastCustomMessageReceived"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="realm">Identifier provided by the sender</param>
+    /// <param name="data">User-defined data</param>
+    public delegate void BroadcastCustomMessageCallback(OBSWebsocket sender, string realm, JObject data);
+
+    /// <summary>
     /// Thrown if authentication fails
     /// </summary>
     public class AuthFailureException : Exception
@@ -241,6 +300,16 @@ namespace OBSWebsocketDotNet
         private ErrorResponseException()
             : base() { }
 
+        /// <summary>
+        /// Returns a standard <see cref="ErrorResponseException"/> for a response missing a required property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ErrorResponseException FromMissingProperty(string propertyName, JObject response)
+        {
+            return new ErrorResponseException($"Response missing '{propertyName}' property.");
+        }
         /// <summary>
         /// Constructor
         /// </summary>
