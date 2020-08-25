@@ -93,6 +93,9 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class ErrorResponseException : Exception
     {
+        /// <summary>
+        /// Response JSON.
+        /// </summary>
         public readonly JToken? Response;
         private ErrorResponseException()
             : base() { }
@@ -105,8 +108,32 @@ namespace OBSWebsocketDotNet
         /// <returns></returns>
         public static ErrorResponseException FromMissingProperty(string propertyName, JObject response)
         {
-            return new ErrorResponseException($"Response missing '{propertyName}' property.");
+            return new ErrorResponseException($"Response missing '{propertyName}' property.", response);
         }
+
+        /// <summary>
+        /// Returns a standard <see cref="ErrorResponseException"/> for a response missing a required property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ErrorResponseException FromNullResponseObject<T>(JObject? response)
+        {
+            return new ErrorResponseException($"'{typeof(T).Name}' could not be constructed from the response.", response);
+        }
+
+        /// <summary>
+        /// Returns a standard <see cref="ErrorResponseException"/> for a response missing a required property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ErrorResponseException FromNullResponseProperty<T>(string propertyName, JObject? response)
+        {
+            return new ErrorResponseException($"'{typeof(T).Name}' could not be constructed from the response's property '{propertyName}'.", response);
+        }
+
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -114,17 +141,33 @@ namespace OBSWebsocketDotNet
         public ErrorResponseException(string message)
             : base(message) { }
 
+        /// <summary>
+        /// Creates a new <see cref="ErrorResponseException"/> with a message and the response JSON.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="response"></param>
         public ErrorResponseException(string message, JToken? response)
             : base(message)
         {
             Response = response;
         }
+        /// <summary>
+        /// Creates a new <see cref="ErrorResponseException"/> with a message, response JSON, and inner <see cref="Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="response"></param>
+        /// <param name="innerException"></param>
         public ErrorResponseException(string message, JToken? response, Exception innerException)
             : base(message, innerException)
         {
             Response = response;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ErrorResponseException"/> with a message and inner <see cref="Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         public ErrorResponseException(string message, Exception innerException)
             : base(message, innerException) 
         { 

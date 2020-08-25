@@ -61,48 +61,48 @@ namespace TestClient
 
         }
 
-        private void _obs_SourceRenamed(OBSWebsocket sender, string newName, string previousName)
+        private void _obs_SourceRenamed(object sender, SourceRenamedEventArgs e)
         {
-            LogMessage($"[SourceRenamed] Previous Name: {previousName} New Name: {newName}");
+            LogMessage($"[SourceRenamed] Previous Name: {e.PreviousName} New Name: {e.NewName}");
         }
 
-        private void _obs_SceneItemVisibilityChanged(OBSWebsocket sender, string sceneName, string itemName, bool isVisible)
+        private void _obs_SceneItemVisibilityChanged(object sender, SceneItemVisibilityChangedEventArgs e)
         {
-            LogMessage($"[SceneItemLockChanged] Scene: {sceneName} Item: {itemName} IsVisible: {isVisible}");
+            LogMessage($"[SceneItemLockChanged] Scene: {e.SceneName} Item: {e.ItemName} IsVisible: {e.IsVisible}");
         }
 
-        private void _obs_SceneItemLockChanged(OBSWebsocket sender, string sceneName, string itemName, int itemId, bool isLocked)
+        private void _obs_SceneItemLockChanged(object sender, SceneItemLockChangedEventArgs e)
         {
-            LogMessage($"[SceneItemLockChanged] Scene: {sceneName} Item: {itemName} ItemId: {itemId} IsLocked: {isLocked}");
+            LogMessage($"[SceneItemLockChanged] Scene: {e.SceneName} Item: {e.ItemName} ItemId: {e.ItemId} IsLocked: {e.IsLocked}");
         }
 
-        private void _obs_SourceFiltersReordered(OBSWebsocket sender, string sourceName, List<OBSWebsocketDotNet.Types.FilterReorderItem> filters)
+        private void _obs_SourceFiltersReordered(object sender, SourceFiltersReorderedEventArgs e)
         {
-            LogMessage($"[SourceFiltersReordered] Source: {sourceName}");
-            foreach(var filter in filters)
+            LogMessage($"[SourceFiltersReordered] Source: {e.SourceName}");
+            foreach(var filter in e.Filters)
             {
                 LogMessage($"\t{filter.Name}");
             }
         }
 
-        private void _obs_SourceOrderChanged(OBSWebsocket sender, string sceneName)
+        private void _obs_SourceOrderChanged(object sender, SourceOrderChangedEventArgs e)
         {
-            LogMessage($"[SourceOrderChanged] Scene: {sceneName}");
+            LogMessage($"[SourceOrderChanged] Scene: {e.SceneName}");
         }
 
-        private void _obs_SourceFilterVisibilityChanged(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled)
+        private void _obs_SourceFilterVisibilityChanged(object sender, SourceFilterVisibilityChangedEventArgs e)
         {
-            LogMessage($"[SourceFilterVisibilityChanged] Source: {sourceName} Filter: {filterName} Visible: {filterEnabled}");
+            LogMessage($"[SourceFilterVisibilityChanged] Source: {e.SourceName} Filter: {e.FilterName} Visible: {e.FilterEnabled}");
         }
 
-        private void _obs_SourceFilterRemoved(OBSWebsocket sender, string sourceName, string filterName)
+        private void _obs_SourceFilterRemoved(object sender, SourceFilterRemovedEventArgs e)
         {
-            LogMessage($"[SourceFilterRemoved] Source: {sourceName} Filter: {filterName}");
+            LogMessage($"[SourceFilterRemoved] Source: {e.SourceName} Filter: {e.FilterName}");
         }
 
-        private void _obs_SourceFilterAdded(OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject filterSettings)
+        private void _obs_SourceFilterAdded(object sender, SourceFilterAddedEventArgs e)
         {
-            LogMessage($"[SourceFilterAdded] Source: {sourceName} Filter: {filterName} FilterType: {filterType}{Environment.NewLine}\tSettings: {filterSettings}");
+            LogMessage($"[SourceFilterAdded] Source: {e.SourceName} Filter: {e.FilterName} FilterType: {e.FilterType}{Environment.NewLine}\tSettings: {e.FilterSettings}");
         }
 
         private void _obs_RecordingResumed(object sender, EventArgs e)
@@ -115,24 +115,24 @@ namespace TestClient
             LogMessage($"[RecordingPaused]");
         }
 
-        private void _obs_TransitionVideoEnd(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene)
+        private void _obs_TransitionVideoEnd(object sender, TransitionVideoEndEventArgs e)
         {
-            LogMessage($"[TransitionVideoEnd] Name: {transitionName} Type: {transitionType} Duration: {duration} From: {fromScene} To: {toScene}");
+            LogMessage($"[TransitionVideoEnd] Name: {e.TransitionName} Type: {e.TransitionType} Duration: {e.Duration} From: {e.FromScene} To: {e.ToScene}");
         }
 
-        private void _obs_TransitionEnd(OBSWebsocket sender, string transitionName, string transitionType, int duration, string toScene)
+        private void _obs_TransitionEnd(object sender, TransitionEndEventArgs e)
         {
-            LogMessage($"[TransitionEnd] Name: {transitionName} Type: {transitionType} Duration: {duration} To: {toScene}");
+            LogMessage($"[TransitionEnd] Name: {e.TransitionName} Type: {e.TransitionType} Duration: {e.Duration} To: {e.ToScene}");
         }
 
-        private void _obs_TransitionBegin(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene)
+        private void _obs_TransitionBegin(object sender, TransitionBeginEventArgs e)
         {
-            LogMessage($"[TransitionBegin] Name: {transitionName} Type: {transitionType} Duration: {duration} From: {fromScene} To: {toScene}");
+            LogMessage($"[TransitionBegin] Name: {e.TransitionName} Type: {e.TransitionType} Duration: {e.Duration} From: {e.FromScene} To: {e.ToScene}");
         }
 
-        private void _obs_RecordingStateChanged(OBSWebsocket sender, OBSWebsocketDotNet.Types.OutputState type)
+        private void _obs_RecordingStateChanged(object sender, OutputStateChangedEventArgs e)
         {
-            LogMessage($"[RecordingStateChanged] State: {type}");
+            LogMessage($"[RecordingStateChanged] State: {e.OutputState}");
         }
 
         private void LogMessage(string message)

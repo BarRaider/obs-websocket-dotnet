@@ -36,6 +36,7 @@ using System.Threading.Tasks;
 using WebSocket4Net;
 using System.Diagnostics;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket
@@ -89,7 +90,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when the lock status of a scene item changes
         /// </summary>
-        public event SceneItemLockChangedCallback SceneItemLockChanged;      
+        public event EventHandler<SceneItemLockChangedEventArgs>? SceneItemLockChanged;
 
         /// <summary>
         /// Triggered when switching to another scene collection
@@ -154,12 +155,12 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when the recording output is paused
         /// </summary>
-        public event EventHandler RecordingPaused;
+        public event EventHandler? RecordingPaused;
 
         /// <summary>
         /// Triggered when the recording output is resumed
         /// </summary>
-        public event EventHandler RecordingResumed;
+        public event EventHandler? RecordingResumed;
 
         /// <summary>
         /// Triggered when state of the replay buffer changes
@@ -254,7 +255,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when the visibility of a filter has changed
         /// </summary>
-        public event SourceFilterVisibilityChangedCallback SourceFilterVisibilityChanged;
+        public event EventHandler<SourceFilterVisibilityChangedEventArgs>? SourceFilterVisibilityChanged;
 
         /// <summary>
         /// A source has been muted or unmuted
@@ -278,7 +279,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// A custom broadcast message was received
         /// </summary>
-        public event BroadcastCustomMessageCallback BroadcastCustomMessageReceived;
+        public event EventHandler<BroadcastCustomMessageReceivedEventArgs>? BroadcastCustomMessageReceived;
 
         #endregion
 
@@ -659,6 +660,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="password">User password</param>
         /// <param name="authInfo">Authentication data</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>true if authentication succeeds</returns>
         /// <exception cref="AuthFailureException">Thrown if authentication fails.</exception>
         public async Task<bool> Authenticate(string password, OBSAuthInfo authInfo, CancellationToken cancellationToken)
@@ -740,6 +742,12 @@ namespace OBSWebsocketDotNet
                         {
                             if (TryCreateEventArgs(eventType, body, out SceneItemVisibilityChangedEventArgs args))
                                 SceneItemVisibilityChanged?.Invoke(this, args);
+                            break;
+                        }
+                    case "SceneItemLockChanged":
+                        {
+                            if (TryCreateEventArgs(eventType, body, out SceneItemLockChangedEventArgs args))
+                                SceneItemLockChanged?.Invoke(this, args);
                             break;
                         }
                     case "SceneCollectionChanged":
@@ -989,203 +997,23 @@ namespace OBSWebsocketDotNet
                                 SourceFiltersReordered?.Invoke(this, args);
                             break;
                         }
+                    case "SourceFilterVisibilityChanged":
+                        {
+                            if (TryCreateEventArgs(eventType, body, out SourceFilterVisibilityChangedEventArgs args))
+                                SourceFilterVisibilityChanged?.Invoke(this, args);
+                            break;
+                        }
+                    case "BroadcastCustomMessage":
+                        {
+                            if (TryCreateEventArgs(eventType, body, out BroadcastCustomMessageReceivedEventArgs args))
+                                BroadcastCustomMessageReceived?.Invoke(this, args);
+                            break;
+                        }
                     default:
                         {
                             UnhandledEvent?.Invoke(this, body);
+                            break;
                         }
-                case "ScenesChanged":
-                    SceneListChanged?.Invoke(this, EventArgs.Empty);
-                    break;
-
-                case "SourceOrderChanged":
-                    SourceOrderChanged?.Invoke(this, (string)body["scene-name"]);
-                    break;
-
-                case "SceneItemAdded":
-                    SceneItemAdded?.Invoke(this, (string)body["scene-name"], (string)body["item-name"]);
-                    break;
-
-                case "SceneItemRemoved":
-                    SceneItemRemoved?.Invoke(this, (string)body["scene-name"], (string)body["item-name"]);
-                    break;
-
-                case "SceneItemVisibilityChanged":
-                    SceneItemVisibilityChanged?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (bool)body["item-visible"]);
-                    break;
-                case "SceneItemLockChanged":
-                    SceneItemLockChanged?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (int)body["item-id"], (bool)body["item-locked"]);
-                    break;
-                case "SceneCollectionChanged":
-                    SceneCollectionChanged?.Invoke(this, EventArgs.Empty);
-                    break;
-
-                case "SceneCollectionListChanged":
-                    SceneCollectionListChanged?.Invoke(this, EventArgs.Empty);
-                    break;
-
-                case "SwitchTransition":
-                    TransitionChanged?.Invoke(this, (string)body["transition-name"]);
-                    break;
-
-                case "TransitionDurationChanged":
-                    TransitionDurationChanged?.Invoke(this, (int)body["new-duration"]);
-                    break;
-
-                case "TransitionListChanged":
-                    TransitionListChanged?.Invoke(this, EventArgs.Empty);
-                    break;
-
-                case "TransitionBegin":
-                    TransitionBegin?.Invoke(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
-                    break;
-                case "TransitionEnd":
-                    TransitionEnd?.Invoke(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["to-scene"]);
-                    break;
-                case "TransitionVideoEnd":
-                    TransitionVideoEnd?.Invoke(this, (string)body["name"], (string)body["type"], (int)body["duration"], (string)body["from-scene"], (string)body["to-scene"]);
-                    break;
-                case "ProfileChanged":
-                    ProfileChanged?.Invoke(this, EventArgs.Empty);
-                    break;
-
-                case "ProfileListChanged":
-                    ProfileListChanged?.Invoke(this, EventArgs.Empty);
-                    break;
-
-                case "StreamStarting":
-                    StreamingStateChanged?.Invoke(this, OutputState.Starting);
-                    break;
-
-                case "StreamStarted":
-                    StreamingStateChanged?.Invoke(this, OutputState.Started);
-                    break;
-
-                case "StreamStopping":
-                    StreamingStateChanged?.Invoke(this, OutputState.Stopping);
-                    break;
-
-                case "StreamStopped":
-                    StreamingStateChanged?.Invoke(this, OutputState.Stopped);
-                    break;
-
-                case "RecordingStarting":
-                    RecordingStateChanged?.Invoke(this, OutputState.Starting);
-                    break;
-
-                case "RecordingStarted":
-                    RecordingStateChanged?.Invoke(this, OutputState.Started);
-                    break;
-
-                case "RecordingStopping":
-                    RecordingStateChanged?.Invoke(this, OutputState.Stopping);
-                    break;
-
-                case "RecordingStopped":
-                    RecordingStateChanged?.Invoke(this, OutputState.Stopped);
-                    break;
-
-                case "RecordingPaused":
-                    RecordingStateChanged?.Invoke(this, OutputState.Paused);
-                    break;
-
-                case "RecordingResumed":
-                    RecordingStateChanged?.Invoke(this, OutputState.Resumed);
-                    break;
-
-                case "StreamStatus":
-                    if (StreamStatus != null)
-                    {
-                        status = new StreamStatus(body);
-                        StreamStatus(this, status);
-                    }
-                    break;
-
-                case "PreviewSceneChanged":
-                    PreviewSceneChanged?.Invoke(this, (string)body["scene-name"]);
-                    break;
-
-                case "StudioModeSwitched":
-                    StudioModeSwitched?.Invoke(this, (bool)body["new-state"]);
-                    break;
-
-                case "ReplayStarting":
-                    ReplayBufferStateChanged?.Invoke(this, OutputState.Starting);
-                    break;
-
-                case "ReplayStarted":
-                    ReplayBufferStateChanged?.Invoke(this, OutputState.Started);
-                    break;
-
-                case "ReplayStopping":
-                    ReplayBufferStateChanged?.Invoke(this, OutputState.Stopping);
-                    break;
-
-                case "ReplayStopped":
-                    ReplayBufferStateChanged?.Invoke(this, OutputState.Stopped);
-                    break;
-
-                case "Exiting":
-                    OBSExit?.Invoke(this, EventArgs.Empty);
-                    break;
-
-                case "Heartbeat":
-                    Heartbeat?.Invoke(this, new Heartbeat(body));
-                    break;
-                case "SceneItemDeselected":
-                    SceneItemDeselected?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
-                    break;
-                case "SceneItemSelected":
-                    SceneItemSelected?.Invoke(this, (string)body["scene-name"], (string)body["item-name"], (string)body["item-id"]);
-                    break;
-                case "SceneItemTransformChanged":
-                    SceneItemTransformChanged?.Invoke(this, new SceneItemTransformInfo(body));
-                    break;
-                case "SourceAudioMixersChanged":
-                    SourceAudioMixersChanged?.Invoke(this, new AudioMixersChangedInfo(body));
-                    break;
-                case "SourceAudioSyncOffsetChanged":
-                    SourceAudioSyncOffsetChanged?.Invoke(this, (string)body["sourceName"], (int)body["syncOffset"]);
-                    break;
-                case "SourceCreated":
-                    SourceCreated?.Invoke(this, new SourceSettings(body));
-                    break;
-                case "SourceDestroyed":
-                    SourceDestroyed?.Invoke(this, (string)body["sourceName"], (string)body["sourceType"], (string)body["sourceKind"]);
-                    break;
-                case "SourceRenamed":
-                    SourceRenamed?.Invoke(this, (string)body["newName"], (string)body["previousName"]);
-                    break;
-
-                case "SourceMuteStateChanged":
-                    SourceMuteStateChanged?.Invoke(this, (string)body["sourceName"], (bool)body["muted"]);
-                    break;
-                case "SourceVolumeChanged":
-                    SourceVolumeChanged?.Invoke(this, (string)body["sourceName"], (float)body["volume"]);
-                    break;
-                case "SourceFilterAdded":
-                    SourceFilterAdded?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (string)body["filterType"], (JObject)body["filterSettings"]);
-                    break;
-                case "SourceFilterRemoved":
-                    SourceFilterRemoved?.Invoke(this, (string)body["sourceName"], (string)body["filterName"]);
-                    break;
-                case "SourceFiltersReordered":
-                    List<FilterReorderItem> filters = new List<FilterReorderItem>();
-                    JsonConvert.PopulateObject(body["filters"].ToString(), filters);
-
-                    SourceFiltersReordered?.Invoke(this, (string)body["sourceName"], filters);
-                    break;
-                case "SourceFilterVisibilityChanged":
-                    SourceFilterVisibilityChanged?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);
-                    break;
-                case "BroadcastCustomMessage":
-                    BroadcastCustomMessageReceived?.Invoke(this, (string)body["realm"], (JObject)body["data"]);
-                    break;
-                default:
-                        var message = $"Unsupported Event: {eventType}\n{body}";
-                        Console.WriteLine(message);
-                        Debug.WriteLine(message);
-                        break;
-
                 }
             }
 #pragma warning disable CA1031 // Do not catch general exception types

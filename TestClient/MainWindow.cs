@@ -592,5 +592,18 @@ namespace TestClient
             advanced.SetOBS(_obs);
             advanced.ShowDialog();
         }
+
+        private async void btnGetStats_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OBSStats stats = await _obs.GetStats();
+                MessageBox.Show($"RenderTotalFrames: {stats.RenderTotalFrames}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error getting stats: {ex.Message}");
+            }
+        }
     }
 }
