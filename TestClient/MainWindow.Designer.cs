@@ -58,6 +58,7 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.btnGetStats = new System.Windows.Forms.Button();
             this.btnAdvanced = new System.Windows.Forms.Button();
             this.btnToggleConsole = new System.Windows.Forms.Button();
@@ -117,7 +118,6 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -172,6 +172,7 @@ namespace TestClient
             this.tvScenes.Size = new System.Drawing.Size(138, 118);
             this.tvScenes.TabIndex = 4;
             this.tvScenes.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvScenes_NodeMouseClick);
+            this.tvScenes.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvScenes_NodeMouseDoubleClick);
             // 
             // groupBox1
             // 
@@ -275,6 +276,17 @@ namespace TestClient
             this.gbControls.Size = new System.Drawing.Size(871, 515);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(325, 235);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 17;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnGetStats
             // 
@@ -978,17 +990,6 @@ namespace TestClient
             this.label5.TabIndex = 2;
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(325, 235);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainWindow
             // 

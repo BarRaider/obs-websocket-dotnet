@@ -667,5 +667,22 @@ namespace TestClient
                 MessageBox.Show($"Error getting stats: {ex.Message}");
             }
         }
+
+        private async void tvScenes_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+
+            if (e.Node.Level == 1)
+            {
+                string sourceName = e.Node.Text;
+                try
+                {
+                    var settings = await _obs.GetSourceSettings(sourceName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error getting source settings for '{sourceName}': {ex.Message}");
+                }
+            }
+        }
     }
 }
