@@ -3,10 +3,10 @@
     <TargetFramework>net46</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Version>4.8.0-Beta1</Version>
+    <Version>4.8.0</Version>
     <Copyright>Copyright © Stéphane Lepin 2020</Copyright>
-    <AssemblyVersion>4.8.0.1</AssemblyVersion>
-    <FileVersion>4.8.0.1</FileVersion>
+    <AssemblyVersion>4.8.0.2</AssemblyVersion>
+    <FileVersion>4.8.0.2</FileVersion>
     <Authors />
     <Company />
   </PropertyGroup>
