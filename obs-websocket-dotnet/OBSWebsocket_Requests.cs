@@ -1266,11 +1266,11 @@ namespace OBSWebsocketDotNet
         /// <param name="save">Save to disk</param>
         public void SetStreamingSettings(StreamingService service, bool save)
         {
-            var jsonSettings = JsonConvert.SerializeObject(service.Settings);
+            var jtokenSettings = JToken.FromObject(service.Settings);
 
             var requestFields = new JObject();
             requestFields.Add("type", service.Type);
-            requestFields.Add("settings", jsonSettings);
+            requestFields.Add("settings", jtokenSettings);
             requestFields.Add("save", save);
             SendRequest("SetStreamSettings", requestFields);
         }
