@@ -101,16 +101,6 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// At least embedPictureFormat or saveToFilePath must be specified.
-        /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
-        /// </summary>
-        /// <param name="sourceName"></param>
-        public SourceScreenshotResponse TakeSourceScreenshot(string sourceName)
-        {
-            return TakeSourceScreenshot(sourceName, null, null);
-        }
-
-        /// <summary>
         /// Get the current scene info along with its items
         /// </summary>
         /// <returns>An <see cref="OBSScene"/> object describing the current scene</returns>
