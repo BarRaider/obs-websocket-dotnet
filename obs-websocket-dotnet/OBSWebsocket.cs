@@ -281,7 +281,7 @@ namespace OBSWebsocketDotNet
                     WSConnection.WaitTime = _pWSTimeout;
             }
         }
-        private TimeSpan _pWSTimeout;
+        private TimeSpan _pWSTimeout = TimeSpan.FromSeconds(10);
 
         // Random should never be created inside a function
         private static Random random = new Random();
