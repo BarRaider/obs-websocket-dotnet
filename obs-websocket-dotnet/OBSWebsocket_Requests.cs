@@ -499,12 +499,23 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the current status of the streaming and recording outputs
         /// </summary>
-        /// <returns>An <see cref="OutputStatus"/> object describing the current outputs states</returns>
-        public OutputStatus GetStreamingStatus()
+        /// <returns>An <see cref="StreamingStatus"/> object describing the current outputs states</returns>
+        public StreamingStatus GetStreamingStatus()
         {
             JObject response = SendRequest("GetStreamingStatus");
-            var outputStatus = new OutputStatus(response);
-            return outputStatus;
+            var streamingStatus = new StreamingStatus(response);
+            return streamingStatus;
+        }
+
+        /// <summary>
+        /// Get the current status of the recording
+        /// </summary>
+        /// <returns>An <see cref="RecordingStatus"/> object describing the current outputs states</returns>
+        public RecordingStatus GetRecordingStatus()
+        {
+            JObject response = SendRequest("GetRecordingStatus");
+            var recordingStatus = new RecordingStatus(response);
+            return recordingStatus;
         }
 
         /// <summary>

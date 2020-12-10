@@ -145,16 +145,39 @@ namespace OBSWebsocketDotNet.Tests
         }
 
         [TestMethod]
-        public void OBSOutputStatus_BuildFromJSON()
+        public void OBSStreamingStatus_BuildFromJSON()
         {
+            string streamingTimecode = "TestStr";
+
             var data = new JObject();
             data.Add("streaming", true);
             data.Add("recording", true);
+            data.Add("stream-timecode", streamingTimecode);
 
-            var outputState = new OutputStatus(data);
+            var streamingStatus = new StreamingStatus(data);
 
-            Assert.IsTrue(outputState.IsStreaming);
-            Assert.IsTrue(outputState.IsRecording);
+            Assert.IsTrue(streamingStatus.IsStreaming);
+            Assert.IsTrue(streamingStatus.IsRecording);
+            Assert.AreEqual(streamingStatus.StreamingTimecode, streamingTimecode);
+            Assert.IsNull(streamingStatus.RecordingTimecode);
+        }
+
+        [TestMethod]
+        public void OBSRecordingStatus_BuildFromJSON()
+        {
+            string recordingTimecode = "TestStr";
+
+            var data = new JObject();
+            data.Add("isRecording", true);
+            data.Add("isRecordingPaused", true);
+            data.Add("recordTimecode", recordingTimecode);
+
+            var recordingStatus = new RecordingStatus(data);
+
+            Assert.IsTrue(recordingStatus.IsRecording);
+            Assert.IsTrue(recordingStatus.IsRecordingPaused);
+            Assert.AreEqual(recordingStatus.RecordingTimecode, recordingTimecode);
+            Assert.IsNull(recordingStatus.RecordingFilename);
         }
 
         [TestMethod]
