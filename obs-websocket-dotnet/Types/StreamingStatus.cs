@@ -21,6 +21,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// True if recording is started and running, false otherwise
         /// </summary>
+        [ObsoleteAttribute("Use GetRecordingStatus instead. recording will be obsoleted in websockets v5.0. See https://github.com/Palakis/obs-websocket/pull/549")]
         [JsonProperty(PropertyName = "recording")]
         public readonly bool IsRecording;
 
@@ -33,6 +34,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Time elapsed since recording started (only present if currently recording)
         /// </summary>
+        [ObsoleteAttribute("Use GetRecordingStatus instead. rec-timecode will be obsoleted in websockets v5.0. See https://github.com/Palakis/obs-websocket/pull/549")]
         [JsonProperty(PropertyName = "rec-timecode")]
         public readonly string RecordingTimecode;
 
