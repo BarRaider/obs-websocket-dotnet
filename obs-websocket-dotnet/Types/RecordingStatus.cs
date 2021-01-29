@@ -30,7 +30,7 @@ namespace OBSWebsocketDotNet.Types
         public string RecordTimeCode { set; get; }
 
         /// <summary>
-        /// Time elapsed since recording started (only present if currently recording)
+        /// Filename for the recording (only present if currently recording)
         /// </summary>
         [JsonProperty(PropertyName = "recordingFilename")]
         public string RecordingFilename { set; get; }
