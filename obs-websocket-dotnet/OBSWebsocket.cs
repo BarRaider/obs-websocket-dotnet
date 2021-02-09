@@ -142,16 +142,6 @@ namespace OBSWebsocketDotNet
         public event OutputStateCallback RecordingStateChanged;
 
         /// <summary>
-        /// Triggered when the recording output is paused
-        /// </summary>
-        public event EventHandler RecordingPaused;
-
-        /// <summary>
-        /// Triggered when the recording output is resumed
-        /// </summary>
-        public event EventHandler RecordingResumed;
-
-        /// <summary>
         /// Triggered when state of the replay buffer changes
         /// </summary>
         public event OutputStateCallback ReplayBufferStateChanged;
@@ -290,12 +280,12 @@ namespace OBSWebsocketDotNet
         public WebSocket WSConnection { get; private set; }
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
-        protected ConcurrentDictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
         protected TaskCompletionSource<bool> ConnectingTaskSource;
 
         public OBSWebsocket()
         {
-            _responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
+            responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
         }
 
         /// <summary>
@@ -307,7 +297,6 @@ namespace OBSWebsocketDotNet
             WSConnection = new WebSocket(url);
             SetEvents(WSConnection);
         }
-
 
         /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
@@ -348,6 +337,7 @@ namespace OBSWebsocketDotNet
                     throw;
                 }
             }
+
             Connected?.Invoke(this, null);
             return true;
         }
@@ -439,8 +429,8 @@ namespace OBSWebsocketDotNet
 
         protected void CancelAllHandlers(Exception exception = null)
         {
-            var unusedHandlers = _responseHandlers.ToArray();
-            _responseHandlers.Clear();
+            var unusedHandlers = responseHandlers.ToArray();
+            responseHandlers.Clear();
             foreach (var pair in unusedHandlers)
             {
                 if (exception != null)
@@ -477,7 +467,7 @@ namespace OBSWebsocketDotNet
                 // its associated message ID
                 string msgID = (string)body["message-id"];
 
-                if (_responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
+                if (responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
                 {
                     // Set the response body as Result and notify the request sender
                     handler.SetResult(body);
@@ -533,7 +523,7 @@ namespace OBSWebsocketDotNet
             {
                 // Generate a random message id
                 messageID = NewMessageID();
-                if (_responseHandlers.TryAdd(messageID, tcs))
+                if (responseHandlers.TryAdd(messageID, tcs))
                 {
                     body.Add("message-id", messageID);
                     break;
@@ -720,11 +710,11 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case "RecordingPaused":
-                    RecordingStateChanged?.Invoke(this, OutputState.Paused);
+                        RecordingStateChanged?.Invoke(this, OutputState.Paused);
                     break;
 
                 case "RecordingResumed":
-                    RecordingStateChanged?.Invoke(this, OutputState.Resumed);
+                        RecordingStateChanged?.Invoke(this, OutputState.Resumed);
                     break;
 
                 case "StreamStatus":
@@ -804,10 +794,13 @@ namespace OBSWebsocketDotNet
                     SourceFilterRemoved?.Invoke(this, (string)body["sourceName"], (string)body["filterName"]);
                     break;
                 case "SourceFiltersReordered":
-                    List<FilterReorderItem> filters = new List<FilterReorderItem>();
-                    JsonConvert.PopulateObject(body["filters"].ToString(), filters);
+                    if (SourceFiltersReordered != null)
+                    {
+                        List<FilterReorderItem> filters = new List<FilterReorderItem>();
+                        JsonConvert.PopulateObject(body["filters"].ToString(), filters);
 
-                    SourceFiltersReordered?.Invoke(this, (string)body["sourceName"], filters);
+                        SourceFiltersReordered?.Invoke(this, (string)body["sourceName"], filters);
+                    }
                     break;
                 case "SourceFilterVisibilityChanged":
                     SourceFilterVisibilityChanged?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);

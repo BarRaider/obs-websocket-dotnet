@@ -129,6 +129,7 @@ namespace OBSWebsocketDotNet
             {
                 { "sourceName", sourceName }
             };
+
             if (embedPictureFormat != null)
             {
                 requestFields.Add("embedPictureFormat", embedPictureFormat);
@@ -233,7 +234,9 @@ namespace OBSWebsocketDotNet
         {
             var requestFields = new JObject();
             if (sceneName != null)
+            {
                 requestFields.Add("scene", sceneName);
+            }
 
             var items = JObject.Parse(JsonConvert.SerializeObject(sceneItems));
             requestFields.Add("items", items);
@@ -326,7 +329,9 @@ namespace OBSWebsocketDotNet
             };
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             await SendRequest("SetSceneItemProperties", requestFields).ConfigureAwait(false);
         }
@@ -356,7 +361,9 @@ namespace OBSWebsocketDotNet
             };
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             return await SendRequest("GetSceneItemProperties", requestFields).ConfigureAwait(false);
         }
@@ -705,7 +712,9 @@ namespace OBSWebsocketDotNet
             };
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             await SendRequest("SetSceneItemPosition", requestFields).ConfigureAwait(false);
         }
@@ -729,7 +738,9 @@ namespace OBSWebsocketDotNet
             };
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             await SendRequest("SetSceneItemTransform", requestFields).ConfigureAwait(false);
         }
@@ -770,7 +781,9 @@ namespace OBSWebsocketDotNet
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(props, DefaultSerializerSettings));
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             await SendRequest("SetSceneItemProperties", requestFields).ConfigureAwait(false);
         }
@@ -934,6 +947,7 @@ namespace OBSWebsocketDotNet
             {
                 { "rec-folder", recFolder }
             };
+
             await SendRequest("SetRecordingFolder", requestFields).ConfigureAwait(false);
         }
 
@@ -1007,7 +1021,7 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Enable Studio Mode
+        /// Returns true if Studio Mode is enabled, false otherwise.
         /// </summary>
         public async Task<bool> GetStudioModeStatus()
         {
@@ -1057,6 +1071,7 @@ namespace OBSWebsocketDotNet
             {
                 { "scene-name", previewScene }
             };
+
             await SendRequest("SetPreviewScene", requestFields).ConfigureAwait(false);
         }
 
@@ -1168,6 +1183,7 @@ namespace OBSWebsocketDotNet
                 { "source", sourceName },
                 { "offset", syncOffset }
             };
+
             await SendRequest("SetSyncOffset", requestFields).ConfigureAwait(false);
         }
 
@@ -1182,6 +1198,7 @@ namespace OBSWebsocketDotNet
             {
                 { "source", sourceName }
             };
+
             var response = await SendRequest("GetSyncOffset", requestFields).ConfigureAwait(false);
             return (int)response["offset"];
         }
@@ -1190,20 +1207,25 @@ namespace OBSWebsocketDotNet
         /// Deletes a scene item
         /// </summary>
         /// <param name="sceneItem">Scene item, requires name or id of item</param>
-        /// /// <param name="sceneName">Scene name to delete item from (optional)</param>
+        /// <param name="sceneName">Scene name to delete item from (optional)</param>
         public async Task DeleteSceneItem(SceneItemStub sceneItem, string sceneName = null)
         {
             var requestFields = new JObject();
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
-            JObject minReqs = new JObject();
+            JObject minReqs = new JObject
+            {
+                { "id", sceneItem.ID }
+            };
+
             if (sceneItem.SourceName != null)
+            {
                 minReqs.Add("name", sceneItem.SourceName);
-
-            minReqs.Add("id", sceneItem.ID);
-
+            }
             requestFields.Add("item", minReqs);
 
             await SendRequest("DeleteSceneItem", requestFields).ConfigureAwait(false);
@@ -1219,13 +1241,14 @@ namespace OBSWebsocketDotNet
             var requestFields = new JObject();
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             JObject minReqs = new JObject
             {
                 { "id", sceneItemId }
             };
-
             requestFields.Add("item", minReqs);
 
             await SendRequest("DeleteSceneItem", requestFields).ConfigureAwait(false);
@@ -1240,16 +1263,19 @@ namespace OBSWebsocketDotNet
         public async Task SetSceneItemCrop(string sceneItemName,
             SceneItemCropInfo cropInfo, string sceneName = null)
         {
-            var requestFields = new JObject();
+            var requestFields = new JObject
+            {
+                { "item", sceneItemName },
+                { "top", cropInfo.Top },
+                { "bottom", cropInfo.Bottom },
+                { "left", cropInfo.Left },
+                { "right", cropInfo.Right }
+            };
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
-
-            requestFields.Add("item", sceneItemName);
-            requestFields.Add("top", cropInfo.Top);
-            requestFields.Add("bottom", cropInfo.Bottom);
-            requestFields.Add("left", cropInfo.Left);
-            requestFields.Add("right", cropInfo.Right);
+            }
 
             await SendRequest("SetSceneItemCrop", requestFields).ConfigureAwait(false);
         }
@@ -1279,7 +1305,9 @@ namespace OBSWebsocketDotNet
             };
 
             if (sceneName != null)
+            {
                 requestFields.Add("scene-name", sceneName);
+            }
 
             await SendRequest("ResetSceneItem", requestFields).ConfigureAwait(false);
         }
@@ -1328,10 +1356,10 @@ namespace OBSWebsocketDotNet
 
             JObject minReqs = new JObject();
             if (sceneItem.SourceName != null)
+            {
                 minReqs.Add("name", sceneItem.SourceName);
-
+            }
             minReqs.Add("id", sceneItem.ID);
-
             requestFields.Add("item", minReqs);
 
             await SendRequest("DuplicateSceneItem", requestFields).ConfigureAwait(false);
@@ -1355,7 +1383,6 @@ namespace OBSWebsocketDotNet
             {
                 { "id", sceneItemID }
             };
-
             requestFields.Add("item", minReqs);
 
             await SendRequest("DuplicateSceneItem", requestFields).ConfigureAwait(false);
@@ -1389,14 +1416,13 @@ namespace OBSWebsocketDotNet
         /// <param name="save">Save to disk</param>
         public async Task SetStreamingSettings(StreamingService service, bool save)
         {
-            var jsonSettings = JsonConvert.SerializeObject(service.Settings);
-
             var requestFields = new JObject
             {
                 { "type", service.Type },
-                { "settings", jsonSettings },
+                { "settings", JToken.FromObject(service.Settings) },
                 { "save", save }
             };
+
             await SendRequest("SetStreamSettings", requestFields).ConfigureAwait(false);
         }
 
@@ -1441,6 +1467,7 @@ namespace OBSWebsocketDotNet
             {
                 { "sourceName", sourceName }
             };
+
             if (sceneName != null)
             {
                 request.Add("scene-name", sourceName);
@@ -1507,7 +1534,6 @@ namespace OBSWebsocketDotNet
 
             JObject result = await SendRequest("GetSourceSettings", request).ConfigureAwait(false);
             SourceSettings settings = new SourceSettings(result);
-
             return settings;
         }
 
