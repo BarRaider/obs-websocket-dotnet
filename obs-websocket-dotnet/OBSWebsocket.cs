@@ -135,16 +135,6 @@ namespace OBSWebsocketDotNet
         public event OutputStateCallback RecordingStateChanged;
 
         /// <summary>
-        /// Triggered when the recording output is paused
-        /// </summary>
-        public event EventHandler RecordingPaused;
-
-        /// <summary>
-        /// Triggered when the recording output is resumed
-        /// </summary>
-        public event EventHandler RecordingResumed;
-
-        /// <summary>
         /// Triggered when state of the replay buffer changes
         /// </summary>
         public event OutputStateCallback ReplayBufferStateChanged;

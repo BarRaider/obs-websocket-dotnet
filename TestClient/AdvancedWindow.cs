@@ -48,8 +48,6 @@ namespace TestClient
             obs.TransitionBegin += OBS_TransitionBegin;
             obs.TransitionEnd += OBS_TransitionEnd;
             obs.TransitionVideoEnd += OBS_TransitionVideoEnd;
-            obs.RecordingPaused += OBS_RecordingPaused;
-            obs.RecordingResumed += OBS_RecordingResumed;
             obs.SourceFilterAdded += OBS_SourceFilterAdded;
             obs.SourceFilterRemoved += OBS_SourceFilterRemoved;
             obs.SourceFilterVisibilityChanged += OBS_SourceFilterVisibilityChanged;
@@ -102,16 +100,6 @@ namespace TestClient
         private void OBS_SourceFilterAdded(OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject filterSettings)
         {
             LogMessage($"[SourceFilterAdded] Source: {sourceName} Filter: {filterName} FilterType: {filterType}{Environment.NewLine}\tSettings: {filterSettings}");
-        }
-
-        private void OBS_RecordingResumed(object sender, EventArgs e)
-        {
-            LogMessage($"[RecordingResumed]");
-        }
-
-        private void OBS_RecordingPaused(object sender, EventArgs e)
-        {
-            LogMessage($"[RecordingPaused]");
         }
 
         private void OBS_TransitionVideoEnd(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene)
@@ -169,12 +157,12 @@ namespace TestClient
             obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
         }
 
-        private void btnSourceFilters_Click(object sender, EventArgs e)
+        private async void btnSourceFilters_Click(object sender, EventArgs e)
         {
             try
             {
                 LogMessage("GetSourceFilters:");
-                var filters = obs.GetSourceFilters(SOURCE_NAME);
+                var filters = await obs.GetSourceFilters(SOURCE_NAME).ConfigureAwait(false);
 
                 foreach (var filter in filters)
                 {
@@ -189,7 +177,7 @@ namespace TestClient
                 }
 
                 LogMessage("GetSourceFilterInfo:");
-                LogFilter(obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
+                LogFilter(await obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
             }
             catch (Exception ex)
             {
@@ -219,10 +207,10 @@ namespace TestClient
             */
         }
 
-        private void btnOutputs_Click(object sender, EventArgs e)
+        private async void btnOutputs_Click(object sender, EventArgs e)
         {
             LogMessage("Testing ListOutputs:");
-            var outputs = obs.ListOutputs();
+            var outputs = await obs.ListOutputs();
             foreach (var output in outputs)
             {
                 LogOutput(output);
