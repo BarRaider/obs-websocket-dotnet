@@ -11,7 +11,7 @@ namespace OBSWebsocketDotNet.Types
         /// The point on the scene item that the item is manipulated from
         /// </summary>
         [JsonProperty(PropertyName = "alignment")]
-        public int Alingnment { set; get; }
+        public int Alignment { set; get; }
 
         /// <summary>
         /// The x position of the scene item from the left
