@@ -57,21 +57,21 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List existing outputs
         /// </summary>
-        /// <returns>Array of <see cref="Output"/></returns>
-        public async Task<Output[]> ListOutputs()
+        /// <returns>Array of <see cref="OBSOutputInfo"/></returns>
+        public async Task<OBSOutputInfo[]> ListOutputs()
         {
             JObject response = await SendRequest("ListOutputs").ConfigureAwait(false);
             JObject[] jOutputs = response["outputs"]?.Children<JObject>().ToArray();
             int outputCount = jOutputs?.Length ?? 0;
             if (outputCount == 0)
-                return Array.Empty<Output>();
-            Output[] outputs = new Output[outputCount];
+                return Array.Empty<OBSOutputInfo>();
+            OBSOutputInfo[] outputs = new OBSOutputInfo[outputCount];
 
             for (int i = 0; i < outputCount; i++)
             {
                 try
                 {
-                    outputs[i] = Output.CreateOutput(jOutputs[i]);
+                    outputs[i] = OBSOutputInfo.CreateOutput(jOutputs[i]);
                 }
                 catch (Exception ex)
                 {
@@ -81,7 +81,7 @@ namespace OBSWebsocketDotNet
             return outputs;
         }
 
-        public async Task<Output> GetOutput(string outputName)
+        public async Task<OBSOutputInfo> GetOutput(string outputName)
         {
             var requestFields = new JObject
             {
@@ -89,7 +89,7 @@ namespace OBSWebsocketDotNet
             };
             JObject response = await SendRequest("GetOutputInfo", requestFields).ConfigureAwait(false);
 
-            return Output.CreateOutput(response["outputInfo"] as JObject);
+            return OBSOutputInfo.CreateOutput(response["outputInfo"] as JObject);
         }
 
         public Task StartOutput(string outputName)
