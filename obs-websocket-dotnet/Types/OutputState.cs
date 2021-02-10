@@ -6,6 +6,10 @@
     public enum OutputState
     {
         /// <summary>
+        /// OutputState could not be determined.
+        /// </summary>
+        Unknown,
+        /// <summary>
         /// The output is initializing and doesn't produces frames yet
         /// </summary>
         Starting,
@@ -23,6 +27,16 @@
         /// <summary>
         /// The output is completely stopped
         /// </summary>
-        Stopped
+        Stopped,
+
+        /// <summary>
+        /// The output is paused. Only used for recording.
+        /// </summary>
+        Paused,
+
+        /// <summary>
+        /// The output is resumed from pause. Only used for recording.
+        /// </summary>
+        Resumed
     }
 }

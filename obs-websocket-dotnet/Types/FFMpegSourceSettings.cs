@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OBSWebsocketDotNet
+namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
     /// 
@@ -57,7 +57,7 @@ namespace OBSWebsocketDotNet
         /// Local filename
         /// </summary>
         [JsonProperty(PropertyName = "local_file")]
-        public string LocalFile { get; set; }
+        public string? LocalFile { get; set; }
 
         /// <summary>
         /// Speed percentage

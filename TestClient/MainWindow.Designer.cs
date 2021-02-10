@@ -58,6 +58,19 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnGetStats = new System.Windows.Forms.Button();
+            this.btnAdvanced = new System.Windows.Forms.Button();
+            this.btnToggleConsole = new System.Windows.Forms.Button();
+            this.btnClearConsole = new System.Windows.Forms.Button();
+            this.tbConsole = new System.Windows.Forms.TextBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnStopOutput = new System.Windows.Forms.Button();
+            this.btnStartOutput = new System.Windows.Forms.Button();
+            this.btnGetOutput = new System.Windows.Forms.Button();
+            this.btnListOutputs = new System.Windows.Forms.Button();
+            this.tvOutputs = new System.Windows.Forms.TreeView();
+            this.tbOutput = new System.Windows.Forms.TextBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.btnSetTransitionDuration = new System.Windows.Forms.Button();
             this.btnGetTransitionDuration = new System.Windows.Forms.Button();
@@ -105,9 +118,9 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnAdvanced = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).BeginInit();
             this.groupBox6.SuspendLayout();
@@ -123,7 +136,7 @@ namespace TestClient
             // btnConnect
             // 
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnect.Location = new System.Drawing.Point(511, 5);
+            this.btnConnect.Location = new System.Drawing.Point(808, 5);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(75, 23);
             this.btnConnect.TabIndex = 1;
@@ -134,7 +147,7 @@ namespace TestClient
             // txtServerIP
             // 
             this.txtServerIP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtServerIP.Location = new System.Drawing.Point(203, 7);
+            this.txtServerIP.Location = new System.Drawing.Point(500, 7);
             this.txtServerIP.Name = "txtServerIP";
             this.txtServerIP.Size = new System.Drawing.Size(114, 20);
             this.txtServerIP.TabIndex = 2;
@@ -143,7 +156,7 @@ namespace TestClient
             // txtServerPassword
             // 
             this.txtServerPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtServerPassword.Location = new System.Drawing.Point(391, 7);
+            this.txtServerPassword.Location = new System.Drawing.Point(688, 7);
             this.txtServerPassword.Name = "txtServerPassword";
             this.txtServerPassword.Size = new System.Drawing.Size(114, 20);
             this.txtServerPassword.TabIndex = 3;
@@ -159,6 +172,7 @@ namespace TestClient
             this.tvScenes.Size = new System.Drawing.Size(138, 118);
             this.tvScenes.TabIndex = 4;
             this.tvScenes.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvScenes_NodeMouseClick);
+            this.tvScenes.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvScenes_NodeMouseDoubleClick);
             // 
             // groupBox1
             // 
@@ -219,7 +233,7 @@ namespace TestClient
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(144, 10);
+            this.label1.Location = new System.Drawing.Point(441, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 7;
@@ -230,7 +244,7 @@ namespace TestClient
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(330, 10);
+            this.label2.Location = new System.Drawing.Point(627, 10);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 13);
             this.label2.TabIndex = 8;
@@ -241,7 +255,13 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbControls.Controls.Add(this.button1);
+            this.gbControls.Controls.Add(this.btnGetStats);
             this.gbControls.Controls.Add(this.btnAdvanced);
+            this.gbControls.Controls.Add(this.btnToggleConsole);
+            this.gbControls.Controls.Add(this.btnClearConsole);
+            this.gbControls.Controls.Add(this.tbConsole);
+            this.gbControls.Controls.Add(this.groupBox8);
             this.gbControls.Controls.Add(this.groupBox7);
             this.gbControls.Controls.Add(this.groupBox6);
             this.gbControls.Controls.Add(this.gbStatus);
@@ -253,16 +273,163 @@ namespace TestClient
             this.gbControls.Enabled = false;
             this.gbControls.Location = new System.Drawing.Point(12, 34);
             this.gbControls.Name = "gbControls";
-            this.gbControls.Size = new System.Drawing.Size(574, 515);
+            this.gbControls.Size = new System.Drawing.Size(871, 515);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(325, 235);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 17;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnGetStats
+            // 
+            this.btnGetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetStats.Location = new System.Drawing.Point(695, 486);
+            this.btnGetStats.Name = "btnGetStats";
+            this.btnGetStats.Size = new System.Drawing.Size(75, 23);
+            this.btnGetStats.TabIndex = 16;
+            this.btnGetStats.Text = "Get Stats";
+            this.btnGetStats.UseVisualStyleBackColor = true;
+            this.btnGetStats.Click += new System.EventHandler(this.btnGetStats_Click);
+            // 
+            // btnAdvanced
+            // 
+            this.btnAdvanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdvanced.Location = new System.Drawing.Point(796, 486);
+            this.btnAdvanced.Name = "btnAdvanced";
+            this.btnAdvanced.Size = new System.Drawing.Size(75, 23);
+            this.btnAdvanced.TabIndex = 13;
+            this.btnAdvanced.Text = "Advanced";
+            this.btnAdvanced.UseVisualStyleBackColor = true;
+            this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
+            // 
+            // btnToggleConsole
+            // 
+            this.btnToggleConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnToggleConsole.Location = new System.Drawing.Point(244, 235);
+            this.btnToggleConsole.Name = "btnToggleConsole";
+            this.btnToggleConsole.Size = new System.Drawing.Size(75, 23);
+            this.btnToggleConsole.TabIndex = 15;
+            this.btnToggleConsole.Text = "Stop";
+            this.btnToggleConsole.UseVisualStyleBackColor = true;
+            this.btnToggleConsole.Click += new System.EventHandler(this.btnToggleConsole_Click);
+            // 
+            // btnClearConsole
+            // 
+            this.btnClearConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnClearConsole.Location = new System.Drawing.Point(163, 235);
+            this.btnClearConsole.Name = "btnClearConsole";
+            this.btnClearConsole.Size = new System.Drawing.Size(75, 23);
+            this.btnClearConsole.TabIndex = 14;
+            this.btnClearConsole.Text = "Clear";
+            this.btnClearConsole.UseVisualStyleBackColor = true;
+            this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
+            // 
+            // tbConsole
+            // 
+            this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbConsole.Location = new System.Drawing.Point(163, 12);
+            this.tbConsole.Multiline = true;
+            this.tbConsole.Name = "tbConsole";
+            this.tbConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbConsole.Size = new System.Drawing.Size(467, 216);
+            this.tbConsole.TabIndex = 13;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox8.Controls.Add(this.btnStopOutput);
+            this.groupBox8.Controls.Add(this.btnStartOutput);
+            this.groupBox8.Controls.Add(this.btnGetOutput);
+            this.groupBox8.Controls.Add(this.btnListOutputs);
+            this.groupBox8.Controls.Add(this.tvOutputs);
+            this.groupBox8.Controls.Add(this.tbOutput);
+            this.groupBox8.Location = new System.Drawing.Point(374, 272);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(150, 243);
+            this.groupBox8.TabIndex = 6;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Outputs";
+            // 
+            // btnStopOutput
+            // 
+            this.btnStopOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStopOutput.Location = new System.Drawing.Point(78, 202);
+            this.btnStopOutput.Name = "btnStopOutput";
+            this.btnStopOutput.Size = new System.Drawing.Size(66, 35);
+            this.btnStopOutput.TabIndex = 6;
+            this.btnStopOutput.Text = "Stop Output";
+            this.btnStopOutput.UseVisualStyleBackColor = true;
+            this.btnStopOutput.Click += new System.EventHandler(this.btnStopOutput_Click);
+            // 
+            // btnStartOutput
+            // 
+            this.btnStartOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartOutput.Location = new System.Drawing.Point(78, 155);
+            this.btnStartOutput.Name = "btnStartOutput";
+            this.btnStartOutput.Size = new System.Drawing.Size(66, 35);
+            this.btnStartOutput.TabIndex = 1;
+            this.btnStartOutput.Text = "Start Output";
+            this.btnStartOutput.UseVisualStyleBackColor = true;
+            this.btnStartOutput.Click += new System.EventHandler(this.btnStartOutput_Click);
+            // 
+            // btnGetOutput
+            // 
+            this.btnGetOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnGetOutput.Location = new System.Drawing.Point(10, 173);
+            this.btnGetOutput.Name = "btnGetOutput";
+            this.btnGetOutput.Size = new System.Drawing.Size(62, 38);
+            this.btnGetOutput.TabIndex = 2;
+            this.btnGetOutput.Text = "Get Output";
+            this.btnGetOutput.UseVisualStyleBackColor = true;
+            this.btnGetOutput.Click += new System.EventHandler(this.btnGetOutput_Click);
+            // 
+            // btnListOutputs
+            // 
+            this.btnListOutputs.Location = new System.Drawing.Point(7, 20);
+            this.btnListOutputs.Name = "btnListOutputs";
+            this.btnListOutputs.Size = new System.Drawing.Size(75, 23);
+            this.btnListOutputs.TabIndex = 5;
+            this.btnListOutputs.Text = "List Outputs";
+            this.btnListOutputs.UseVisualStyleBackColor = true;
+            this.btnListOutputs.Click += new System.EventHandler(this.btnListOutputs_Click);
+            // 
+            // tvOutputs
+            // 
+            this.tvOutputs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvOutputs.Location = new System.Drawing.Point(6, 49);
+            this.tvOutputs.Name = "tvOutputs";
+            this.tvOutputs.Size = new System.Drawing.Size(138, 74);
+            this.tvOutputs.TabIndex = 4;
+            this.tvOutputs.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvOutputs_NodeMouseClick);
+            // 
+            // tbOutput
+            // 
+            this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbOutput.Location = new System.Drawing.Point(6, 129);
+            this.tbOutput.Name = "tbOutput";
+            this.tbOutput.Size = new System.Drawing.Size(138, 20);
+            this.tbOutput.TabIndex = 0;
+            // 
             // groupBox7
             // 
+            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox7.Controls.Add(this.btnSetTransitionDuration);
             this.groupBox7.Controls.Add(this.btnGetTransitionDuration);
             this.groupBox7.Controls.Add(this.tbTransitionDuration);
-            this.groupBox7.Location = new System.Drawing.Point(430, 375);
+            this.groupBox7.Location = new System.Drawing.Point(727, 375);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(138, 79);
             this.groupBox7.TabIndex = 12;
@@ -311,12 +478,13 @@ namespace TestClient
             // 
             // groupBox6
             // 
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox6.Controls.Add(this.btnSetCurrentTransition);
             this.groupBox6.Controls.Add(this.btnGetCurrentTransition);
             this.groupBox6.Controls.Add(this.tbTransition);
             this.groupBox6.Controls.Add(this.btnListTransitions);
             this.groupBox6.Controls.Add(this.tvTransitions);
-            this.groupBox6.Location = new System.Drawing.Point(176, 261);
+            this.groupBox6.Location = new System.Drawing.Point(176, 272);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(192, 243);
             this.groupBox6.TabIndex = 10;
@@ -380,7 +548,7 @@ namespace TestClient
             this.gbStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gbStatus.Controls.Add(this.tableLayoutPanel2);
             this.gbStatus.Enabled = false;
-            this.gbStatus.Location = new System.Drawing.Point(339, 12);
+            this.gbStatus.Location = new System.Drawing.Point(636, 12);
             this.gbStatus.Name = "gbStatus";
             this.gbStatus.Size = new System.Drawing.Size(229, 175);
             this.gbStatus.TabIndex = 11;
@@ -582,7 +750,7 @@ namespace TestClient
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.btnToggleRecording);
             this.groupBox5.Controls.Add(this.btnToggleStreaming);
-            this.groupBox5.Location = new System.Drawing.Point(423, 287);
+            this.groupBox5.Location = new System.Drawing.Point(720, 287);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(145, 82);
             this.groupBox5.TabIndex = 10;
@@ -615,12 +783,13 @@ namespace TestClient
             // 
             // groupBox4
             // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox4.Controls.Add(this.btnSetCurrentProfile);
             this.groupBox4.Controls.Add(this.btnGetCurrentProfile);
             this.groupBox4.Controls.Add(this.tbProfile);
             this.groupBox4.Controls.Add(this.btnListProfiles);
             this.groupBox4.Controls.Add(this.tvProfiles);
-            this.groupBox4.Location = new System.Drawing.Point(6, 261);
+            this.groupBox4.Location = new System.Drawing.Point(6, 272);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(164, 243);
             this.groupBox4.TabIndex = 9;
@@ -681,12 +850,13 @@ namespace TestClient
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox2.Controls.Add(this.btnSetCurrentSceneCol);
             this.groupBox2.Controls.Add(this.btnGetCurrentSceneCol);
             this.groupBox2.Controls.Add(this.tbSceneCol);
             this.groupBox2.Controls.Add(this.btnListSceneCol);
             this.groupBox2.Controls.Add(this.tvSceneCols);
-            this.groupBox2.Location = new System.Drawing.Point(162, 12);
+            this.groupBox2.Location = new System.Drawing.Point(530, 272);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(159, 243);
             this.groupBox2.TabIndex = 8;
@@ -749,7 +919,7 @@ namespace TestClient
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.tableLayoutPanel1);
-            this.groupBox3.Location = new System.Drawing.Point(402, 193);
+            this.groupBox3.Location = new System.Drawing.Point(699, 193);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(166, 88);
             this.groupBox3.TabIndex = 7;
@@ -821,21 +991,11 @@ namespace TestClient
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // btnAdvanced
-            // 
-            this.btnAdvanced.Location = new System.Drawing.Point(492, 486);
-            this.btnAdvanced.Name = "btnAdvanced";
-            this.btnAdvanced.Size = new System.Drawing.Size(75, 23);
-            this.btnAdvanced.TabIndex = 13;
-            this.btnAdvanced.Text = "Advanced";
-            this.btnAdvanced.UseVisualStyleBackColor = true;
-            this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 561);
+            this.ClientSize = new System.Drawing.Size(895, 561);
             this.Controls.Add(this.gbControls);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -847,6 +1007,9 @@ namespace TestClient
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbControls.ResumeLayout(false);
+            this.gbControls.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).EndInit();
             this.groupBox6.ResumeLayout(false);
@@ -928,6 +1091,18 @@ namespace TestClient
         private System.Windows.Forms.Button btnGetTransitionDuration;
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
         private System.Windows.Forms.Button btnAdvanced;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button btnStartOutput;
+        private System.Windows.Forms.Button btnGetOutput;
+        private System.Windows.Forms.Button btnListOutputs;
+        private System.Windows.Forms.TreeView tvOutputs;
+        private System.Windows.Forms.TextBox tbOutput;
+        private System.Windows.Forms.Button btnStopOutput;
+        private System.Windows.Forms.Button btnClearConsole;
+        private System.Windows.Forms.TextBox tbConsole;
+        private System.Windows.Forms.Button btnToggleConsole;
+        private System.Windows.Forms.Button btnGetStats;
+        private System.Windows.Forms.Button button1;
     }
 }
 

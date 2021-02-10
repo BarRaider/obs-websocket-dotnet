@@ -26,259 +26,140 @@ using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace OBSWebsocketDotNet
 {
-
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneChanged"/>
+    /// Struct containing info about requests made. Used for <see cref="OBSWebsocket.RequestSent"/>.
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newSceneName">Name of the new current scene</param>
-    public delegate void SceneChangeCallback(OBSWebsocket sender, string newSceneName);
-
+    public struct RequestData
+    {
+        /// <summary>
+        /// Request type
+        /// </summary>
+        public readonly string RequestType;
+        /// <summary>
+        /// Message ID
+        /// </summary>
+        public readonly string MessageId;
+        /// <summary>
+        /// Request body JSON.
+        /// </summary>
+        public readonly JObject? RequestBody;
+        /// <summary>
+        /// Creates a new <see cref="RequestData"/>.
+        /// </summary>
+        /// <param name="requestType"></param>
+        /// <param name="messageId"></param>
+        /// <param name="requestBody"></param>
+        public RequestData(string requestType, string messageId, JObject requestBody)
+        {
+            RequestType = requestType;
+            MessageId = messageId;
+            RequestBody = requestBody;
+        }
+    }
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.SourceOrderChanged"/>
+    /// Holds data about an error from the OBS connection. Used by <see cref="OBSWebsocket.OBSError"/>.
     /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene where items where reordered</param>
-    public delegate void SourceOrderChangeCallback(OBSWebsocket sender, string sceneName);
+    public class OBSErrorEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Additional information about the error.
+        /// </summary>
+        public readonly string? Message;
+        /// <summary>
+        /// Exception associated with the error, if any.
+        /// </summary>
+        public readonly Exception? Exception;
+        /// <summary>
+        /// JSON data associated with the error, if any.
+        /// </summary>
+        public readonly JToken? Data;
 
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemAdded"/>
-    /// or <see cref="OBSWebsocket.SceneItemRemoved"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene where the item is</param>
-    /// <param name="itemName">Name of the concerned item</param>
-    public delegate void SceneItemUpdateCallback(OBSWebsocket sender, string sceneName, string itemName);
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message, <see cref="System.Exception"/>, and <see cref="JToken"/> data.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="exception"></param>
+        /// <param name="data"></param>
+        public OBSErrorEventArgs(string? message, Exception? exception, JToken? data)
+        {
+            Message = message;
+            Exception = exception;
+            Data = data;
+        }
 
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemVisibilityChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene where the item is</param>
-    /// <param name="itemName">Name of the concerned item</param>
-    /// <param name="isVisible">Visibility of the item</param>
-    public delegate void SceneItemVisibilityChangedCallback(OBSWebsocket sender, string sceneName, string itemName, bool isVisible);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemLockChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene where the item is</param>
-    /// <param name="itemName">Name of the concerned item</param>
-    /// <param name="itemId">Id of the concerned item</param>
-    /// <param name="isLocked">Lock status of the item</param>
-    public delegate void SceneItemLockChangedCallback(OBSWebsocket sender, string sceneName, string itemName, int itemId, bool isLocked);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.TransitionChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newTransitionName">Name of the new selected transition</param>
-    public delegate void TransitionChangeCallback(OBSWebsocket sender, string newTransitionName);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.TransitionDurationChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newDuration">Name of the new transition duration (in milliseconds)</param>
-    public delegate void TransitionDurationChangeCallback(OBSWebsocket sender, int newDuration);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.TransitionBegin"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionName">Transition name</param>
-    /// <param name="transitionType">Transition type</param>
-    /// <param name="duration">Transition duration (in milliseconds). Will be -1 for any transition with a fixed duration, such as a Stinger, due to limitations of the OBS API</param>
-    /// <param name="fromScene">Source scene of the transition</param>
-    /// <param name="toScene">Destination scene of the transition</param>
-    public delegate void TransitionBeginCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.TransitionEnd"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionName">Transition name</param>
-    /// <param name="transitionType">Transition type</param>
-    /// <param name="duration">Transition duration (in milliseconds).</param>
-    /// <param name="toScene">Destination scene of the transition</param>
-    public delegate void TransitionEndCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string toScene);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.TransitionVideoEnd"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionName">Transition name</param>
-    /// <param name="transitionType">Transition type</param>
-    /// <param name="duration">Transition duration (in milliseconds).</param>
-    /// <param name="fromScene">Source scene of the transition</param>
-    /// <param name="toScene">Destination scene of the transition</param>
-    public delegate void TransitionVideoEndCallback(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.StreamingStateChanged"/>, <see cref="OBSWebsocket.RecordingStateChanged"/>
-    /// or <see cref="OBSWebsocket.ReplayBufferStateChanged"/> 
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="type">New output state</param>
-    public delegate void OutputStateCallback(OBSWebsocket sender, OutputState type);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.StreamStatus"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="status">Stream status data</param>
-    public delegate void StreamStatusCallback(OBSWebsocket sender, StreamStatus status);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.StudioModeSwitched"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="enabled">New Studio Mode status</param>
-    public delegate void StudioModeChangeCallback(OBSWebsocket sender, bool enabled);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.Heartbeat"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="heatbeat">heartbeat data</param>
-    public delegate void HeartBeatCallback(OBSWebsocket sender, Heartbeat heatbeat);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneItemDeselected"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene item was in</param>
-    /// <param name="itemName">Name of the item deselected</param>
-    /// <param name="itemId">Id of the item deselected</param>
-    public delegate void SceneItemDeselectedCallback(OBSWebsocket sender, string sceneName, string itemName, string itemId);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneItemSelected"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene item was in</param>
-    /// <param name="itemName">Name of the item seletected</param>
-    /// <param name="itemId">Id of the item selected</param>
-    public delegate void SceneItemSelectedCallback(OBSWebsocket sender, string sceneName, string itemName, string itemId);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneItemTransformChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transform">Transform data</param>
-    public delegate void SceneItemTransformCallback(OBSWebsocket sender, SceneItemTransformInfo transform);
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with an <see cref="System.Exception"/>.
+        /// </summary>
+        /// <param name="exception"></param>
+        public OBSErrorEventArgs(Exception? exception)
+            : this(null, exception, null) { }
 
 
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceAudioMixersChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="mixerInfo">Mixer information that was updated</param>
-    public delegate void SourceAudioMixersChangedCallback(OBSWebsocket sender, AudioMixersChangedInfo mixerInfo);
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message.
+        /// </summary>
+        /// <param name="message"></param>
+        public OBSErrorEventArgs(string? message)
+            : this(message, null, null) { }
+
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message and <see cref="System.Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="exception"></param>
+        public OBSErrorEventArgs(string? message, Exception? exception)
+            : this(message, exception, null) { }
 
 
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with a message and <see cref="JToken"/> data.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="data"></param>
+        public OBSErrorEventArgs(string? message, JToken? data)
+            : this(message, null, data) { }
 
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceAudioSyncOffsetChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of the source for the offset change</param>
-    /// <param name="syncOffset">Sync offset value</param>
-    public delegate void SourceAudioSyncOffsetCallback(OBSWebsocket sender, string sourceName, int syncOffset);
 
+        /// <summary>
+        /// Creates a new <see cref="OBSErrorEventArgs"/> with an <see cref="System.Exception"/> and <see cref="JToken"/> data.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="data"></param>
+        public OBSErrorEventArgs(Exception? exception, JToken? data)
+            : this(null, exception, data) { }
 
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceCreated"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="settings">Newly created source settings</param>
-    public delegate void SourceCreatedCallback(OBSWebsocket sender, SourceSettings settings);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceDestroyed"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Newly destroyed source information</param>
-    /// <param name="sourceKind">Kind of source destroyed</param>
-    /// <param name="sourceType">Type of source destroyed</param>
-    public delegate void SourceDestroyedCallback(OBSWebsocket sender, string sourceName, string sourceType, string sourceKind);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceRenamed"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newName">New name of source</param>
-    /// <param name="previousName">Previous name of source</param>
-    public delegate void SourceRenamedCallback(OBSWebsocket sender, string newName, string previousName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceMuteStateChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="muted">Current mute state of source</param>
-    public delegate void SourceMuteStateChangedCallback(OBSWebsocket sender, string sourceName, bool muted);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceVolumeChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="volume">Current volume level of source</param>
-    public delegate void SourceVolumeChangedCallback(OBSWebsocket sender, string sourceName, float volume);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterRemoved"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="filterName">Name of removed filter</param>
-    public delegate void SourceFilterRemovedCallback(OBSWebsocket sender, string sourceName, string filterName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterAdded"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="filterName">Name of filter</param>
-    /// <param name="filterType">Type of filter</param>
-    /// <param name="filterSettings">Settings for filter</param>
-    public delegate void SourceFilterAddedCallback(OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject filterSettings);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFiltersReordered"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="filters">Current order of filters for source</param>
-    public delegate void SourceFiltersReorderedCallback(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterVisibilityChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of source</param>
-    /// <param name="filterName">Name of filter</param>
-    /// <param name="filterEnabled">New filter state</param>
-    public delegate void SourceFilterVisibilityChangedCallback(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.BroadcastCustomMessageReceived"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="realm">Identifier provided by the sender</param>
-    /// <param name="data">User-defined data</param>
-    public delegate void BroadcastCustomMessageCallback(OBSWebsocket sender, string realm, JObject data);
+    }
 
     /// <summary>
     /// Thrown if authentication fails
     /// </summary>
     public class AuthFailureException : Exception
     {
+        /// <summary>
+        /// Creates an empty <see cref="AuthFailureException"/>.
+        /// </summary>
+        public AuthFailureException()
+        {
+        }
+        /// <summary>
+        /// Creates an <see cref="AuthFailureException"/> with a message.
+        /// </summary>
+        /// <param name="message"></param>
+        public AuthFailureException(string message) : base(message)
+        {
+        }
+        /// <summary>
+        /// Creates an <see cref="AuthFailureException"/> with a message and inner <see cref="System.Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
+        public AuthFailureException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 
     /// <summary>
@@ -287,11 +168,117 @@ namespace OBSWebsocketDotNet
     public class ErrorResponseException : Exception
     {
         /// <summary>
+        /// Response JSON.
+        /// </summary>
+        public readonly JToken? Response;
+        private ErrorResponseException()
+            : base() { }
+
+        /// <summary>
+        /// Returns a standard <see cref="ErrorResponseException"/> for a response missing a required property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ErrorResponseException FromMissingProperty(string propertyName, JObject response)
+        {
+            return new ErrorResponseException($"Response missing '{propertyName}' property.", response);
+        }
+
+        /// <summary>
+        /// Returns a standard <see cref="ErrorResponseException"/> for a null response object.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ErrorResponseException FromNullResponseObject<T>(JObject? response)
+        {
+            return new ErrorResponseException($"'{typeof(T).Name}' could not be constructed from the response.", response);
+        }
+
+        /// <summary>
+        /// Returns a standard <see cref="ErrorResponseException"/> for a null response object created from a property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ErrorResponseException FromNullResponseProperty<T>(string propertyName, JObject? response)
+        {
+            return new ErrorResponseException($"'{typeof(T).Name}' could not be constructed from the response's property '{propertyName}'.", response);
+        }
+
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="message"></param>
-        public ErrorResponseException(string message) : base(message)
+        public ErrorResponseException(string message)
+            : base(message) { }
+
+        /// <summary>
+        /// Creates a new <see cref="ErrorResponseException"/> with a message and the response JSON.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="response"></param>
+        public ErrorResponseException(string message, JToken? response)
+            : base(message)
         {
+            Response = response;
+        }
+        /// <summary>
+        /// Creates a new <see cref="ErrorResponseException"/> with a message, response JSON, and inner <see cref="Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="response"></param>
+        /// <param name="innerException"></param>
+        public ErrorResponseException(string message, JToken? response, Exception innerException)
+            : base(message, innerException)
+        {
+            Response = response;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ErrorResponseException"/> with a message and inner <see cref="Exception"/>.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
+        public ErrorResponseException(string message, Exception innerException)
+            : base(message, innerException) 
+        { 
+            
+        }
+    }
+
+    /// <summary>
+    /// An <see cref="ErrorResponseException"/> for WebSocket errors.
+    /// </summary>
+    public class SocketErrorResponseException : ErrorResponseException
+    {
+        /// <summary>
+        /// WebSocket error code.
+        /// </summary>
+        public SocketError SocketErrorCode { get; }
+        /// <summary>
+        /// WebSocket error code as an integer.
+        /// </summary>
+        public int ErrorCode => (int)SocketErrorCode;
+        /// <summary>
+        /// Creates a new <see cref="SocketErrorResponseException"/> with a message and <see cref="SocketException"/>
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="socketException"></param>
+        public SocketErrorResponseException(string message, SocketException socketException)
+            : base(message, socketException)
+        {
+            SocketErrorCode = socketException.SocketErrorCode;
+        }
+        /// <summary>
+        /// Creates a new <see cref="SocketErrorResponseException"/> from a <see cref="SocketException"/>
+        /// </summary>
+        /// <param name="socketException"></param>
+        public SocketErrorResponseException(SocketException socketException)
+           : base(socketException.Message, socketException)
+        {
+            SocketErrorCode = socketException.SocketErrorCode;
         }
     }
 }

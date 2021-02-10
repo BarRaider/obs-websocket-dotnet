@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Text;
 using System.Windows.Forms;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
@@ -31,9 +32,12 @@ namespace TestClient
         {
             InitializeComponent();
             _obs = new OBSWebsocket();
-
+            _obs.OBSError += OnError;
             _obs.Connected += onConnect;
             _obs.Disconnected += onDisconnect;
+            _obs.EventReceived += onEvent;
+            _obs.RequestSent += onRequest;
+            _obs.ResponseReceived += onResponse;
 
             _obs.SceneChanged += onSceneChange;
             _obs.SceneCollectionChanged += onSceneColChange;
@@ -46,17 +50,88 @@ namespace TestClient
 
             _obs.StreamStatus += onStreamData;
         }
+        readonly StringBuilder ConsoleBuilder = new StringBuilder();
+        bool ConsoleActive = true;
+        private void onEvent(object sender, Newtonsoft.Json.Linq.JObject e)
+        {
+            if (!ConsoleActive) return;
+            lock (_consoleBuilderLock)
+            {
+                ConsoleBuilder.Insert(0, $"Event '{e["update-type"]}' <<{Environment.NewLine}{e.ToString(Newtonsoft.Json.Formatting.Indented)}{Environment.NewLine}");
+            }
+            BeginInvoke((MethodInvoker)(() =>
+            {
+                lock (_consoleBuilderLock)
+                {
+                    tbConsole.Text = ConsoleBuilder.ToString();
+                }
+            }));
+        }
+        private void onResponse(object sender, Newtonsoft.Json.Linq.JObject e)
+        {
+            if (!ConsoleActive) return;
+            lock (_consoleBuilderLock)
+            {
+                ConsoleBuilder.Insert(0, $"Response <<{Environment.NewLine}{e.ToString(Newtonsoft.Json.Formatting.Indented)}{Environment.NewLine}");
+            }
+            BeginInvoke((MethodInvoker)(() =>
+            {
+                lock (_consoleBuilderLock)
+                {
+                    tbConsole.Text = ConsoleBuilder.ToString();
+                }
+            }));
+        }
+        private void onRequest(object sender, RequestData e)
+        {
+            if (!ConsoleActive) return;
+            lock (_consoleBuilderLock)
+            {
+                ConsoleBuilder.Insert(0, $"Request '{e.RequestType}' >>{Environment.NewLine}{e.RequestBody.ToString(Newtonsoft.Json.Formatting.Indented)}{Environment.NewLine}");
+            }
+            BeginInvoke((MethodInvoker)(() =>
+            {
+                lock (_consoleBuilderLock)
+                {
+                    tbConsole.Text = ConsoleBuilder.ToString();
+                }
+            }));
+        }
+
+        private object _consoleBuilderLock = new object();
+
+        private void btnToggleConsole_Click(object sender, EventArgs e)
+        {
+            ConsoleActive = !ConsoleActive;
+            if (ConsoleActive)
+                btnToggleConsole.Text = "Stop Console";
+            else
+                btnToggleConsole.Text = "Start Console";
+        }
+
+        private void btnClearConsole_Click(object sender, EventArgs e)
+        {
+            ConsoleBuilder.Clear();
+            tbConsole.Text = "";
+        }
+
+        private void OnError(object sender, OBSErrorEventArgs e)
+        {
+            string msg = string.Join("\n", e.Message, e.Data?.ToString(), e.Exception);
+            MessageBox.Show(msg);
+        }
 
         private void onConnect(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker)(() => {
+            BeginInvoke((MethodInvoker)(async () =>
+            {
                 txtServerIP.Enabled = false;
                 txtServerPassword.Enabled = false;
                 btnConnect.Text = "Disconnect";
 
                 gbControls.Enabled = true;
 
-                var versionInfo = _obs.GetVersion();
+                var versionInfo = await _obs.GetVersion();
                 tbPluginVersion.Text = versionInfo.PluginVersion;
                 tbOBSVersion.Text = versionInfo.OBSStudioVersion;
 
@@ -74,22 +149,23 @@ namespace TestClient
 
                 btnGetTransitionDuration.PerformClick();
 
-                var streamStatus = _obs.GetStreamingStatus();
+                var streamStatus = await _obs.GetStreamingStatus();
                 if (streamStatus.IsStreaming)
-                    onStreamingStateChange(_obs, OutputState.Started);
+                    onStreamingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Started });
                 else
-                    onStreamingStateChange(_obs, OutputState.Stopped);
+                    onStreamingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Stopped });
 
                 if (streamStatus.IsRecording)
-                    onRecordingStateChange(_obs, OutputState.Started);
+                    onRecordingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Started });
                 else
-                    onRecordingStateChange(_obs, OutputState.Stopped);
+                    onRecordingStateChange(_obs, new OutputStateChangedEventArgs() { OutputState = OutputState.Stopped });
             }));
         }
 
         private void onDisconnect(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker)(() => {
+            BeginInvoke((MethodInvoker)(() =>
+            {
                 gbControls.Enabled = false;
 
                 txtServerIP.Enabled = true;
@@ -98,50 +174,54 @@ namespace TestClient
             }));
         }
 
-        private void onSceneChange(OBSWebsocket sender, string newSceneName)
+        private void onSceneChange(object sender, SceneChangeEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbCurrentScene.Text = newSceneName;
+                tbCurrentScene.Text = e.NewSceneName;
             });
         }
 
-        private void onSceneColChange(object sender, EventArgs e)
+        private async void onSceneColChange(object sender, EventArgs e)
+        {
+            string currentCollection = await _obs.GetCurrentSceneCollection();
+            BeginInvoke((MethodInvoker)delegate
+            {
+                tbSceneCol.Text = currentCollection;
+            });
+        }
+
+        private async void onProfileChange(object sender, EventArgs e)
+        {
+            string currentProfile = await _obs.GetCurrentProfile();
+            BeginInvoke((MethodInvoker)delegate
+            {
+                tbSceneCol.Text = currentProfile;
+            });
+
+        }
+
+        private void onTransitionChange(object sender, TransitionChangeEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbSceneCol.Text = _obs.GetCurrentSceneCollection();
+                tbTransition.Text = e.NewTransitionName;
             });
         }
 
-        private void onProfileChange(object sender, EventArgs e)
+        private void onTransitionDurationChange(object sender, TransitionDurationChangeEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbProfile.Text = _obs.GetCurrentProfile();
+                tbTransitionDuration.Value = e.NewDuration;
             });
         }
 
-        private void onTransitionChange(OBSWebsocket sender, string newTransitionName)
+        private void onStreamingStateChange(object sender, OutputStateChangedEventArgs e)
         {
-            BeginInvoke((MethodInvoker)delegate
-            {
-                tbTransition.Text = newTransitionName;
-            });
-        }
-
-        private void onTransitionDurationChange(OBSWebsocket sender, int newDuration)
-        {
-            BeginInvoke((MethodInvoker)delegate
-            {
-                tbTransitionDuration.Value = newDuration;
-            });
-        }
-
-        private void onStreamingStateChange(OBSWebsocket sender, OutputState newState)
-        {
+            OutputState newState = e.OutputState;
             string state = "";
-            switch(newState)
+            switch (newState)
             {
                 case OutputState.Starting:
                     state = "Stream starting...";
@@ -178,27 +258,30 @@ namespace TestClient
             });
         }
 
-        private void onRecordingStateChange(OBSWebsocket sender, OutputState newState)
+        private void onRecordingStateChange(object sender, OutputStateChangedEventArgs e)
         {
+            OutputState newState = e.OutputState;
             string state = "";
             switch (newState)
             {
                 case OutputState.Starting:
                     state = "Recording starting...";
                     break;
-
                 case OutputState.Started:
                     state = "Stop recording";
                     break;
-
                 case OutputState.Stopping:
                     state = "Recording stopping...";
                     break;
-
                 case OutputState.Stopped:
                     state = "Start recording";
                     break;
-
+                case OutputState.Paused:
+                    state = "Recording paused...";
+                    break;
+                case OutputState.Resumed:
+                    state = "Stop recording";
+                    break;
                 default:
                     state = "State unknown";
                     break;
@@ -210,27 +293,27 @@ namespace TestClient
             });
         }
 
-        private void onStreamData(OBSWebsocket sender, StreamStatus data)
+        private void onStreamData(object sender, StreamStatusEventArgs e)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                txtStreamTime.Text = data.TotalStreamTime.ToString() + " sec";
-                txtKbitsSec.Text = data.KbitsPerSec.ToString() + " kbit/s";
-                txtBytesSec.Text = data.BytesPerSec.ToString() + " bytes/s";
-                txtFramerate.Text = data.FPS.ToString() + " FPS";
-                txtStrain.Text = (data.Strain * 100).ToString() + " %";
-                txtDroppedFrames.Text = data.DroppedFrames.ToString();
-                txtTotalFrames.Text = data.TotalFrames.ToString();
+                txtStreamTime.Text = e.TotalStreamTime.ToString() + " sec";
+                txtKbitsSec.Text = e.KbitsPerSec.ToString() + " kbit/s";
+                txtBytesSec.Text = e.BytesPerSec.ToString() + " bytes/s";
+                txtFramerate.Text = e.FPS.ToString() + " FPS";
+                txtStrain.Text = (e.Strain * 100).ToString() + " %";
+                txtDroppedFrames.Text = e.DroppedFrames.ToString();
+                txtTotalFrames.Text = e.TotalFrames.ToString();
             });
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private async void btnConnect_Click(object sender, EventArgs e)
         {
-            if(!_obs.IsConnected)
+            if (!_obs.IsConnected)
             {
                 try
                 {
-                    _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
+                    await _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
                 }
                 catch (AuthFailureException)
                 {
@@ -242,18 +325,19 @@ namespace TestClient
                     MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
-            } else
+            }
+            else
             {
                 _obs.Disconnect();
             }
         }
 
-        private void btnListScenes_Click(object sender, EventArgs e)
+        private async void btnListScenes_Click(object sender, EventArgs e)
         {
-            var scenes = _obs.ListScenes();
+            var scenes = await _obs.ListScenes();
 
             tvScenes.Nodes.Clear();
-            foreach(var scene in scenes)
+            foreach (var scene in scenes)
             {
                 var node = new TreeNode(scene.Name);
                 foreach (var item in scene.Items)
@@ -265,14 +349,55 @@ namespace TestClient
             }
         }
 
-        private void btnGetCurrentScene_Click(object sender, EventArgs e)
+        private async void btnGetCurrentScene_Click(object sender, EventArgs e)
         {
-            tbCurrentScene.Text = _obs.GetCurrentScene().Name;
+            if (SceneListener != null)
+                SceneListener.Cancel();
+            tbCurrentScene.Text = (await _obs.GetCurrentScene()).Name;
         }
 
-        private void btnSetCurrentScene_Click(object sender, EventArgs e)
+        AsyncEventListener<bool, SceneChangeEventArgs> SceneListener;
+
+        private async void btnSetCurrentScene_Click(object sender, EventArgs e)
         {
-            _obs.SetCurrentScene(tbCurrentScene.Text);
+            btnSetCurrentScene.Enabled = false;
+            try
+            {
+                if (SceneListener == null)
+                {
+                    SceneListener = new AsyncEventListener<bool, SceneChangeEventArgs>((s, args) =>
+                    {
+                        bool sceneResult = tbCurrentScene.Text == args.NewSceneName;
+                        return new EventListenerResult<bool>(sceneResult, true);
+                    }, 5000);
+                    _obs.SceneChanged += SceneListener.OnEvent;
+                }
+                else
+                    SceneListener.Reset();
+                SceneListener.StartListening();
+                string currentScene = (await _obs.GetCurrentScene()).Name;
+                await _obs.SetCurrentScene(tbCurrentScene.Text);
+                if (currentScene == tbCurrentScene.Text)
+                {
+                    SceneListener.SetResult(true);
+                }
+                bool result = await SceneListener.Task;
+                if (!result)
+                    MessageBox.Show("Scene change failed.");
+            }
+            catch (TimeoutException ex)
+            {
+                MessageBox.Show($"Timed out: {ex.Message}");
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageBox.Show($"Canceled: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+            btnSetCurrentScene.Enabled = true;
         }
 
         private void tvScenes_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -283,9 +408,9 @@ namespace TestClient
             }
         }
 
-        private void btnListSceneCol_Click(object sender, EventArgs e)
+        private async void btnListSceneCol_Click(object sender, EventArgs e)
         {
-            var sc = _obs.ListSceneCollections();
+            var sc = await _obs.ListSceneCollections();
 
             tvSceneCols.Nodes.Clear();
             foreach (var sceneCol in sc)
@@ -294,14 +419,16 @@ namespace TestClient
             }
         }
 
-        private void btnGetCurrentSceneCol_Click(object sender, EventArgs e)
+        private async void btnGetCurrentSceneCol_Click(object sender, EventArgs e)
         {
-            tbSceneCol.Text = _obs.GetCurrentSceneCollection();
+            tbSceneCol.Text = await _obs.GetCurrentSceneCollection();
         }
 
-        private void btnSetCurrentSceneCol_Click(object sender, EventArgs e)
+        private async void btnSetCurrentSceneCol_Click(object sender, EventArgs e)
         {
-            _obs.SetCurrentSceneCollection(tbSceneCol.Text);
+
+            await _obs.SetCurrentSceneCollection(tbSceneCol.Text);
+
         }
 
         private void tvSceneCols_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -312,9 +439,9 @@ namespace TestClient
             }
         }
 
-        private void btnListProfiles_Click(object sender, EventArgs e)
+        private async void btnListProfiles_Click(object sender, EventArgs e)
         {
-            var profiles = _obs.ListProfiles();
+            var profiles = await _obs.ListProfiles();
 
             tvProfiles.Nodes.Clear();
             foreach (var profile in profiles)
@@ -323,14 +450,14 @@ namespace TestClient
             }
         }
 
-        private void btnGetCurrentProfile_Click(object sender, EventArgs e)
+        private async void btnGetCurrentProfile_Click(object sender, EventArgs e)
         {
-            tbProfile.Text = _obs.GetCurrentProfile();
+            tbProfile.Text = await _obs.GetCurrentProfile();
         }
 
-        private void btnSetCurrentProfile_Click(object sender, EventArgs e)
+        private async void btnSetCurrentProfile_Click(object sender, EventArgs e)
         {
-            _obs.SetCurrentProfile(tbProfile.Text);
+            await _obs.SetCurrentProfile(tbProfile.Text);
         }
 
         private void tvProfiles_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -341,19 +468,58 @@ namespace TestClient
             }
         }
 
-        private void btnToggleStreaming_Click(object sender, EventArgs e)
+        AsyncEventListener<OutputState, OutputStateChangedEventArgs> StreamListener;
+
+        private async void btnToggleStreaming_Click(object sender, EventArgs e)
         {
-            _obs.ToggleStreaming();
+            btnToggleStreaming.Enabled = false;
+            try
+            {
+                if (StreamListener == null)
+                {
+                    StreamListener = new AsyncEventListener<OutputState, OutputStateChangedEventArgs>((s, state) =>
+                    {
+                        bool finished = state.OutputState == OutputState.Started;
+                        return new EventListenerResult<OutputState>(state.OutputState, finished);
+                    }, 5000);
+                    _obs.StreamingStateChanged += StreamListener.OnEvent;
+                }
+                else
+                    StreamListener.Reset();
+                StreamListener.StartListening();
+                bool isStreaming = (await _obs.GetStreamingStatus()).IsStreaming;
+                await _obs.ToggleStreaming();
+                if (isStreaming)
+                {
+                    StreamListener.SetResult(OutputState.Started);
+                }
+                OutputState result = await StreamListener.Task;
+                if (result != OutputState.Started)
+                    MessageBox.Show("StartStreaming failed.");
+            }
+            catch (TimeoutException ex)
+            {
+                MessageBox.Show($"Timed out: {ex.Message}");
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageBox.Show($"Canceled: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+            btnToggleStreaming.Enabled = true;
         }
 
-        private void btnToggleRecording_Click(object sender, EventArgs e)
+        private async void btnToggleRecording_Click(object sender, EventArgs e)
         {
-            _obs.ToggleRecording();
+            await _obs.ToggleRecording();
         }
 
-        private void btnListTransitions_Click(object sender, EventArgs e)
+        private async void btnListTransitions_Click(object sender, EventArgs e)
         {
-            var transitions = _obs.ListTransitions();
+            var transitions = await _obs.ListTransitions();
 
             tvTransitions.Nodes.Clear();
             foreach (var transition in transitions)
@@ -362,14 +528,14 @@ namespace TestClient
             }
         }
 
-        private void btnGetCurrentTransition_Click(object sender, EventArgs e)
+        private async void btnGetCurrentTransition_Click(object sender, EventArgs e)
         {
-            tbTransition.Text = _obs.GetCurrentTransition().Name;
+            tbTransition.Text = (await _obs.GetCurrentTransition()).Name;
         }
 
-        private void btnSetCurrentTransition_Click(object sender, EventArgs e)
+        private async void btnSetCurrentTransition_Click(object sender, EventArgs e)
         {
-            _obs.SetCurrentTransition(tbTransition.Text);
+            await _obs.SetCurrentTransition(tbTransition.Text);
         }
 
         private void tvTransitions_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -380,14 +546,91 @@ namespace TestClient
             }
         }
 
-        private void btnGetTransitionDuration_Click(object sender, EventArgs e)
+        private async void btnGetTransitionDuration_Click(object sender, EventArgs e)
         {
-            tbTransitionDuration.Value = _obs.GetCurrentTransition().Duration;
+            tbTransitionDuration.Value = (await _obs.GetCurrentTransition()).Duration;
         }
 
-        private void btnSetTransitionDuration_Click(object sender, EventArgs e)
+        private async void btnSetTransitionDuration_Click(object sender, EventArgs e)
         {
-            _obs.SetTransitionDuration((int)tbTransitionDuration.Value);
+            await _obs.SetTransitionDuration((int)tbTransitionDuration.Value);
+        }
+
+        private async void btnGetOutput_Click(object sender, EventArgs e)
+        {
+            string outputName = tbOutput.Text;
+            if (!string.IsNullOrEmpty(outputName))
+            {
+                try
+                {
+                    var output = await _obs.GetOutput(outputName);
+                    MessageBox.Show($"Output: {output.Name} is {(output.Active ? "active." : "inactive.")}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error in GetOutput: {ex.Message}");
+                }
+            }
+            else
+                MessageBox.Show("An output name must be specified.");
+        }
+
+        private async void btnListOutputs_Click(object sender, EventArgs e)
+        {
+            var outputs = await _obs.ListOutputs();
+
+            tvOutputs.Nodes.Clear();
+            foreach (var scene in outputs)
+            {
+                var node = new TreeNode(scene.Name);
+                tvOutputs.Nodes.Add(node);
+            }
+        }
+
+        private async void btnStartOutput_Click(object sender, EventArgs e)
+        {
+            string outputName = tbOutput.Text;
+            if (!string.IsNullOrEmpty(outputName))
+            {
+                try
+                {
+                    await _obs.StartOutput(outputName);
+                    MessageBox.Show($"Started {outputName}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error in StartOutput: {ex.Message}");
+                }
+            }
+            else
+                MessageBox.Show("An output name must be specified.");
+        }
+
+        private void tvOutputs_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                tbOutput.Text = e.Node.Text;
+            }
+        }
+
+        private async void btnStopOutput_Click(object sender, EventArgs e)
+        {
+            string outputName = tbOutput.Text;
+            if (!string.IsNullOrEmpty(outputName))
+            {
+                try
+                {
+                    await _obs.StopOutput(outputName);
+                    MessageBox.Show($"Stopped {outputName}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error in StartOutput: {ex.Message}");
+                }
+            }
+            else
+                MessageBox.Show("An output name must be specified.");
         }
 
         private void btnAdvanced_Click(object sender, EventArgs e)
@@ -395,6 +638,51 @@ namespace TestClient
             AdvancedWindow advanced = new AdvancedWindow();
             advanced.SetOBS(_obs);
             advanced.ShowDialog();
+        }
+
+        private async void btnGetStats_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OBSStats stats = await _obs.GetStats();
+                MessageBox.Show($"RenderTotalFrames: {stats.RenderTotalFrames}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error getting stats: {ex.Message}");
+            }
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var sourceList = await _obs.GetSourcesList();
+                SourceSettings settings = await _obs.GetSourceSettings("Desktop Audio", "wasapi_output_capture");
+                var thing = await _obs.GetSpecialSources();
+                await _obs.GetAudioMonitorType("Desktop Audio");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error getting stats: {ex.Message}");
+            }
+        }
+
+        private async void tvScenes_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+
+            if (e.Node.Level == 1)
+            {
+                string sourceName = e.Node.Text;
+                try
+                {
+                    var settings = await _obs.GetSourceSettings(sourceName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error getting source settings for '{sourceName}': {ex.Message}");
+                }
+            }
         }
     }
 }

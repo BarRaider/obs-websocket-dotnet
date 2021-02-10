@@ -44,94 +44,83 @@ namespace TestClient
                 return;
             }
 
-            obs.RecordingStateChanged += OBS_RecordingStateChanged;
-            obs.TransitionBegin += OBS_TransitionBegin;
-            obs.TransitionEnd += OBS_TransitionEnd;
-            obs.TransitionVideoEnd += OBS_TransitionVideoEnd;
-            obs.RecordingPaused += OBS_RecordingPaused;
-            obs.RecordingResumed += OBS_RecordingResumed;
-            obs.SourceFilterAdded += OBS_SourceFilterAdded;
-            obs.SourceFilterRemoved += OBS_SourceFilterRemoved;
-            obs.SourceFilterVisibilityChanged += OBS_SourceFilterVisibilityChanged;
-            obs.SourceOrderChanged += OBS_SourceOrderChanged;
-            obs.SourceFiltersReordered += OBS_SourceFiltersReordered;
-            obs.SceneItemLockChanged += OBS_SceneItemLockChanged;
-            obs.SceneItemVisibilityChanged += OBS_SceneItemVisibilityChanged;
-            obs.SourceRenamed += OBS_SourceRenamed;
+            obs.RecordingStateChanged += _obs_RecordingStateChanged;
+            obs.TransitionBegin += _obs_TransitionBegin;
+            obs.TransitionEnd += _obs_TransitionEnd;
+            obs.TransitionVideoEnd += _obs_TransitionVideoEnd;
+            obs.SourceFilterAdded += _obs_SourceFilterAdded;
+            obs.SourceFilterRemoved += _obs_SourceFilterRemoved;
+            obs.SourceFilterVisibilityChanged += _obs_SourceFilterVisibilityChanged;
+            obs.SourceOrderChanged += _obs_SourceOrderChanged;
+            obs.SourceFiltersReordered += _obs_SourceFiltersReordered;
+            obs.SceneItemLockChanged += _obs_SceneItemLockChanged;
+            obs.SceneItemVisibilityChanged += _obs_SceneItemVisibilityChanged;
+            obs.SourceRenamed += _obs_SourceRenamed;
+
         }
 
-        private void OBS_SourceRenamed(OBSWebsocket sender, string newName, string previousName)
+        private void _obs_SourceRenamed(object sender, SourceRenamedEventArgs e)
         {
-            LogMessage($"[SourceRenamed] Previous Name: {previousName} New Name: {newName}");
+            LogMessage($"[SourceRenamed] Previous Name: {e.PreviousName} New Name: {e.NewName}");
         }
 
-        private void OBS_SceneItemVisibilityChanged(OBSWebsocket sender, string sceneName, string itemName, bool isVisible)
+        private void _obs_SceneItemVisibilityChanged(object sender, SceneItemVisibilityChangedEventArgs e)
         {
-            LogMessage($"[SceneItemLockChanged] Scene: {sceneName} Item: {itemName} IsVisible: {isVisible}");
+            LogMessage($"[SceneItemLockChanged] Scene: {e.SceneName} Item: {e.ItemName} IsVisible: {e.IsVisible}");
         }
 
-        private void OBS_SceneItemLockChanged(OBSWebsocket sender, string sceneName, string itemName, int itemId, bool isLocked)
+        private void _obs_SceneItemLockChanged(object sender, SceneItemLockChangedEventArgs e)
         {
-            LogMessage($"[SceneItemLockChanged] Scene: {sceneName} Item: {itemName} ItemId: {itemId} IsLocked: {isLocked}");
+            LogMessage($"[SceneItemLockChanged] Scene: {e.SceneName} Item: {e.ItemName} ItemId: {e.ItemId} IsLocked: {e.IsLocked}");
         }
 
-        private void OBS_SourceFiltersReordered(OBSWebsocket sender, string sourceName, List<OBSWebsocketDotNet.Types.FilterReorderItem> filters)
+        private void _obs_SourceFiltersReordered(object sender, SourceFiltersReorderedEventArgs e)
         {
-            LogMessage($"[SourceFiltersReordered] Source: {sourceName}");
-            foreach(var filter in filters)
+            LogMessage($"[SourceFiltersReordered] Source: {e.SourceName}");
+            foreach (var filter in e.Filters)
             {
                 LogMessage($"\t{filter.Name}");
             }
         }
 
-        private void OBS_SourceOrderChanged(OBSWebsocket sender, string sceneName)
+        private void _obs_SourceOrderChanged(object sender, SourceOrderChangedEventArgs e)
         {
-            LogMessage($"[SourceOrderChanged] Scene: {sceneName}");
+            LogMessage($"[SourceOrderChanged] Scene: {e.SceneName}");
         }
 
-        private void OBS_SourceFilterVisibilityChanged(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled)
+        private void _obs_SourceFilterVisibilityChanged(object sender, SourceFilterVisibilityChangedEventArgs e)
         {
-            LogMessage($"[SourceFilterVisibilityChanged] Source: {sourceName} Filter: {filterName} Visible: {filterEnabled}");
+            LogMessage($"[SourceFilterVisibilityChanged] Source: {e.SourceName} Filter: {e.FilterName} Visible: {e.FilterEnabled}");
         }
 
-        private void OBS_SourceFilterRemoved(OBSWebsocket sender, string sourceName, string filterName)
+        private void _obs_SourceFilterRemoved(object sender, SourceFilterRemovedEventArgs e)
         {
-            LogMessage($"[SourceFilterRemoved] Source: {sourceName} Filter: {filterName}");
+            LogMessage($"[SourceFilterRemoved] Source: {e.SourceName} Filter: {e.FilterName}");
         }
 
-        private void OBS_SourceFilterAdded(OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject filterSettings)
+        private void _obs_SourceFilterAdded(object sender, SourceFilterAddedEventArgs e)
         {
-            LogMessage($"[SourceFilterAdded] Source: {sourceName} Filter: {filterName} FilterType: {filterType}{Environment.NewLine}\tSettings: {filterSettings}");
+            LogMessage($"[SourceFilterAdded] Source: {e.SourceName} Filter: {e.FilterName} FilterType: {e.FilterType}{Environment.NewLine}\tSettings: {e.FilterSettings}");
         }
 
-        private void OBS_RecordingResumed(object sender, EventArgs e)
+        private void _obs_TransitionVideoEnd(object sender, TransitionVideoEndEventArgs e)
         {
-            LogMessage($"[RecordingResumed]");
+            LogMessage($"[TransitionVideoEnd] Name: {e.TransitionName} Type: {e.TransitionType} Duration: {e.Duration} From: {e.FromScene} To: {e.ToScene}");
         }
 
-        private void OBS_RecordingPaused(object sender, EventArgs e)
+        private void _obs_TransitionEnd(object sender, TransitionEndEventArgs e)
         {
-            LogMessage($"[RecordingPaused]");
+            LogMessage($"[TransitionEnd] Name: {e.TransitionName} Type: {e.TransitionType} Duration: {e.Duration} To: {e.ToScene}");
         }
 
-        private void OBS_TransitionVideoEnd(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene)
+        private void _obs_TransitionBegin(object sender, TransitionBeginEventArgs e)
         {
-            LogMessage($"[TransitionVideoEnd] Name: {transitionName} Type: {transitionType} Duration: {duration} From: {fromScene} To: {toScene}");
+            LogMessage($"[TransitionBegin] Name: {e.TransitionName} Type: {e.TransitionType} Duration: {e.Duration} From: {e.FromScene} To: {e.ToScene}");
         }
 
-        private void OBS_TransitionEnd(OBSWebsocket sender, string transitionName, string transitionType, int duration, string toScene)
+        private void _obs_RecordingStateChanged(object sender, OutputStateChangedEventArgs e)
         {
-            LogMessage($"[TransitionEnd] Name: {transitionName} Type: {transitionType} Duration: {duration} To: {toScene}");
-        }
-
-        private void OBS_TransitionBegin(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene)
-        {
-            LogMessage($"[TransitionBegin] Name: {transitionName} Type: {transitionType} Duration: {duration} From: {fromScene} To: {toScene}");
-        }
-
-        private void OBS_RecordingStateChanged(OBSWebsocket sender, OBSWebsocketDotNet.Types.OutputState type)
-        {
-            LogMessage($"[RecordingStateChanged] State: {type}");
+            LogMessage($"[RecordingStateChanged] State: {e.OutputState}");
         }
 
         private void LogMessage(string message)
@@ -149,32 +138,47 @@ namespace TestClient
             }
         }
 
-        private void btnProjector_Click(object sender, EventArgs e)
+        private async void btnProjector_Click(object sender, EventArgs e)
         {
-            const string SCENE_NAME = "Webcam Full";
-            obs.OpenProjector();
-            MessageBox.Show("Press Ok to continue");
-            obs.OpenProjector("preview", 0);
-            MessageBox.Show("Press Ok to continue");
-            // Should not do anything as sceneName only works in "Source" and "Scene"
-            obs.OpenProjector("preview", 0, null, SOURCE_NAME);
-            MessageBox.Show("Press Ok to continue");
-            obs.OpenProjector("source", 0, null, SOURCE_NAME);
-            MessageBox.Show("Press Ok to continue");
-            obs.OpenProjector("scene", 0, null, SCENE_NAME);
+            try
+            {
+                const string SCENE_NAME = "Webcam Full";
+                await obs.OpenProjector();
+                MessageBox.Show("Press Ok to continue");
+                await obs.OpenProjector("preview", 0);
+                MessageBox.Show("Press Ok to continue");
+                // Should not do anything as sceneName only works in "Source" and "Scene"
+                await obs.OpenProjector("preview", 0, null, SOURCE_NAME);
+                MessageBox.Show("Press Ok to continue");
+                await obs.OpenProjector("source", 0, null, SOURCE_NAME);
+                MessageBox.Show("Press Ok to continue");
+                await obs.OpenProjector("scene", 0, null, SCENE_NAME);
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"OpenProjector: Error - {ex.Message}");
+            }
         }
 
-        private void btnRename_Click(object sender, EventArgs e)
+        private async void btnRename_Click(object sender, EventArgs e)
         {
-            obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
+            try
+            {
+                await obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
+            }
+            catch (Exception ex)
+            {
+
+                LogMessage($"SetSourceName: Error - {ex.Message}");
+            }
         }
 
-        private void btnSourceFilters_Click(object sender, EventArgs e)
+        private async void btnSourceFilters_Click(object sender, EventArgs e)
         {
             try
             {
                 LogMessage("GetSourceFilters:");
-                var filters = obs.GetSourceFilters(SOURCE_NAME);
+                var filters = await obs.GetSourceFilters(SOURCE_NAME);
 
                 foreach (var filter in filters)
                 {
@@ -189,11 +193,11 @@ namespace TestClient
                 }
 
                 LogMessage("GetSourceFilterInfo:");
-                LogFilter(obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
+                LogFilter(await obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
             }
             catch (Exception ex)
             {
-                LogMessage($"ERROR: {ex}");
+                LogMessage($"GetSourceFilterInfo: Error - {ex.Message}");
             }
         }
 
@@ -219,10 +223,10 @@ namespace TestClient
             */
         }
 
-        private void btnOutputs_Click(object sender, EventArgs e)
+        private async void btnOutputs_Click(object sender, EventArgs e)
         {
             LogMessage("Testing ListOutputs:");
-            var outputs = obs.ListOutputs();
+            var outputs = await obs.ListOutputs();
             foreach (var output in outputs)
             {
                 LogOutput(output);
@@ -259,9 +263,10 @@ namespace TestClient
                 LogMessage("ERROR: Output is null!");
                 return;
             }
-            LogMessage($"Output: {output.Name} Type: {output.Type} Width: {output.Width} Height: {output.Height} Active: {output.IsActive} Reconnecting: {output.IsReconnecting} Congestion: {output.Congestion} TotalFrames: {output.TotalFrames} DroppedFrames: {output.DroppedFrames} TotalBytes: {output.TotalBytes}");
-            LogMessage($"\tFlags: {output.Flags.RawValue} Audio: {output.Flags.IsAudio} Video: {output.Flags.IsVideo} Encoded: {output.Flags.IsEncoded} MultiTrack: {output.Flags.IsMultiTrack} Service: {output.Flags.IsService}");
-            LogMessage($"\tSettings: {output.Settings}");
+            LogMessage($"Output: {output.Name} Type: {output.Type} Width: {output.Width} Height: {output.Height} Active: {output.Active} Reconnecting: {output.Reconnecting} Congestion: {output.Congestion} TotalFrames: {output.TotalFrames} DroppedFrames: {output.DroppedFrames} TotalBytes: {output.TotalBytes}");
+            
+            LogMessage($"\tFlags: {output.Flags}");
+            //LogMessage($"\tSettings: {output.Settings}");
         }
 #pragma warning restore IDE1006 // Naming Styles
     }

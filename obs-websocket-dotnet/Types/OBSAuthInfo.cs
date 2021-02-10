@@ -11,6 +11,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// True if authentication is required, false otherwise
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "authRequired")]
         public readonly bool AuthRequired;
 
@@ -18,21 +19,12 @@ namespace OBSWebsocketDotNet.Types
         /// Authentication challenge
         /// </summary>
         [JsonProperty(PropertyName = "challenge")]
-        public readonly string Challenge;
+        public readonly string? Challenge;
 
         /// <summary>
         /// Password salt
         /// </summary>
         [JsonProperty(PropertyName = "salt")]
-        public readonly string PasswordSalt;
-
-        /// <summary>
-        /// Builds the object from JSON response body
-        /// </summary>
-        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
-        public OBSAuthInfo(JObject data)
-        {
-            JsonConvert.PopulateObject(data.ToString(), this);
-        }
+        public readonly string? PasswordSalt;
     }
 }

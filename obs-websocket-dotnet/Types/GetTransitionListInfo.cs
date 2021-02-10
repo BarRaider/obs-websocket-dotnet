@@ -14,13 +14,15 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Name of the currently active transition
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "current-transition")]
-        public string CurrentTransition { set; get; }
+        public string CurrentTransition { set; get; } = null!;
 
         /// <summary>
         /// List of transitions.
         /// </summary>
+        [JsonRequired]
         [JsonProperty(PropertyName = "transitions")]
-        public List<TransitionSettings> Transitions { set; get; }
+        public List<TransitionSettings> Transitions { set; get; } = null!;
     }
 }
