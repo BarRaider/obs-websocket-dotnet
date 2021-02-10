@@ -529,7 +529,7 @@ namespace OBSWebsocketDotNet
         protected void CancelAllHandlers(Exception? exception = null)
         {
             KeyValuePair<string, TaskCompletionSource<JObject>>[]? unusedHandlers = responseHandlers.ToArray();
-            _responseHandlers.Clear();
+            responseHandlers.Clear();
             foreach (KeyValuePair<string, TaskCompletionSource<JObject>> pair in unusedHandlers)
             {
                 if (exception != null)
@@ -560,12 +560,11 @@ namespace OBSWebsocketDotNet
             }
             string? msgID = (string?)body["message-id"];
             string? eventType = body["update-type"]?.ToString();
-            if (msgID != null)
+            if (msgID != null && msgID.Length > 0)
             {
                 // Handle a request :
                 // Find the response handler based on
                 // its associated message ID
-                string msgID = (string)body["message-id"];
 
                 if (responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
                 {

@@ -44,18 +44,18 @@ namespace TestClient
                 return;
             }
 
-            _obs.RecordingStateChanged += _obs_RecordingStateChanged;
-            _obs.TransitionBegin += _obs_TransitionBegin;
-            _obs.TransitionEnd += _obs_TransitionEnd;
-            _obs.TransitionVideoEnd += _obs_TransitionVideoEnd;
-            _obs.SourceFilterAdded += _obs_SourceFilterAdded;
-            _obs.SourceFilterRemoved += _obs_SourceFilterRemoved;
-            _obs.SourceFilterVisibilityChanged += _obs_SourceFilterVisibilityChanged;
-            _obs.SourceOrderChanged += _obs_SourceOrderChanged;
-            _obs.SourceFiltersReordered += _obs_SourceFiltersReordered;
-            _obs.SceneItemLockChanged += _obs_SceneItemLockChanged;
-            _obs.SceneItemVisibilityChanged += _obs_SceneItemVisibilityChanged;
-            _obs.SourceRenamed += _obs_SourceRenamed;
+            obs.RecordingStateChanged += _obs_RecordingStateChanged;
+            obs.TransitionBegin += _obs_TransitionBegin;
+            obs.TransitionEnd += _obs_TransitionEnd;
+            obs.TransitionVideoEnd += _obs_TransitionVideoEnd;
+            obs.SourceFilterAdded += _obs_SourceFilterAdded;
+            obs.SourceFilterRemoved += _obs_SourceFilterRemoved;
+            obs.SourceFilterVisibilityChanged += _obs_SourceFilterVisibilityChanged;
+            obs.SourceOrderChanged += _obs_SourceOrderChanged;
+            obs.SourceFiltersReordered += _obs_SourceFiltersReordered;
+            obs.SceneItemLockChanged += _obs_SceneItemLockChanged;
+            obs.SceneItemVisibilityChanged += _obs_SceneItemVisibilityChanged;
+            obs.SourceRenamed += _obs_SourceRenamed;
 
         }
 
@@ -143,16 +143,16 @@ namespace TestClient
             try
             {
                 const string SCENE_NAME = "Webcam Full";
-                await _obs.OpenProjector();
+                await obs.OpenProjector();
                 MessageBox.Show("Press Ok to continue");
-                await _obs.OpenProjector("preview", 0);
+                await obs.OpenProjector("preview", 0);
                 MessageBox.Show("Press Ok to continue");
                 // Should not do anything as sceneName only works in "Source" and "Scene"
-                await _obs.OpenProjector("preview", 0, null, SOURCE_NAME);
+                await obs.OpenProjector("preview", 0, null, SOURCE_NAME);
                 MessageBox.Show("Press Ok to continue");
-                await _obs.OpenProjector("source", 0, null, SOURCE_NAME);
+                await obs.OpenProjector("source", 0, null, SOURCE_NAME);
                 MessageBox.Show("Press Ok to continue");
-                await _obs.OpenProjector("scene", 0, null, SCENE_NAME);
+                await obs.OpenProjector("scene", 0, null, SCENE_NAME);
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@ namespace TestClient
         {
             try
             {
-                await _obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
+                await obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
             }
             catch (Exception ex)
             {
@@ -178,7 +178,7 @@ namespace TestClient
             try
             {
                 LogMessage("GetSourceFilters:");
-                var filters = await _obs.GetSourceFilters(SOURCE_NAME);
+                var filters = await obs.GetSourceFilters(SOURCE_NAME);
 
                 foreach (var filter in filters)
                 {
@@ -193,7 +193,7 @@ namespace TestClient
                 }
 
                 LogMessage("GetSourceFilterInfo:");
-                LogFilter(await _obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
+                LogFilter(await obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
             }
             catch (Exception ex)
             {
