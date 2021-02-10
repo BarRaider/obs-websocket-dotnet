@@ -265,7 +265,7 @@ namespace TestClient
             }
             LogMessage($"Output: {output.Name} Type: {output.Type} Width: {output.Width} Height: {output.Height} Active: {output.Active} Reconnecting: {output.Reconnecting} Congestion: {output.Congestion} TotalFrames: {output.TotalFrames} DroppedFrames: {output.DroppedFrames} TotalBytes: {output.TotalBytes}");
             
-            LogMessage($"\tFlags: {output.Flags} Audio: {output.Flags.HasFlag(OutputFlags.Audio)} Video: {output.Flags.HasFlag(OutputFlags.Video)} Encoded: {output.Flags.HasFlag(OutputFlags.Encoded)} MultiTrack: {output.Flags.HasFlag(OutputFlags.Multitrack)} Service: {output.Flags.HasFlag(OutputFlags.UsesService)}");
+            LogMessage($"\tFlags: {output.Flags}");
             //LogMessage($"\tSettings: {output.Settings}");
         }
 #pragma warning restore IDE1006 // Naming Styles
