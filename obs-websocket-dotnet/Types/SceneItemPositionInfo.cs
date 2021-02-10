@@ -12,7 +12,7 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonRequired]
         [JsonProperty(PropertyName = "alignment")]
-        public int Alingnment { set; get; }
+        public int Alignment { set; get; }
 
         /// <summary>
         /// The x position of the scene item from the left

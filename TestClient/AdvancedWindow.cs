@@ -15,15 +15,15 @@ namespace TestClient
 {
     public partial class AdvancedWindow : Form
     {
+#pragma warning disable IDE1006 // Naming Styles
         // Source to test on
         private const string SOURCE_NAME = "BarRaider";
 
-        protected OBSWebsocket _obs;
-        private Random random = new Random();
+        protected OBSWebsocket obs;
 
         public void SetOBS(OBSWebsocket obs)
         {
-            _obs = obs;
+            this.obs = obs;
         }
 
         public AdvancedWindow()
@@ -38,7 +38,7 @@ namespace TestClient
 
         private void btnEvents_Click(object sender, EventArgs e)
         {
-            if (_obs == null)
+            if (obs == null)
             {
                 LogMessage("Error: OBS is null!");
                 return;
@@ -205,5 +205,69 @@ namespace TestClient
         {
             LogMessage($"Filter: {filter.Name} Type: {filter.Type} Enabled: {filter.IsEnabled}{Environment.NewLine}Settings: {filter.Settings}");
         }
+
+        private void btnCreateScene_Click(object sender, EventArgs e)
+        {
+            // TODO: Add in v4.9
+            /*
+            string newScene = SOURCE_NAME + random.Next(100);
+            
+            //_obs.CreateScene(newScene); 
+            var createdScene = _obs.GetSceneList().Scenes.FirstOrDefault(s => s.Name == newScene);
+            if (createdScene == null)
+            {
+                LogMessage($"ERROR: Scene was not created!");
+                return;
+            }
+            LogMessage($"Created scene: {createdScene.Name}");
+            */
+        }
+
+        private async void btnOutputs_Click(object sender, EventArgs e)
+        {
+            LogMessage("Testing ListOutputs:");
+            var outputs = await obs.ListOutputs();
+            foreach (var output in outputs)
+            {
+                LogOutput(output);
+            }
+
+            LogMessage("Testing GetOutputInfo:");
+            var firstOutput = outputs.Skip(1).FirstOrDefault();
+            if (firstOutput == null)
+            {
+                LogMessage($"ERROR: No outputs retrieved!");
+                return;
+            }
+            /*
+            string outputName = firstOutput.Name;
+            
+            var retrievedOutput = _obs.GetOutputInfo(outputName);
+            LogOutput(retrievedOutput);
+
+            LogMessage("Testing StartOutput:");
+            _obs.StartOutput(outputName);
+            retrievedOutput = _obs.GetOutputInfo(outputName);
+            LogOutput(retrievedOutput);
+
+            LogMessage("Testing StopOutput:");
+            _obs.StopOutput(outputName);
+            retrievedOutput = _obs.GetOutputInfo(outputName);
+            LogOutput(retrievedOutput);*/
+        }
+
+        private void LogOutput(OBSOutputInfo output)
+        {
+            if (output == null)
+            {
+                LogMessage("ERROR: Output is null!");
+                return;
+            }
+            LogMessage($"Output: {output.Name} Type: {output.Type} Width: {output.Width} Height: {output.Height} Active: {output.Active} Reconnecting: {output.Reconnecting} Congestion: {output.Congestion} TotalFrames: {output.TotalFrames} DroppedFrames: {output.DroppedFrames} TotalBytes: {output.TotalBytes}");
+            
+            LogMessage($"\tFlags: {output.Flags} Audio: {output.Flags.HasFlag(OutputFlags.Audio)} Video: {output.Flags.HasFlag(OutputFlags.Video)} Encoded: {output.Flags.HasFlag(OutputFlags.Encoded)} MultiTrack: {output.Flags.HasFlag(OutputFlags.Multitrack)} Service: {output.Flags.HasFlag(OutputFlags.UsesService)}");
+            //LogMessage($"\tSettings: {output.Settings}");
+        }
+#pragma warning restore IDE1006 // Naming Styles
     }
 }

@@ -322,7 +322,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Dictionary of response handlers waiting for a response.
         /// </summary>
-        protected ConcurrentDictionary<string, TaskCompletionSource<JObject>> _responseHandlers;
+        protected ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
         /// <summary>
         /// <see cref="TaskCompletionSource{TResult}"/> used to wait for a connection.
         /// </summary>
@@ -333,7 +333,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public OBSWebsocket()
         {
-            _responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
+            responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
         }
 
         /// <summary>
@@ -401,6 +401,7 @@ namespace OBSWebsocketDotNet
                     throw;
                 }
             }
+
             Connected?.Invoke(this, null);
             return true;
         }
@@ -527,7 +528,7 @@ namespace OBSWebsocketDotNet
         /// <param name="exception"></param>
         protected void CancelAllHandlers(Exception? exception = null)
         {
-            KeyValuePair<string, TaskCompletionSource<JObject>>[]? unusedHandlers = _responseHandlers.ToArray();
+            KeyValuePair<string, TaskCompletionSource<JObject>>[]? unusedHandlers = responseHandlers.ToArray();
             _responseHandlers.Clear();
             foreach (KeyValuePair<string, TaskCompletionSource<JObject>> pair in unusedHandlers)
             {
@@ -561,7 +562,12 @@ namespace OBSWebsocketDotNet
             string? eventType = body["update-type"]?.ToString();
             if (msgID != null)
             {
-                if (_responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
+                // Handle a request :
+                // Find the response handler based on
+                // its associated message ID
+                string msgID = (string)body["message-id"];
+
+                if (responseHandlers.TryRemove(msgID, out TaskCompletionSource<JObject> handler))
                 {
                     // Set the response body as Result and notify the request sender
                     handler.SetResult(body);
@@ -640,7 +646,7 @@ namespace OBSWebsocketDotNet
             {
                 // Generate a random message id
                 messageID = NewMessageID();
-                if (_responseHandlers.TryAdd(messageID, tcs))
+                if (responseHandlers.TryAdd(messageID, tcs))
                 {
                     body.Add("message-id", messageID);
                     break;

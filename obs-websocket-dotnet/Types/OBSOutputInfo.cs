@@ -10,7 +10,7 @@ namespace OBSWebsocketDotNet.Types
     {
         /// <summary>
         /// Creates a new <see cref="OBSOutputInfo"/> from a JSON object.
-        /// If the response is recognized as a Stream or File output, a <see cref="StreamOutput"/> or <see cref="FileOutput"/> will be returned with the Output settings.
+        /// If the response is recognized as a Stream or File output, a <see cref="StreamOutputInfo"/> or <see cref="FileOutputInfo"/> will be returned with the Output settings.
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
@@ -24,15 +24,15 @@ namespace OBSWebsocketDotNet.Types
             }
             else if (outputName.Contains("stream"))
             {
-                return new StreamOutput(response);
+                return new StreamOutputInfo(response);
             }
             else if (outputName.Contains("file"))
             {
-                return new FileOutput(response);
+                return new FileOutputInfo(response);
             }
             else if (outputName.Contains("replay"))
             {
-                return new ReplayOutput(response);
+                return new ReplayOutputInfo(response);
             }
             else
             {
@@ -108,7 +108,7 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// An <see cref="OBSOutputInfo"/> with stream specific properties.
     /// </summary>
-    public class StreamOutput : OBSOutputInfo
+    public class StreamOutputInfo : OBSOutputInfo
     {
         /// <summary>
         /// Stream output settings.
@@ -116,10 +116,10 @@ namespace OBSWebsocketDotNet.Types
         public readonly StreamOutputSettings Settings;
 
         /// <summary>
-        /// Creates a new <see cref="StreamOutput"/> from a <see cref="JObject"/>.
+        /// Creates a new <see cref="StreamOutputInfo"/> from a <see cref="JObject"/>.
         /// </summary>
         /// <param name="response"></param>
-        public StreamOutput(JObject response)
+        public StreamOutputInfo(JObject response)
             : base(response)
         {
             if (response["settings"] is JObject settings)
@@ -130,7 +130,7 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// An <see cref="OBSOutputInfo"/> with file specific properties.
     /// </summary>
-    public class FileOutput : OBSOutputInfo
+    public class FileOutputInfo : OBSOutputInfo
     {
         /// <summary>
         /// File output settings.
@@ -138,10 +138,10 @@ namespace OBSWebsocketDotNet.Types
         public readonly FileOutputSettings Settings;
 
         /// <summary>
-        /// Creates a new <see cref="FileOutput"/> from a <see cref="JObject"/>.
+        /// Creates a new <see cref="FileOutputInfo"/> from a <see cref="JObject"/>.
         /// </summary>
         /// <param name="response"></param>
-        public FileOutput(JObject response)
+        public FileOutputInfo(JObject response)
             : base(response)
         {
 
@@ -153,7 +153,7 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// An <see cref="OBSOutputInfo"/> with replay specific properties.
     /// </summary>
-    public class ReplayOutput : OBSOutputInfo
+    public class ReplayOutputInfo : OBSOutputInfo
     {
         /// <summary>
         /// File output settings.
@@ -164,7 +164,7 @@ namespace OBSWebsocketDotNet.Types
         /// Creates a new <see cref="ReplayOutput"/> from a <see cref="JObject"/>.
         /// </summary>
         /// <param name="response"></param>
-        public ReplayOutput(JObject response)
+        public ReplayOutputInfo(JObject response)
             : base(response)
         {
             if (response["settings"] is JObject settings)
