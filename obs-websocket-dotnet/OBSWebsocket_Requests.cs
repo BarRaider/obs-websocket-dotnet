@@ -119,11 +119,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="keyId">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
         /// <param name="keyModifier">Optional key modifiers object. You can combine multiple key operators. e.g. KeyModifier.Shift | KeyModifier.Control</param>
-        public void TriggerHotkeyBySequence(string keyId, KeyModifier keyModifier = KeyModifier.None)
+        public void TriggerHotkeyBySequence(OBSHotkey key, KeyModifier keyModifier = KeyModifier.None)
         {
             var requestFields = new JObject
             {
-                { "keyId", keyId },
+                { "keyId", key.ToString() },
                 { "keyModifiers", new JObject{
                     { "shift", (keyModifier & KeyModifier.Shift) == KeyModifier.Shift },
                     { "alt", (keyModifier & KeyModifier.Alt) == KeyModifier.Alt },

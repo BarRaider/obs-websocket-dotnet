@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OBSWebsocketDotNet
+namespace OBSWebsocketDotNet.Types
 {
     [Flags]
     /// <summary>
