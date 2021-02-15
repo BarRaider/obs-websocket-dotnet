@@ -27,6 +27,8 @@ using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace OBSWebsocketDotNet
 {
@@ -355,6 +357,26 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// If your code needs to perform multiple successive T-Bar moves (e.g. : in an animation, or in response to a user moving a T-Bar control in your User Interface), set release to false and call ReleaseTBar later once the animation/interaction is over.
+        /// </summary>
+        /// <param name="position">	T-Bar position. This value must be between 0.0 and 1.0.</param>
+        /// <param name="release">Whether or not the T-Bar gets released automatically after setting its new position (like a user releasing their mouse button after moving the T-Bar). Call ReleaseTBar manually if you set release to false. Defaults to true.</param>
+        public void SetTBarPosition(double position, bool release = true)
+        {
+            if (position < 0.0 || position > 1.0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position));
+            }
+
+            var requestFields = new JObject
+            {
+                { "position", position },
+                { "release", release}
+            };
+
+            var response = SendRequest("SetTBarPosition");
+        }
+        /// <summary>
         /// Set the current properties of a Text GDI Plus source.
         /// </summary>
         /// <param name="properties">properties for the source</param>
@@ -468,6 +490,14 @@ namespace OBSWebsocketDotNet
 
             JObject response = SendRequest("GetSourceFilterInfo", requestFields);
             return JsonConvert.DeserializeObject<FilterSettings>(response.ToString());
+        }
+
+        /// <summary>
+        /// Release the T-Bar (like a user releasing their mouse button after moving it). YOU MUST CALL THIS if you called SetTBarPosition with the release parameter set to false.
+        /// </summary>
+        public void ReleaseTBar()
+        {
+            SendRequest("ReleaseTBar");
         }
 
         /// <summary>
@@ -1681,6 +1711,22 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest("ListOutputs");
             return response["outputs"].ToObject<List<OBSOutputInfo>>();
+        }
+
+        /// <summary>
+        /// Get the audio's active status of a specified source.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>Audio active status of the source.</returns>
+        public bool GetAudioActive(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetAudioActive");
+            return (bool)response["audioActive"];
         }
         /// <summary>
         /// Get the audio monitoring type of the specified source.
