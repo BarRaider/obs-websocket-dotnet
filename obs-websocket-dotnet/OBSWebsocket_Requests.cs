@@ -597,6 +597,30 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Change the current settings of a transition
+        /// </summary>
+        /// <param name="transitionName">Transition name</param>
+        /// <param name="transitionSettings">Transition settings (they can be partial)</param>
+        /// <returns>Updated transition settings</returns>
+        public TransitionSettings SetTransitionSettings(string transitionName, JObject transitionSettings)
+        {
+            var requestFields = new JObject
+            {
+                { "transitionName", transitionName },
+                { "transitionSettings", JToken.FromObject(transitionSettings)}
+            };
+
+            var response = SendRequest("SetTransitionSettings", requestFields);
+            var token = response.SelectToken("transitionSettings");
+            if (token == null)
+            {
+                return null;
+            }
+
+            return new TransitionSettings((JObject)token);
+        }
+
+        /// <summary>
         /// Change the volume of the specified source
         /// </summary>
         /// <param name="sourceName">Name of the source which volume will be changed</param>
@@ -938,6 +962,47 @@ namespace OBSWebsocketDotNet
             return (string)response["rec-folder"];
         }
 
+        /// <summary>
+        /// Get current recording status.
+        /// </summary>
+        /// <returns></returns>
+        public RecordingStatus GetRecordingStatus()
+        {
+            var response = SendRequest("GetRecordingStatus");
+            return JsonConvert.DeserializeObject<RecordingStatus>(response.ToString());
+        }
+
+        /// <summary>
+        /// Get the status of the OBS replay buffer.
+        /// </summary>
+        /// <returns>Current recording status. true when active</returns>
+        public bool GetReplayBufferStatus()
+        {
+            var response = SendRequest("GetReplayBufferStatus");
+            return (bool)response["isReplayBufferActive"];
+        }
+
+        /// <summary>
+        /// Get the current settings of a transition
+        /// </summary>
+        /// <param name="transitionName">Transition name</param>
+        /// <returns>Current transition settings</returns>
+        public TransitionSettings GetTransitionSettings(string transitionName)
+        {
+            var requestFields = new JObject
+            {
+                { "transitionName", transitionName }
+            };
+
+            var response = SendRequest("GetTransitionSettings", requestFields);
+            var token = response.SelectToken("transitionSettings");
+            if (token == null)
+            {
+                return null;
+            }
+
+            return new TransitionSettings((JObject)token);
+        }
         /// <summary>
         /// Get duration of the currently selected transition (if supported)
         /// </summary>
