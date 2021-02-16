@@ -1776,5 +1776,19 @@ namespace OBSWebsocketDotNet
 
             SendRequest("BroadcastCustomMessage", request);
         }
+
+        /// <summary>
+        /// Refreshes the specified browser source.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void RefreshBrowserSource(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("RefreshBrowserSource", request);
+        }
     }
 }
