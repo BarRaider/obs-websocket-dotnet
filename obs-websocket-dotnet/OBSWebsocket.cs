@@ -320,6 +320,9 @@ namespace OBSWebsocketDotNet
         /// <param name="password">Server password</param>
         public void Connect(string url, string password)
         {
+            if (url.ToLower().StartsWith("ws://") == false)
+                url = "ws://" + url;
+            
             if (WSConnection != null && WSConnection.IsAlive)
                 Disconnect();
 
