@@ -27,6 +27,8 @@ using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace OBSWebsocketDotNet
 {
@@ -98,6 +100,41 @@ namespace OBSWebsocketDotNet
         public SourceScreenshotResponse TakeSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null)
         {
             return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath, -1, -1);
+        }
+
+        /// <summary>
+        /// Executes hotkey routine, identified by hotkey unique name
+        /// </summary>
+        /// <param name="hotkeyName">Unique name of the hotkey, as defined when registering the hotkey (e.g. "ReplayBuffer.Save")</param>
+        public void TriggerHotkeyByName(string hotkeyName)
+        {
+            var requestFields = new JObject
+            {
+                { "hotkeyName", hotkeyName }
+            };
+
+            SendRequest("TriggerHotkeyByName", requestFields);
+        }
+
+        /// <summary>
+        /// EExecutes hotkey routine, identified by bound combination of keys. A single key combination might trigger multiple hotkey routines depending on user settings
+        /// </summary>
+        /// <param name="keyId">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
+        /// <param name="keyModifier">Optional key modifiers object. You can combine multiple key operators. e.g. KeyModifier.Shift | KeyModifier.Control</param>
+        public void TriggerHotkeyBySequence(OBSHotkey key, KeyModifier keyModifier = KeyModifier.None)
+        {
+            var requestFields = new JObject
+            {
+                { "keyId", key.ToString() },
+                { "keyModifiers", new JObject{
+                    { "shift", (keyModifier & KeyModifier.Shift) == KeyModifier.Shift },
+                    { "alt", (keyModifier & KeyModifier.Alt) == KeyModifier.Alt },
+                    { "control", (keyModifier & KeyModifier.Control) == KeyModifier.Control },
+                    { "command", (keyModifier & KeyModifier.Command) == KeyModifier.Command } } 
+                }
+            };
+
+            SendRequest("TriggerHotkeyBySequence", requestFields);
         }
 
         /// <summary>
@@ -320,6 +357,26 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// If your code needs to perform multiple successive T-Bar moves (e.g. : in an animation, or in response to a user moving a T-Bar control in your User Interface), set release to false and call ReleaseTBar later once the animation/interaction is over.
+        /// </summary>
+        /// <param name="position">	T-Bar position. This value must be between 0.0 and 1.0.</param>
+        /// <param name="release">Whether or not the T-Bar gets released automatically after setting its new position (like a user releasing their mouse button after moving the T-Bar). Call ReleaseTBar manually if you set release to false. Defaults to true.</param>
+        public void SetTBarPosition(double position, bool release = true)
+        {
+            if (position < 0.0 || position > 1.0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position));
+            }
+
+            var requestFields = new JObject
+            {
+                { "position", position },
+                { "release", release}
+            };
+
+            var response = SendRequest("SetTBarPosition");
+        }
+        /// <summary>
         /// Set the current properties of a Text GDI Plus source.
         /// </summary>
         /// <param name="properties">properties for the source</param>
@@ -433,6 +490,14 @@ namespace OBSWebsocketDotNet
 
             JObject response = SendRequest("GetSourceFilterInfo", requestFields);
             return JsonConvert.DeserializeObject<FilterSettings>(response.ToString());
+        }
+
+        /// <summary>
+        /// Release the T-Bar (like a user releasing their mouse button after moving it). YOU MUST CALL THIS if you called SetTBarPosition with the release parameter set to false.
+        /// </summary>
+        public void ReleaseTBar()
+        {
+            SendRequest("ReleaseTBar");
         }
 
         /// <summary>
@@ -559,6 +624,30 @@ namespace OBSWebsocketDotNet
             };
 
             SendRequest("SetTransitionDuration", requestFields);
+        }
+
+        /// <summary>
+        /// Change the current settings of a transition
+        /// </summary>
+        /// <param name="transitionName">Transition name</param>
+        /// <param name="transitionSettings">Transition settings (they can be partial)</param>
+        /// <returns>Updated transition settings</returns>
+        public TransitionSettings SetTransitionSettings(string transitionName, JObject transitionSettings)
+        {
+            var requestFields = new JObject
+            {
+                { "transitionName", transitionName },
+                { "transitionSettings", JToken.FromObject(transitionSettings)}
+            };
+
+            var response = SendRequest("SetTransitionSettings", requestFields);
+            var token = response.SelectToken("transitionSettings");
+            if (token == null)
+            {
+                return null;
+            }
+
+            return new TransitionSettings((JObject)token);
         }
 
         /// <summary>
@@ -903,6 +992,47 @@ namespace OBSWebsocketDotNet
             return (string)response["rec-folder"];
         }
 
+        /// <summary>
+        /// Get current recording status.
+        /// </summary>
+        /// <returns></returns>
+        public RecordingStatus GetRecordingStatus()
+        {
+            var response = SendRequest("GetRecordingStatus");
+            return JsonConvert.DeserializeObject<RecordingStatus>(response.ToString());
+        }
+
+        /// <summary>
+        /// Get the status of the OBS replay buffer.
+        /// </summary>
+        /// <returns>Current recording status. true when active</returns>
+        public bool GetReplayBufferStatus()
+        {
+            var response = SendRequest("GetReplayBufferStatus");
+            return (bool)response["isReplayBufferActive"];
+        }
+
+        /// <summary>
+        /// Get the current settings of a transition
+        /// </summary>
+        /// <param name="transitionName">Transition name</param>
+        /// <returns>Current transition settings</returns>
+        public TransitionSettings GetTransitionSettings(string transitionName)
+        {
+            var requestFields = new JObject
+            {
+                { "transitionName", transitionName }
+            };
+
+            var response = SendRequest("GetTransitionSettings", requestFields);
+            var token = response.SelectToken("transitionSettings");
+            if (token == null)
+            {
+                return null;
+            }
+
+            return new TransitionSettings((JObject)token);
+        }
         /// <summary>
         /// Get duration of the currently selected transition (if supported)
         /// </summary>
@@ -1582,6 +1712,22 @@ namespace OBSWebsocketDotNet
             var response = SendRequest("ListOutputs");
             return response["outputs"].ToObject<List<OBSOutputInfo>>();
         }
+
+        /// <summary>
+        /// Get the audio's active status of a specified source.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>Audio active status of the source.</returns>
+        public bool GetAudioActive(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetAudioActive");
+            return (bool)response["audioActive"];
+        }
         /// <summary>
         /// Get the audio monitoring type of the specified source.
         /// Valid return values: none, monitorOnly, monitorAndOutput
@@ -1629,6 +1775,20 @@ namespace OBSWebsocketDotNet
             };
 
             SendRequest("BroadcastCustomMessage", request);
+        }
+
+        /// <summary>
+        /// Refreshes the specified browser source.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void RefreshBrowserSource(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("RefreshBrowserSource", request);
         }
     }
 }
