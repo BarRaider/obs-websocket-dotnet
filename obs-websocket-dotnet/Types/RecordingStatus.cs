@@ -1,20 +1,24 @@
-﻿namespace OBSWebsocketDotNet.Types
-{
-    using Newtonsoft.Json;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
+namespace OBSWebsocketDotNet.Types
+{
     /// <summary>
-    /// Current recording status.
+    /// GetRecordingStatus response
     /// </summary>
     public class RecordingStatus
     {
         /// <summary>
-        /// Current recording status.
+        /// Current recording status
         /// </summary>
         [JsonProperty(PropertyName = "isRecording")]
         public bool IsRecording { set; get; }
 
         /// <summary>
-        /// Whether the recording is paused or not.
+        /// Whether the recording is paused or not
         /// </summary>
         [JsonProperty(PropertyName = "isRecordingPaused")]
         public bool IsRecordingPaused { set; get; }
