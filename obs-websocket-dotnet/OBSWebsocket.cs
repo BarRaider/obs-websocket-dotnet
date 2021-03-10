@@ -259,6 +259,45 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event BroadcastCustomMessageCallback BroadcastCustomMessageReceived;
 
+        /// <summary>
+        /// These events are emitted by the OBS sources themselves. For example when the media file ends. The behavior depends on the type of media source being used.
+        /// </summary>
+        public event MediaEndedCallback MediaEnded;
+
+        /// <summary>
+        /// These events are emitted by the OBS sources themselves. For example when the media file starts playing. The behavior depends on the type of media source being used.
+        /// </summary>
+        public event MediaStartedCallback MediaStarted;
+
+        /// <summary>
+        /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+        /// </summary>
+        public event MediaPreviousCallback MediaPrevious;
+
+        /// <summary>
+        /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+        /// </summary>
+        public event MediaNextCallback MediaNext;
+
+        /// <summary>
+        /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+        /// </summary>
+        public event MediaStoppedCallback MediaStopped;
+
+        /// <summary>
+        /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+        /// </summary>
+        public event MediaRestartedCallback MediaRestarted;
+
+        /// <summary>
+        /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+        /// </summary>
+        public event MediaPausedCallback MediaPaused;
+
+        /// <summary>
+        /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+        /// </summary>
+        public event MediaPlayingCallback MediaPlaying;
         #endregion
 
         /// <summary>
@@ -703,6 +742,31 @@ namespace OBSWebsocketDotNet
                     break;
                 case "BroadcastCustomMessage":
                     BroadcastCustomMessageReceived?.Invoke(this, (string)body["realm"], (JObject)body["data"]);
+                    break;
+
+                case "MediaEnded":
+                    MediaEnded?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "MediaStarted":
+                    MediaStarted?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "MediaPrevious":
+                    MediaPrevious?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "MediaNext":
+                    MediaNext?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "MediaStopped":
+                    MediaStopped?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "MediaRestarted":
+                    MediaRestarted?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "MediaPaused":
+                    MediaPaused?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "MediaPlaying":
+                    MediaPlaying?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
                     break;
                 default:
                         var message = $"Unsupported Event: {eventType}\n{body}";
