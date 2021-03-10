@@ -224,6 +224,20 @@ namespace OBSWebsocketDotNet
     public delegate void SourceMuteStateChangedCallback(OBSWebsocket sender, string sourceName, bool muted);
 
     /// <summary>
+    /// Callback by <see cref="OBSWebsocket.SourceAudioDeactivated"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    public delegate void SourceAudioDeactivatedCallback(OBSWebsocket sender, string sourceName);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.SourceAudioActivated"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    public delegate void SourceAudioActivatedCallback(OBSWebsocket sender, string sourceName);
+
+    /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceVolumeChanged"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>

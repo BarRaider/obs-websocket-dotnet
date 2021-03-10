@@ -245,6 +245,16 @@ namespace OBSWebsocketDotNet
         public event SourceMuteStateChangedCallback SourceMuteStateChanged;
 
         /// <summary>
+        /// A source has been muted or unmuted
+        /// </summary>
+        public event SourceAudioDeactivatedCallback SourceAudioDeactivated;
+
+        /// <summary>
+        /// A source has been muted or unmuted
+        /// </summary>
+        public event SourceAudioActivatedCallback SourceAudioActivated;
+
+        /// <summary>
         /// A source has been renamed
         /// </summary>
         public event SourceRenamedCallback SourceRenamed;
@@ -718,6 +728,12 @@ namespace OBSWebsocketDotNet
 
                 case "SourceMuteStateChanged":
                     SourceMuteStateChanged?.Invoke(this, (string)body["sourceName"], (bool)body["muted"]);
+                    break;
+                case "SourceAudioDeactivated":
+                    SourceAudioDeactivated?.Invoke(this, (string)body["sourceName"]);
+                    break;
+                case "SourceAudioActivated":
+                    SourceAudioActivated?.Invoke(this, (string)body["sourceName"]);
                     break;
                 case "SourceVolumeChanged":
                     SourceVolumeChanged?.Invoke(this, (string)body["sourceName"], (float)body["volume"]);
