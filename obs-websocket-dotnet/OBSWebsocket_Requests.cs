@@ -1790,5 +1790,206 @@ namespace OBSWebsocketDotNet
 
             SendRequest("RefreshBrowserSource", request);
         }
+
+        /// <summary>
+        /// Pause or play a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note :Leaving out playPause toggles the current pause state
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="playPause">(optional) Whether to pause or play the source. false for play, true for pause.</param>
+        public void PlayPauseMedia(string sourceName, bool? playPause)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            if (playPause.HasValue)
+            {
+                request.Add("playPause", playPause.Value);
+            }
+
+            SendRequest("PlayPauseMedia", request);
+        }
+
+        /// <summary>
+        /// Restart a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void RestartMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("RestartMedia", request);
+        }
+
+        /// <summary>
+        /// Stop a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void StopMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("StopMedia", request);
+        }
+
+        /// <summary>
+        /// Skip to the next media item in the playlist. Supports only vlc media source (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void NextMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("NextMedia", request);
+        }
+
+        /// <summary>
+        /// Go to the previous media item in the playlist. Supports only vlc media source (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void PreviousMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("PreviousMedia", request);
+        }
+
+        /// <summary>
+        /// Get the length of media in milliseconds. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note: For some reason, for the first 5 or so seconds that the media is playing, the total duration can be off by upwards of 50ms.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>The total length of media in milliseconds.</returns>
+        public int GetMediaDuration(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetMediaDuration", request);
+            return (int)response["mediaDuration"];
+        }
+
+        /// <summary>
+        /// Get the current timestamp of media in milliseconds. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>The time in milliseconds since the start of the media.</returns>
+        public int GetMediaTime(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetMediaTime", request);
+            return (int)response["timestamp"];
+        }
+
+        /// <summary>
+        /// Set the timestamp of a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <param name="timestamp">Milliseconds to set the timestamp to.</param>
+        public void SetMediaTime(string sourceName, int timestamp)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "timestamp", timestamp }
+            };
+
+            SendRequest("SetMediaTime", request);
+        }
+
+        /// <summary>
+        /// Scrub media using a supplied offset. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note: Due to processing/network delays, this request is not perfect. The processing rate of this request has also not been tested.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <param name="timeOffset">Millisecond offset (positive or negative) to offset the current media position.</param>
+        public void ScrubMedia(string sourceName, int timeOffset)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "timeOffset", timeOffset }
+            };
+
+            SendRequest("ScrubMedia", request);
+        }
+
+        /// <summary>
+        /// Get the current playing state of a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>The media state of the provided source.</returns>
+        public MediaState GetMediaState(string sourceName)
+        {
+           var request = new JObject
+            {
+                { "sourceName", sourceName }
+            }; 
+
+            var response = SendRequest("GetMediaState", request);
+            return (MediaState)Enum.Parse(typeof(MediaState), (string)response["mediaState"]);
+        }
+
+        /// <summary>
+        /// List the media state of all media sources (vlc and media source)
+        /// </summary>
+        /// <returns>Array of sources</returns>
+        public IEnumerable<MediaSource> GetMediaSourcesList()
+        {
+            var result = new List<MediaSource>();
+
+            var response = SendRequest("GetMediaSourcesList");
+            var t = (JArray)response["mediaSources"];
+            return response["mediaSources"].Select(m => new MediaSource((JObject)m));
+        }
+
+        /// <summary>
+        /// Create a source and add it as a sceneitem to a scene.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <param name="sourceKind">Source kind, Eg. vlc_source</param>
+        /// <param name="sceneName">Scene to add the new source to.</param>
+        /// <param name="sourceSettings">Source settings data.</param>
+        /// <param name="setVisible">Set the created SceneItem as visible or not. Defaults to true</param>
+        /// <returns>ID of the SceneItem in the scene.</returns>
+        public int CreateSource(string sourceName, string sourceKind, string sceneName, JObject sourceSettings, bool? setVisible)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "sourceKind", sourceKind },
+                { "sceneName", sceneName }
+            };
+
+            if (sourceSettings != null)
+            {
+                request.Add("sourceSettings	", sourceSettings);
+            }
+
+            if (setVisible.HasValue)
+            {
+                request.Add("setVisible	", setVisible.Value);
+            }
+
+            var response = SendRequest("CreateSource", request);
+            return (int)response["itemId"];
+        }
     }
 }
