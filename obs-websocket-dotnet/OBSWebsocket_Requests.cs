@@ -1725,9 +1725,10 @@ namespace OBSWebsocketDotNet
                 { "sourceName", sourceName }
             };
 
-            var response = SendRequest("GetAudioActive");
+            var response = SendRequest("GetAudioActive", request);
             return (bool)response["audioActive"];
         }
+
         /// <summary>
         /// Get the audio monitoring type of the specified source.
         /// Valid return values: none, monitorOnly, monitorAndOutput
@@ -1956,7 +1957,6 @@ namespace OBSWebsocketDotNet
             var result = new List<MediaSource>();
 
             var response = SendRequest("GetMediaSourcesList");
-            var t = (JArray)response["mediaSources"];
             return response["mediaSources"].Select(m => new MediaSource((JObject)m));
         }
 
@@ -1990,6 +1990,75 @@ namespace OBSWebsocketDotNet
 
             var response = SendRequest("CreateSource", request);
             return (int)response["itemId"];
+        }
+
+        /// <summary>
+        /// Get the default settings for a given source type.
+        /// </summary>
+        /// <param name="sourceKind">Source kind. Also called "source id" in libobs terminology.</param>
+        /// <returns>Settings object for source.</returns>
+        public JObject GetSourceDefaultSettings(string sourceKind)
+        {
+            var request = new JObject
+            {
+                { "sourceKind", sourceKind }
+            };
+
+            var response = SendRequest("GetSourceDefaultSettings", request);
+            return (JObject)response["defaultSettings"];
+        }
+
+        /// <summary>
+        /// Get a list of all scene items in a scene.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to get the list of scene items from. Defaults to the current scene if not specified.</param>
+        public IEnumerable<SceneItem2> GetSceneItemList(string sceneName)
+        {
+            JObject request = null;
+            if (!string.IsNullOrEmpty(sceneName))
+            {
+                request = new JObject
+                {
+                    { "sceneName", sceneName }
+                };
+            }
+
+            var response = SendRequest("GetSceneItemList", request);
+            return response["sceneItems"].Select(m => new SceneItem2((JObject)m));
+        }
+
+        /// <summary>
+        /// Creates a scene item in a scene. In other words, this is how you add a source into a scene.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to create the scene item in</param>
+        /// <param name="sourceName">Name of the source to be added</param>
+        /// <param name="setVisible">Whether to make the sceneitem visible on creation or not. Default true</param>
+        /// <returns>Numerical ID of the created scene item</returns>
+        public int AddSceneItem(string sceneName, string sourceName, bool setVisible = true)
+        {
+            var request = new JObject
+            {
+                { "sceneName", sceneName },
+                { "sourceName", sourceName },
+                { "setVisible", setVisible }
+            };
+
+            var response = SendRequest("AddSceneItem", request);
+            return (int)response["itemId"];
+        }
+
+        /// <summary>
+        /// Create a new scene scene.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to create.</param>
+        public void CreateScene(string sceneName)
+        {
+            var request = new JObject
+            {
+                { "sceneName", sceneName }
+            };
+
+            SendRequest("CreateScene", request);
         }
     }
 }
