@@ -267,6 +267,14 @@ namespace OBSWebsocketDotNet
     public delegate void SourceFilterVisibilityChangedCallback(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled);
 
     /// <summary>
+    /// Callback by <see cref="OBSWebsocket.BroadcastCustomMessageReceived"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="realm">Identifier provided by the sender</param>
+    /// <param name="data">User-defined data</param>
+    public delegate void BroadcastCustomMessageCallback(OBSWebsocket sender, string realm, JObject data);
+
+    /// <summary>
     /// Thrown if authentication fails
     /// </summary>
     public class AuthFailureException : Exception

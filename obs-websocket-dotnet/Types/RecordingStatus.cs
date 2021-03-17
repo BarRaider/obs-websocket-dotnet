@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +24,15 @@ namespace OBSWebsocketDotNet.Types
         public bool IsRecordingPaused { set; get; }
 
         /// <summary>
-        /// Time elapsed since recording started (only present if currently recording)
+        /// Time elapsed since recording started (only present if currently recording). (Optional)
         /// </summary>
         [JsonProperty(PropertyName = "recordTimecode")]
-        public string RecordTimeCode { set; get; }
+        public string RecordTimecode { set; get; }
+
+        /// <summary>
+        /// Absolute path to the recording file (only present if currently recording). (Optional)
+        /// </summary>
+        [JsonProperty(PropertyName = "recordingFilename")]
+        public string RecordingFilename { set; get; }
     }
 }
