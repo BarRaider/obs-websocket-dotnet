@@ -1,35 +1,9 @@
-﻿/*
-    The MIT License (MIT)
-
-    Copyright (c) 2017 Stéphane Lepin
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-*/
-
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
-using System;
 using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
 {
-
     /// <summary>
     /// Called by <see cref="OBSWebsocket.SceneChanged"/>
     /// </summary>
@@ -224,6 +198,20 @@ namespace OBSWebsocketDotNet
     public delegate void SourceMuteStateChangedCallback(OBSWebsocket sender, string sourceName, bool muted);
 
     /// <summary>
+    /// Callback by <see cref="OBSWebsocket.SourceAudioDeactivated"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    public delegate void SourceAudioDeactivatedCallback(OBSWebsocket sender, string sourceName);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.SourceAudioActivated"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    public delegate void SourceAudioActivatedCallback(OBSWebsocket sender, string sourceName);
+
+    /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceVolumeChanged"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
@@ -275,23 +263,66 @@ namespace OBSWebsocketDotNet
     public delegate void BroadcastCustomMessageCallback(OBSWebsocket sender, string realm, JObject data);
 
     /// <summary>
-    /// Thrown if authentication fails
+    /// Callback by <see cref="OBSWebsocket.MediaEnded"/>
     /// </summary>
-    public class AuthFailureException : Exception
-    {
-    }
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaEndedCallback(OBSWebsocket sender, string sourceName, string sourceKind);
 
     /// <summary>
-    /// Thrown when the server responds with an error
+    /// Callback by <see cref="OBSWebsocket.MediaStarted"/>
     /// </summary>
-    public class ErrorResponseException : Exception
-    {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="message"></param>
-        public ErrorResponseException(string message) : base(message)
-        {
-        }
-    }
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaStartedCallback(OBSWebsocket sender, string sourceName, string sourceKind);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.MediaPrevious"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaPreviousCallback(OBSWebsocket sender, string sourceName, string sourceKind);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.MediaNext"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaNextCallback(OBSWebsocket sender, string sourceName, string sourceKind);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.MediaStopped"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaStoppedCallback(OBSWebsocket sender, string sourceName, string sourceKind);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.MediaRestarted"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaRestartedCallback(OBSWebsocket sender, string sourceName, string sourceKind);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.MediaPaused"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaPausedCallback(OBSWebsocket sender, string sourceName, string sourceKind);
+
+    /// <summary>
+    /// Callback by <see cref="OBSWebsocket.MediaPlaying"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="sourceName">Name of source</param>
+    /// <param name="sourceKind">Kind of source</param>
+    public delegate void MediaPlayingCallback(OBSWebsocket sender, string sourceName, string sourceKind);
 }

@@ -4,7 +4,7 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<AssemblyName>obs-websocket-dotnet-tests</AssemblyName>
 		<RootNamespace>OBSWebsocketDotNet.Tests</RootNamespace>
-		<Copyright>Copyright © Stéphane Lepin 2020</Copyright>
+		<Copyright>Copyright © Stéphane Lepin, BarRaider 2021</Copyright>
 		<LangVersion>8</LangVersion>
 	</PropertyGroup>
 

@@ -1,7 +1,7 @@
 ﻿/*
     The MIT License (MIT)
 
-    Copyright (c) 2017 Stéphane Lepin
+    Copyright (c) 2021 Stéphane Lepin, BarRaider
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -735,6 +735,7 @@ namespace OBSWebsocketDotNet
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
+        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
         public void SetSceneItemPosition(string itemName, float x, float y, string sceneName = null)
         {
             var requestFields = new JObject
@@ -760,6 +761,7 @@ namespace OBSWebsocketDotNet
         /// <param name="xScale">Horizontal scale factor</param>
         /// <param name="yScale">Vertical scale factor</param>
         /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
+        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
         public void SetSceneItemTransform(string itemName, float rotation = 0, float xScale = 1, float yScale = 1, string sceneName = null)
         {
             var requestFields = new JObject
@@ -1352,8 +1354,8 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemName">Name of the scene item</param>
         /// <param name="cropInfo">Crop coordinates</param>
         /// <param name="sceneName">(optional) parent scene name of the specified source</param>
-        public void SetSceneItemCrop(string sceneItemName,
-            SceneItemCropInfo cropInfo, string sceneName = null)
+        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
+        public void SetSceneItemCrop(string sceneItemName, SceneItemCropInfo cropInfo, string sceneName = null)
         {
             var requestFields = new JObject
             {
@@ -1553,6 +1555,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
         /// <returns>BrowserSource properties</returns>
+        [Obsolete("Deprecated! Please use GetSourceSettings(). Will be removed in v5.0")]
         public BrowserSourceProperties GetBrowserSourceProperties(string sourceName, string sceneName = null)
         {
             var request = new JObject
@@ -1579,6 +1582,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="props">BrowserSource properties</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
+        [Obsolete("Deprecated! Please use SetSourceSettings(). Will be removed in v5.0")]
         public void SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
             props.Source = sourceName;
@@ -1595,7 +1599,7 @@ namespace OBSWebsocketDotNet
         /// Enable/disable the heartbeat event
         /// </summary>
         /// <param name="enable"></param>
-        [Obsolete("Will be deprecated in v4.9 and completely removed in v5.0")]
+        [Obsolete("Deprecated! Please pool the appropriate data using individual requests. Will be removed in v5.0")]
         public void SetHeartbeat(bool enable)
         {
             var request = new JObject
@@ -1746,9 +1750,10 @@ namespace OBSWebsocketDotNet
                 { "sourceName", sourceName }
             };
 
-            var response = SendRequest("GetAudioActive");
+            var response = SendRequest("GetAudioActive", request);
             return (bool)response["audioActive"];
         }
+
         /// <summary>
         /// Get the audio monitoring type of the specified source.
         /// Valid return values: none, monitorOnly, monitorAndOutput
@@ -1810,6 +1815,275 @@ namespace OBSWebsocketDotNet
             };
 
             SendRequest("RefreshBrowserSource", request);
+        }
+
+        /// <summary>
+        /// Pause or play a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note :Leaving out playPause toggles the current pause state
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="playPause">(optional) Whether to pause or play the source. false for play, true for pause.</param>
+        public void PlayPauseMedia(string sourceName, bool? playPause)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            if (playPause.HasValue)
+            {
+                request.Add("playPause", playPause.Value);
+            }
+
+            SendRequest("PlayPauseMedia", request);
+        }
+
+        /// <summary>
+        /// Restart a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void RestartMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("RestartMedia", request);
+        }
+
+        /// <summary>
+        /// Stop a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void StopMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("StopMedia", request);
+        }
+
+        /// <summary>
+        /// Skip to the next media item in the playlist. Supports only vlc media source (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void NextMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("NextMedia", request);
+        }
+
+        /// <summary>
+        /// Go to the previous media item in the playlist. Supports only vlc media source (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        public void PreviousMedia(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            SendRequest("PreviousMedia", request);
+        }
+
+        /// <summary>
+        /// Get the length of media in milliseconds. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note: For some reason, for the first 5 or so seconds that the media is playing, the total duration can be off by upwards of 50ms.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>The total length of media in milliseconds.</returns>
+        public int GetMediaDuration(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetMediaDuration", request);
+            return (int)response["mediaDuration"];
+        }
+
+        /// <summary>
+        /// Get the current timestamp of media in milliseconds. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>The time in milliseconds since the start of the media.</returns>
+        public int GetMediaTime(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetMediaTime", request);
+            return (int)response["timestamp"];
+        }
+
+        /// <summary>
+        /// Set the timestamp of a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <param name="timestamp">Milliseconds to set the timestamp to.</param>
+        public void SetMediaTime(string sourceName, int timestamp)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "timestamp", timestamp }
+            };
+
+            SendRequest("SetMediaTime", request);
+        }
+
+        /// <summary>
+        /// Scrub media using a supplied offset. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note: Due to processing/network delays, this request is not perfect. The processing rate of this request has also not been tested.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <param name="timeOffset">Millisecond offset (positive or negative) to offset the current media position.</param>
+        public void ScrubMedia(string sourceName, int timeOffset)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "timeOffset", timeOffset }
+            };
+
+            SendRequest("ScrubMedia", request);
+        }
+
+        /// <summary>
+        /// Get the current playing state of a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <returns>The media state of the provided source.</returns>
+        public MediaState GetMediaState(string sourceName)
+        {
+           var request = new JObject
+            {
+                { "sourceName", sourceName }
+            }; 
+
+            var response = SendRequest("GetMediaState", request);
+            return (MediaState)Enum.Parse(typeof(MediaState), (string)response["mediaState"]);
+        }
+
+        /// <summary>
+        /// List the media state of all media sources (vlc and media source)
+        /// </summary>
+        /// <returns>Array of sources</returns>
+        public IEnumerable<MediaSource> GetMediaSourcesList()
+        {
+            var result = new List<MediaSource>();
+
+            var response = SendRequest("GetMediaSourcesList");
+            return response["mediaSources"].Select(m => new MediaSource((JObject)m));
+        }
+
+        /// <summary>
+        /// Create a source and add it as a sceneitem to a scene.
+        /// </summary>
+        /// <param name="sourceName">Source name.</param>
+        /// <param name="sourceKind">Source kind, Eg. vlc_source</param>
+        /// <param name="sceneName">Scene to add the new source to.</param>
+        /// <param name="sourceSettings">Source settings data.</param>
+        /// <param name="setVisible">Set the created SceneItem as visible or not. Defaults to true</param>
+        /// <returns>ID of the SceneItem in the scene.</returns>
+        public int CreateSource(string sourceName, string sourceKind, string sceneName, JObject sourceSettings, bool? setVisible)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "sourceKind", sourceKind },
+                { "sceneName", sceneName }
+            };
+
+            if (sourceSettings != null)
+            {
+                request.Add("sourceSettings	", sourceSettings);
+            }
+
+            if (setVisible.HasValue)
+            {
+                request.Add("setVisible	", setVisible.Value);
+            }
+
+            var response = SendRequest("CreateSource", request);
+            return (int)response["itemId"];
+        }
+
+        /// <summary>
+        /// Get the default settings for a given source type.
+        /// </summary>
+        /// <param name="sourceKind">Source kind. Also called "source id" in libobs terminology.</param>
+        /// <returns>Settings object for source.</returns>
+        public JObject GetSourceDefaultSettings(string sourceKind)
+        {
+            var request = new JObject
+            {
+                { "sourceKind", sourceKind }
+            };
+
+            var response = SendRequest("GetSourceDefaultSettings", request);
+            return (JObject)response["defaultSettings"];
+        }
+
+        /// <summary>
+        /// Get a list of all scene items in a scene.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to get the list of scene items from. Defaults to the current scene if not specified.</param>
+        public IEnumerable<SceneItem2> GetSceneItemList(string sceneName)
+        {
+            JObject request = null;
+            if (!string.IsNullOrEmpty(sceneName))
+            {
+                request = new JObject
+                {
+                    { "sceneName", sceneName }
+                };
+            }
+
+            var response = SendRequest("GetSceneItemList", request);
+            return response["sceneItems"].Select(m => new SceneItem2((JObject)m));
+        }
+
+        /// <summary>
+        /// Creates a scene item in a scene. In other words, this is how you add a source into a scene.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to create the scene item in</param>
+        /// <param name="sourceName">Name of the source to be added</param>
+        /// <param name="setVisible">Whether to make the sceneitem visible on creation or not. Default true</param>
+        /// <returns>Numerical ID of the created scene item</returns>
+        public int AddSceneItem(string sceneName, string sourceName, bool setVisible = true)
+        {
+            var request = new JObject
+            {
+                { "sceneName", sceneName },
+                { "sourceName", sourceName },
+                { "setVisible", setVisible }
+            };
+
+            var response = SendRequest("AddSceneItem", request);
+            return (int)response["itemId"];
+        }
+
+        /// <summary>
+        /// Create a new scene scene.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene to create.</param>
+        public void CreateScene(string sceneName)
+        {
+            var request = new JObject
+            {
+                { "sceneName", sceneName }
+            };
+
+            SendRequest("CreateScene", request);
         }
     }
 }
