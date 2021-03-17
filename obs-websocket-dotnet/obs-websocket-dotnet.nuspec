@@ -5,7 +5,7 @@
 		<version>4.2.0-beta3</version>
 
 		<authors>Stéphane Lepin</authors>
-		<owners>Palakis</owners>
+		<owners>BarRaider</owners>
 
 		<licenseUrl>https://github.com/Palakis/obs-websocket-dotnet/blob/master/LICENSE.md</licenseUrl>
 		<projectUrl>https://github.com/Palakis/obs-websocket-dotnet</projectUrl>
@@ -14,7 +14,7 @@
 		<description>C#/VB .NET library to communicate with an obs-websocket server</description>
 		<releaseNotes>Better error handling + test coverage</releaseNotes>
 
-		<copyright>Copyright 2017 (c) Stéphane Lepin</copyright>
+		<copyright>Copyright 2021 (c) Stéphane Lepin, BarRaider</copyright>
 		<tags>obs studio websocket api</tags>
 
 		<dependencies>

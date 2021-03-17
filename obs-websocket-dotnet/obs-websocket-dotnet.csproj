@@ -4,7 +4,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<AssemblyName>obs-websocket-dotnet</AssemblyName>
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
-		<Copyright>Copyright © Stéphane Lepin 2020</Copyright>
+		<Copyright>Copyright © Stéphane Lepin, BarRaider 2021</Copyright>
 		<LangVersion>8</LangVersion>
 	</PropertyGroup>
 
