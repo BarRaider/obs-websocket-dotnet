@@ -724,6 +724,7 @@ namespace OBSWebsocketDotNet
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
+        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
         public void SetSceneItemPosition(string itemName, float x, float y, string sceneName = null)
         {
             var requestFields = new JObject
@@ -749,6 +750,7 @@ namespace OBSWebsocketDotNet
         /// <param name="xScale">Horizontal scale factor</param>
         /// <param name="yScale">Vertical scale factor</param>
         /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
+        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
         public void SetSceneItemTransform(string itemName, float rotation = 0, float xScale = 1, float yScale = 1, string sceneName = null)
         {
             var requestFields = new JObject
@@ -1331,8 +1333,8 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemName">Name of the scene item</param>
         /// <param name="cropInfo">Crop coordinates</param>
         /// <param name="sceneName">(optional) parent scene name of the specified source</param>
-        public void SetSceneItemCrop(string sceneItemName,
-            SceneItemCropInfo cropInfo, string sceneName = null)
+        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
+        public void SetSceneItemCrop(string sceneItemName, SceneItemCropInfo cropInfo, string sceneName = null)
         {
             var requestFields = new JObject
             {
@@ -1532,6 +1534,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
         /// <returns>BrowserSource properties</returns>
+        [Obsolete("Deprecated! Please use GetSourceSettings(). Will be removed in v5.0")]
         public BrowserSourceProperties GetBrowserSourceProperties(string sourceName, string sceneName = null)
         {
             var request = new JObject
@@ -1558,6 +1561,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="props">BrowserSource properties</param>
         /// <param name="sceneName">Optional name of a scene where the specified source can be found</param>
+        [Obsolete("Deprecated! Please use SetSourceSettings(). Will be removed in v5.0")]
         public void SetBrowserSourceProperties(string sourceName, BrowserSourceProperties props, string sceneName = null)
         {
             props.Source = sourceName;
@@ -1574,7 +1578,7 @@ namespace OBSWebsocketDotNet
         /// Enable/disable the heartbeat event
         /// </summary>
         /// <param name="enable"></param>
-        [Obsolete("Will be deprecated in v4.9 and completely removed in v5.0")]
+        [Obsolete("Deprecated! Please pool the appropriate data using individual requests. Will be removed in v5.0")]
         public void SetHeartbeat(bool enable)
         {
             var request = new JObject
