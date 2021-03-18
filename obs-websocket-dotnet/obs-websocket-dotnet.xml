@@ -804,7 +804,7 @@
             <summary>
             EExecutes hotkey routine, identified by bound combination of keys. A single key combination might trigger multiple hotkey routines depending on user settings
             </summary>
-            <param name="keyId">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
+            <param name="key">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
             <param name="keyModifier">Optional key modifiers object. You can combine multiple key operators. e.g. KeyModifier.Shift | KeyModifier.Control</param>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetCurrentScene">
@@ -1643,7 +1643,7 @@
             </summary>
             <param name="sceneName">Name of the scene to create the scene item in</param>
             <param name="sourceName">Name of the source to be added</param>
-            <param name="setVisible">Whether to make the sceneitem visible on creation or not. Default true</param>
+            <param name="setVisible">Whether to make the scene item visible on creation or not. Default true</param>
             <returns>Numerical ID of the created scene item</returns>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.CreateScene(System.String)">
@@ -2020,7 +2020,7 @@
         </member>
         <member name="P:OBSWebsocketDotNet.Types.MediaSource.SourceKind">
             <summary>
-            Kind of source
+            Kind of source (a.k.a ffmpeg_source or vlc_source)
             </summary>
         </member>
         <member name="P:OBSWebsocketDotNet.Types.MediaSource.MediaState">
@@ -2064,6 +2064,11 @@
             Builds the object from JSON response body
             </summary>
             <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSHotkey">
+            <summary>
+            OBS Hotkeys as defined here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.OBSOutputFlags">
             <summary>
@@ -2463,32 +2468,6 @@
             Empty constructor for JSON deserialization
             </summary>
         </member>
-        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.ItemId">
-            <summary>
-            Unique item id of the source item
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.SourceKind">
-            <summary>
-            Kind of source
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.SourceName">
-            <summary>
-            Name of the scene item's source
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.SourceType">
-            <summary>
-            Type of the scene item's source.
-            </summary>
-        </member>
-        <member name="M:OBSWebsocketDotNet.Types.SceneItem2.#ctor(Newtonsoft.Json.Linq.JObject)">
-            <summary>
-            Builds the object from the JSON data
-            </summary>
-            <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
-        </member>
         <member name="T:OBSWebsocketDotNet.Types.SceneItemBoundsInfo">
             <summary>
             Information on scene item bounds
@@ -2578,6 +2557,37 @@
             <summary>
             Right crop (in pixels)
             </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemDetails">
+            <summary>
+            Meta data regarding a Scene item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemDetails.ItemId">
+            <summary>
+            Unique item id of the source item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemDetails.SourceKind">
+            <summary>
+            Kind of source (Example: vlc_source or image_source)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemDetails.SourceName">
+            <summary>
+            Name of the scene item's source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemDetails.SourceType">
+            <summary>
+            Type of the scene item's source.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemDetails.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON data
+            </summary>
+            <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SceneItemPointInfo">
             <summary>
@@ -2693,6 +2703,26 @@
         <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Rotation">
             <summary>
             The clockwise rotation of the scene item in degrees around the point of alignment.
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemSourceType">
+            <summary>
+            Type of scene item's source
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemSourceType.Input">
+            <summary>
+            Input
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemSourceType.Group">
+            <summary>
+            Group
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemSourceType.Scene">
+            <summary>
+            Scene
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SceneItemStub">
@@ -2814,7 +2844,7 @@
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SourceType">
             <summary>
-            OBS SOurce Type definitions
+            OBS Source Type definitions
             </summary>
         </member>
         <member name="P:OBSWebsocketDotNet.Types.SourceType.TypeID">

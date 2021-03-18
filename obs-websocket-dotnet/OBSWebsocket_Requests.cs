@@ -2012,7 +2012,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the scene to create the scene item in</param>
         /// <param name="sourceName">Name of the source to be added</param>
-        /// <param name="setVisible">Whether to make the sceneitem visible on creation or not. Default true</param>
+        /// <param name="setVisible">Whether to make the scene item visible on creation or not. Default true</param>
         /// <returns>Numerical ID of the created scene item</returns>
         public int AddSceneItem(string sceneName, string sourceName, bool setVisible = true)
         {
