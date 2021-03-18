@@ -12,7 +12,40 @@
 		<PackageProjectUrl>https://github.com/BarRaider/obs-websocket-dotnet</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/BarRaider/obs-websocket-dotnet</RepositoryUrl>
 		<Description>Official obs-websocket .NET library. Written in C#. Supports .NET Standard</Description>
-		<PackageTags>OBS obs-websocket websocket officia obs-websocket-dotnet obs.websocket.net obs-websocket-net</PackageTags>
+		<PackageTags>OBS obs-websocket websocket official obs-websocket-dotnet obs.websocket.net obs-websocket-net</PackageTags>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReleaseNotes>Added Events:
+New `Media` category with lots of events
+`SourceAudioActivated`
+`SourceAudioDeactivated`
+
+Added Requests:
+New `Media Control` category with lots of requests
+`CreateSource`
+`CreateScene`
+`GetSourceDefaultSettings`
+`RefreshBrowserSource`
+`AddSceneItem`
+`GetSceneItemList`
+`GetAudioActive`
+`TriggerHotkeyByName`
+`TriggerHotkeyBySequence`
+`GetRecordingStatus`
+`GetReplayBufferStatus`
+`GetTransitionSettings`
+`SetTransitionSettings`
+`GetTransitionPosition`
+`ReleaseTBar`
+`SetTBarPosition`
+
+⚠️ Deprecated:
+`GetBrowserSourceProperties`
+`SetBrowserSourceProperties`
+`SetHeartbeat`
+`SetSceneItemCrop`
+`SetSceneItemPosition`
+`SetSceneItemTransform`
+</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
