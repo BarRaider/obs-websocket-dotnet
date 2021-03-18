@@ -95,7 +95,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// EExecutes hotkey routine, identified by bound combination of keys. A single key combination might trigger multiple hotkey routines depending on user settings
         /// </summary>
-        /// <param name="keyId">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
+        /// <param name="key">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
         /// <param name="keyModifier">Optional key modifiers object. You can combine multiple key operators. e.g. KeyModifier.Shift | KeyModifier.Control</param>
         public void TriggerHotkeyBySequence(OBSHotkey key, KeyModifier keyModifier = KeyModifier.None)
         {
@@ -1335,8 +1335,8 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItem">Scene item object</param>
         /// <param name="cropInfo">Crop coordinates</param>
         /// <param name="scene">Parent scene of scene item</param>
-        public void SetSceneItemCrop(SceneItem sceneItem,
-            SceneItemCropInfo cropInfo, OBSScene scene)
+        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
+        public void SetSceneItemCrop(SceneItem sceneItem, SceneItemCropInfo cropInfo, OBSScene scene)
         {
             SetSceneItemCrop(sceneItem.SourceName, cropInfo, scene.Name);
         }
@@ -1992,7 +1992,7 @@ namespace OBSWebsocketDotNet
         /// Get a list of all scene items in a scene.
         /// </summary>
         /// <param name="sceneName">Name of the scene to get the list of scene items from. Defaults to the current scene if not specified.</param>
-        public IEnumerable<SceneItem2> GetSceneItemList(string sceneName)
+        public IEnumerable<SceneItemDetails> GetSceneItemList(string sceneName)
         {
             JObject request = null;
             if (!string.IsNullOrEmpty(sceneName))
@@ -2004,7 +2004,7 @@ namespace OBSWebsocketDotNet
             }
 
             var response = SendRequest("GetSceneItemList", request);
-            return response["sceneItems"].Select(m => new SceneItem2((JObject)m));
+            return response["sceneItems"].Select(m => new SceneItemDetails((JObject)m));
         }
 
         /// <summary>

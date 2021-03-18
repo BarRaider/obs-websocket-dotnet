@@ -6,11 +6,29 @@
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
 		<Copyright>Copyright © Stéphane Lepin, BarRaider 2021</Copyright>
 		<LangVersion>8</LangVersion>
+		<Version>4.9.0-Beta1</Version>
+		<Authors>Stéphane Lepin, BarRaider</Authors>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/BarRaider/obs-websocket-dotnet</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/BarRaider/obs-websocket-dotnet</RepositoryUrl>
+		<Description>Official obs-websocket .NET library. Written in C#. Supports .NET Standard</Description>
+		<PackageTags>OBS obs-websocket websocket officia obs-websocket-dotnet obs.websocket.net obs-websocket-net</PackageTags>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DocumentationFile>E:\Projects\GitHub\obs-websocket-dotnet-standard\obs-websocket-dotnet\obs-websocket-dotnet.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 	  <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
 	</ItemGroup>
 
 </Project>
