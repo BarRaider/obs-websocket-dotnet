@@ -2013,6 +2013,41 @@
             OBS Stats
             </summary>
         </member>
+        <member name="T:OBSWebsocketDotNet.Types.KeyModifier">
+            <summary>
+            Key Modifiers
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.KeyModifier.None">
+            <summary>
+            No modifiers
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.KeyModifier.Shift">
+            <summary>
+            Shift Key
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.KeyModifier.Alt">
+            <summary>
+            Alt Key
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.KeyModifier.Control">
+            <summary>
+            Control Key
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.KeyModifier.Command">
+            <summary>
+            Command (Mac) / WinKey (?) Windows
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.MediaSource">
+            <summary>
+            Meta Data on the selected media source
+            </summary>
+        </member>
         <member name="P:OBSWebsocketDotNet.Types.MediaSource.SourceName">
             <summary>
             Name of the source
