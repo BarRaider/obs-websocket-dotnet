@@ -3,7 +3,7 @@
 
 Official .NET library (written in C#) to communicate with an obs-websocket server.
 
-This library is available on the [NuGet gallery](https://www.nuget.org/packages/obs-websocket-dotnet)      [![NuGet](https://img.shields.io/nuget/v/obs-websocket-dotnet.svg?style=flat)](https://www.nuget.org/packages/obs-websocket-dotnet)    
+This library is available on the [NuGet gallery](https://www.nuget.org/packages/obs-websocket-dotnet)  
 See the `TestClient` project for a working example.  
   
 ## What's New
