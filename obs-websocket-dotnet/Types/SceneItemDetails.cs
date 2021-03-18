@@ -6,7 +6,10 @@ using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
-    public class SceneItem2
+    /// <summary>
+    /// Meta data regarding a Scene item
+    /// </summary>
+    public class SceneItemDetails
     {
         /// <summary>
         /// Unique item id of the source item
@@ -15,7 +18,7 @@ namespace OBSWebsocketDotNet.Types
         public int ItemId { set; get; }
 
         /// <summary>
-        /// Kind of source
+        /// Kind of source (Example: vlc_source or image_source)
         /// </summary>
         [JsonProperty(PropertyName = "sourceKind")]
         public string SourceKind { set; get; }
@@ -30,14 +33,14 @@ namespace OBSWebsocketDotNet.Types
         /// Type of the scene item's source.
         /// </summary>
         [JsonProperty(PropertyName = "sourceType")]
-        public SourceType2 SourceType { set; get; }
+        public SceneItemSourceType SourceType { set; get; }
 
 
         /// <summary>
         /// Builds the object from the JSON data
         /// </summary>
         /// <param name="data">JSON item description as a <see cref="JObject"/></param>
-        public SceneItem2(JObject data)
+        public SceneItemDetails(JObject data)
         {
             JsonConvert.PopulateObject(data.ToString(), this);
         }

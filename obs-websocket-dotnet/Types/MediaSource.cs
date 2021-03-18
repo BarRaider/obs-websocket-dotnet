@@ -15,7 +15,7 @@ namespace OBSWebsocketDotNet.Types
         public string SourceName { set; get; }
 
         /// <summary>
-        /// Kind of source
+        /// Kind of source (a.k.a ffmpeg_source or vlc_source)
         /// </summary>
         [JsonProperty(PropertyName = "sourceKind")]
         public string SourceKind { set; get; }

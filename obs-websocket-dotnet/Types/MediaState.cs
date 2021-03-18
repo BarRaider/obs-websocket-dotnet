@@ -5,6 +5,7 @@
     /// </summary>
     public enum MediaState
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         None,
         Playing,
         Opening,
@@ -14,5 +15,6 @@
         Ended,
         Error,
         Unknown
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

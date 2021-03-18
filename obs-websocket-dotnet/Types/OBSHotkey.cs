@@ -4,8 +4,12 @@ using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// OBS Hotkeys as defined here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h
+    /// </summary>
     public enum OBSHotkey
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         OBS_KEY_NONE,
         OBS_KEY_RETURN,
         OBS_KEY_ENTER,
@@ -613,5 +617,6 @@ namespace OBSWebsocketDotNet.Types
         OBS_KEY_VK_NONAME,
         OBS_KEY_VK_PA1,
         OBS_KEY_VK_OEM_CLEAR
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
