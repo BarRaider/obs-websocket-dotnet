@@ -775,12 +775,14 @@ namespace OBSWebsocketDotNet
         /// <returns></returns>
         protected string HashEncode(string input)
         {
-            var sha256 = new SHA256Managed();
+            using (var sha256 = new SHA256Managed())
+            {
 
-            byte[] textBytes = Encoding.ASCII.GetBytes(input);
-            byte[] hash = sha256.ComputeHash(textBytes);
+                byte[] textBytes = Encoding.ASCII.GetBytes(input);
+                byte[] hash = sha256.ComputeHash(textBytes);
 
-            return System.Convert.ToBase64String(hash);
+                return System.Convert.ToBase64String(hash);
+            }
         }
 
         /// <summary>
