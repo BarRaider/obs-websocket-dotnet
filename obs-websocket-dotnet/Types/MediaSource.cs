@@ -6,6 +6,9 @@ using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// Meta Data on the selected media source
+    /// </summary>
     public class MediaSource
     {
         /// <summary>
