@@ -1,5 +1,5 @@
 # obs-websocket-dotnet
-![Build status](https://github.com/Palakis/obs-websocket-dotnet/workflows/obs-websocket-dotnet%20Tests/badge.svg)  Stable Release: [![NuGet](https://img.shields.io/nuget/v/obs-websocket-dotnet.svg?style=flat)](https://www.nuget.org/packages/obs-websocket-dotnet)  Latest Release: [![Latest](https://img.shields.io/badge/Latest%20PreRelease-v4.9.0_Beta1-yellow)](https://github.com/BarRaider/obs-websocket-dotnet/releases/)
+![Build status](https://github.com/Palakis/obs-websocket-dotnet/workflows/obs-websocket-dotnet%20Tests/badge.svg)  Releases: [![NuGet](https://img.shields.io/nuget/v/obs-websocket-dotnet.svg?style=flat)](https://www.nuget.org/packages/obs-websocket-dotnet)  [![Latest](https://img.shields.io/badge/Latest%20PreRelease-v4.9.0_Beta1-yellow)](https://github.com/BarRaider/obs-websocket-dotnet/releases/)
 
 Official .NET library (written in C#) to communicate with an obs-websocket server.
 
