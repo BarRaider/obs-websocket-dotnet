@@ -35,24 +35,27 @@
             this.btnSourceFilters = new System.Windows.Forms.Button();
             this.btnCreateScene = new System.Windows.Forms.Button();
             this.btnOutputs = new System.Windows.Forms.Button();
+            this.btnTransition = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbLog
             // 
             this.tbLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbLog.Location = new System.Drawing.Point(13, 13);
+            this.tbLog.Location = new System.Drawing.Point(15, 15);
+            this.tbLog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.ReadOnly = true;
             this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLog.Size = new System.Drawing.Size(671, 425);
+            this.tbLog.Size = new System.Drawing.Size(782, 490);
             this.tbLog.TabIndex = 0;
             // 
             // btnEvents
             // 
-            this.btnEvents.Location = new System.Drawing.Point(691, 13);
+            this.btnEvents.Location = new System.Drawing.Point(806, 15);
+            this.btnEvents.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnEvents.Name = "btnEvents";
-            this.btnEvents.Size = new System.Drawing.Size(97, 23);
+            this.btnEvents.Size = new System.Drawing.Size(113, 27);
             this.btnEvents.TabIndex = 1;
             this.btnEvents.Text = "Events";
             this.btnEvents.UseVisualStyleBackColor = true;
@@ -60,9 +63,10 @@
             // 
             // btnProjector
             // 
-            this.btnProjector.Location = new System.Drawing.Point(691, 42);
+            this.btnProjector.Location = new System.Drawing.Point(806, 48);
+            this.btnProjector.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnProjector.Name = "btnProjector";
-            this.btnProjector.Size = new System.Drawing.Size(97, 23);
+            this.btnProjector.Size = new System.Drawing.Size(113, 27);
             this.btnProjector.TabIndex = 2;
             this.btnProjector.Text = "Projector";
             this.btnProjector.UseVisualStyleBackColor = true;
@@ -70,9 +74,10 @@
             // 
             // btnRename
             // 
-            this.btnRename.Location = new System.Drawing.Point(691, 71);
+            this.btnRename.Location = new System.Drawing.Point(806, 82);
+            this.btnRename.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnRename.Name = "btnRename";
-            this.btnRename.Size = new System.Drawing.Size(97, 23);
+            this.btnRename.Size = new System.Drawing.Size(113, 27);
             this.btnRename.TabIndex = 3;
             this.btnRename.Text = "Source Rename";
             this.btnRename.UseVisualStyleBackColor = true;
@@ -80,9 +85,10 @@
             // 
             // btnSourceFilters
             // 
-            this.btnSourceFilters.Location = new System.Drawing.Point(691, 100);
+            this.btnSourceFilters.Location = new System.Drawing.Point(806, 115);
+            this.btnSourceFilters.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnSourceFilters.Name = "btnSourceFilters";
-            this.btnSourceFilters.Size = new System.Drawing.Size(97, 23);
+            this.btnSourceFilters.Size = new System.Drawing.Size(113, 27);
             this.btnSourceFilters.TabIndex = 4;
             this.btnSourceFilters.Text = "Source Filters";
             this.btnSourceFilters.UseVisualStyleBackColor = true;
@@ -90,9 +96,10 @@
             // 
             // btnCreateScene
             // 
-            this.btnCreateScene.Location = new System.Drawing.Point(691, 129);
+            this.btnCreateScene.Location = new System.Drawing.Point(806, 149);
+            this.btnCreateScene.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCreateScene.Name = "btnCreateScene";
-            this.btnCreateScene.Size = new System.Drawing.Size(97, 23);
+            this.btnCreateScene.Size = new System.Drawing.Size(113, 27);
             this.btnCreateScene.TabIndex = 5;
             this.btnCreateScene.Text = "Create Scene";
             this.btnCreateScene.UseVisualStyleBackColor = true;
@@ -100,19 +107,32 @@
             // 
             // btnOutputs
             // 
-            this.btnOutputs.Location = new System.Drawing.Point(690, 158);
+            this.btnOutputs.Location = new System.Drawing.Point(805, 182);
+            this.btnOutputs.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnOutputs.Name = "btnOutputs";
-            this.btnOutputs.Size = new System.Drawing.Size(97, 23);
+            this.btnOutputs.Size = new System.Drawing.Size(113, 27);
             this.btnOutputs.TabIndex = 6;
             this.btnOutputs.Text = "Outputs";
             this.btnOutputs.UseVisualStyleBackColor = true;
             this.btnOutputs.Click += new System.EventHandler(this.btnOutputs_Click);
             // 
+            // btnTransition
+            // 
+            this.btnTransition.Location = new System.Drawing.Point(805, 215);
+            this.btnTransition.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnTransition.Name = "btnTransition";
+            this.btnTransition.Size = new System.Drawing.Size(113, 27);
+            this.btnTransition.TabIndex = 7;
+            this.btnTransition.Text = "Transition";
+            this.btnTransition.UseVisualStyleBackColor = true;
+            this.btnTransition.Click += new System.EventHandler(this.btnTransition_Click);
+            // 
             // AdvancedWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(933, 519);
+            this.Controls.Add(this.btnTransition);
             this.Controls.Add(this.btnOutputs);
             this.Controls.Add(this.btnCreateScene);
             this.Controls.Add(this.btnSourceFilters);
@@ -120,6 +140,7 @@
             this.Controls.Add(this.btnProjector);
             this.Controls.Add(this.btnEvents);
             this.Controls.Add(this.tbLog);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AdvancedWindow";
@@ -140,5 +161,6 @@
         private System.Windows.Forms.Button btnSourceFilters;
         private System.Windows.Forms.Button btnCreateScene;
         private System.Windows.Forms.Button btnOutputs;
+        private System.Windows.Forms.Button btnTransition;
     }
 }

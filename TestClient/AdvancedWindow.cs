@@ -235,21 +235,24 @@ namespace TestClient
                 LogMessage($"ERROR: No outputs retrieved!");
                 return;
             }
-            /*
+
+            // TODO: Reuse when properly works on Windows
+            /* Output information does not work properly on OBS Websocket Window
+
             string outputName = firstOutput.Name;
-            
-            var retrievedOutput = _obs.GetOutputInfo(outputName);
+            var retrievedOutput = obs.GetOutputInfo(outputName);
             LogOutput(retrievedOutput);
 
             LogMessage("Testing StartOutput:");
-            _obs.StartOutput(outputName);
-            retrievedOutput = _obs.GetOutputInfo(outputName);
+            obs.StartOutput(outputName);
+            retrievedOutput = obs.GetOutputInfo(outputName);
             LogOutput(retrievedOutput);
 
             LogMessage("Testing StopOutput:");
-            _obs.StopOutput(outputName);
-            retrievedOutput = _obs.GetOutputInfo(outputName);
-            LogOutput(retrievedOutput);*/
+            obs.StopOutput(outputName);
+            retrievedOutput = obs.GetOutputInfo(outputName);
+            LogOutput(retrievedOutput);
+            */
         }
 
         private void LogOutput(OBSOutputInfo output)
@@ -262,6 +265,19 @@ namespace TestClient
             LogMessage($"Output: {output.Name} Type: {output.Type} Width: {output.Width} Height: {output.Height} Active: {output.IsActive} Reconnecting: {output.IsReconnecting} Congestion: {output.Congestion} TotalFrames: {output.TotalFrames} DroppedFrames: {output.DroppedFrames} TotalBytes: {output.TotalBytes}");
             LogMessage($"\tFlags: {output.Flags.RawValue} Audio: {output.Flags.IsAudio} Video: {output.Flags.IsVideo} Encoded: {output.Flags.IsEncoded} MultiTrack: {output.Flags.IsMultiTrack} Service: {output.Flags.IsService}");
             LogMessage($"\tSettings: {output.Settings}");
+        }
+
+        private void btnTransition_Click(object sender, EventArgs e)
+        {
+            LogMessage($"Getting Transitions");
+            var transitions = obs.GetTransitionList();
+
+            LogMessage($"Found {transitions.Transitions.Count} transitions. Active: {transitions.CurrentTransition}");
+            foreach (var transition in transitions.Transitions)
+            {
+                var info = obs.GetTransitionSettings(transition.Name);
+                LogMessage($"Transition: {transition.Name} has {info.Count} settings");
+            }
         }
 #pragma warning restore IDE1006 // Naming Styles
     }

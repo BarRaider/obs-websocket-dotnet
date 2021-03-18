@@ -608,7 +608,7 @@ namespace OBSWebsocketDotNet
         /// <param name="transitionName">Transition name</param>
         /// <param name="transitionSettings">Transition settings (they can be partial)</param>
         /// <returns>Updated transition settings</returns>
-        public TransitionSettings SetTransitionSettings(string transitionName, JObject transitionSettings)
+        public JObject SetTransitionSettings(string transitionName, JObject transitionSettings)
         {
             var requestFields = new JObject
             {
@@ -617,13 +617,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest("SetTransitionSettings", requestFields);
-            var token = response.SelectToken("transitionSettings");
-            if (token == null)
-            {
-                return null;
-            }
-
-            return new TransitionSettings((JObject)token);
+            return (JObject) response.SelectToken("transitionSettings");
         }
 
         /// <summary>
@@ -995,7 +989,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="transitionName">Transition name</param>
         /// <returns>Current transition settings</returns>
-        public TransitionSettings GetTransitionSettings(string transitionName)
+        public JObject GetTransitionSettings(string transitionName)
         {
             var requestFields = new JObject
             {
@@ -1003,13 +997,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest("GetTransitionSettings", requestFields);
-            var token = response.SelectToken("transitionSettings");
-            if (token == null)
-            {
-                return null;
-            }
-
-            return new TransitionSettings((JObject)token);
+            return (JObject)response.SelectToken("transitionSettings");
         }
         /// <summary>
         /// Get duration of the currently selected transition (if supported)
