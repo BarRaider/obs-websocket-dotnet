@@ -346,7 +346,9 @@ namespace OBSWebsocketDotNet
         public void Connect(string url, string password)
         {
             if (WSConnection != null && WSConnection.IsAlive)
+            {
                 Disconnect();
+            }
 
             WSConnection = new WebSocket(url)
             {
@@ -376,9 +378,17 @@ namespace OBSWebsocketDotNet
         public void Disconnect()
         {
             if (WSConnection != null)
-                WSConnection.Close();
-
-            WSConnection = null;
+            {
+                // Attempt to both close and dispose the existing connection
+                try
+                {
+                    WSConnection.Close();
+                    ((IDisposable)WSConnection).Dispose();
+                }
+                catch { }
+                WSConnection = null;
+            }
+            
             var unusedHandlers = responseHandlers.ToArray();
             responseHandlers.Clear();
             foreach (var cb in unusedHandlers)
