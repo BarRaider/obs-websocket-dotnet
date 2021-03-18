@@ -1,0 +1,3229 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>obs-websocket-dotnet</name>
+    </assembly>
+    <members>
+        <member name="T:OBSWebsocketDotNet.SceneChangeCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="newSceneName">Name of the new current scene</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceOrderChangeCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceOrderChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sceneName">Name of the scene where items where reordered</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SceneItemUpdateCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemAdded"/>
+            or <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemRemoved"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sceneName">Name of the scene where the item is</param>
+            <param name="itemName">Name of the concerned item</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SceneItemVisibilityChangedCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemVisibilityChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sceneName">Name of the scene where the item is</param>
+            <param name="itemName">Name of the concerned item</param>
+            <param name="isVisible">Visibility of the item</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SceneItemLockChangedCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemLockChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sceneName">Name of the scene where the item is</param>
+            <param name="itemName">Name of the concerned item</param>
+            <param name="itemId">Id of the concerned item</param>
+            <param name="isLocked">Lock status of the item</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.TransitionChangeCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.TransitionChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="newTransitionName">Name of the new selected transition</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.TransitionDurationChangeCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.TransitionDurationChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="newDuration">Name of the new transition duration (in milliseconds)</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.TransitionBeginCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.TransitionBegin"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="transitionName">Transition name</param>
+            <param name="transitionType">Transition type</param>
+            <param name="duration">Transition duration (in milliseconds). Will be -1 for any transition with a fixed duration, such as a Stinger, due to limitations of the OBS API</param>
+            <param name="fromScene">Source scene of the transition</param>
+            <param name="toScene">Destination scene of the transition</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.TransitionEndCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.TransitionEnd"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="transitionName">Transition name</param>
+            <param name="transitionType">Transition type</param>
+            <param name="duration">Transition duration (in milliseconds).</param>
+            <param name="toScene">Destination scene of the transition</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.TransitionVideoEndCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.TransitionVideoEnd"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="transitionName">Transition name</param>
+            <param name="transitionType">Transition type</param>
+            <param name="duration">Transition duration (in milliseconds).</param>
+            <param name="fromScene">Source scene of the transition</param>
+            <param name="toScene">Destination scene of the transition</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.OutputStateCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.StreamingStateChanged"/>, <see cref="E:OBSWebsocketDotNet.OBSWebsocket.RecordingStateChanged"/>
+            or <see cref="E:OBSWebsocketDotNet.OBSWebsocket.ReplayBufferStateChanged"/> 
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="type">New output state</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.StreamStatusCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.StreamStatus"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="status">Stream status data</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.StudioModeChangeCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.StudioModeSwitched"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="enabled">New Studio Mode status</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.HeartBeatCallback">
+            <summary>
+            Called by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.Heartbeat"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="heatbeat">heartbeat data</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SceneItemDeselectedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemDeselected"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sceneName">Name of the scene item was in</param>
+            <param name="itemName">Name of the item deselected</param>
+            <param name="itemId">Id of the item deselected</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SceneItemSelectedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemSelected"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sceneName">Name of the scene item was in</param>
+            <param name="itemName">Name of the item seletected</param>
+            <param name="itemId">Id of the item selected</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SceneItemTransformCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemTransformChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="transform">Transform data</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceAudioMixersChangedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioMixersChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="mixerInfo">Mixer information that was updated</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceAudioSyncOffsetCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioSyncOffsetChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of the source for the offset change</param>
+            <param name="syncOffset">Sync offset value</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceCreatedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceCreated"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="settings">Newly created source settings</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceDestroyedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceDestroyed"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Newly destroyed source information</param>
+            <param name="sourceKind">Kind of source destroyed</param>
+            <param name="sourceType">Type of source destroyed</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceRenamedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceRenamed"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="newName">New name of source</param>
+            <param name="previousName">Previous name of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceMuteStateChangedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceMuteStateChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="muted">Current mute state of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceAudioDeactivatedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioDeactivated"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceAudioActivatedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioActivated"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceVolumeChangedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceVolumeChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="volume">Current volume level of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceFilterRemovedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterRemoved"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="filterName">Name of removed filter</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceFilterAddedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterAdded"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="filterName">Name of filter</param>
+            <param name="filterType">Type of filter</param>
+            <param name="filterSettings">Settings for filter</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceFiltersReorderedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceFiltersReordered"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="filters">Current order of filters for source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.SourceFilterVisibilityChangedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterVisibilityChanged"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="filterName">Name of filter</param>
+            <param name="filterEnabled">New filter state</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.BroadcastCustomMessageCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.BroadcastCustomMessageReceived"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="realm">Identifier provided by the sender</param>
+            <param name="data">User-defined data</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaEndedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaEnded"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaStartedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaStarted"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaPreviousCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaPrevious"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaNextCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaNext"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaStoppedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaStopped"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaRestartedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaRestarted"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaPausedCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaPaused"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaPlayingCallback">
+            <summary>
+            Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.MediaPlaying"/>
+            </summary>
+            <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
+            <param name="sourceName">Name of source</param>
+            <param name="sourceKind">Kind of source</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.AuthFailureException">
+            <summary>
+            Thrown if authentication fails
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.ErrorResponseException">
+            <summary>
+            Thrown when the server responds with an error
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.ErrorResponseException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.FFMpegSourceSettings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.ClearOnMediaEnd">
+            <summary>
+            Clear window when media ends
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.CloseWhenInactive">
+            <summary>
+            Close when inactive
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.ColorRange">
+            <summary>
+            HW Decoder
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.HWDecode">
+            <summary>
+            HW Decoder
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.Looping">
+            <summary>
+            Looping
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.RestartOnActivate">
+            <summary>
+            Restart when activated
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.IsLocalFile">
+            <summary>
+            Is Local file
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.LocalFile">
+            <summary>
+            Local filename
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.SpeedPercent">
+            <summary>
+            Speed percentage
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.FFMpegSourceSettings.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.MediaSourceSettings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.MediaSourceSettings.SourceName">
+            <summary>
+            Source Name
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.MediaSourceSettings.SourceType">
+            <summary>
+            Source Type
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.MediaSourceSettings.Media">
+            <summary>
+            Media settings
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.OBSWebsocket">
+            <summary>
+            Instance of a connection with an obs-websocket server
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneChanged">
+            <summary>
+            Triggered when switching to another scene
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneListChanged">
+            <summary>
+            Triggered when a scene is created, deleted or renamed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceOrderChanged">
+            <summary>
+            Triggered when the scene item list of the specified scene is reordered
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemAdded">
+            <summary>
+            Triggered when a new item is added to the item list of the specified scene
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemRemoved">
+            <summary>
+            Triggered when an item is removed from the item list of the specified scene
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemVisibilityChanged">
+            <summary>
+            Triggered when the visibility of a scene item changes
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemLockChanged">
+            <summary>
+            Triggered when the lock status of a scene item changes
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneCollectionChanged">
+            <summary>
+            Triggered when switching to another scene collection
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneCollectionListChanged">
+            <summary>
+            Triggered when a scene collection is created, deleted or renamed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.TransitionChanged">
+            <summary>
+            Triggered when switching to another transition
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.TransitionDurationChanged">
+            <summary>
+            Triggered when the current transition duration is changed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.TransitionListChanged">
+            <summary>
+            Triggered when a transition is created or removed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.TransitionBegin">
+            <summary>
+            Triggered when a transition between two scenes starts. Followed by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SceneChanged"/>
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.TransitionEnd">
+            <summary>
+            Triggered when a transition (other than "cut") has ended. Please note that the from-scene field is not available in TransitionEnd
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.TransitionVideoEnd">
+            <summary>
+            Triggered when a stinger transition has finished playing its video
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.ProfileChanged">
+            <summary>
+            Triggered when switching to another profile
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.ProfileListChanged">
+            <summary>
+            Triggered when a profile is created, imported, removed or renamed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.StreamingStateChanged">
+            <summary>
+            Triggered when the streaming output state changes
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.RecordingStateChanged">
+            <summary>
+            Triggered when the recording output state changes
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.RecordingPaused">
+            <summary>
+            Triggered when the recording output is paused
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.RecordingResumed">
+            <summary>
+            Triggered when the recording output is resumed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.ReplayBufferStateChanged">
+            <summary>
+            Triggered when state of the replay buffer changes
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.StreamStatus">
+            <summary>
+            Triggered every 2 seconds while streaming is active
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.PreviewSceneChanged">
+            <summary>
+            Triggered when the preview scene selection changes (Studio Mode only)
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.StudioModeSwitched">
+            <summary>
+            Triggered when Studio Mode is turned on or off
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.OBSExit">
+            <summary>
+            Triggered when OBS exits
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.Connected">
+            <summary>
+            Triggered when connected successfully to an obs-websocket server
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.Disconnected">
+            <summary>
+            Triggered when disconnected from an obs-websocket server
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.Heartbeat">
+            <summary>
+            Emitted every 2 seconds after enabling it by calling SetHeartbeat
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemDeselected">
+            <summary>
+            A scene item is deselected
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemSelected">
+            <summary>
+            A scene item is selected
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemTransformChanged">
+            <summary>
+            A scene item transform has changed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioMixersChanged">
+            <summary>
+            Audio mixer routing changed on a source
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioSyncOffsetChanged">
+            <summary>
+            The audio sync offset of a source has changed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceCreated">
+            <summary>
+            A source has been created. A source can be an input, a scene or a transition.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceDestroyed">
+            <summary>
+            A source has been destroyed/removed. A source can be an input, a scene or a transition.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterAdded">
+            <summary>
+            A filter was added to a source
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterRemoved">
+            <summary>
+            A filter was removed from a source
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceFiltersReordered">
+            <summary>
+            Filters in a source have been reordered
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterVisibilityChanged">
+            <summary>
+            Triggered when the visibility of a filter has changed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceMuteStateChanged">
+            <summary>
+            A source has been muted or unmuted
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioDeactivated">
+            <summary>
+            A source has been muted or unmuted
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceAudioActivated">
+            <summary>
+            A source has been muted or unmuted
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceRenamed">
+            <summary>
+            A source has been renamed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceVolumeChanged">
+            <summary>
+            The volume of a source has changed
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.BroadcastCustomMessageReceived">
+            <summary>
+            A custom broadcast message was received
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaEnded">
+            <summary>
+            These events are emitted by the OBS sources themselves. For example when the media file ends. The behavior depends on the type of media source being used.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaStarted">
+            <summary>
+            These events are emitted by the OBS sources themselves. For example when the media file starts playing. The behavior depends on the type of media source being used.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaPrevious">
+            <summary>
+            This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaNext">
+            <summary>
+            This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaStopped">
+            <summary>
+            This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaRestarted">
+            <summary>
+            This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaPaused">
+            <summary>
+            This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.MediaPlaying">
+            <summary>
+            This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.OBSWebsocket.WSTimeout">
+            <summary>
+            WebSocket request timeout, represented as a TimeSpan object
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.OBSWebsocket.IsConnected">
+            <summary>
+            Current connection state
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.OBSWebsocket.WSConnection">
+            <summary>
+            Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.Connect(System.String,System.String)">
+            <summary>
+            Connect this instance to the specified URL, and authenticate (if needed) with the specified password
+            </summary>
+            <param name="url">Server URL in standard URL format</param>
+            <param name="password">Server password</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.Disconnect">
+            <summary>
+            Disconnect this instance from the server
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SendRequest(System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Sends a message to the websocket API with the specified request type and optional parameters
+            </summary>
+            <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
+            <param name="additionalFields">additional JSON fields if required by the request type</param>
+            <returns>The server's JSON response as a JObject</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetVersion">
+            <summary>
+            Requests version info regarding obs-websocket, the API and OBS Studio
+            </summary>
+            <returns>Version info in an <see cref="T:OBSWebsocketDotNet.Types.OBSVersion"/> object</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetAuthInfo">
+            <summary>
+            Request authentication data. You don't have to call this manually.
+            </summary>
+            <returns>Authentication data in an <see cref="T:OBSWebsocketDotNet.Types.OBSAuthInfo"/> object</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.Authenticate(System.String,OBSWebsocketDotNet.Types.OBSAuthInfo)">
+            <summary>
+            Authenticates to the Websocket server using the challenge and salt given in the passed <see cref="T:OBSWebsocketDotNet.Types.OBSAuthInfo"/> object
+            </summary>
+            <param name="password">User password</param>
+            <param name="authInfo">Authentication data</param>
+            <returns>true if authentication succeeds, false otherwise</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ProcessEventType(System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Update message handler
+            </summary>
+            <param name="eventType">Value of "event-type" in the JSON body</param>
+            <param name="body">full JSON message body</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.HashEncode(System.String)">
+            <summary>
+            Encode a Base64-encoded SHA-256 hash
+            </summary>
+            <param name="input">source string</param>
+            <returns></returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.NewMessageID(System.Int32)">
+            <summary>
+            Generate a message ID
+            </summary>
+            <param name="length">(optional) message ID length</param>
+            <returns>A random string of alphanumerical characters</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetVideoInfo">
+            <summary>
+            Get basic OBS video information
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.TakeSourceScreenshot(System.String,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            At least embedPictureFormat or saveToFilePath must be specified.
+            Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
+            </summary>
+            <param name="sourceName"></param>
+            <param name="embedPictureFormat">Format of the Data URI encoded picture. Can be "png", "jpg", "jpeg" or "bmp" (or any other value supported by Qt's Image module)</param>
+            <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
+            <param name="width">Screenshot width. Defaults to the source's base width.</param>
+            <param name="height">Screenshot height. Defaults to the source's base height.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.TakeSourceScreenshot(System.String,System.String,System.String)">
+            <summary>
+            At least embedPictureFormat or saveToFilePath must be specified.
+            Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
+            </summary>
+            <param name="sourceName"></param>
+            <param name="embedPictureFormat">Format of the Data URI encoded picture. Can be "png", "jpg", "jpeg" or "bmp" (or any other value supported by Qt's Image module)</param>
+            <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.TriggerHotkeyByName(System.String)">
+            <summary>
+            Executes hotkey routine, identified by hotkey unique name
+            </summary>
+            <param name="hotkeyName">Unique name of the hotkey, as defined when registering the hotkey (e.g. "ReplayBuffer.Save")</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.TriggerHotkeyBySequence(OBSWebsocketDotNet.Types.OBSHotkey,OBSWebsocketDotNet.Types.KeyModifier)">
+            <summary>
+            EExecutes hotkey routine, identified by bound combination of keys. A single key combination might trigger multiple hotkey routines depending on user settings
+            </summary>
+            <param name="keyId">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
+            <param name="keyModifier">Optional key modifiers object. You can combine multiple key operators. e.g. KeyModifier.Shift | KeyModifier.Control</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetCurrentScene">
+            <summary>
+            Get the current scene info along with its items
+            </summary>
+            <returns>An <see cref="T:OBSWebsocketDotNet.Types.OBSScene"/> object describing the current scene</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetCurrentScene(System.String)">
+            <summary>
+            Set the current scene to the specified one
+            </summary>
+            <param name="sceneName">The desired scene name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetFilenameFormatting">
+            <summary>
+            Get the filename formatting string
+            </summary>
+            <returns>Current filename formatting string</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetStats">
+            <summary>
+            Get OBS stats (almost the same info as provided in OBS' stats window)
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ListScenes">
+            <summary>
+            List every available scene
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.List`1" /> of <see cref="T:OBSWebsocketDotNet.Types.OBSScene"/> objects describing each scene</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSceneList">
+            <summary>
+            Get a list of scenes in the currently active profile
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ReorderSceneItems(System.Collections.Generic.List{OBSWebsocketDotNet.Types.SceneItemStub},System.String)">
+            <summary>
+            Changes the order of scene items in the requested scene
+            </summary>
+            <param name="sceneName">Name of the scene to reorder (defaults to current)</param>
+            <param name="sceneItems">List of items to reorder, only ID or Name required</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSceneTransitionOverride(System.String)">
+            <summary>
+            Get the specified scene's transition override info
+            </summary>
+            <param name="sceneName">Name of the scene to return the override info</param>
+            <returns>TransitionOverrideInfo</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneTransitionOverride(System.String,System.String,System.Int32)">
+            <summary>
+            Set specific transition override for a scene
+            </summary>
+            <param name="sceneName">Name of the scene to set the transition override</param>
+            <param name="transitionName">Name of the transition to use</param>
+            <param name="transitionDuration">Duration in milliseconds of the transition if transition is not fixed. Defaults to the current duration specified in the UI if there is no current override and this value is not given</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.RemoveSceneTransitionOverride(System.String)">
+            <summary>
+            Remove any transition override from a specific scene
+            </summary>
+            <param name="sceneName">Name of the scene to remove the transition override</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourcesList">
+            <summary>
+            List all sources available in the running OBS instance
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceTypesList">
+            <summary>
+            List all sources available in the running OBS instance
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSourceRender(System.String,System.Boolean,System.String)">
+            <summary>
+            Change the visibility of the specified scene item
+            </summary>
+            <param name="itemName">Scene item which visiblity will be changed</param>
+            <param name="visible">Desired visiblity</param>
+            <param name="sceneName">Scene name of the specified item</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSceneItemProperties(System.String,System.String)">
+            <summary>
+            Gets the scene specific properties of the specified source item. Coordinates are relative to the item's parent (the scene or group it belongs to).
+            </summary>
+            <param name="itemName">The name of the source</param>
+            <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSceneItemPropertiesJson(System.String,System.String)">
+            <summary>
+            Gets the scene specific properties of the specified source item. Coordinates are relative to the item's parent (the scene or group it belongs to).
+            Response is a JObject
+            </summary>
+            <param name="itemName">The name of the source</param>
+            <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetTextGDIPlusProperties(System.String)">
+            <summary>
+            Get the current properties of a Text GDI Plus source.
+            </summary>
+            <param name="sourceName">The name of the source</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetTBarPosition(System.Double,System.Boolean)">
+            <summary>
+            If your code needs to perform multiple successive T-Bar moves (e.g. : in an animation, or in response to a user moving a T-Bar control in your User Interface), set release to false and call ReleaseTBar later once the animation/interaction is over.
+            </summary>
+            <param name="position">	T-Bar position. This value must be between 0.0 and 1.0.</param>
+            <param name="release">Whether or not the T-Bar gets released automatically after setting its new position (like a user releasing their mouse button after moving the T-Bar). Call ReleaseTBar manually if you set release to false. Defaults to true.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetTextGDIPlusProperties(OBSWebsocketDotNet.Types.TextGDIPlusProperties)">
+            <summary>
+            Set the current properties of a Text GDI Plus source.
+            </summary>
+            <param name="properties">properties for the source</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.MoveSourceFilter(System.String,System.String,OBSWebsocketDotNet.Types.FilterMovementType)">
+            <summary>
+            Move a filter in the chain (relative positioning)
+            </summary>
+            <param name="sourceName">Scene Name</param>
+            <param name="filterName">Filter Name</param>
+            <param name="movement">Direction to move</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ReorderSourceFilter(System.String,System.String,System.Int32)">
+            <summary>
+            Move a filter in the chain (absolute index positioning)
+            </summary>
+            <param name="sourceName">Scene Name</param>
+            <param name="filterName">Filter Name</param>
+            <param name="newIndex">Desired position of the filter in the chain</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSourceFilterSettings(System.String,System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Apply settings to a source filter
+            </summary>
+            <param name="sourceName">Source with filter</param>
+            <param name="filterName">Filter name</param>
+            <param name="filterSettings">Filter settings</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSourceFilterVisibility(System.String,System.String,System.Boolean)">
+            <summary>
+            Modify the Source Filter's visibility
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="filterName">Source filter name</param>
+            <param name="filterEnabled">New filter state</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceFilters(System.String)">
+            <summary>
+            Return a list of all filters on a source
+            </summary>
+            <param name="sourceName">Source name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceFilterInfo(System.String,System.String)">
+            <summary>
+            Return a list of all filters on a source
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="filterName">Filter name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ReleaseTBar">
+            <summary>
+            Release the T-Bar (like a user releasing their mouse button after moving it). YOU MUST CALL THIS if you called SetTBarPosition with the release parameter set to false.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.RemoveFilterFromSource(System.String,System.String)">
+            <summary>
+            Remove the filter from a source
+            </summary>
+            <param name="sourceName"></param>
+            <param name="filterName"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.AddFilterToSource(System.String,System.String,System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Add a filter to a source
+            </summary>
+            <param name="sourceName">Name of the source for the filter</param>
+            <param name="filterName">Name of the filter</param>
+            <param name="filterType">Type of filter</param>
+            <param name="filterSettings">Filter settings object</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ToggleStreaming">
+            <summary>
+            Start/Stop the streaming output
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ToggleRecording">
+            <summary>
+            Start/Stop the recording output
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetStreamingStatus">
+            <summary>
+            Get the current status of the streaming and recording outputs
+            </summary>
+            <returns>An <see cref="T:OBSWebsocketDotNet.OutputStatus"/> object describing the current outputs states</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ListTransitions">
+            <summary>
+            List all transitions
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> of all transition names</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetCurrentTransition">
+            <summary>
+            Get the current transition name and duration
+            </summary>
+            <returns>An <see cref="T:OBSWebsocketDotNet.Types.TransitionSettings"/> object with the current transition name and duration</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetCurrentTransition(System.String)">
+            <summary>
+            Set the current transition to the specified one
+            </summary>
+            <param name="transitionName">Desired transition name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetTransitionDuration(System.Int32)">
+            <summary>
+            Change the transition's duration
+            </summary>
+            <param name="duration">Desired transition duration (in milliseconds)</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetTransitionSettings(System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Change the current settings of a transition
+            </summary>
+            <param name="transitionName">Transition name</param>
+            <param name="transitionSettings">Transition settings (they can be partial)</param>
+            <returns>Updated transition settings</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetVolume(System.String,System.Single,System.Boolean)">
+            <summary>
+            Change the volume of the specified source
+            </summary>
+            <param name="sourceName">Name of the source which volume will be changed</param>
+            <param name="volume">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
+            <param name="useDecibel">Interperet `volume` data as decibels instead of amplitude/mul.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetVolume(System.String,System.Boolean)">
+            <summary>
+            Get the volume of the specified source
+            Volume is between `0.0` and `1.0` if using amplitude/mul (useDecibel is false), under `0.0` if using dB (useDecibel is true).
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="useDecibel">Output volume in decibels of attenuation instead of amplitude/mul.</param>
+            <returns>An <see cref="T:OBSWebsocketDotNet.Types.VolumeInfo"/>Object containing the volume and mute state of the specified source.</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetMute(System.String,System.Boolean)">
+            <summary>
+            Set the mute state of the specified source
+            </summary>
+            <param name="sourceName">Name of the source which mute state will be changed</param>
+            <param name="mute">Desired mute state</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ToggleMute(System.String)">
+            <summary>
+            Toggle the mute state of the specified source
+            </summary>
+            <param name="sourceName">Name of the source which mute state will be toggled</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneItemPosition(System.String,System.Single,System.Single,System.String)">
+            <summary>
+            Set the position of the specified scene item
+            </summary>
+            <param name="itemName">Name of the scene item which position will be changed</param>
+            <param name="x">X coordinate</param>
+            <param name="y">Y coordinate</param>
+            <param name="sceneName">(optional) name of the scene the item belongs to</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneItemTransform(System.String,System.Single,System.Single,System.Single,System.String)">
+            <summary>
+            Set the scale and rotation of the specified scene item
+            </summary>
+            <param name="itemName">Name of the scene item which transform will be changed</param>
+            <param name="rotation">Rotation in Degrees</param>
+            <param name="xScale">Horizontal scale factor</param>
+            <param name="yScale">Vertical scale factor</param>
+            <param name="sceneName">(optional) name of the scene the item belongs to</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneItemProperties(OBSWebsocketDotNet.Types.SceneItemProperties,System.String)">
+            <summary>
+            Sets the scene specific properties of a source. Unspecified properties will remain unchanged. Coordinates are relative to the item's parent (the scene or group it belongs to).
+            </summary>
+            <param name="props">Object containing changes</param>
+            <param name="sceneName">Option scene name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneItemProperties(Newtonsoft.Json.Linq.JObject,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <param name="sceneName"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetCurrentSceneCollection(System.String)">
+            <summary>
+            Set the current scene collection to the specified one
+            </summary>
+            <param name="scName">Desired scene collection name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetCurrentSceneCollection">
+            <summary>
+            Get the name of the current scene collection
+            </summary>
+            <returns>Name of the current scene collection</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ListSceneCollections">
+            <summary>
+            List all scene collections
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> of the names of all scene collections</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetCurrentProfile(System.String)">
+            <summary>
+            Set the current profile to the specified one
+            </summary>
+            <param name="profileName">Name of the desired profile</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetCurrentProfile">
+            <summary>
+            Get the name of the current profile
+            </summary>
+            <returns>Name of the current profile</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ListProfiles">
+            <summary>
+            List all profiles
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> of the names of all profiles</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartStreaming">
+            <summary>
+            Start streaming. Will trigger an error if streaming is already active
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StopStreaming">
+            <summary>
+            Stop streaming. Will trigger an error if streaming is not active.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartStopStreaming">
+            <summary>
+            Toggle Streaming
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartRecording">
+            <summary>
+            Start recording. Will trigger an error if recording is already active.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StopRecording">
+            <summary>
+            Stop recording. Will trigger an error if recording is not active.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartStopRecording">
+            <summary>
+            Toggle recording
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.PauseRecording">
+            <summary>
+            Pause the current recording. Returns an error if recording is not active or already paused.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ResumeRecording">
+            <summary>
+            Resume/unpause the current recording (if paused). Returns an error if recording is not active or not paused.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetRecordingFolder(System.String)">
+            <summary>
+            Change the current recording folder
+            </summary>
+            <param name="recFolder">Recording folder path</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetRecordingFolder">
+            <summary>
+            Get the path of the current recording folder
+            </summary>
+            <returns>Current recording folder path</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetRecordingStatus">
+            <summary>
+            Get current recording status.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetReplayBufferStatus">
+            <summary>
+            Get the status of the OBS replay buffer.
+            </summary>
+            <returns>Current recording status. true when active</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionSettings(System.String)">
+            <summary>
+            Get the current settings of a transition
+            </summary>
+            <param name="transitionName">Transition name</param>
+            <returns>Current transition settings</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionDuration">
+            <summary>
+            Get duration of the currently selected transition (if supported)
+            </summary>
+            <returns>Current transition duration (in milliseconds)</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionList">
+            <summary>
+            Get duration of the currently selected transition (if supported)
+            </summary>
+            <returns>Current transition duration (in milliseconds)</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionPosition">
+            <summary>
+            Get the position of the current transition. Value will be between 0.0 and 1.0.
+            Note: Returns 1.0 when not active.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StudioModeEnabled">
+            <summary>
+            Get status of Studio Mode
+            </summary>
+            <returns>Studio Mode status (on/off)</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.DisableStudioMode">
+            <summary>
+            Disable Studio Mode
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.EnableStudioMode">
+            <summary>
+            Enable Studio Mode
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetStudioModeStatus">
+            <summary>
+            Enable Studio Mode
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetStudioMode(System.Boolean)">
+            <summary>
+            Enable/disable Studio Mode
+            </summary>
+            <param name="enable">Desired Studio Mode status</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ToggleStudioMode">
+            <summary>
+            Toggle Studio Mode status (on to off or off to on)
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetPreviewScene">
+            <summary>
+            Get the currently selected preview scene. Triggers an error
+            if Studio Mode is disabled
+            </summary>
+            <returns>Preview scene object</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetPreviewScene(System.String)">
+            <summary>
+            Change the currently active preview scene to the one specified.
+            Triggers an error if Studio Mode is disabled
+            </summary>
+            <param name="previewScene">Preview scene name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetPreviewScene(OBSWebsocketDotNet.Types.OBSScene)">
+            <summary>
+            Change the currently active preview scene to the one specified.
+            Triggers an error if Studio Mode is disabled.
+            </summary>
+            <param name="previewScene">Preview scene object</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.TransitionToProgram(System.Int32,System.String)">
+            <summary>
+            Triggers a Studio Mode transition (preview scene to program)
+            </summary>
+            <param name="transitionDuration">(optional) Transition duration</param>
+            <param name="transitionName">(optional) Name of transition to use</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetMute(System.String)">
+            <summary>
+            Get if the specified source is muted
+            </summary>
+            <param name="sourceName">Source name</param>
+            <returns>Source mute status (on/off)</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ToggleReplayBuffer">
+            <summary>
+            Toggle the Replay Buffer on/off
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartReplayBuffer">
+            <summary>
+            Start recording into the Replay Buffer. Triggers an error
+            if the Replay Buffer is already active, or if the "Save Replay Buffer"
+            hotkey is not set in OBS' settings
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StopReplayBuffer">
+            <summary>
+            Stop recording into the Replay Buffer. Triggers an error if the
+            Replay Buffer is not active.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartStopReplayBuffer">
+            <summary>
+            Toggle replay buffer
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SaveReplayBuffer">
+            <summary>
+            Save and flush the contents of the Replay Buffer to disk. Basically
+            the same as triggering the "Save Replay Buffer" hotkey in OBS.
+            Triggers an error if Replay Buffer is not active.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSyncOffset(System.String,System.Int32)">
+            <summary>
+            Set the audio sync offset of the specified source
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="syncOffset">Audio offset (in nanoseconds) for the specified source</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSyncOffset(System.String)">
+            <summary>
+            Get the audio sync offset of the specified source
+            </summary>
+            <param name="sourceName">Source name</param>
+            <returns>Audio offset (in nanoseconds) of the specified source</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.DeleteSceneItem(OBSWebsocketDotNet.Types.SceneItemStub,System.String)">
+            <summary>
+            Deletes a scene item
+            </summary>
+            <param name="sceneItem">Scene item, requires name or id of item</param>
+            /// <param name="sceneName">Scene name to delete item from (optional)</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.DeleteSceneItem(System.Int32,System.String)">
+            <summary>
+            Deletes a scene item
+            </summary>
+            <param name="sceneItemId">Scene item id</param>
+            /// <param name="sceneName">Scene name to delete item from (optional)</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneItemCrop(System.String,OBSWebsocketDotNet.Types.SceneItemCropInfo,System.String)">
+            <summary>
+            Set the relative crop coordinates of the specified source item
+            </summary>
+            <param name="sceneItemName">Name of the scene item</param>
+            <param name="cropInfo">Crop coordinates</param>
+            <param name="sceneName">(optional) parent scene name of the specified source</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneItemCrop(OBSWebsocketDotNet.Types.SceneItem,OBSWebsocketDotNet.Types.SceneItemCropInfo,OBSWebsocketDotNet.Types.OBSScene)">
+            <summary>
+            Set the relative crop coordinates of the specified source item
+            </summary>
+            <param name="sceneItem">Scene item object</param>
+            <param name="cropInfo">Crop coordinates</param>
+            <param name="scene">Parent scene of scene item</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ResetSceneItem(System.String,System.String)">
+            <summary>
+            Reset a scene item
+            </summary>
+            <param name="itemName">Name of the source item</param>
+            <param name="sceneName">Name of the scene the source belongs to. Defaults to the current scene.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SendCaptions(System.String)">
+            <summary>
+            Send the provided text as embedded CEA-608 caption data. As of OBS Studio 23.1, captions are not yet available on Linux.
+            </summary>
+            <param name="text">Captions text</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetFilenameFormatting(System.String)">
+            <summary>
+            Set the filename formatting string
+            </summary>
+            <param name="filenameFormatting">Filename formatting string to set</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.DuplicateSceneItem(System.String,System.String,OBSWebsocketDotNet.Types.SceneItem)">
+            <summary>
+            Set the relative crop coordinates of the specified source item
+            </summary>
+            <param name="fromSceneName">Source of the scene item</param>
+            <param name="toSceneName">Destination for the scene item</param>
+            <param name="sceneItem">Scene item, requires name or id</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.DuplicateSceneItem(System.String,System.String,System.Int32)">
+            <summary>
+            Set the relative crop coordinates of the specified source item
+            </summary>
+            <param name="fromSceneName">Source of the scene item</param>
+            <param name="toSceneName">Destination for the scene item</param>
+            <param name="sceneItemID">Scene item id to duplicate</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSpecialSources">
+            <summary>
+            Get names of configured special sources (like Desktop Audio
+            and Mic sources)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetStreamingSettings(OBSWebsocketDotNet.Types.StreamingService,System.Boolean)">
+            <summary>
+            Set current streaming settings
+            </summary>
+            <param name="service">Service settings</param>
+            <param name="save">Save to disk</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetStreamSettings">
+            <summary>
+            Get current streaming settings
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetStreamSettings(OBSWebsocketDotNet.Types.StreamingService,System.Boolean)">
+            <summary>
+            Set current streaming settings
+            </summary>
+            <param name="service">Service settings</param>
+            <param name="save">Save to disk</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SaveStreamSettings">
+            <summary>
+            Save current Streaming settings to disk
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetBrowserSourceProperties(System.String,System.String)">
+            <summary>
+            Get settings of the specified BrowserSource
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="sceneName">Optional name of a scene where the specified source can be found</param>
+            <returns>BrowserSource properties</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetBrowserSourceProperties(System.String,OBSWebsocketDotNet.Types.BrowserSourceProperties,System.String)">
+            <summary>
+            Set settings of the specified BrowserSource
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="props">BrowserSource properties</param>
+            <param name="sceneName">Optional name of a scene where the specified source can be found</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetHeartbeat(System.Boolean)">
+            <summary>
+            Enable/disable the heartbeat event
+            </summary>
+            <param name="enable"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceSettings(System.String,System.String)">
+            <summary>
+            Get the settings from a source item
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="sourceType">Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.</param>
+            <returns>settings</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSourceSettings(System.String,Newtonsoft.Json.Linq.JObject,System.String)">
+            <summary>
+            Set settings of the specified source.
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="settings">Settings for the source</param>
+            <param name="sourceType">Type of the specified source. Useful for type-checking to avoid settings a set of settings incompatible with the actual source's type.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetMediaSourceSettings(System.String)">
+            <summary>
+            Gets settings for a media source
+            </summary>
+            <param name="sourceName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetMediaSourceSettings(OBSWebsocketDotNet.MediaSourceSettings)">
+            <summary>
+            Sets settings of a media source
+            </summary>
+            <param name="sourceSettings"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.OpenProjector(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Open a projector window or create a projector on a monitor. Requires OBS v24.0.4 or newer.
+            </summary>
+            <param name="projectorType">Type of projector: "Preview" (default), "Source", "Scene", "StudioProgram", or "Multiview" (case insensitive)</param>
+            <param name="monitor">Monitor to open the projector on. If -1 or omitted, opens a window</param>
+            <param name="geometry">Size and position of the projector window (only if monitor is -1). Encoded in Base64 using Qt's geometry encoding. Corresponds to OBS's saved projectors</param>
+            <param name="name">Name of the source or scene to be displayed (ignored for other projector types)</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSourceName(System.String,System.String)">
+            <summary>
+            Renames a source.
+            Note: If the new name already exists as a source, obs-websocket will return an error.
+            </summary>
+            <param name="currentName">Current source name</param>
+            <param name="newName">New source name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ListOutputs">
+            <summary>
+            List existing outputs
+            </summary>
+            <returns>Array of OutputInfo</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetAudioActive(System.String)">
+            <summary>
+            Get the audio's active status of a specified source.
+            </summary>
+            <param name="sourceName">Source name.</param>
+            <returns>Audio active status of the source.</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetAudioMonitorType(System.String)">
+            <summary>
+            Get the audio monitoring type of the specified source.
+            Valid return values: none, monitorOnly, monitorAndOutput
+            </summary>
+            <param name="sourceName">Source name</param>
+            <returns>The monitor type in use</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetAudioMonitorType(System.String,System.String)">
+            <summary>
+            Set the audio monitoring type of the specified source
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="monitorType">The monitor type to use. Options: none, monitorOnly, monitorAndOutput</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.BroadcastCustomMessage(System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Broadcast custom message to all connected WebSocket clients
+            </summary>
+            <param name="realm">Identifier to be choosen by the client</param>
+            <param name="data">User-defined data</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.RefreshBrowserSource(System.String)">
+            <summary>
+            Refreshes the specified browser source.
+            </summary>
+            <param name="sourceName">Source name.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.PlayPauseMedia(System.String,System.Nullable{System.Boolean})">
+            <summary>
+            Pause or play a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note :Leaving out playPause toggles the current pause state
+            </summary>
+            <param name="sourceName">Source name</param>
+            <param name="playPause">(optional) Whether to pause or play the source. false for play, true for pause.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.RestartMedia(System.String)">
+            <summary>
+            Restart a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+            </summary>
+            <param name="sourceName">Source name.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StopMedia(System.String)">
+            <summary>
+            Stop a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+            </summary>
+            <param name="sourceName">Source name.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.NextMedia(System.String)">
+            <summary>
+            Skip to the next media item in the playlist. Supports only vlc media source (as of OBS v25.0.8)
+            </summary>
+            <param name="sourceName">Source name.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.PreviousMedia(System.String)">
+            <summary>
+            Go to the previous media item in the playlist. Supports only vlc media source (as of OBS v25.0.8)
+            </summary>
+            <param name="sourceName">Source name.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetMediaDuration(System.String)">
+            <summary>
+            Get the length of media in milliseconds. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note: For some reason, for the first 5 or so seconds that the media is playing, the total duration can be off by upwards of 50ms.
+            </summary>
+            <param name="sourceName">Source name.</param>
+            <returns>The total length of media in milliseconds.</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetMediaTime(System.String)">
+            <summary>
+            Get the current timestamp of media in milliseconds. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+            </summary>
+            <param name="sourceName">Source name.</param>
+            <returns>The time in milliseconds since the start of the media.</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetMediaTime(System.String,System.Int32)">
+            <summary>
+            Set the timestamp of a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+            </summary>
+            <param name="sourceName">Source name.</param>
+            <param name="timestamp">Milliseconds to set the timestamp to.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ScrubMedia(System.String,System.Int32)">
+            <summary>
+            Scrub media using a supplied offset. Supports ffmpeg and vlc media sources (as of OBS v25.0.8) Note: Due to processing/network delays, this request is not perfect. The processing rate of this request has also not been tested.
+            </summary>
+            <param name="sourceName">Source name.</param>
+            <param name="timeOffset">Millisecond offset (positive or negative) to offset the current media position.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetMediaState(System.String)">
+            <summary>
+            Get the current playing state of a media source. Supports ffmpeg and vlc media sources (as of OBS v25.0.8)
+            </summary>
+            <param name="sourceName">Source name.</param>
+            <returns>The media state of the provided source.</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetMediaSourcesList">
+            <summary>
+            List the media state of all media sources (vlc and media source)
+            </summary>
+            <returns>Array of sources</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.CreateSource(System.String,System.String,System.String,Newtonsoft.Json.Linq.JObject,System.Nullable{System.Boolean})">
+            <summary>
+            Create a source and add it as a sceneitem to a scene.
+            </summary>
+            <param name="sourceName">Source name.</param>
+            <param name="sourceKind">Source kind, Eg. vlc_source</param>
+            <param name="sceneName">Scene to add the new source to.</param>
+            <param name="sourceSettings">Source settings data.</param>
+            <param name="setVisible">Set the created SceneItem as visible or not. Defaults to true</param>
+            <returns>ID of the SceneItem in the scene.</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceDefaultSettings(System.String)">
+            <summary>
+            Get the default settings for a given source type.
+            </summary>
+            <param name="sourceKind">Source kind. Also called "source id" in libobs terminology.</param>
+            <returns>Settings object for source.</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSceneItemList(System.String)">
+            <summary>
+            Get a list of all scene items in a scene.
+            </summary>
+            <param name="sceneName">Name of the scene to get the list of scene items from. Defaults to the current scene if not specified.</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.AddSceneItem(System.String,System.String,System.Boolean)">
+            <summary>
+            Creates a scene item in a scene. In other words, this is how you add a source into a scene.
+            </summary>
+            <param name="sceneName">Name of the scene to create the scene item in</param>
+            <param name="sourceName">Name of the source to be added</param>
+            <param name="setVisible">Whether to make the sceneitem visible on creation or not. Default true</param>
+            <returns>Numerical ID of the created scene item</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.CreateScene(System.String)">
+            <summary>
+            Create a new scene.
+            </summary>
+            <param name="sceneName">Name of the scene to create.</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.OutputStatus">
+            <summary>
+            Status of streaming output and recording output
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.OutputStatus.IsStreaming">
+            <summary>
+            True if streaming is started and running, false otherwise
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.OutputStatus.IsRecording">
+            <summary>
+            True if recording is started and running, false otherwise
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OutputStatus.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.AudioMixerChannel">
+            <summary>
+            Audio Mixer Channel information
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.AudioMixerChannel.Enabled">
+            <summary>
+            Is channel enabled
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.AudioMixerChannel.ID">
+            <summary>
+            ID of the channel
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.AudioMixersChangedInfo">
+            <summary>
+            Response from audio mixer change event
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.AudioMixersChangedInfo.SourceName">
+            <summary>
+            Mixer source name
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.AudioMixersChangedInfo.Mixers">
+            <summary>
+            Routing status of the source for each audio mixer (array of 6 values)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.AudioMixersChangedInfo.HexMixersValue">
+            <summary>
+            Raw mixer flags (little-endian, one bit per mixer) as an hexadecimal value
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.AudioMixersChangedInfo.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Create mixer response
+            </summary>
+            <param name="body"></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.BrowserSourceProperties">
+            <summary>
+            BrowserSource source properties
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.Source">
+            <summary>
+            Source name for the browser properties
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.URL">
+            <summary>
+            URL to load in the embedded browser
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.IsLocalFile">
+            <summary>
+            true if the URL points to a local file, false otherwise.
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.LocalFile">
+            <summary>
+            File to load in embedded browser 
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.CustomCSS">
+            <summary>
+            Additional CSS to apply to the page
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.Width">
+            <summary>
+            Embedded browser render (viewport) width
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.Height">
+            <summary>
+            Embedded browser render (viewport) height
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.FPS">
+            <summary>
+            Embedded browser render frames per second
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.CustomFPS">
+            <summary>
+            true if custom FPS is set
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.ShutdownWhenNotVisible">
+            <summary>
+            true if source should be disabled (inactive) when not visible, false otherwise
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.RestartWhenActive">
+            <summary>
+            true if source should restart the video when visible
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.BrowserSourceProperties.Visible">
+            <summary>
+            true if source should be visible, false otherwise
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.BrowserSourceProperties.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Construct the object from JSON response data
+            </summary>
+            <param name="props"></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.CommonRTMPStreamingService">
+            <summary>
+            Common RTMP settings (predefined streaming services list)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CommonRTMPStreamingService.ServiceName">
+            <summary>
+            Streaming provider name
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CommonRTMPStreamingService.ServerUrl">
+            <summary>
+            Streaming server URL;
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CommonRTMPStreamingService.StreamKey">
+            <summary>
+            Stream key
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.CommonRTMPStreamingService.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Construct object from data provided by <see cref="P:OBSWebsocketDotNet.Types.StreamingService.Settings"/>
+            </summary>
+            <param name="settings"></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.CustomRTMPStreamingService">
+            <summary>
+            Custom RTMP settings (fully customizable RTMP credentials)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CustomRTMPStreamingService.ServerAddress">
+            <summary>
+            RTMP server URL
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CustomRTMPStreamingService.StreamKey">
+            <summary>
+            RTMP stream key (URL suffix)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CustomRTMPStreamingService.UseAuthentication">
+            <summary>
+            Tell OBS' RTMP client to authenticate to the server
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CustomRTMPStreamingService.AuthUsername">
+            <summary>
+            Username used if authentication is enabled
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.CustomRTMPStreamingService.AuthPassword">
+            <summary>
+            Password used if authentication is enabled
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.CustomRTMPStreamingService.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Construct object from data provided by <see cref="P:OBSWebsocketDotNet.Types.StreamingService.Settings"/>
+            </summary>
+            <param name="settings"></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.FilterMovementType">
+            <summary>
+            Direction to move filters
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.FilterMovementType.UP">
+            <summary>
+            Up one
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.FilterMovementType.DOWN">
+            <summary>
+            Down one
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.FilterMovementType.TOP">
+            <summary>
+            Top of the list
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.FilterMovementType.BOTTOM">
+            <summary>
+            Bottom of the list
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.FilterReorderItem">
+            <summary>
+            Filter list item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.FilterReorderItem.Name">
+            <summary>
+            Name of filter
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.FilterReorderItem.Type">
+            <summary>
+            Type of filter
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.FilterSettings">
+            <summary>
+            Filter settings
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.FilterSettings.Name">
+            <summary>
+            Name of the filter
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.FilterSettings.Type">
+            <summary>
+            Type of the specified filter
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.FilterSettings.IsEnabled">
+            <summary>
+            Status of the specified filter
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.FilterSettings.Settings">
+            <summary>
+            Settings for the filter
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.GetSceneListInfo">
+            <summary>
+            Get Scene Info response
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.GetSceneListInfo.CurrentScene">
+            <summary>
+            Name of the currently active scene
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.GetSceneListInfo.Scenes">
+            <summary>
+            Ordered list of the current profile's scenes
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.GetTransitionListInfo">
+            <summary>
+            Response from <see cref="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionList"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.GetTransitionListInfo.CurrentTransition">
+            <summary>
+            Name of the currently active transition
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.GetTransitionListInfo.Transitions">
+            <summary>
+            List of transitions.
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.Heartbeat">
+            <summary>
+            Heartbeat response
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Heartbeat.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Create a heartbeat
+            </summary>
+            <param name="body"></param>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.Pulse">
+            <summary>
+            Toggles between every JSON message as an "I am alive" indicator.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.CurrentProfile">
+            <summary>
+            Current active profile.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.CurrentScene">
+            <summary>
+            Current active scene.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.Streaming">
+            <summary>
+            Current streaming state.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.totalStreamTime">
+            <summary>
+            Total time (in seconds) since the stream started.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.TotalStreamBytes">
+            <summary>
+            Total bytes sent since the stream started.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.TotalStreamFrames">
+            <summary>
+            Total frames streamed since the stream started.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.Recording">
+            <summary>
+            Current recording state.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.TotalRecordTime">
+            <summary>
+            Total time (in seconds) since recording started.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.TotalTecordBytes">
+            <summary>
+            Total bytes recorded since the recording started.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.TotalRecordFrames">
+            <summary>
+            Total frames recorded since the recording started.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Heartbeat.Stats">
+            <summary>
+            OBS Stats
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.MediaSource.SourceName">
+            <summary>
+            Name of the source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.MediaSource.SourceKind">
+            <summary>
+            Kind of source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.MediaSource.MediaState">
+            <summary>
+            Type of the specified source. Useful for type-checking if you expect a specific settings schema.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.MediaSource.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON data
+            </summary>
+            <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.MediaState">
+            <summary>
+            The media state.
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSAuthInfo">
+            <summary>
+            Data required by authentication
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSAuthInfo.AuthRequired">
+            <summary>
+            True if authentication is required, false otherwise
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSAuthInfo.Challenge">
+            <summary>
+            Authentication challenge
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSAuthInfo.PasswordSalt">
+            <summary>
+            Password salt
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.OBSAuthInfo.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSOutputFlags">
+            <summary>
+            OBS Output flags
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputFlags.RawValue">
+            <summary>
+            Raw flags value
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputFlags.IsAudio">
+            <summary>
+            Output uses audio
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputFlags.IsVideo">
+            <summary>
+            Output uses video
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputFlags.IsEncoded">
+            <summary>
+            Output is encoded
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputFlags.IsMultiTrack">
+            <summary>
+            Output uses several tracks
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputFlags.IsService">
+            <summary>
+            Output users a service
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSOutputInfo">
+            <summary>
+            OBS Output information
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.Name">
+            <summary>
+            Output Name
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.Type">
+            <summary>
+            Output type/kind
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.Height">
+            <summary>
+            Video output height
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.Width">
+            <summary>
+            Video output width
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.Settings">
+            <summary>
+            Settings
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.IsActive">
+            <summary>
+            Output status (active or not)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.IsReconnecting">
+            <summary>
+            Output reconnection status (reconnecting or not)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.Congestion">
+            <summary>
+            Output congestion
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.TotalFrames">
+            <summary>
+            Number of frames sent
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.DroppedFrames">
+            <summary>
+            Number of frames dropped
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.TotalBytes">
+            <summary>
+            Total bytes sent
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSOutputInfo.Flags">
+            <summary>
+            Output flags
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSScene">
+            <summary>
+            Describes a scene in OBS, along with its items
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSScene.Name">
+            <summary>
+            OBS Scene name
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OBSScene.Items">
+            <summary>
+            Scene item list
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.OBSScene.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON description
+            </summary>
+            <param name="data">JSON scene description as a <see cref="T:Newtonsoft.Json.Linq.JObject" /></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.OBSScene.#ctor">
+            <summary>
+            Constructor used for jsonconverter
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSStats">
+            <summary>
+            OBS Stats
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.FPS">
+            <summary>
+            Current framerate.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.RenderTotalFrames">
+            <summary>
+            Number of frames rendered
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.RenderMissedFrames">
+            <summary>
+            Number of frames missed due to rendering lag
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.OutputTotalFrames">
+            <summary>
+            Number of frames outputted
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.OutputSkippedFrames">
+            <summary>
+            Number of frames skipped due to encoding lag
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.AverageFrameTime">
+            <summary>
+            Average frame render time (in milliseconds)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.CpuUsage">
+            <summary>
+            Current CPU usage (percentage)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.MemoryUsage">
+            <summary>
+            Current RAM usage (in megabytes)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSStats.FreeDiskSpace">
+            <summary>
+            Free recording disk space (in megabytes)
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSVersion">
+            <summary>
+            Version info of the plugin, the API and OBS Studio
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVersion.PluginVersion">
+            <summary>
+            obs-websocket plugin version
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVersion.OBSStudioVersion">
+            <summary>
+            OBS Studio version
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVersion.Version">
+            <summary>
+            OBSRemote compatible API version.Fixed to 1.1 for retrocompatibility.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVersion.AvailableRequests">
+            <summary>
+            List of available request types, formatted as a comma-separated list string (e.g. : "Method1,Method2,Method3").
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.OBSVersion.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.OBSVersion.#ctor">
+            <summary>
+            Empty constructor for jsonconvert
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OBSVideoInfo">
+            <summary>
+            Basic OBS video information
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.BaseWidth">
+            <summary>
+            Base (canvas) width
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.BaseHeight">
+            <summary>
+            Base (canvas) height
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.OutputWidth">
+            <summary>
+            Output width
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.OutputHeight">
+            <summary>
+            Output height
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.ScaleType">
+            <summary>
+            Scaling method used if output size differs from base size
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.FPS">
+            <summary>
+            Frames rendered per second
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.VideoFormat">
+            <summary>
+            Video color format
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.ColorSpace">
+            <summary>
+            Color space for YUV
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.OBSVideoInfo.ColorRange">
+            <summary>
+            Color range (full or partial)
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.OutputState">
+            <summary>
+            Describes the state of an output (streaming or recording)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OutputState.Starting">
+            <summary>
+            The output is initializing and doesn't produces frames yet
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OutputState.Started">
+            <summary>
+            The output is running and produces frames
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OutputState.Stopping">
+            <summary>
+            The output is stopping and sends the last remaining frames in its buffer
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.OutputState.Stopped">
+            <summary>
+            The output is completely stopped
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.RecordingStatus">
+            <summary>
+            GetRecordingStatus response
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.RecordingStatus.IsRecording">
+            <summary>
+            Current recording status
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.RecordingStatus.IsRecordingPaused">
+            <summary>
+            Whether the recording is paused or not
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.RecordingStatus.RecordTimecode">
+            <summary>
+            Time elapsed since recording started (only present if currently recording). (Optional)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.RecordingStatus.RecordingFilename">
+            <summary>
+            Absolute path to the recording file (only present if currently recording). (Optional)
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItem">
+            <summary>
+            Describes a scene item in an OBS scene
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.SourceName">
+            <summary>
+            Source name
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.InternalType">
+            <summary>
+            Source type. Value is one of the following: "input", "filter", "transition", "scene" or "unknown"
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.AudioVolume">
+            <summary>
+            Source audio volume
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.XPos">
+            <summary>
+            Scene item horizontal position/offset
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.YPos">
+            <summary>
+            Scene item vertical position/offset
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.SourceWidth">
+            <summary>
+            Item source width, without scaling and transforms applied
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.SourceHeight">
+            <summary>
+            Item source height, without scaling and transforms applied
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.Width">
+            <summary>
+            Item width
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItem.Height">
+            <summary>
+            Item height
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem.Locked">
+            <summary>
+            Whether or not this Scene Item is locked and can't be moved around
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem.Render">
+            <summary>
+            Whether or not this Scene Item is set to "visible".
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem.ID">
+            <summary>
+            Scene item ID
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem.ParentGroupName">
+            <summary>
+            Name of the item's parent (if this item belongs to a group)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem.GroupChildren">
+            <summary>
+            Name of the item's parent (if this item belongs to a group)
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItem.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON scene description
+            </summary>
+            <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItem.#ctor">
+            <summary>
+            Empty constructor for JSON deserialization
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.ItemId">
+            <summary>
+            Unique item id of the source item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.SourceKind">
+            <summary>
+            Kind of source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.SourceName">
+            <summary>
+            Name of the scene item's source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItem2.SourceType">
+            <summary>
+            Type of the scene item's source.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItem2.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON data
+            </summary>
+            <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemBoundsInfo">
+            <summary>
+            Information on scene item bounds
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemBoundsInfo.Alignnment">
+            <summary>
+            Alignment of the bounding box
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemBoundsInfo.Type">
+            <summary>
+            Type of bounding box
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemBoundsInfo.Width">
+            <summary>
+            Width of the bounding box
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemBoundsInfo.Height">
+            <summary>
+            Height of the bounding box
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemBoundsType">
+            <summary>
+            Types of bounding boxes for scene items
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemBoundsType.OBS_BOUNDS_STRETCH">
+            <summary>
+            Stretch
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemBoundsType.OBS_BOUNDS_SCALE_INNER">
+            <summary>
+            Inner scale
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemBoundsType.OBS_BOUNDS_SCALE_OUTER">
+            <summary>
+            Outer scale
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemBoundsType.OBS_BOUNDS_SCALE_TO_WIDTH">
+            <summary>
+            Scale to width
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemBoundsType.OBS_BOUNDS_SCALE_TO_HEIGHT">
+            <summary>
+            Scale to height
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemBoundsType.OBS_BOUNDS_MAX_ONLY">
+            <summary>
+            Max only
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemBoundsType.OBS_BOUNDS_NONE">
+            <summary>
+            No bounds
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemCropInfo">
+            <summary>
+            Crop coordinates for a scene item
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemCropInfo.Top">
+            <summary>
+            Top crop (in pixels)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemCropInfo.Bottom">
+            <summary>
+            Bottom crop (in pixels)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemCropInfo.Left">
+            <summary>
+            Left crop (in pixels)
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemCropInfo.Right">
+            <summary>
+            Right crop (in pixels)
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemPointInfo">
+            <summary>
+            Scene item point information
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemPointInfo.X">
+            <summary>
+            The x-scale factor of the scene item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemPointInfo.Y">
+            <summary>
+            The y-scale factor of the scene item
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemPositionInfo">
+            <summary>
+            Scene item position information
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemPositionInfo.Alignment">
+            <summary>
+            The point on the scene item that the item is manipulated from
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemPositionInfo.X">
+            <summary>
+            The x position of the scene item from the left
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemPositionInfo.Y">
+            <summary>
+            The y position of the scene item from the top
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemProperties">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemProperties.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Initialize the scene item transform
+            </summary>
+            <param name="body"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemProperties.#ctor">
+            <summary>
+            Constructor used for json converter
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Crop">
+            <summary>
+            Crop Information
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Bounds">
+            <summary>
+            Bounds Information
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Scale">
+            <summary>
+            Scale Information
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Position">
+            <summary>
+            Position of the item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.ItemName">
+            <summary>
+            Scene item name, <i>populated from GetSceneItemProperites only</i>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Item">
+            <summary>
+            Scene item name, <i>populated from GetSceneItemProperites only</i>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Height">
+            <summary>
+            Scene item height (base source height multiplied by the vertical scaling factor)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Width">
+            <summary>
+            Scene item width (base source width multiplied by the horizontal scaling factor)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Locked">
+            <summary>
+            If the scene item is locked in position
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Visible">
+            <summary>
+            If the scene item is visible
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.SourceHeight">
+            <summary>
+            Base height (without scaling) of the source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.SourceWidth">
+            <summary>
+            Base width (without scaling) of the source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Rotation">
+            <summary>
+            The clockwise rotation of the scene item in degrees around the point of alignment.
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemStub">
+            <summary>
+            Stub for scene item that only contains the name or ID of an item
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.SceneItemStub.SourceName">
+            <summary>
+            Source name
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemStub.ID">
+            <summary>
+            Scene item ID
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemTransformInfo">
+            <summary>
+            Scene transformation information from an event
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemTransformInfo.SceneName">
+            <summary>
+            Name of the scene
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemTransformInfo.ItemName">
+            <summary>
+            Name of the item in the scene
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemTransformInfo.ItemID">
+            <summary>
+            Scene Item ID
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemTransformInfo.Transform">
+            <summary>
+            Scene item transform properties
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemTransformInfo.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Initialize the scene item transform
+            </summary>
+            <param name="body"></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SourceInfo">
+            <summary>
+            Source information returned by GetSourcesList
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceInfo.Name">
+            <summary>
+            Name of the source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceInfo.TypeID">
+            <summary>
+            Non-unique source internal type(a.k.a type id)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceInfo.Type">
+            <summary>
+            Source type.Value is one of the following: "input", "filter", "transition", "scene" or "unknown"
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SourceScreenshotResponse">
+            <summary>
+            Response from <see cref="M:OBSWebsocketDotNet.OBSWebsocket.TakeSourceScreenshot(System.String,System.String,System.String,System.Int32,System.Int32)"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceScreenshotResponse.SourceName">
+            <summary>
+            Source name
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceScreenshotResponse.ImageData">
+            <summary>
+            Image Data URI(if embedPictureFormat was specified in the request)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceScreenshotResponse.ImageFile">
+            <summary>
+            Absolute path to the saved image file(if saveToFilePath was specified in the request)
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SourceSettings">
+            <summary>
+            Settings for a source item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.sourceName">
+            <summary>
+            Name of the source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.SourceKind">
+            <summary>
+            Kind of source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.sourceType">
+            <summary>
+            Type of the specified source. Useful for type-checking if you expect a specific settings schema.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.sourceSettings">
+            <summary>
+            Settings for the source
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SourceSettings.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON data
+            </summary>
+            <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SourceType">
+            <summary>
+            OBS SOurce Type definitions
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceType.TypeID">
+            <summary>
+            Non-unique internal source type ID
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceType.DisplayName">
+            <summary>
+            Display name of the source type
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceType.Type">
+            <summary>
+            Type.Value is one of the following: "input", "filter", "transition" or "other"
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceType.DefaultSettings">
+            <summary>
+            Default settings of the source type
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceType.Capabilities">
+            <summary>
+            Source type capabilities
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SourceTypeCapabilities">
+            <summary>
+            Capabilities for a SourceType
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.IsAsync">
+            <summary>
+            True if source of this type provide frames asynchronously
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.IsDeprecated">
+            <summary>
+            True if source of this type is deprecated
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.HasVideo">
+            <summary>
+            True if sources of this type provide video
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.HasAudio">
+            <summary>
+            True if sources of this type provide audio
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.CanInteract">
+            <summary>
+            True if interaction with this sources of this type is possible
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.IsComposite">
+            <summary>
+            True if sources of this type composite one or more sub-sources
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.DoNotDuplicate">
+            <summary>
+            True if sources of this type should not be fully duplicated
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.DoNotSelfMonitor">
+            <summary>
+            True if sources of this type may cause a feedback loop if it's audio is monitored and shouldn't be
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.StreamingService">
+            <summary>
+            Streaming settings
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingService.Type">
+            <summary>
+            Type of streaming service
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingService.Settings">
+            <summary>
+            Streaming service settings (JSON data)
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.StreamingServiceSettings">
+            <summary>
+            Streaming server settings
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Server">
+            <summary>
+            The publish URL
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Key">
+            <summary>
+            The publish key of the stream
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.UseAuth">
+            <summary>
+            Indicates whether authentication should be used when connecting to the streaming server
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Username">
+            <summary>
+            The username to use when accessing the streaming server. Only present if use-auth is true
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Password">
+            <summary>
+            The password to use when accessing the streaming server. Only present if use-auth is true
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.StreamStatus">
+            <summary>
+            Data of a stream status update
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.Streaming">
+            <summary>
+            True if streaming is started and running, false otherwise
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.Recording">
+            <summary>
+            True if recording is started and running, false otherwise
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.BytesPerSec">
+            <summary>
+            Stream bitrate in bytes per second
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.KbitsPerSec">
+            <summary>
+            Stream bitrate in kilobits per second
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.Strain">
+            <summary>
+            RTMP output strain
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.TotalStreamTime">
+            <summary>
+            Total time since streaming start
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.TotalFrames">
+            <summary>
+            Number of frames sent since streaming start
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.DroppedFrames">
+            <summary>
+            Overall number of frames dropped since streaming start
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.FPS">
+            <summary>
+            Current framerate in Frames Per Second
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.CPU">
+            <summary>
+            Current OBS CPU Usage
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.SkippedFrames">
+            <summary>
+            Total number of skipped frames
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.RenderMissedFrames">
+            <summary>
+            Total number of missed frames
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.StreamTime">
+            <summary>
+            Overall stream time
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamStatus.ReplayBufferActive">
+            <summary>
+            Is replay buffer active
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.StreamStatus.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON event body
+            </summary>
+            <param name="data">JSON event body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.TextGDIPlusFont">
+            <summary>
+            Font information for a Text GDI+ source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusFont.Face">
+            <summary>
+            Font face.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusFont.Flags">
+            <summary>
+            Font text styling flag. Bold=1, Italic=2, Bold Italic=3, Underline=5, Strikeout=8
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusFont.Size">
+            <summary>
+            Font text size.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusFont.Style">
+            <summary>
+            Font Style (unknown function).
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.TextGDIPlusProperties">
+            <summary>
+            Properties for a GDI+ Text source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.SourceName">
+            <summary>
+            Source name.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.Alignment">
+            <summary>
+            Text Alignment ("left", "center", "right").
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.BackgroundColor">
+            <summary>
+            Background color.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.BackgroundOpacity">
+            <summary>
+            Background opacity (0-100).
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.IsChatLog">
+            <summary>
+            Chat log.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.ChatlogLines">
+            <summary>
+            Chat log lines.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.TextColor">
+            <summary>
+            Text color.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.HasExtents">
+            <summary>
+            Extents wrap.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.Height">
+            <summary>
+            Extents cx.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.Width">
+            <summary>
+            Extents cy.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.Filename">
+            <summary>
+            File path name.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.IsReadFromFile">
+            <summary>
+            Read text from the specified file.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.Font">
+            <summary>
+            Holds data for the font. Ex: "font": { "face": "Arial", "flags": 0, "size": 150, "style": "" }
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.HasGradient">
+            <summary>
+            Gradient enabled.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.GradientColor">
+            <summary>
+            Gradient color.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.GradientDirection">
+            <summary>
+            Gradient direction.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.GradientOpacity">
+            <summary>
+            Gradient opacity (0-100).
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.HasOutline">
+            <summary>
+            Outline.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.OutlineColor">
+            <summary>
+            Outline color.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.OutlineSize">
+            <summary>
+            Outline size.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.OutlineOpacity">
+            <summary>
+            Outline opacity (0-100).
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.Text">
+            <summary>
+            Text content to be displayed.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.VeritcalAslignment">
+            <summary>
+            Text vertical alignment ("top", "center", "bottom").
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TextGDIPlusProperties.IsVertical">
+            <summary>
+            Vertical text enabled.
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.TransitionOverrideInfo">
+            <summary>
+            Scene transition override settings
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TransitionOverrideInfo.Name">
+            <summary>
+            Name of the current overriding transition. Empty string if no override is set.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TransitionOverrideInfo.Duration">
+            <summary>
+            Transition duration in milliseconds. -1 if no override is set.
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.TransitionSettings">
+            <summary>
+            Current transition settings
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TransitionSettings.Name">
+            <summary>
+            Transition name
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.TransitionSettings.Duration">
+            <summary>
+            Transition duration in milliseconds
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.TransitionSettings.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.TransitionSettings.#ctor">
+            <summary>
+            Constructor for jsonconverter
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.VolumeInfo">
+            <summary>
+            Volume settings of an OBS source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.VolumeInfo.Volume">
+            <summary>
+            Source volume in linear scale (0.0 to 1.0)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.VolumeInfo.Muted">
+            <summary>
+            True if source is muted, false otherwise
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.VolumeInfo.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+    </members>
+</doc>
