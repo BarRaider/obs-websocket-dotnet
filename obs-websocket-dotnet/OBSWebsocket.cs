@@ -320,8 +320,8 @@ namespace OBSWebsocketDotNet
         /// <param name="password">Server password</param>
         public void Connect(string url, string password)
         {
-            if (url.ToLower().StartsWith("ws://") == false)
-                url = "ws://" + url;
+            if (!url.ToLower().StartsWith("ws://"))
+                throw new ErrorResponseException(@"Invalid server url, must start with 'ws://'");
             
             if (WSConnection != null && WSConnection.IsAlive)
                 Disconnect();
