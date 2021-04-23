@@ -350,7 +350,7 @@ namespace OBSWebsocketDotNet
                 { "release", release}
             };
 
-            var response = SendRequest("SetTBarPosition");
+            SendRequest("SetTBarPosition", requestFields);
         }
         /// <summary>
         /// Set the current properties of a Text GDI Plus source.

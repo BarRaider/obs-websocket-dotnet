@@ -2851,7 +2851,7 @@
             Settings for a source item
             </summary>
         </member>
-        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.sourceName">
+        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.SourceName">
             <summary>
             Name of the source
             </summary>
@@ -2861,12 +2861,12 @@
             Kind of source
             </summary>
         </member>
-        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.sourceType">
+        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.SourceType">
             <summary>
             Type of the specified source. Useful for type-checking if you expect a specific settings schema.
             </summary>
         </member>
-        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.sourceSettings">
+        <member name="P:OBSWebsocketDotNet.Types.SourceSettings.Settings">
             <summary>
             Settings for the source
             </summary>

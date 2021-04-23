@@ -6,7 +6,7 @@
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
 		<Copyright>Copyright © Stéphane Lepin, BarRaider 2021</Copyright>
 		<LangVersion>8</LangVersion>
-		<Version>4.9.0-Beta1</Version>
+		<Version>4.9.0</Version>
 		<Authors>Stéphane Lepin, BarRaider</Authors>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BarRaider/obs-websocket-dotnet</PackageProjectUrl>
@@ -53,7 +53,7 @@ New `Media Control` category with lots of requests
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	  <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
 	</ItemGroup>
 

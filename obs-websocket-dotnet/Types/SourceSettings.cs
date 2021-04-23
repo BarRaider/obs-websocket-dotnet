@@ -12,7 +12,7 @@ namespace OBSWebsocketDotNet.Types
         /// Name of the source
         /// </summary>
         [JsonProperty(PropertyName = "sourceName")]
-        public string sourceName { set; get; }
+        public string SourceName { set; get; }
 
         /// <summary>
         /// Kind of source
@@ -24,13 +24,13 @@ namespace OBSWebsocketDotNet.Types
         /// Type of the specified source. Useful for type-checking if you expect a specific settings schema.
         /// </summary>
         [JsonProperty(PropertyName = "sourceType")]
-        public string sourceType { set; get; }
+        public string SourceType { set; get; }
 
         /// <summary>
         /// Settings for the source
         /// </summary>
         [JsonProperty(PropertyName = "sourceSettings")]
-        public JObject sourceSettings { set; get; }
+        public JObject Settings { set; get; }
 
         /// <summary>
         /// Builds the object from the JSON data
