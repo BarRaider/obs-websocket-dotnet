@@ -245,7 +245,7 @@ namespace TestClient
                     MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
-                
+
             }
             else
             {
@@ -402,17 +402,22 @@ namespace TestClient
             advanced.Show();
         }
 
-        
+
 
         private void browseButton_Click(object sender, EventArgs e)
         {
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 string selectedPath = this.folderBrowserDialog1.SelectedPath;
                 folderpath.Text = selectedPath;
                 _obs.SetRecordingFolder(selectedPath);
             }
+        }
+
+        private void setPathButton_Click(object sender, EventArgs e)
+        {
+            _obs.SetRecordingFolder(folderpath.Text);
         }
     }
 }

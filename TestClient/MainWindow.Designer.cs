@@ -311,6 +311,7 @@ namespace TestClient
             this.setPathButton.TabIndex = 11;
             this.setPathButton.Text = "Set Path";
             this.setPathButton.UseVisualStyleBackColor = true;
+            this.setPathButton.Click += new System.EventHandler(this.setPathButton_Click);
             // 
             // btnAdvanced
             // 
