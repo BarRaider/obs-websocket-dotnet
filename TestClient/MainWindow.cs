@@ -413,6 +413,7 @@ namespace TestClient
             if(result == DialogResult.OK)
             {
                 folderpath.Text = this.folderBrowserDialog1.SelectedPath;
+                _obs.SetRecordingFolder(this.folderBrowserDialog1.SelectedPath);
             }
         }
     }
