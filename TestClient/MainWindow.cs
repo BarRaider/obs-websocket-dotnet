@@ -410,6 +410,10 @@ namespace TestClient
         private void browseButton_Click(object sender, EventArgs e)
         {
             DialogResult result = this.openFileDialog.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                folderpath.Text = this.openFileDialog.FileName;
+            }
         }
     }
 }
