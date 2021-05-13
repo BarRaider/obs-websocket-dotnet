@@ -402,8 +402,6 @@ namespace TestClient
             advanced.Show();
         }
 
-
-
         private void browseButton_Click(object sender, EventArgs e)
         {
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
