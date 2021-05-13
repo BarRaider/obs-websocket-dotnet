@@ -272,7 +272,7 @@ namespace TestClient
             this.gbControls.Controls.Add(this.groupBox3);
             this.gbControls.Controls.Add(this.groupBox1);
             this.gbControls.Enabled = false;
-            this.gbControls.Location = new System.Drawing.Point(13, 30);
+            this.gbControls.Location = new System.Drawing.Point(13, 39);
             this.gbControls.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.gbControls.Name = "gbControls";
             this.gbControls.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
