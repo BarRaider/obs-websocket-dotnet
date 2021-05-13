@@ -111,6 +111,7 @@ namespace TestClient
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -1060,6 +1061,7 @@ namespace TestClient
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 
