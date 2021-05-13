@@ -110,6 +110,7 @@ namespace TestClient
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -951,6 +952,10 @@ namespace TestClient
             this.button3.Text = "Set Path";
             this.button3.UseVisualStyleBackColor = true;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1054,6 +1059,7 @@ namespace TestClient
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
