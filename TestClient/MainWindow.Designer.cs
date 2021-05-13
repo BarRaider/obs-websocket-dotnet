@@ -255,6 +255,7 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbControls.Controls.Add(this.filerecording);
             this.gbControls.Controls.Add(this.button1);
             this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.groupBox7);
@@ -918,7 +919,7 @@ namespace TestClient
             // filerecording
             // 
             this.filerecording.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.filerecording.Location = new System.Drawing.Point(21, 15);
+            this.filerecording.Location = new System.Drawing.Point(15, 616);
             this.filerecording.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.filerecording.Name = "filerecording";
             this.filerecording.Size = new System.Drawing.Size(132, 23);
@@ -930,7 +931,6 @@ namespace TestClient
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(698, 711);
-            this.Controls.Add(this.filerecording);
             this.Controls.Add(this.gbControls);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -943,6 +943,7 @@ namespace TestClient
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbControls.ResumeLayout(false);
+            this.gbControls.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).EndInit();
             this.groupBox6.ResumeLayout(false);
