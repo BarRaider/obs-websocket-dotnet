@@ -912,7 +912,6 @@ namespace TestClient
             this.filerecording.Size = new System.Drawing.Size(132, 23);
             this.filerecording.TabIndex = 10;
             this.filerecording.Text = "ws://127.0.0.1:4444";
-            this.filerecording.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // button1
             // 
