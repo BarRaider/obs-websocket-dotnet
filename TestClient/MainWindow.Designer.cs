@@ -60,7 +60,7 @@ namespace TestClient
             this.gbControls = new System.Windows.Forms.GroupBox();
             this.browseButton = new System.Windows.Forms.Button();
             this.folderpath = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.setPathButton = new System.Windows.Forms.Button();
             this.btnAdvanced = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.btnSetTransitionDuration = new System.Windows.Forms.Button();
@@ -261,7 +261,7 @@ namespace TestClient
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbControls.Controls.Add(this.browseButton);
             this.gbControls.Controls.Add(this.folderpath);
-            this.gbControls.Controls.Add(this.button1);
+            this.gbControls.Controls.Add(this.setPathButton);
             this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.groupBox7);
             this.gbControls.Controls.Add(this.groupBox6);
@@ -301,17 +301,17 @@ namespace TestClient
             this.folderpath.Size = new System.Drawing.Size(232, 23);
             this.folderpath.TabIndex = 10;
             // 
-            // button1
+            // setPathButton
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(356, 616);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(88, 23);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Set Path";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.setPathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setPathButton.Location = new System.Drawing.Point(356, 616);
+            this.setPathButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.setPathButton.Name = "setPathButton";
+            this.setPathButton.Size = new System.Drawing.Size(88, 23);
+            this.setPathButton.TabIndex = 11;
+            this.setPathButton.Text = "Set Path";
+            this.setPathButton.UseVisualStyleBackColor = true;
+            this.setPathButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnAdvanced
             // 
@@ -1057,7 +1057,7 @@ namespace TestClient
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
         private System.Windows.Forms.Button btnAdvanced;
         private System.Windows.Forms.TextBox folderpath;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button setPathButton;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
