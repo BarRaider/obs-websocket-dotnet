@@ -404,7 +404,7 @@ namespace TestClient
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _obs.SetRecordingFolder("C:/Users/t-schish/Pictures");
+            _obs.SetRecordingFolder(folderpath.Text);
         }
 
     }
