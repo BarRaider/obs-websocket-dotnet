@@ -281,7 +281,7 @@ namespace TestClient
             this.folderpath.Location = new System.Drawing.Point(15, 616);
             this.folderpath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.folderpath.Name = "folderpath";
-            this.folderpath.Size = new System.Drawing.Size(132, 23);
+            this.folderpath.Size = new System.Drawing.Size(232, 23);
             this.folderpath.TabIndex = 10;
             this.folderpath.Text = "ws://127.0.0.1:4444";
             // 
