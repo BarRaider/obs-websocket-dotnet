@@ -107,7 +107,7 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.filerecording = new System.Windows.Forms.TextBox();
+            this.folderpath = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -255,7 +255,7 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbControls.Controls.Add(this.filerecording);
+            this.gbControls.Controls.Add(this.folderpath);
             this.gbControls.Controls.Add(this.button1);
             this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.groupBox7);
@@ -916,15 +916,15 @@ namespace TestClient
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // filerecording
+            // folderpath
             // 
-            this.filerecording.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.filerecording.Location = new System.Drawing.Point(15, 616);
-            this.filerecording.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.filerecording.Name = "filerecording";
-            this.filerecording.Size = new System.Drawing.Size(132, 23);
-            this.filerecording.TabIndex = 10;
-            this.filerecording.Text = "ws://127.0.0.1:4444";
+            this.folderpath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderpath.Location = new System.Drawing.Point(15, 616);
+            this.folderpath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.folderpath.Name = "folderpath";
+            this.folderpath.Size = new System.Drawing.Size(132, 23);
+            this.folderpath.TabIndex = 10;
+            this.folderpath.Text = "ws://127.0.0.1:4444";
             // 
             // MainWindow
             // 
@@ -1025,7 +1025,7 @@ namespace TestClient
         private System.Windows.Forms.Button btnGetTransitionDuration;
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
         private System.Windows.Forms.Button btnAdvanced;
-        private System.Windows.Forms.TextBox filerecording;
+        private System.Windows.Forms.TextBox folderpath;
         private System.Windows.Forms.Button button1;
     }
 }
