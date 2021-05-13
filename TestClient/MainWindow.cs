@@ -233,6 +233,7 @@ namespace TestClient
                 try
                 {
                     _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
+                    folderpath.Text = _obs.GetRecordingFolder().ToString();
                 }
                 catch (AuthFailureException)
                 {
@@ -244,7 +245,7 @@ namespace TestClient
                     MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
-                folderpath.Text = _obs.GetRecordingFolder().ToString();
+                
             }
             else
             {
