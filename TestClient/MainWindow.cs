@@ -396,5 +396,12 @@ namespace TestClient
             advanced.SetOBS(_obs);
             advanced.Show();
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            _obs.SetFilenameFormatting(filerecording.Text);
+        }
+
+       
     }
 }
