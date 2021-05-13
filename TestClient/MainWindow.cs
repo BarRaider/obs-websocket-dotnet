@@ -407,5 +407,9 @@ namespace TestClient
             _obs.SetRecordingFolder(folderpath.Text);
         }
 
+        private void browseButton_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

@@ -949,6 +949,7 @@ namespace TestClient
             this.browseButton.TabIndex = 14;
             this.browseButton.Text = "Browse";
             this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
             // 
             // MainWindow
             // 
