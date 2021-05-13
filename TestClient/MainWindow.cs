@@ -49,7 +49,8 @@ namespace TestClient
 
         private void onConnect(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker)(() => {
+            BeginInvoke((MethodInvoker)(() =>
+            {
                 txtServerIP.Enabled = false;
                 txtServerPassword.Enabled = false;
                 btnConnect.Text = "Disconnect";
@@ -89,7 +90,8 @@ namespace TestClient
 
         private void onDisconnect(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker)(() => {
+            BeginInvoke((MethodInvoker)(() =>
+            {
                 gbControls.Enabled = false;
 
                 txtServerIP.Enabled = true;
@@ -141,7 +143,7 @@ namespace TestClient
         private void onStreamingStateChange(OBSWebsocket sender, OutputState newState)
         {
             string state = "";
-            switch(newState)
+            switch (newState)
             {
                 case OutputState.Starting:
                     state = "Stream starting...";
@@ -226,7 +228,7 @@ namespace TestClient
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if(!_obs.IsConnected)
+            if (!_obs.IsConnected)
             {
                 try
                 {
@@ -242,7 +244,8 @@ namespace TestClient
                     MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
-            } else
+            }
+            else
             {
                 _obs.Disconnect();
             }
@@ -253,7 +256,7 @@ namespace TestClient
             var scenes = _obs.ListScenes();
 
             tvScenes.Nodes.Clear();
-            foreach(var scene in scenes)
+            foreach (var scene in scenes)
             {
                 var node = new TreeNode(scene.Name);
                 foreach (var item in scene.Items)
@@ -397,7 +400,7 @@ namespace TestClient
             advanced.Show();
         }
 
-          private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
 
         }
