@@ -412,7 +412,7 @@ namespace TestClient
             DialogResult result = this.openFileDialog1.ShowDialog();
             if(result == DialogResult.OK)
             {
-                folderpath.Text = this.openFileDialog1.FileName;
+                folderpath.Text = this.folderBrowserDialog1.SelectedPath;
             }
         }
     }
