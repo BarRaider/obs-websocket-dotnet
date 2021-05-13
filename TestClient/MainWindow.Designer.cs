@@ -58,6 +58,7 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.folderpath = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.btnAdvanced = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -107,7 +108,6 @@ namespace TestClient
             this.tbPluginVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.folderpath = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -275,10 +275,20 @@ namespace TestClient
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
             // 
+            // folderpath
+            // 
+            this.folderpath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderpath.Location = new System.Drawing.Point(15, 616);
+            this.folderpath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.folderpath.Name = "folderpath";
+            this.folderpath.Size = new System.Drawing.Size(132, 23);
+            this.folderpath.TabIndex = 10;
+            this.folderpath.Text = "ws://127.0.0.1:4444";
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(241, 616);
+            this.button1.Location = new System.Drawing.Point(333, 616);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(88, 23);
@@ -915,16 +925,6 @@ namespace TestClient
             this.label5.TabIndex = 2;
             this.label5.Text = "OBS Version :";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // folderpath
-            // 
-            this.folderpath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderpath.Location = new System.Drawing.Point(15, 616);
-            this.folderpath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.folderpath.Name = "folderpath";
-            this.folderpath.Size = new System.Drawing.Size(132, 23);
-            this.folderpath.TabIndex = 10;
-            this.folderpath.Text = "ws://127.0.0.1:4444";
             // 
             // MainWindow
             // 
