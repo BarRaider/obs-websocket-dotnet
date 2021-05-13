@@ -283,7 +283,6 @@ namespace TestClient
             this.folderpath.Name = "folderpath";
             this.folderpath.Size = new System.Drawing.Size(232, 23);
             this.folderpath.TabIndex = 10;
-            this.folderpath.Text = "ws://127.0.0.1:4444";
             // 
             // button1
             // 
