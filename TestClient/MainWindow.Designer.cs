@@ -109,7 +109,7 @@ namespace TestClient
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
-            this.browseButton = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -257,7 +257,6 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbControls.Controls.Add(this.browseButton);
             this.gbControls.Controls.Add(this.folderpath);
             this.gbControls.Controls.Add(this.button1);
             this.gbControls.Controls.Add(this.btnAdvanced);
@@ -939,17 +938,9 @@ namespace TestClient
             this.button3.Text = "Set Path";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // browseButton
+            // openFileDialog1
             // 
-            this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browseButton.Location = new System.Drawing.Point(260, 616);
-            this.browseButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.browseButton.Name = "browseButton";
-            this.browseButton.Size = new System.Drawing.Size(88, 23);
-            this.browseButton.TabIndex = 14;
-            this.browseButton.Text = "Browse";
-            this.browseButton.UseVisualStyleBackColor = true;
-            this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // MainWindow
             // 
@@ -1052,8 +1043,8 @@ namespace TestClient
         private System.Windows.Forms.Button btnAdvanced;
         private System.Windows.Forms.TextBox folderpath;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
