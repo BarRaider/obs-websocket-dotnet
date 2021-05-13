@@ -412,8 +412,9 @@ namespace TestClient
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
             if(result == DialogResult.OK)
             {
-                folderpath.Text = this.folderBrowserDialog1.SelectedPath;
-                _obs.SetRecordingFolder(this.folderBrowserDialog1.SelectedPath);
+                string selectedPath = this.folderBrowserDialog1.SelectedPath;
+                folderpath.Text = selectedPath;
+                _obs.SetRecordingFolder(selectedPath);
             }
         }
     }
