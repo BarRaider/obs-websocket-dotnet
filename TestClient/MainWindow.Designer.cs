@@ -947,7 +947,7 @@ namespace TestClient
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(88, 23);
             this.browseButton.TabIndex = 14;
-            this.browseButton.Text = "Set Path";
+            this.browseButton.Text = "Browse";
             this.browseButton.UseVisualStyleBackColor = true;
             // 
             // MainWindow
