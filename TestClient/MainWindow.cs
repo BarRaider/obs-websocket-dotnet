@@ -407,7 +407,7 @@ namespace TestClient
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            folderpath.Text = _obs.GetRecordingFolder();
+            folderpath.Text = _obs.GetRecordingFolder().ToString();
         }
     }
 }
