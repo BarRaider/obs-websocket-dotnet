@@ -266,11 +266,11 @@ namespace TestClient
             this.gbControls.Controls.Add(this.groupBox3);
             this.gbControls.Controls.Add(this.groupBox1);
             this.gbControls.Enabled = false;
-            this.gbControls.Location = new System.Drawing.Point(14, 39);
+            this.gbControls.Location = new System.Drawing.Point(13, 30);
             this.gbControls.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.gbControls.Name = "gbControls";
             this.gbControls.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.gbControls.Size = new System.Drawing.Size(670, 632);
+            this.gbControls.Size = new System.Drawing.Size(670, 658);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
             // 
@@ -918,7 +918,7 @@ namespace TestClient
             // filerecording
             // 
             this.filerecording.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.filerecording.Location = new System.Drawing.Point(22, 24);
+            this.filerecording.Location = new System.Drawing.Point(21, 15);
             this.filerecording.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.filerecording.Name = "filerecording";
             this.filerecording.Size = new System.Drawing.Size(132, 23);
@@ -929,7 +929,7 @@ namespace TestClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(698, 685);
+            this.ClientSize = new System.Drawing.Size(698, 711);
             this.Controls.Add(this.filerecording);
             this.Controls.Add(this.gbControls);
             this.Controls.Add(this.label2);
