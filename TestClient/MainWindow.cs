@@ -402,10 +402,7 @@ namespace TestClient
             advanced.Show();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            _obs.SetRecordingFolder(folderpath.Text);
-        }
+        
 
         private void browseButton_Click(object sender, EventArgs e)
         {
