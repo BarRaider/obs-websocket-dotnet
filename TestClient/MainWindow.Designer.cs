@@ -58,6 +58,7 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.browseButton = new System.Windows.Forms.Button();
             this.folderpath = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.btnAdvanced = new System.Windows.Forms.Button();
@@ -109,7 +110,6 @@ namespace TestClient
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -257,6 +257,7 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbControls.Controls.Add(this.browseButton);
             this.gbControls.Controls.Add(this.folderpath);
             this.gbControls.Controls.Add(this.button1);
             this.gbControls.Controls.Add(this.btnAdvanced);
@@ -276,6 +277,18 @@ namespace TestClient
             this.gbControls.Size = new System.Drawing.Size(670, 658);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
+            // 
+            // browseButton
+            // 
+            this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.browseButton.Location = new System.Drawing.Point(260, 616);
+            this.browseButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.browseButton.Name = "browseButton";
+            this.browseButton.Size = new System.Drawing.Size(88, 23);
+            this.browseButton.TabIndex = 14;
+            this.browseButton.Text = "Browse";
+            this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
             // 
             // folderpath
             // 
@@ -938,10 +951,6 @@ namespace TestClient
             this.button3.Text = "Set Path";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1043,8 +1052,8 @@ namespace TestClient
         private System.Windows.Forms.Button btnAdvanced;
         private System.Windows.Forms.TextBox folderpath;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
