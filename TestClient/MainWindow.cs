@@ -244,6 +244,7 @@ namespace TestClient
                     MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
+                folderpath.Text = _obs.GetRecordingFolder().ToString();
             }
             else
             {
