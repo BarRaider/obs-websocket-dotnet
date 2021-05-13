@@ -404,5 +404,10 @@ namespace TestClient
         {
             _obs.SetRecordingFolder("C:/Users/t-schish/Pictures");
         }
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            folderpath.Text = _obs.GetRecordingFolder();
+        }
     }
 }

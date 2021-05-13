@@ -940,6 +940,7 @@ namespace TestClient
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "MainWindow";
             this.Text = "obs-websocket client";
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbControls.ResumeLayout(false);
