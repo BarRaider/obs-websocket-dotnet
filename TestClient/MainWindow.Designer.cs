@@ -107,6 +107,7 @@ namespace TestClient
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.filerecording = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -254,6 +255,7 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbControls.Controls.Add(this.button1);
             this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.groupBox7);
             this.gbControls.Controls.Add(this.groupBox6);
@@ -912,6 +914,18 @@ namespace TestClient
             this.filerecording.Text = "ws://127.0.0.1:4444";
             this.filerecording.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(148, -9);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(88, 27);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "Connect";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1012,6 +1026,7 @@ namespace TestClient
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
         private System.Windows.Forms.Button btnAdvanced;
         private System.Windows.Forms.TextBox filerecording;
+        private System.Windows.Forms.Button button1;
     }
 }
 
