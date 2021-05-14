@@ -306,10 +306,15 @@ namespace OBSWebsocketDotNet
                     WSConnection.WaitTime = _pWSTimeout;
             }
         }
+
+        #region Private Members
+        private const string WEBSOCKET_URL_PREFIX = "ws://";
         private TimeSpan _pWSTimeout = TimeSpan.FromSeconds(10);
 
         // Random should never be created inside a function
         private static readonly Random random = new Random();
+
+        #endregion
 
         /// <summary>
         /// Current connection state
@@ -341,10 +346,15 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
         /// </summary>
-        /// <param name="url">Server URL in standard URL format</param>
+        /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
         public void Connect(string url, string password)
         {
+            if (!url.ToLower().StartsWith(WEBSOCKET_URL_PREFIX))
+            {
+                throw new ArgumentException($"Invalid url, must start with '{WEBSOCKET_URL_PREFIX}'");
+            }
+
             if (WSConnection != null && WSConnection.IsAlive)
             {
                 Disconnect();
