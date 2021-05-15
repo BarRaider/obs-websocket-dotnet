@@ -74,6 +74,7 @@ namespace TestClient
                 btnGetCurrentTransition.PerformClick();
 
                 btnGetTransitionDuration.PerformClick();
+                folderpath.Text = _obs.GetRecordingFolder().ToString();
 
                 var streamStatus = _obs.GetStreamingStatus();
                 if (streamStatus.IsStreaming)
@@ -233,7 +234,6 @@ namespace TestClient
                 try
                 {
                     _obs.Connect(txtServerIP.Text, txtServerPassword.Text);
-                    folderpath.Text = _obs.GetRecordingFolder().ToString();
                 }
                 catch (AuthFailureException)
                 {
