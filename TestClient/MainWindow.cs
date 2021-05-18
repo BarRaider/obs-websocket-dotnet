@@ -409,7 +409,6 @@ namespace TestClient
             {
                 string selectedPath = this.folderBrowserDialog1.SelectedPath;
                 folderpath.Text = selectedPath;
-                _obs.SetRecordingFolder(selectedPath);
             }
         }
 
