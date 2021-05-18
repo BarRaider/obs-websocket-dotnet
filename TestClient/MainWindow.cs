@@ -407,8 +407,7 @@ namespace TestClient
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string selectedPath = this.folderBrowserDialog1.SelectedPath;
-                folderpath.Text = selectedPath;
+                folderpath.Text = this.folderBrowserDialog1.SelectedPath;
             }
         }
 
