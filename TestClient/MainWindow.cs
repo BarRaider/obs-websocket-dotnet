@@ -74,7 +74,7 @@ namespace TestClient
                 btnGetCurrentTransition.PerformClick();
 
                 btnGetTransitionDuration.PerformClick();
-                tbFolderPath.Text = _obs.GetRecordingFolder().ToString();
+                tbFolderPath.Text = obs.GetRecordingFolder().ToString();
 
                 var streamStatus = obs.GetStreamingStatus();
                 if (streamStatus.IsStreaming)
