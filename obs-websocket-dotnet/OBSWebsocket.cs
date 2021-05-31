@@ -293,23 +293,22 @@ namespace OBSWebsocketDotNet
         {
             get
             {
-                if (WSConnection != null)
-                    return WSConnection.WaitTime;
-                else
-                    return _pWSTimeout;
+                return WSConnection?.WaitTime ?? wsTimeout;
             }
             set
             {
-                _pWSTimeout = value;
+                wsTimeout = value;
 
                 if (WSConnection != null)
-                    WSConnection.WaitTime = _pWSTimeout;
+                {
+                    WSConnection.WaitTime = wsTimeout;
+                }
             }
         }
 
         #region Private Members
         private const string WEBSOCKET_URL_PREFIX = "ws://";
-        private TimeSpan _pWSTimeout = TimeSpan.FromSeconds(10);
+        private TimeSpan wsTimeout = TimeSpan.FromSeconds(10);
 
         // Random should never be created inside a function
         private static readonly Random random = new Random();
@@ -362,7 +361,7 @@ namespace OBSWebsocketDotNet
 
             WSConnection = new WebSocket(url)
             {
-                WaitTime = _pWSTimeout
+                WaitTime = wsTimeout
             };
             WSConnection.OnMessage += WebsocketMessageHandler;
             WSConnection.OnClose += (s, e) =>
@@ -377,7 +376,9 @@ namespace OBSWebsocketDotNet
             OBSAuthInfo authInfo = GetAuthInfo();
 
             if (authInfo.AuthRequired)
+            {
                 Authenticate(password, authInfo);
+            }
 
             Connected?.Invoke(this, null);
         }
