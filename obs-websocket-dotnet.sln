@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "obs-websocket-dotnet", "obs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestClient", "TestClient\TestClient.csproj", "{2CB2A741-4BFB-4AE8-894B-D6F146E6670F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obs-websocket-dotnet-tests", "obs-websocket-dotnet-tests\obs-websocket-dotnet-tests.csproj", "{107BEC4B-3EC4-4CA0-A53F-7D3678DC7017}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "obs-websocket-dotnet-tests", "obs-websocket-dotnet-tests\obs-websocket-dotnet-tests.csproj", "{107BEC4B-3EC4-4CA0-A53F-7D3678DC7017}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
