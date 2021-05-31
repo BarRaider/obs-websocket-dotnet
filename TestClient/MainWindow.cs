@@ -74,7 +74,7 @@ namespace TestClient
                 btnGetCurrentTransition.PerformClick();
 
                 btnGetTransitionDuration.PerformClick();
-                folderpath.Text = _obs.GetRecordingFolder().ToString();
+                tbFolderPath.Text = _obs.GetRecordingFolder().ToString();
 
                 var streamStatus = _obs.GetStreamingStatus();
                 if (streamStatus.IsStreaming)
@@ -402,18 +402,18 @@ namespace TestClient
             advanced.Show();
         }
 
-        private void browseButton_Click(object sender, EventArgs e)
+        private void btnBrowse_Click(object sender, EventArgs e)
         {
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                folderpath.Text = this.folderBrowserDialog1.SelectedPath;
+                tbFolderPath.Text = this.folderBrowserDialog1.SelectedPath;
             }
         }
 
-        private void setPathButton_Click(object sender, EventArgs e)
+        private void btnSetPath_Click(object sender, EventArgs e)
         {
-            _obs.SetRecordingFolder(folderpath.Text);
+            _obs.SetRecordingFolder(tbFolderPath.Text);
         }
     }
 }

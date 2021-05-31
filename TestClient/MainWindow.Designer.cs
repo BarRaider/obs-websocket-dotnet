@@ -58,9 +58,10 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
-            this.browseButton = new System.Windows.Forms.Button();
-            this.folderpath = new System.Windows.Forms.TextBox();
-            this.setPathButton = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnBrowse = new System.Windows.Forms.Button();
+            this.tbFolderPath = new System.Windows.Forms.TextBox();
+            this.btnSetPath = new System.Windows.Forms.Button();
             this.btnAdvanced = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.btnSetTransitionDuration = new System.Windows.Forms.Button();
@@ -114,6 +115,7 @@ namespace TestClient
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).BeginInit();
             this.groupBox6.SuspendLayout();
@@ -259,9 +261,7 @@ namespace TestClient
             this.gbControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbControls.Controls.Add(this.browseButton);
-            this.gbControls.Controls.Add(this.folderpath);
-            this.gbControls.Controls.Add(this.setPathButton);
+            this.gbControls.Controls.Add(this.groupBox8);
             this.gbControls.Controls.Add(this.btnAdvanced);
             this.gbControls.Controls.Add(this.groupBox7);
             this.gbControls.Controls.Add(this.groupBox6);
@@ -276,42 +276,54 @@ namespace TestClient
             this.gbControls.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.gbControls.Name = "gbControls";
             this.gbControls.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.gbControls.Size = new System.Drawing.Size(670, 658);
+            this.gbControls.Size = new System.Drawing.Size(670, 642);
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
             // 
-            // browseButton
+            // groupBox8
             // 
-            this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browseButton.Location = new System.Drawing.Point(260, 616);
-            this.browseButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.browseButton.Name = "browseButton";
-            this.browseButton.Size = new System.Drawing.Size(88, 23);
-            this.browseButton.TabIndex = 14;
-            this.browseButton.Text = "Browse";
-            this.browseButton.UseVisualStyleBackColor = true;
-            this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
+            this.groupBox8.Controls.Add(this.btnBrowse);
+            this.groupBox8.Controls.Add(this.tbFolderPath);
+            this.groupBox8.Controls.Add(this.btnSetPath);
+            this.groupBox8.Location = new System.Drawing.Point(7, 582);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(422, 51);
+            this.groupBox8.TabIndex = 15;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Recordings Directory";
             // 
-            // folderpath
+            // btnBrowse
             // 
-            this.folderpath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderpath.Location = new System.Drawing.Point(15, 616);
-            this.folderpath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.folderpath.Name = "folderpath";
-            this.folderpath.Size = new System.Drawing.Size(232, 23);
-            this.folderpath.TabIndex = 10;
+            this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowse.Location = new System.Drawing.Point(242, 22);
+            this.btnBrowse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(33, 23);
+            this.btnBrowse.TabIndex = 17;
+            this.btnBrowse.Text = "...";
+            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
-            // setPathButton
+            // tbFolderPath
             // 
-            this.setPathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.setPathButton.Location = new System.Drawing.Point(356, 616);
-            this.setPathButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.setPathButton.Name = "setPathButton";
-            this.setPathButton.Size = new System.Drawing.Size(88, 23);
-            this.setPathButton.TabIndex = 11;
-            this.setPathButton.Text = "Set Path";
-            this.setPathButton.UseVisualStyleBackColor = true;
-            this.setPathButton.Click += new System.EventHandler(this.setPathButton_Click);
+            this.tbFolderPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFolderPath.Location = new System.Drawing.Point(8, 22);
+            this.tbFolderPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.tbFolderPath.Name = "tbFolderPath";
+            this.tbFolderPath.Size = new System.Drawing.Size(232, 23);
+            this.tbFolderPath.TabIndex = 15;
+            // 
+            // btnSetPath
+            // 
+            this.btnSetPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetPath.Location = new System.Drawing.Point(319, 21);
+            this.btnSetPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnSetPath.Name = "btnSetPath";
+            this.btnSetPath.Size = new System.Drawing.Size(94, 23);
+            this.btnSetPath.TabIndex = 16;
+            this.btnSetPath.Text = "Set Path";
+            this.btnSetPath.UseVisualStyleBackColor = true;
+            this.btnSetPath.Click += new System.EventHandler(this.btnSetPath_Click);
             // 
             // btnAdvanced
             // 
@@ -961,7 +973,7 @@ namespace TestClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(698, 711);
+            this.ClientSize = new System.Drawing.Size(698, 693);
             this.Controls.Add(this.gbControls);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -974,7 +986,8 @@ namespace TestClient
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbControls.ResumeLayout(false);
-            this.gbControls.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).EndInit();
             this.groupBox6.ResumeLayout(false);
@@ -1056,12 +1069,14 @@ namespace TestClient
         private System.Windows.Forms.Button btnGetTransitionDuration;
         private System.Windows.Forms.NumericUpDown tbTransitionDuration;
         private System.Windows.Forms.Button btnAdvanced;
-        private System.Windows.Forms.TextBox folderpath;
-        private System.Windows.Forms.Button setPathButton;
-        private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.TextBox tbFolderPath;
+        private System.Windows.Forms.Button btnSetPath;
+        private System.Windows.Forms.Button btnBrowseButton;
     }
 }
 
