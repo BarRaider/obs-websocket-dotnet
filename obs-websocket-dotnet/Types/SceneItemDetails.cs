@@ -42,7 +42,15 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="data">JSON item description as a <see cref="JObject"/></param>
         public SceneItemDetails(JObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            if (data != null)
+            {
+                JsonConvert.PopulateObject(data.ToString(), this);
+            }
         }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public SceneItemDetails() { }
     }
 }
