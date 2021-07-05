@@ -2032,7 +2032,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Get the current status of the virtual camera
         /// </summary>
-        /// <returns>An <see cref="VirtualCamStatus"/> object describing the current outputs states</returns>
+        /// <returns>An <see cref="VirtualCamStatus"/> object describing the current virtual camera state</returns>
         public VirtualCamStatus GetVirtualCamStatus()
         {
             JObject response = SendRequest("GetVirtualCamStatus");
