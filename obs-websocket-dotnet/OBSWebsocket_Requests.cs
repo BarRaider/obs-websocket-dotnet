@@ -53,7 +53,7 @@ namespace OBSWebsocketDotNet
             {
                 requestFields.Add("saveToFilePath", saveToFilePath);
             }
-            if (width > -1)
+            if (width > -1)   
             {
                 requestFields.Add("width", width);
             }
@@ -2027,6 +2027,41 @@ namespace OBSWebsocketDotNet
             };
 
             SendRequest("CreateScene", request);
+        }
+
+        /// <summary>
+        /// Get the current status of the virtual camera
+        /// </summary>
+        /// <returns>An <see cref="VirtualCamStatus"/> object describing the current outputs states</returns>
+        public VirtualCamStatus GetVirtualCamStatus()
+        {
+            JObject response = SendRequest("GetVirtualCamStatus");
+            var outputStatus = new VirtualCamStatus(response);
+            return outputStatus;
+        }
+
+        /// <summary>
+        /// Start virtual camera. Will trigger an error if virtual camera is already started.
+        /// </summary>
+        public void StartVirtualCam()
+        {
+            SendRequest("StartVirtualCam");
+        }
+
+        /// <summary>
+        /// Stop virtual camera. Will trigger an error if virtual camera is already stopped.
+        /// </summary>
+        public void StopVirtualCam()
+        {
+            SendRequest("StopVirtualCam");
+        }
+
+        /// <summary>
+        /// Toggle virtual camera on or off (depending on the current virtual camera state).
+        /// </summary>
+        public void StartStopVirtualCam()
+        {
+            SendRequest("StartStopVituralCam");
         }
     }
 }

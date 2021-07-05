@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
+using System;
 using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
@@ -325,4 +326,18 @@ namespace OBSWebsocketDotNet
     /// <param name="sourceName">Name of source</param>
     /// <param name="sourceKind">Kind of source</param>
     public delegate void MediaPlayingCallback(OBSWebsocket sender, string sourceName, string sourceKind);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.VirtualCameraStarted"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="args"></param>
+    public delegate void VirtualCameraStarted(OBSWebsocket sender, EventArgs args);
+
+    /// <summary>
+    /// Called by <see cref="OBSWebsocket.VirtualCameraStopped"/>
+    /// </summary>
+    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// <param name="args"></param>
+    public delegate void VirtualCameraStopped(OBSWebsocket sender, EventArgs args);
 }
