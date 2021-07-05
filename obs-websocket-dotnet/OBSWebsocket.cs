@@ -286,12 +286,12 @@ namespace OBSWebsocketDotNet
         public event MediaPlayingCallback MediaPlaying;
 
         /// <summary>
-        /// The vitual camera has been started.
+        /// The virtual camera has been started.
         /// </summary>
         public event EventHandler VirtualCameraStarted;
 
         /// <summary>
-        /// The vitual camera has been stopped.
+        /// The virtual camera has been stopped.
         /// </summary>
         public event EventHandler VirtualCameraStopped;
 
