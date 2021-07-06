@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
-using System;
 using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
