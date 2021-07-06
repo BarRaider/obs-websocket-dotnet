@@ -288,12 +288,12 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// The virtual camera has been started.
         /// </summary>
-        public event EventHandler VirtualCameraStarted;
+        public event VirtualCameraStartedCallback VirtualCameraStarted;
 
         /// <summary>
         /// The virtual camera has been stopped.
         /// </summary>
-        public event EventHandler VirtualCameraStopped;
+        public event VirtualCameraStoppedCallback VirtualCameraStopped;
 
         #endregion
 

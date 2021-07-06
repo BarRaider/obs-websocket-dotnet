@@ -332,12 +332,12 @@ namespace OBSWebsocketDotNet
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="args"></param>
-    public delegate void VirtualCameraStarted(OBSWebsocket sender, EventArgs args);
+    public delegate void VirtualCameraStartedCallback(OBSWebsocket sender, EventArgs args);
 
     /// <summary>
     /// Called by <see cref="OBSWebsocket.VirtualCameraStopped"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="args"></param>
-    public delegate void VirtualCameraStopped(OBSWebsocket sender, EventArgs args);
+    public delegate void VirtualCameraStoppedCallback(OBSWebsocket sender, EventArgs args);
 }
