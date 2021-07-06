@@ -326,18 +326,4 @@ namespace OBSWebsocketDotNet
     /// <param name="sourceName">Name of source</param>
     /// <param name="sourceKind">Kind of source</param>
     public delegate void MediaPlayingCallback(OBSWebsocket sender, string sourceName, string sourceKind);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.VirtualCameraStarted"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="args"></param>
-    public delegate void VirtualCameraStartedCallback(OBSWebsocket sender, EventArgs args);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.VirtualCameraStopped"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="args"></param>
-    public delegate void VirtualCameraStoppedCallback(OBSWebsocket sender, EventArgs args);
 }
