@@ -2032,5 +2032,41 @@ namespace OBSWebsocketDotNet
 
             SendRequest("CreateScene", request);
         }
+
+        /// <summary>
+        /// Gets whether an audio track is active for a source.
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <returns>Indication for each track whther it's active or not</returns>
+        public SourceTracks GetAudioTracks(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetAudioTracks", request);
+            return new SourceTracks(response);
+        }
+
+        /// <summary>
+        /// Sets whether an audio track is active for a source.
+        /// </summary>
+        /// <param name="sourceName">Source Name</param>
+        /// <param name="trackNum">Audio tracks 1-6</param>
+        /// <param name="isActive">Whether audio track is active or not</param>
+        /// <returns></returns>
+        public void SetAudioTrack(string sourceName, int trackNum, bool isActive)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "track", trackNum },
+                { "active", isActive },
+            };
+
+            SendRequest("GetAudioTracks", request);
+        }
+
     }
 }
