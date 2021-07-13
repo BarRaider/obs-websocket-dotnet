@@ -1948,12 +1948,12 @@ namespace OBSWebsocketDotNet
 
             if (sourceSettings != null)
             {
-                request.Add("sourceSettings	", sourceSettings);
+                request.Add("sourceSettings", sourceSettings);
             }
 
             if (setVisible.HasValue)
             {
-                request.Add("setVisible	", setVisible.Value);
+                request.Add("setVisible", setVisible.Value);
             }
 
             var response = SendRequest("CreateSource", request);
