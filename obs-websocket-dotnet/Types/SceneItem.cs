@@ -103,10 +103,8 @@ namespace OBSWebsocketDotNet.Types
         }
 
         /// <summary>
-        /// Empty constructor for JSON deserialization
+        /// Default Constructor for deserialization
         /// </summary>
-        public SceneItem()
-        {
-        }
+        public SceneItem() { }
     }
 }

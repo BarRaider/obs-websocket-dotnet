@@ -40,5 +40,10 @@ namespace OBSWebsocketDotNet.Types
         {
             JsonConvert.PopulateObject(body.ToString(), this);
         }
+
+        /// <summary>
+        /// Default Constructor for deserialization
+        /// </summary>
+        public SceneItemTransformInfo() { }
     }
 }

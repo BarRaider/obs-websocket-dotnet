@@ -46,5 +46,10 @@ namespace OBSWebsocketDotNet.Types
         {
             JsonConvert.PopulateObject(settings.ToString(), this);
         }
+
+        /// <summary>
+        /// Default Constructor for deserialization
+        /// </summary>
+        public CustomRTMPStreamingService() { }
     }
 }
