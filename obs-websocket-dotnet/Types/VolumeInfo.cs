@@ -28,5 +28,10 @@ namespace OBSWebsocketDotNet.Types
         {
             JsonConvert.PopulateObject(data.ToString(), this);
         }
+
+        /// <summary>
+        /// Default Constructor for deserialization
+        /// </summary>
+        public VolumeInfo() { }
     }
 }

@@ -49,7 +49,7 @@ namespace OBSWebsocketDotNet.Types
         }
 
         /// <summary>
-        /// Default constructor
+        /// Default Constructor for deserialization
         /// </summary>
         public SceneItemDetails() { }
     }

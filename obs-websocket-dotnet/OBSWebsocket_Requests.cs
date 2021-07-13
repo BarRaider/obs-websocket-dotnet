@@ -1137,10 +1137,14 @@ namespace OBSWebsocketDotNet
                 var withTransition = new JObject();
 
                 if (transitionDuration > -1)
-                    withTransition.Add("duration");
+                {
+                    withTransition.Add("duration", transitionDuration);
+                }
 
-                if (transitionName != null)
+                if (!String.IsNullOrEmpty(transitionName))
+                {
                     withTransition.Add("name", transitionName);
+                }
 
                 requestFields.Add("with-transition", withTransition);
             }
@@ -1948,12 +1952,12 @@ namespace OBSWebsocketDotNet
 
             if (sourceSettings != null)
             {
-                request.Add("sourceSettings	", sourceSettings);
+                request.Add("sourceSettings", sourceSettings);
             }
 
             if (setVisible.HasValue)
             {
-                request.Add("setVisible	", setVisible.Value);
+                request.Add("setVisible", setVisible.Value);
             }
 
             var response = SendRequest("CreateSource", request);
@@ -2027,6 +2031,56 @@ namespace OBSWebsocketDotNet
             };
 
             SendRequest("CreateScene", request);
+        }
+
+        /// Gets whether an audio track is active for a source.
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <returns>Indication for each track whther it's active or not</returns>
+        public SourceTracks GetAudioTracks(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetAudioTracks", request);
+            return new SourceTracks(response);
+        }
+
+        /// <summary>
+        /// Sets whether an audio track is active for a source.
+        /// </summary>
+        /// <param name="sourceName">Source Name</param>
+        /// <param name="trackNum">Audio tracks 1-6</param>
+        /// <param name="isActive">Whether audio track is active or not</param>
+        /// <returns></returns>
+        public void SetAudioTrack(string sourceName, int trackNum, bool isActive)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName },
+                { "track", trackNum },
+                { "active", isActive },
+            };
+
+            SendRequest("GetAudioTracks", request);
+        }
+
+        /// <summary>
+        /// Get the source's active status of a specified source (if it is showing in the final mix).
+        /// </summary>
+        /// <param name="sourceName">Source Name</param>
+        /// <returns>Active status of the source</returns>
+        public bool GetSourceActive(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetSourceActive", request);
+            return (bool)response["sourceActive"];
         }
 
         /// <summary>

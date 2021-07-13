@@ -36,6 +36,7 @@
             this.btnCreateScene = new System.Windows.Forms.Button();
             this.btnOutputs = new System.Windows.Forms.Button();
             this.btnTransition = new System.Windows.Forms.Button();
+            this.btnTracks = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbLog
@@ -127,11 +128,23 @@
             this.btnTransition.UseVisualStyleBackColor = true;
             this.btnTransition.Click += new System.EventHandler(this.btnTransition_Click);
             // 
+            // btnTracks
+            // 
+            this.btnTracks.Location = new System.Drawing.Point(806, 248);
+            this.btnTracks.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnTracks.Name = "btnTracks";
+            this.btnTracks.Size = new System.Drawing.Size(113, 27);
+            this.btnTracks.TabIndex = 8;
+            this.btnTracks.Text = "Tracks";
+            this.btnTracks.UseVisualStyleBackColor = true;
+            this.btnTracks.Click += new System.EventHandler(this.btnTracks_Click);
+            // 
             // AdvancedWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 519);
+            this.Controls.Add(this.btnTracks);
             this.Controls.Add(this.btnTransition);
             this.Controls.Add(this.btnOutputs);
             this.Controls.Add(this.btnCreateScene);
@@ -162,5 +175,6 @@
         private System.Windows.Forms.Button btnCreateScene;
         private System.Windows.Forms.Button btnOutputs;
         private System.Windows.Forms.Button btnTransition;
+        private System.Windows.Forms.Button btnTracks;
     }
 }

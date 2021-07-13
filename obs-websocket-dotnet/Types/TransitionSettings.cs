@@ -30,11 +30,9 @@ namespace OBSWebsocketDotNet.Types
         }
 
         /// <summary>
-        /// Constructor for jsonconverter
+        /// Default Constructor for deserialization
         /// </summary>
-        public TransitionSettings()
-        {
-        }
+        public TransitionSettings() { }
 
     }
 }
