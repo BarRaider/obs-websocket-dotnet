@@ -53,7 +53,7 @@ namespace OBSWebsocketDotNet
             {
                 requestFields.Add("saveToFilePath", saveToFilePath);
             }
-            if (width > -1)   
+            if (width > -1)
             {
                 requestFields.Add("width", width);
             }
@@ -2059,9 +2059,9 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Toggle virtual camera on or off (depending on the current virtual camera state).
         /// </summary>
-        public void StartStopVirtualCam()
+        public void ToggleVirtualCam()
         {
-            SendRequest("StartStopVituralCam");
+            SendRequest("StartStopVirtualCam");
         }
     }
 }

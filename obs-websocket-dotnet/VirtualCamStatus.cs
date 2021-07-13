@@ -25,5 +25,12 @@ namespace OBSWebsocketDotNet
         {
             JsonConvert.PopulateObject(data.ToString(), this);
         }
+
+        /// <summary>
+        /// Constructor for jsonconverter
+        /// </summary>
+        public VirtualCamStatus()
+        {
+        }
     }
 }
