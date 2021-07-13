@@ -1137,10 +1137,14 @@ namespace OBSWebsocketDotNet
                 var withTransition = new JObject();
 
                 if (transitionDuration > -1)
-                    withTransition.Add("duration");
+                {
+                    withTransition.Add("duration", transitionDuration);
+                }
 
-                if (transitionName != null)
+                if (!String.IsNullOrEmpty(transitionName))
+                {
                     withTransition.Add("name", transitionName);
+                }
 
                 requestFields.Add("with-transition", withTransition);
             }
