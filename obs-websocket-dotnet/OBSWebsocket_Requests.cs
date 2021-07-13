@@ -2068,5 +2068,21 @@ namespace OBSWebsocketDotNet
             SendRequest("GetAudioTracks", request);
         }
 
+        /// <summary>
+        /// Get the source's active status of a specified source (if it is showing in the final mix).
+        /// </summary>
+        /// <param name="sourceName">Source Name</param>
+        /// <returns>Active status of the source</returns>
+        public bool GetSourceActive(string sourceName)
+        {
+            var request = new JObject
+            {
+                { "sourceName", sourceName }
+            };
+
+            var response = SendRequest("GetSourceActive", request);
+            return (bool)response["sourceActive"];
+        }
+
     }
 }
