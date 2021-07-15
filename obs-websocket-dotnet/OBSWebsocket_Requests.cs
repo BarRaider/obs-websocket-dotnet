@@ -2064,7 +2064,7 @@ namespace OBSWebsocketDotNet
                 { "active", isActive },
             };
 
-            SendRequest("GetAudioTracks", request);
+            SendRequest("SetAudioTracks", request);
         }
 
         /// <summary>
