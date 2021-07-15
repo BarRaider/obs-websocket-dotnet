@@ -688,6 +688,16 @@
             This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
             </summary>
         </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.VirtualCameraStarted">
+            <summary>
+            The virtual camera has been started.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.VirtualCameraStopped">
+            <summary>
+            The virtual camera has been stopped.
+            </summary>
+        </member>
         <member name="P:OBSWebsocketDotNet.OBSWebsocket.WSTimeout">
             <summary>
             WebSocket request timeout, represented as a TimeSpan object
@@ -1652,6 +1662,44 @@
             </summary>
             <param name="sceneName">Name of the scene to create.</param>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:OBSWebsocketDotNet.OBSWebsocket.GetAudioTracks(System.String)" -->
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetAudioTrack(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Sets whether an audio track is active for a source.
+            </summary>
+            <param name="sourceName">Source Name</param>
+            <param name="trackNum">Audio tracks 1-6</param>
+            <param name="isActive">Whether audio track is active or not</param>
+            <returns></returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceActive(System.String)">
+            <summary>
+            Get the source's active status of a specified source (if it is showing in the final mix).
+            </summary>
+            <param name="sourceName">Source Name</param>
+            <returns>Active status of the source</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetVirtualCamStatus">
+            <summary>
+            Get the current status of the virtual camera
+            </summary>
+            <returns>An <see cref="T:OBSWebsocketDotNet.VirtualCamStatus"/> object describing the current virtual camera state</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartVirtualCam">
+            <summary>
+            Start virtual camera. Will trigger an error if virtual camera is already started.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StopVirtualCam">
+            <summary>
+            Stop virtual camera. Will trigger an error if virtual camera is already stopped.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ToggleVirtualCam">
+            <summary>
+            Toggle virtual camera on or off (depending on the current virtual camera state).
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.OutputStatus">
             <summary>
             Status of streaming output and recording output
@@ -1672,6 +1720,11 @@
             Builds the object from the JSON response body
             </summary>
             <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OutputStatus.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.AudioMixerChannel">
             <summary>
@@ -1713,6 +1766,11 @@
             Create mixer response
             </summary>
             <param name="body"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.AudioMixersChangedInfo.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.BrowserSourceProperties">
             <summary>
@@ -1785,6 +1843,11 @@
             </summary>
             <param name="props"></param>
         </member>
+        <member name="M:OBSWebsocketDotNet.Types.BrowserSourceProperties.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.CommonRTMPStreamingService">
             <summary>
             Common RTMP settings (predefined streaming services list)
@@ -1810,6 +1873,11 @@
             Construct object from data provided by <see cref="P:OBSWebsocketDotNet.Types.StreamingService.Settings"/>
             </summary>
             <param name="settings"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.CommonRTMPStreamingService.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.CustomRTMPStreamingService">
             <summary>
@@ -1846,6 +1914,11 @@
             Construct object from data provided by <see cref="P:OBSWebsocketDotNet.Types.StreamingService.Settings"/>
             </summary>
             <param name="settings"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.CustomRTMPStreamingService.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.FilterMovementType">
             <summary>
@@ -1947,12 +2020,6 @@
             Heartbeat response
             </summary>
         </member>
-        <member name="M:OBSWebsocketDotNet.Types.Heartbeat.#ctor(Newtonsoft.Json.Linq.JObject)">
-            <summary>
-            Create a heartbeat
-            </summary>
-            <param name="body"></param>
-        </member>
         <member name="P:OBSWebsocketDotNet.Types.Heartbeat.Pulse">
             <summary>
             Toggles between every JSON message as an "I am alive" indicator.
@@ -2013,6 +2080,17 @@
             OBS Stats
             </summary>
         </member>
+        <member name="M:OBSWebsocketDotNet.Types.Heartbeat.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Create a heartbeat
+            </summary>
+            <param name="body"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Heartbeat.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.KeyModifier">
             <summary>
             Key Modifiers
@@ -2069,6 +2147,11 @@
             </summary>
             <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
         </member>
+        <member name="M:OBSWebsocketDotNet.Types.MediaSource.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.MediaState">
             <summary>
             The media state.
@@ -2099,6 +2182,11 @@
             Builds the object from JSON response body
             </summary>
             <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.OBSAuthInfo.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.OBSHotkey">
             <summary>
@@ -2228,7 +2316,7 @@
         </member>
         <member name="M:OBSWebsocketDotNet.Types.OBSScene.#ctor">
             <summary>
-            Constructor used for jsonconverter
+            Default Constructor for deserialization
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.OBSStats">
@@ -2500,7 +2588,7 @@
         </member>
         <member name="M:OBSWebsocketDotNet.Types.SceneItem.#ctor">
             <summary>
-            Empty constructor for JSON deserialization
+            Default Constructor for deserialization
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SceneItemBoundsInfo">
@@ -2626,7 +2714,7 @@
         </member>
         <member name="M:OBSWebsocketDotNet.Types.SceneItemDetails.#ctor">
             <summary>
-            Default constructor
+            Default Constructor for deserialization
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SceneItemPointInfo">
@@ -2668,17 +2756,6 @@
              <summary>
             
              </summary>
-        </member>
-        <member name="M:OBSWebsocketDotNet.Types.SceneItemProperties.#ctor(Newtonsoft.Json.Linq.JObject)">
-            <summary>
-            Initialize the scene item transform
-            </summary>
-            <param name="body"></param>
-        </member>
-        <member name="M:OBSWebsocketDotNet.Types.SceneItemProperties.#ctor">
-            <summary>
-            Constructor used for json converter
-            </summary>
         </member>
         <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Crop">
             <summary>
@@ -2743,6 +2820,17 @@
         <member name="P:OBSWebsocketDotNet.Types.SceneItemProperties.Rotation">
             <summary>
             The clockwise rotation of the scene item in degrees around the point of alignment.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemProperties.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Initialize the scene item transform
+            </summary>
+            <param name="body"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemProperties.#ctor">
+            <summary>
+            Default Constructor for deserialization
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SceneItemSourceType">
@@ -2810,6 +2898,11 @@
             Initialize the scene item transform
             </summary>
             <param name="body"></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemTransformInfo.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SourceInfo">
             <summary>
@@ -2881,6 +2974,57 @@
             Builds the object from the JSON data
             </summary>
             <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SourceSettings.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SourceTracks">
+            <summary>
+            Tracks status for a source item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTracks.IsTrack1Active">
+            <summary>
+            Is the track active
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTracks.IsTrack2Active">
+            <summary>
+            Is the track active
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTracks.IsTrack3Active">
+            <summary>
+            Is the track active
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTracks.IsTrack4Active">
+            <summary>
+            Is the track active
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTracks.IsTrack5Active">
+            <summary>
+            Is the track active
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceTracks.IsTrack6Active">
+            <summary>
+            Is the track active
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SourceTracks.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON data
+            </summary>
+            <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SourceTracks.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.SourceType">
             <summary>
@@ -3083,6 +3227,11 @@
             </summary>
             <param name="data">JSON event body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
         </member>
+        <member name="M:OBSWebsocketDotNet.Types.StreamStatus.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.TextGDIPlusFont">
             <summary>
             Font information for a Text GDI+ source
@@ -3271,7 +3420,7 @@
         </member>
         <member name="M:OBSWebsocketDotNet.Types.TransitionSettings.#ctor">
             <summary>
-            Constructor for jsonconverter
+            Default Constructor for deserialization
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.VolumeInfo">
@@ -3294,6 +3443,32 @@
             Builds the object from the JSON response body
             </summary>
             <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.VolumeInfo.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.VirtualCamStatus.IsActive">
+            <summary>
+            The current virtual camera status
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.VirtualCamStatus.Timecode">
+            <summary>
+            Time elapsed since virtual camera started (only present if virtual cam currently active)
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.VirtualCamStatus.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.VirtualCamStatus.#ctor">
+            <summary>
+            Constructor for jsonconverter
+            </summary>
         </member>
     </members>
 </doc>
