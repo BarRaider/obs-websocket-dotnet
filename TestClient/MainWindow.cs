@@ -20,6 +20,7 @@ using System;
 using System.Windows.Forms;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
+using static System.Windows.Forms.AxHost;
 
 namespace TestClient
 {
@@ -43,6 +44,9 @@ namespace TestClient
 
             obs.StreamingStateChanged += onStreamingStateChange;
             obs.RecordingStateChanged += onRecordingStateChange;
+
+            obs.VirtualCameraStarted += onVirtualCameraStarted;
+            obs.VirtualCameraStopped += onVirtualCameraStopped;
 
             obs.StreamStatus += onStreamData;
         }
@@ -86,6 +90,16 @@ namespace TestClient
                     onRecordingStateChange(obs, OutputState.Started);
                 else
                     onRecordingStateChange(obs, OutputState.Stopped);
+
+                var camStatus = obs.GetVirtualCamStatus();
+                if (camStatus.IsActive)
+                {
+                    onVirtualCameraStarted(this, EventArgs.Empty);
+                }
+                else
+                {
+                    onVirtualCameraStopped(this, EventArgs.Empty);
+                }
             }));
         }
 
@@ -414,6 +428,37 @@ namespace TestClient
         private void btnSetPath_Click(object sender, EventArgs e)
         {
             obs.SetRecordingFolder(tbFolderPath.Text);
+        }
+       
+        private void onVirtualCameraStopped(object sender, EventArgs e)
+        {
+            BeginInvoke((MethodInvoker)delegate
+{
+                lblVirtualCamStatus.Text = "Stopped";
+            });
+        }
+
+        private void onVirtualCameraStarted(object sender, EventArgs e)
+        {
+            BeginInvoke((MethodInvoker)delegate
+            {
+                lblVirtualCamStatus.Text = "Started";
+            });
+        }
+
+        private void btnVirtualCamStart_Click(object sender, EventArgs e)
+        {
+            obs.StartVirtualCam();
+        }
+
+        private void btnVirtualCamStop_Click(object sender, EventArgs e)
+        {
+            obs.StopVirtualCam();
+        }
+
+        private void btnVirtualCamToggle_Click(object sender, EventArgs e)
+        {
+            obs.ToggleVirtualCam();
         }
     }
 }
