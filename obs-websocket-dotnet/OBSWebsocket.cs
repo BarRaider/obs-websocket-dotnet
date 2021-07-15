@@ -284,6 +284,17 @@ namespace OBSWebsocketDotNet
         /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
         /// </summary>
         public event MediaPlayingCallback MediaPlaying;
+
+        /// <summary>
+        /// The virtual camera has been started.
+        /// </summary>
+        public event EventHandler VirtualCameraStarted;
+
+        /// <summary>
+        /// The virtual camera has been stopped.
+        /// </summary>
+        public event EventHandler VirtualCameraStopped;
+
         #endregion
 
         /// <summary>
@@ -780,6 +791,12 @@ namespace OBSWebsocketDotNet
                     break;
                 case "MediaPlaying":
                     MediaPlaying?.Invoke(this, (string)body["sourceName"], (string)body["sourceKind"]);
+                    break;
+                case "VirtualCamStarted":
+                    VirtualCameraStarted?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "VirtualCamStopped":
+                    VirtualCameraStopped?.Invoke(this, EventArgs.Empty);
                     break;
                 default:
                         var message = $"Unsupported Event: {eventType}\n{body}";
