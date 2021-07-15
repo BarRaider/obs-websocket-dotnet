@@ -6,7 +6,7 @@
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
 		<Copyright>Copyright © Stéphane Lepin, BarRaider 2021</Copyright>
 		<LangVersion>8</LangVersion>
-		<Version>4.9.0</Version>
+		<Version>4.9.1-Beta1</Version>
 		<Authors>Stéphane Lepin, BarRaider</Authors>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BarRaider/obs-websocket-dotnet</PackageProjectUrl>
@@ -15,37 +15,15 @@
 		<PackageTags>OBS obs-websocket websocket official obs-websocket-dotnet obs.websocket.net obs-websocket-net</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>Added Events:
-New `Media` category with lots of events
-`SourceAudioActivated`
-`SourceAudioDeactivated`
+`VirtualCameraStarted`
+`VirtualCameraStopped`
 
 Added Requests:
-New `Media Control` category with lots of requests
-`CreateSource`
-`CreateScene`
-`GetSourceDefaultSettings`
-`RefreshBrowserSource`
-`AddSceneItem`
-`GetSceneItemList`
-`GetAudioActive`
-`TriggerHotkeyByName`
-`TriggerHotkeyBySequence`
-`GetRecordingStatus`
-`GetReplayBufferStatus`
-`GetTransitionSettings`
-`SetTransitionSettings`
-`GetTransitionPosition`
-`ReleaseTBar`
-`SetTBarPosition`
-
-⚠️ Deprecated:
-`GetBrowserSourceProperties`
-`SetBrowserSourceProperties`
-`SetHeartbeat`
-`SetSceneItemCrop`
-`SetSceneItemPosition`
-`SetSceneItemTransform`
-</PackageReleaseNotes>
+`StartVirtualCam`
+`StopVirtualCam`
+`ToggleVirtualCam`
+`GetVirtualCamStatus`
+`GetSourceActive`</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
