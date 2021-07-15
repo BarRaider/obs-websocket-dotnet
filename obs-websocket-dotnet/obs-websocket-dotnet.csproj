@@ -23,7 +23,11 @@ Added Requests:
 `StopVirtualCam`
 `ToggleVirtualCam`
 `GetVirtualCamStatus`
-`GetSourceActive`</PackageReleaseNotes>
+`GetSourceActive`
+`GetAudioTracks`
+`SetAudioTrack`
+
+- Bug Fixes</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
