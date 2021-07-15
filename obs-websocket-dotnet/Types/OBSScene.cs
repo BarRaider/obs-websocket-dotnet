@@ -34,10 +34,8 @@ namespace OBSWebsocketDotNet.Types
         }
 
         /// <summary>
-        /// Constructor used for jsonconverter
+        /// Default Constructor for deserialization
         /// </summary>
-        public OBSScene()
-        {
-        }
+        public OBSScene() { }
     }
 }

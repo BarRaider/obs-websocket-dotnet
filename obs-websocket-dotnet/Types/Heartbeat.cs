@@ -9,15 +9,6 @@ namespace OBSWebsocketDotNet.Types
     public class Heartbeat
     {
         /// <summary>
-        /// Create a heartbeat
-        /// </summary>
-        /// <param name="body"></param>
-        public Heartbeat(JObject body)
-        {
-            JsonConvert.PopulateObject(body.ToString(), this);
-        }
-
-        /// <summary>
         /// Toggles between every JSON message as an "I am alive" indicator.
         /// </summary>
         [JsonProperty(PropertyName = "pulse")]
@@ -88,5 +79,19 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "stats")]
         public OBSStats Stats { set; get; }
+
+        /// <summary>
+        /// Create a heartbeat
+        /// </summary>
+        /// <param name="body"></param>
+        public Heartbeat(JObject body)
+        {
+            JsonConvert.PopulateObject(body.ToString(), this);
+        }
+
+        /// <summary>
+        /// Default Constructor for deserialization
+        /// </summary>
+        public Heartbeat() { }
     }
 }

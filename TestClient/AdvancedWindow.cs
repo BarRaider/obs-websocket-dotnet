@@ -18,6 +18,7 @@ namespace TestClient
 #pragma warning disable IDE1006 // Naming Styles
         // Source to test on
         private const string SOURCE_NAME = "BarRaider";
+        private readonly Random random = new Random();
 
         protected OBSWebsocket obs;
 
@@ -166,7 +167,9 @@ namespace TestClient
 
         private void btnRename_Click(object sender, EventArgs e)
         {
-            obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + "1");
+            var active = obs.GetSourceActive(SOURCE_NAME);
+            LogMessage($"GetSourceActive for {SOURCE_NAME}: {active}. Renaming source");
+            obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + random.Next(100));
         }
 
         private void btnSourceFilters_Click(object sender, EventArgs e)
@@ -204,19 +207,16 @@ namespace TestClient
 
         private void btnCreateScene_Click(object sender, EventArgs e)
         {
-            // TODO: Add in v4.9
-            /*
             string newScene = SOURCE_NAME + random.Next(100);
             
-            //_obs.CreateScene(newScene); 
-            var createdScene = _obs.GetSceneList().Scenes.FirstOrDefault(s => s.Name == newScene);
+            obs.CreateScene(newScene); 
+            var createdScene = obs.GetSceneList().Scenes.FirstOrDefault(s => s.Name == newScene);
             if (createdScene == null)
             {
                 LogMessage($"ERROR: Scene was not created!");
                 return;
             }
             LogMessage($"Created scene: {createdScene.Name}");
-            */
         }
 
         private void btnOutputs_Click(object sender, EventArgs e)
@@ -277,6 +277,53 @@ namespace TestClient
             {
                 var info = obs.GetTransitionSettings(transition.Name);
                 LogMessage($"Transition: {transition.Name} has {info.Count} settings");
+            }
+        }
+
+        private void btnTracks_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LogMessage($"Getting tracks for source {SOURCE_NAME}:");
+                var tracks = obs.GetAudioTracks(SOURCE_NAME);
+                if (tracks == null)
+                {
+                    LogMessage("ERROR: No tracks returned");
+                    return;
+                }
+                LogMessage($"Active Tracks: 1 {tracks.IsTrack1Active}, 2 {tracks.IsTrack2Active}, 3 {tracks.IsTrack3Active}, 4 {tracks.IsTrack4Active}, 5 {tracks.IsTrack5Active}, 6 {tracks.IsTrack6Active}");
+
+                bool trackToggle = !tracks.IsTrack3Active;
+                LogMessage($"Setting Track 3 to {trackToggle}");
+
+                obs.SetAudioTrack(SOURCE_NAME, 3, trackToggle);
+                tracks = obs.GetAudioTracks(SOURCE_NAME);
+                LogMessage($"Active Tracks: 1 {tracks.IsTrack1Active}, 2 {tracks.IsTrack2Active}, 3 {tracks.IsTrack3Active}, 4 {tracks.IsTrack4Active}, 5 {tracks.IsTrack5Active}, 6 {tracks.IsTrack6Active}");
+                LogMessage($"Value is {tracks.IsTrack3Active} expected {trackToggle}");
+                
+                if (tracks.IsTrack3Active != trackToggle)
+                {
+                    LogMessage("ERROR: FAILED!");
+                    return;
+                }
+
+                trackToggle = !tracks.IsTrack3Active;
+                LogMessage($"Setting Track 3 back to to {trackToggle}");
+
+                obs.SetAudioTrack(SOURCE_NAME, 3, trackToggle);
+                tracks = obs.GetAudioTracks(SOURCE_NAME);
+                LogMessage($"Active Tracks: 1 {tracks.IsTrack1Active}, 2 {tracks.IsTrack2Active}, 3 {tracks.IsTrack3Active}, 4 {tracks.IsTrack4Active}, 5 {tracks.IsTrack5Active}, 6 {tracks.IsTrack6Active}");
+                LogMessage($"Value is {tracks.IsTrack3Active} expected {trackToggle}");
+
+                if (tracks.IsTrack3Active != trackToggle)
+                {
+                    LogMessage("ERROR: FAILED!");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"ERROR: {ex}");
             }
         }
 #pragma warning restore IDE1006 // Naming Styles

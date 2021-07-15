@@ -89,5 +89,10 @@ namespace OBSWebsocketDotNet.Types
             JsonConvert.PopulateObject(props["sourceSettings"].ToString(), this);
             Source = props["sourceName"].ToString();
         }
+
+        /// <summary>
+        /// Default Constructor for deserialization
+        /// </summary>
+        public BrowserSourceProperties() { }
     }
 }

@@ -2624,6 +2624,11 @@
             </summary>
             <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
         </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemDetails.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.SceneItemPointInfo">
             <summary>
             Scene item point information

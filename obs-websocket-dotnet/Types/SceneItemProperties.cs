@@ -9,22 +9,6 @@ namespace OBSWebsocketDotNet.Types
     public class SceneItemProperties
     {
         /// <summary>
-        /// Initialize the scene item transform
-        /// </summary>
-        /// <param name="body"></param>
-        public SceneItemProperties(JObject body)
-        {
-            JsonConvert.PopulateObject(body.ToString(), this);
-        }
-
-        /// <summary>
-        /// Constructor used for json converter
-        /// </summary>
-        public SceneItemProperties()
-        {
-        }
-
-        /// <summary>
         /// Crop Information
         /// </summary>
         [JsonProperty(PropertyName = "crop")]
@@ -101,5 +85,19 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "rotation")]
         public double Rotation { set; get; }
+
+        /// <summary>
+        /// Initialize the scene item transform
+        /// </summary>
+        /// <param name="body"></param>
+        public SceneItemProperties(JObject body)
+        {
+            JsonConvert.PopulateObject(body.ToString(), this);
+        }
+
+        /// <summary>
+        /// Default Constructor for deserialization
+        /// </summary>
+        public SceneItemProperties() { }
     }
 }
