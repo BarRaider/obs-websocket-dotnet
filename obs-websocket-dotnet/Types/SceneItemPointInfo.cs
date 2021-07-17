@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -7,6 +8,13 @@ namespace OBSWebsocketDotNet.Types
     /// </summary>
     public class SceneItemPointInfo
     {
+        /// <summary>
+        /// The scale filter of the source
+        /// </summary>
+        [JsonProperty(PropertyName = "filter")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SceneItemScaleFilterType Filter { get; set; }
+
         /// <summary>
         /// The x-scale factor of the scene item
         /// </summary>
