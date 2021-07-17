@@ -217,7 +217,7 @@ namespace OBSWebsocketDotNet
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="sourceName">Name of source</param>
     /// <param name="volume">Current volume level of source</param>
-    public delegate void SourceVolumeChangedCallback(OBSWebsocket sender, string sourceName, float volume);
+    public delegate void SourceVolumeChangedCallback(OBSWebsocket sender, string sourceName, float volume, float volumeDb);
 
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceFilterRemoved"/>
