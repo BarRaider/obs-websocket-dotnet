@@ -2117,5 +2117,19 @@ namespace OBSWebsocketDotNet
         {
             SendRequest("StartStopVirtualCam");
         }
+
+        /// <summary>
+        /// Waits for the specified duration. Designed to be used in ExecuteBatch operations.
+        /// </summary>
+        /// <param name="delay">Delay in milliseconds to wait before continuing</param>
+        public void Sleep(int delay)
+        {
+            var request = new JObject
+            {
+                { "sleepMillis", delay }
+            };
+
+            SendRequest("Sleep", request);
+        }
     }
 }
