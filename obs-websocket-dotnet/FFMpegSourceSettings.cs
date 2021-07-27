@@ -24,7 +24,7 @@ namespace OBSWebsocketDotNet
         public bool CloseWhenInactive { get; set; }
 
         /// <summary>
-        /// HW Decoder
+        /// Color Range
         /// </summary>
         [JsonProperty(PropertyName = "color_range")]
         public int ColorRange { get; set; }
