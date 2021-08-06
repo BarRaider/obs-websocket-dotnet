@@ -448,7 +448,7 @@ namespace OBSWebsocketDotNet
             {
                 // Handle an event
                 string eventType = body["update-type"].ToString();
-                ProcessEventType(eventType, body);
+                Task.Run(() => { ProcessEventType(eventType, body); });
             }
         }
 
