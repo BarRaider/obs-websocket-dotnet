@@ -1255,7 +1255,7 @@ namespace OBSWebsocketDotNet
 
             if (sceneName != null)
             {
-                requestFields.Add("scene-name", sceneName);
+                requestFields.Add("scene", sceneName);
             }
 
             JObject minReqs = new JObject
@@ -1283,7 +1283,7 @@ namespace OBSWebsocketDotNet
 
             if (sceneName != null)
             {
-                requestFields.Add("scene-name", sceneName);
+                requestFields.Add("scene", sceneName);
             }
 
             JObject minReqs = new JObject
