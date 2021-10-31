@@ -58,13 +58,13 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Extents cx.
         /// </summary>
-        [JsonProperty(PropertyName = "extents_cx")]
+        [JsonProperty(PropertyName = "extents_cy")]
         public int Height { set; get; }
 
         /// <summary>
         /// Extents cy.
         /// </summary>
-        [JsonProperty(PropertyName = "extents_cy")]
+        [JsonProperty(PropertyName = "extents_cx")]
         public int Width { set; get; }
 
         /// <summary>
