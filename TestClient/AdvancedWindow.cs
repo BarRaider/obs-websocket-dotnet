@@ -59,6 +59,11 @@ namespace TestClient
             obs.SceneItemLockChanged += OBS_SceneItemLockChanged;
             obs.SceneItemVisibilityChanged += OBS_SceneItemVisibilityChanged;
             obs.SourceRenamed += OBS_SourceRenamed;
+            obs.SourceVolumeChanged += Obs_SourceVolumeChanged;
+        }
+        private void Obs_SourceVolumeChanged(OBSWebsocket sender, SourceVolume volume)
+        {
+            LogMessage($"[SourceVolumeChanged] Source: {volume.SourceName} Volume: {volume.Volume} VolumeDB: {volume.VolumeDb}");
         }
 
         private void OBS_SourceRenamed(OBSWebsocket sender, string newName, string previousName)
