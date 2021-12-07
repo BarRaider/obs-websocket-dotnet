@@ -2033,6 +2033,7 @@ namespace OBSWebsocketDotNet
             SendRequest("CreateScene", request);
         }
 
+        /// <summary>
         /// Gets whether an audio track is active for a source.
         /// </summary>
         /// <param name="sourceName">Source name</param>

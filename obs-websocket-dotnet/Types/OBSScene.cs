@@ -27,9 +27,11 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="data">JSON scene description as a <see cref="JObject" /></param>
         public OBSScene(JObject data)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.ObjectCreationHandling = ObjectCreationHandling.Auto;
-            settings.NullValueHandling = NullValueHandling.Include;
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                ObjectCreationHandling = ObjectCreationHandling.Auto,
+                NullValueHandling = NullValueHandling.Include
+            };
             JsonConvert.PopulateObject(data.ToString(), this, settings);
         }
 

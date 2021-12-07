@@ -1160,7 +1160,6 @@ namespace TestClient
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.TextBox tbFolderPath;
         private System.Windows.Forms.Button btnSetPath;
-        private System.Windows.Forms.Button btnBrowseButton;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Label lblVirtualCamStatus;
         private System.Windows.Forms.Label label4;

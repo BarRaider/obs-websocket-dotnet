@@ -355,7 +355,7 @@
         </member>
         <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.ColorRange">
             <summary>
-            HW Decoder
+            Color Range
             </summary>
         </member>
         <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.HWDecode">
@@ -1662,7 +1662,13 @@
             </summary>
             <param name="sceneName">Name of the scene to create.</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:OBSWebsocketDotNet.OBSWebsocket.GetAudioTracks(System.String)" -->
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetAudioTracks(System.String)">
+            <summary>
+            Gets whether an audio track is active for a source.
+            </summary>
+            <param name="sourceName">Source name</param>
+            <returns>Indication for each track whther it's active or not</returns>
+        </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetAudioTrack(System.String,System.Int32,System.Boolean)">
             <summary>
             Sets whether an audio track is active for a source.
@@ -3447,6 +3453,11 @@
         <member name="M:OBSWebsocketDotNet.Types.VolumeInfo.#ctor">
             <summary>
             Default Constructor for deserialization
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.VirtualCamStatus">
+            <summary>
+            VirtualCam Status
             </summary>
         </member>
         <member name="P:OBSWebsocketDotNet.VirtualCamStatus.IsActive">

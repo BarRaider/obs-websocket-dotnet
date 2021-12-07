@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace OBSWebsocketDotNet
 {
+    /// <summary>
+    /// VirtualCam Status
+    /// </summary>
     public class VirtualCamStatus
     {
         /// <summary>
