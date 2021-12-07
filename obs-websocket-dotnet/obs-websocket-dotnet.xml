@@ -212,8 +212,7 @@
             Callback by <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceVolumeChanged"/>
             </summary>
             <param name="sender"><see cref="T:OBSWebsocketDotNet.OBSWebsocket"/> instance</param>
-            <param name="sourceName">Name of source</param>
-            <param name="volume">Current volume level of source</param>
+            <param name="volume">Current volume levels of source</param>
         </member>
         <member name="T:OBSWebsocketDotNet.SourceFilterRemovedCallback">
             <summary>
@@ -3105,6 +3104,37 @@
         <member name="P:OBSWebsocketDotNet.Types.SourceTypeCapabilities.DoNotSelfMonitor">
             <summary>
             True if sources of this type may cause a feedback loop if it's audio is monitored and shouldn't be
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SourceVolume">
+            <summary>
+            Source volume values
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceVolume.SourceName">
+            <summary>
+            Name of the source
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceVolume.Volume">
+            <summary>
+            The source volume in percent
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SourceVolume.VolumeDb">
+            <summary>
+            The source volume in decibels
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SourceVolume.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SourceVolume.#ctor">
+            <summary>
+            Empty constructor for jsonconvert
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.StreamingService">
