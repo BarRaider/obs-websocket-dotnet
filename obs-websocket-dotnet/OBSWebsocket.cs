@@ -744,7 +744,7 @@ namespace OBSWebsocketDotNet
                     SourceAudioActivated?.Invoke(this, (string)body["sourceName"]);
                     break;
                 case "SourceVolumeChanged":
-                    SourceVolumeChanged?.Invoke(this, (string)body["sourceName"], (float)body["volume"]);
+                    SourceVolumeChanged?.Invoke(this, new SourceVolume(body));
                     break;
                 case "SourceFilterAdded":
                     SourceFilterAdded?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (string)body["filterType"], (JObject)body["filterSettings"]);
