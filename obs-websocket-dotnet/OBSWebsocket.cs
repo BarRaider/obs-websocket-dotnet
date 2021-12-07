@@ -553,6 +553,7 @@ namespace OBSWebsocketDotNet
             }
             catch (ErrorResponseException)
             {
+                Disconnect();
                 throw new AuthFailureException();
             }
 
