@@ -9,12 +9,6 @@ namespace OBSWebsocketDotNet.Types
     public class OBSAuthInfo
     {
         /// <summary>
-        /// True if authentication is required, false otherwise
-        /// </summary>
-        [JsonProperty(PropertyName = "authRequired")]
-        public readonly bool AuthRequired;
-
-        /// <summary>
         /// Authentication challenge
         /// </summary>
         [JsonProperty(PropertyName = "challenge")]

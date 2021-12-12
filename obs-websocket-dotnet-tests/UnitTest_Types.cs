@@ -98,7 +98,6 @@ namespace OBSWebsocketDotNet.Tests
 
             var authInfo = new OBSAuthInfo(data);
 
-            Assert.IsTrue(authInfo.AuthRequired);
             Assert.AreEqual(challenge, authInfo.Challenge);
             Assert.AreEqual(salt, authInfo.PasswordSalt);
         }

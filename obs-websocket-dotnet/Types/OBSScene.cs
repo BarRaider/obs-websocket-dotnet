@@ -12,8 +12,14 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// OBS Scene name
         /// </summary>
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "sceneName")]
         public string Name;
+
+        /// <summary>
+        /// Is group
+        /// </summary>
+        [JsonProperty(PropertyName = "isGroup")]
+        public bool IsGroup;
 
         /// <summary>
         /// Scene item list
