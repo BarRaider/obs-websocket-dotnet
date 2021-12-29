@@ -8,16 +8,27 @@
         /// <summary>
         /// Input
         /// </summary>
-        Input,
+        OBS_SOURCE_TYPE_INPUT,
 
         /// <summary>
         /// Group
+        /// TODO: Deprecated?
         /// </summary>
         Group,
 
         /// <summary>
+        /// Filter
+        /// </summary>
+        OBS_SOURCE_TYPE_FILTER,
+
+        /// <summary>
+        /// Transition
+        /// </summary>
+        OBS_SOURCE_TYPE_TRANSITION,
+
+        /// <summary>
         /// Scene
         /// </summary>
-        Scene
+        OBS_SOURCE_TYPE_SCENE
     }
 }

@@ -294,11 +294,12 @@ namespace TestClient
                 foreach (var scene in scenes)
                 {
                     var node = new TreeNode(scene.Name);
-                    // TODO
-                    //foreach (var item in scene.Items)
-                    //{
-                    //    node.Nodes.Add(item.SourceName);
-                    //}
+                    var items = obs.GetSceneItemList(scene.Name);
+                    
+                    foreach (var item in items)
+                    {
+                        node.Nodes.Add(item.SourceName);
+                    }
 
                     tvScenes.Nodes.Add(node);
                 }
