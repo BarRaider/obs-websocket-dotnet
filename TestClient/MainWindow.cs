@@ -294,10 +294,11 @@ namespace TestClient
                 foreach (var scene in scenes)
                 {
                     var node = new TreeNode(scene.Name);
-                    foreach (var item in scene.Items)
-                    {
-                        node.Nodes.Add(item.SourceName);
-                    }
+                    // TODO
+                    //foreach (var item in scene.Items)
+                    //{
+                    //    node.Nodes.Add(item.SourceName);
+                    //}
 
                     tvScenes.Nodes.Add(node);
                 }

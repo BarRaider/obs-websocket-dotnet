@@ -16,17 +16,11 @@ namespace OBSWebsocketDotNet.Types
         public string Name;
 
         /// <summary>
-        /// Is group
+        /// Scene Index
         /// </summary>
-        [JsonProperty(PropertyName = "isGroup")]
-        public bool IsGroup;
-
-        /// <summary>
-        /// Scene item list
-        /// </summary>
-        [JsonProperty(PropertyName = "sources")]
-        public List<SceneItem> Items;
-
+        [JsonProperty(PropertyName = "sceneIndex")]
+        public int Index;
+        
         /// <summary>
         /// Builds the object from the JSON description
         /// </summary>

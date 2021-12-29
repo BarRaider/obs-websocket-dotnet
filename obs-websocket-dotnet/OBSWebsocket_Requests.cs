@@ -119,7 +119,7 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="OBSScene"/> object describing the current scene</returns>
         public OBSScene GetCurrentScene()
         {
-            JObject response = SendRequest("GetCurrentScene");
+            JObject response = SendRequest("GetCurrentProgramScene");
             return new OBSScene(response);
         }
 
@@ -543,7 +543,7 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="OutputStatus"/> object describing the current outputs states</returns>
         public OutputStatus GetStreamingStatus()
         {
-            JObject response = SendRequest("GetStreamingStatus");
+            JObject response = SendRequest("GetStreamStatus");
             var outputStatus = new OutputStatus(response);
             return outputStatus;
         }
@@ -570,7 +570,7 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="TransitionSettings"/> object with the current transition name and duration</returns>
         public TransitionSettings GetCurrentTransition()
         {
-            JObject respBody = SendRequest("GetCurrentTransition");
+            JObject respBody = SendRequest("GetCurrentSceneTransition");
             return new TransitionSettings(respBody);
         }
 
@@ -811,8 +811,8 @@ namespace OBSWebsocketDotNet
         /// <returns>Name of the current scene collection</returns>
         public string GetCurrentSceneCollection()
         {
-            var response = SendRequest("GetCurrentSceneCollection");
-            return (string)response["sc-name"];
+            var response = SendRequest("GetSceneCollectionList");
+            return (string)response["currentSceneCollectionName"];
         }
 
         /// <summary>
@@ -821,13 +821,13 @@ namespace OBSWebsocketDotNet
         /// <returns>A <see cref="List{T}"/> of the names of all scene collections</returns>
         public List<string> ListSceneCollections()
         {
-            var response = SendRequest("ListSceneCollections");
-            var items = (JArray)response["scene-collections"];
+            var response = SendRequest("GetSceneCollectionList");
+            var items = (JArray)response["sceneCollections"];
 
             List<string> sceneCollections = new List<string>();
-            foreach (JObject item in items)
+            foreach (string item in items)
             {
-                sceneCollections.Add((string)item["sc-name"]);
+                sceneCollections.Add(item);
             }
 
             return sceneCollections;
@@ -853,8 +853,8 @@ namespace OBSWebsocketDotNet
         /// <returns>Name of the current profile</returns>
         public string GetCurrentProfile()
         {
-            var response = SendRequest("GetCurrentProfile");
-            return (string)response["profile-name"];
+            var response = SendRequest("GetProfileList");
+            return (string)response["currentProfileName"];
         }
 
         /// <summary>
@@ -863,13 +863,13 @@ namespace OBSWebsocketDotNet
         /// <returns>A <see cref="List{T}"/> of the names of all profiles</returns>
         public List<string> ListProfiles()
         {
-            var response = SendRequest("ListProfiles");
+            var response = SendRequest("GetProfileList");
             var items = (JArray)response["profiles"];
 
             List<string> profiles = new List<string>();
-            foreach (JObject item in items)
+            foreach (string item in items)
             {
-                profiles.Add((string)item["profile-name"]);
+                profiles.Add(item);
             }
 
             return profiles;
@@ -960,8 +960,10 @@ namespace OBSWebsocketDotNet
         /// <returns>Current recording folder path</returns>
         public string GetRecordingFolder()
         {
-            var response = SendRequest("GetRecordingFolder");
-            return (string)response["rec-folder"];
+            // TODO: Currently not implemented in 5.0alpha3, commented out in ws-src
+            //var response = SendRequest("GetRecordDirectory");
+            //return (string)response["recordDirectory"];
+            return "";
         }
 
         /// <summary>
@@ -1015,7 +1017,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Current transition duration (in milliseconds)</returns>
         public GetTransitionListInfo GetTransitionList()
         {
-            var response = SendRequest("GetTransitionList");
+            var response = SendRequest("GetSceneTransitionList");
 
             return JsonConvert.DeserializeObject<GetTransitionListInfo>(response.ToString());
         }
@@ -2090,9 +2092,11 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="VirtualCamStatus"/> object describing the current virtual camera state</returns>
         public VirtualCamStatus GetVirtualCamStatus()
         {
-            JObject response = SendRequest("GetVirtualCamStatus");
-            var outputStatus = new VirtualCamStatus(response);
-            return outputStatus;
+            // TODO: NYI in obs-ws
+            //JObject response = SendRequest("GetVirtualCamStatus");
+            //var outputStatus = new VirtualCamStatus(response);
+            //return outputStatus;
+            return new VirtualCamStatus { IsActive = false };
         }
 
         /// <summary>

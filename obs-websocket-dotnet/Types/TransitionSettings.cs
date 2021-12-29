@@ -11,13 +11,13 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Transition name
         /// </summary>
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "transitionName")]
         public string Name { internal set; get; }
 
         /// <summary>
         /// Transition duration in milliseconds
         /// </summary>
-        [JsonProperty(PropertyName = "duration")]
+        [JsonProperty(PropertyName = "transitionDuration")]
         public int Duration { internal set; get; }
 
         /// <summary>
