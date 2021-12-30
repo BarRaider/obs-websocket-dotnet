@@ -40,6 +40,7 @@ namespace OBSWebsocketDotNet.Tests
             var scene = new OBSScene(data);
 
             Assert.AreEqual(sceneName, scene.Name);
+            // TODO: create new tests for items, as they are not part of the scene info anymore
             //Assert.AreEqual(1, scene.Items.Count);
             //Assert.AreEqual(itemName, scene.Items[0].SourceName);
         }

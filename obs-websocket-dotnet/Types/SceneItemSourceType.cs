@@ -9,13 +9,7 @@
         /// Input
         /// </summary>
         OBS_SOURCE_TYPE_INPUT,
-
-        /// <summary>
-        /// Group
-        /// TODO: Deprecated?
-        /// </summary>
-        Group,
-
+        
         /// <summary>
         /// Filter
         /// </summary>
