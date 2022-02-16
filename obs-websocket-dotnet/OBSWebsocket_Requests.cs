@@ -2125,6 +2125,11 @@ namespace OBSWebsocketDotNet
         /// <param name="delay">Delay in milliseconds to wait before continuing</param>
         public void Sleep(int delay)
         {
+            if (delay < 0)
+            {
+                delay = 0;
+            }
+
             var request = new JObject
             {
                 { "sleepMillis", delay }
