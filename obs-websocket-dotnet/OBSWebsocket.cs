@@ -382,7 +382,9 @@ namespace OBSWebsocketDotNet
             WSConnection.Connect();
 
             if (!WSConnection.IsAlive)
-                return;
+            {
+                throw new ErrorResponseException($"Could not connect to '{url}'.");
+            }
 
             OBSAuthInfo authInfo = GetAuthInfo();
 
