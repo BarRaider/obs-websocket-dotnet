@@ -358,7 +358,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
-        public void Connect(string url, string password)
+        /// <param name="disableLogging">Optional: Hide logging output from WebSocketSharp</param>
+        public void Connect(string url, string password, bool disableLogging = false)
         {
             if (!url.ToLower().StartsWith(WEBSOCKET_URL_PREFIX))
             {
@@ -374,6 +375,11 @@ namespace OBSWebsocketDotNet
             {
                 WaitTime = wsTimeout
             };
+
+
+            if (disableLogging)
+                Logging.Disable(WSConnection.Log);
+
             WSConnection.OnMessage += WebsocketMessageHandler;
             WSConnection.OnClose += (s, e) =>
             {
