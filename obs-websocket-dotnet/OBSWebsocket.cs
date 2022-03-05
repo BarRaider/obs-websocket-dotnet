@@ -378,7 +378,9 @@ namespace OBSWebsocketDotNet
 
 
             if (disableLogging)
-                Logging.Disable(WSConnection.Log);
+            {
+                WSConnection.Log.Output = (__, _) => { };
+            }
 
             WSConnection.OnMessage += WebsocketMessageHandler;
             WSConnection.OnClose += (s, e) =>
