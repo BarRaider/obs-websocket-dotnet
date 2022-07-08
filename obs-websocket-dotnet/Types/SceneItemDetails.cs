@@ -14,13 +14,13 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Unique item id of the source item
         /// </summary>
-        [JsonProperty(PropertyName = "itemId")]
+        [JsonProperty(PropertyName = "sceneItemId")]
         public int ItemId { set; get; }
 
         /// <summary>
         /// Kind of source (Example: vlc_source or image_source)
         /// </summary>
-        [JsonProperty(PropertyName = "sourceKind")]
+        [JsonProperty(PropertyName = "inputKind")]
         public string SourceKind { set; get; }
 
         /// <summary>

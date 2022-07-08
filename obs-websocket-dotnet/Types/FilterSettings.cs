@@ -18,7 +18,7 @@ namespace OBSWebsocketDotNet.Types
         /// Type of the specified filter
         /// </summary>
         [JsonProperty(PropertyName = "filterKind")]
-        public string Type { set; get; }
+        public string Kind { set; get; }
 
         /// <summary>
         /// Index of the specified filter
@@ -37,5 +37,11 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "filterSettings")]
         public JObject Settings { set; get; }
+
+        /// <summary>
+        /// Index of the filter in the list, beginning at 0
+        /// </summary>
+        [JsonProperty(PropertyName = "filterIndex")]
+        public int Index { get; set; }
     }
 }

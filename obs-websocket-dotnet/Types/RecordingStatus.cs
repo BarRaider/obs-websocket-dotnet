@@ -14,25 +14,31 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Current recording status
         /// </summary>
-        [JsonProperty(PropertyName = "isRecording")]
+        [JsonProperty(PropertyName = "outputActive")]
         public bool IsRecording { set; get; }
 
         /// <summary>
         /// Whether the recording is paused or not
         /// </summary>
-        [JsonProperty(PropertyName = "isRecordingPaused")]
+        [JsonProperty(PropertyName = "outputPaused")]
         public bool IsRecordingPaused { set; get; }
 
         /// <summary>
-        /// Time elapsed since recording started (only present if currently recording). (Optional)
+        /// Current formatted timecode string for the output
         /// </summary>
-        [JsonProperty(PropertyName = "recordTimecode")]
+        [JsonProperty(PropertyName = "outputTimecode")]
         public string RecordTimecode { set; get; }
 
         /// <summary>
-        /// Absolute path to the recording file (only present if currently recording). (Optional)
+        /// Current duration in milliseconds for the output
         /// </summary>
-        [JsonProperty(PropertyName = "recordingFilename")]
-        public string RecordingFilename { set; get; }
+        [JsonProperty(PropertyName = "outputDuration")]
+        public int RecordingDuration { set; get; }
+
+        /// <summary>
+        /// Number of bytes sent by the output
+        /// </summary>
+        [JsonProperty(PropertyName = "outputBytes")]
+        public int RecordingBytes { set; get; }
     }
 }

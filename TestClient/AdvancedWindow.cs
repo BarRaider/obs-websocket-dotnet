@@ -182,7 +182,7 @@ namespace TestClient
             try
             {
                 LogMessage("GetSourceFilters:");
-                var filters = obs.GetSourceFilters(SOURCE_NAME);
+                var filters = obs.GetSourceFilterList(SOURCE_NAME);
 
                 foreach (var filter in filters)
                 {
@@ -197,7 +197,7 @@ namespace TestClient
                 }
 
                 LogMessage("GetSourceFilterInfo:");
-                LogFilter(obs.GetSourceFilterInfo(SOURCE_NAME, firstFilter.Name));
+                LogFilter(obs.GetSourceFilter(SOURCE_NAME, firstFilter.Name));
             }
             catch (Exception ex)
             {
@@ -207,7 +207,7 @@ namespace TestClient
 
         private void LogFilter(FilterSettings filter)
         {
-            LogMessage($"Filter: {filter.Name} Type: {filter.Type} Enabled: {filter.IsEnabled}{Environment.NewLine}Settings: {filter.Settings}");
+            LogMessage($"Filter: {filter.Name} Type: {filter.Kind} Enabled: {filter.IsEnabled}{Environment.NewLine}Settings: {filter.Settings}");
         }
 
         private void btnCreateScene_Click(object sender, EventArgs e)
@@ -275,7 +275,7 @@ namespace TestClient
         private void btnTransition_Click(object sender, EventArgs e)
         {
             LogMessage($"Getting Transitions");
-            var transitions = obs.GetTransitionList();
+            var transitions = obs.GetSceneTransitionList();
 
             LogMessage($"Found {transitions.Transitions.Count} transitions. Active: {transitions.CurrentTransition}");
             foreach (var transition in transitions.Transitions)

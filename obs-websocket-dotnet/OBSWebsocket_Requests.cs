@@ -38,7 +38,7 @@ namespace OBSWebsocketDotNet
         /// <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
         /// <param name="width">Screenshot width. Defaults to the source's base width.</param>
         /// <param name="height">Screenshot height. Defaults to the source's base height.</param>
-        public SourceScreenshotResponse TakeSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null, int width = -1, int height = -1)
+        public SourceScreenshotResponse SaveSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null, int width = -1, int height = -1, int compressionQuality = -1)
         {
             var requestFields = new JObject
             {
@@ -47,22 +47,26 @@ namespace OBSWebsocketDotNet
 
             if (embedPictureFormat != null)
             {
-                requestFields.Add("embedPictureFormat", embedPictureFormat);
+                requestFields.Add("imageFormat", embedPictureFormat);
             }
             if (saveToFilePath != null)
             {
-                requestFields.Add("saveToFilePath", saveToFilePath);
+                requestFields.Add("imageFilePath", saveToFilePath);
             }
             if (width > -1)
             {
-                requestFields.Add("width", width);
+                requestFields.Add("imageWidth", width);
             }
             if (height > -1)
             {
-                requestFields.Add("height", height);
+                requestFields.Add("imageHeight", height);
+            }
+            if (compressionQuality > -1)
+            {
+                requestFields.Add("imageCompressionQuality", compressionQuality);
             }
 
-            var response = SendRequest("TakeSourceScreenshot", requestFields);
+            var response = SendRequest("SaveSourceScreenshot", requestFields);
             return JsonConvert.DeserializeObject<SourceScreenshotResponse>(response.ToString());
         }
 
@@ -73,9 +77,9 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName"></param>
         /// <param name="embedPictureFormat">Format of the Data URI encoded picture. Can be "png", "jpg", "jpeg" or "bmp" (or any other value supported by Qt's Image module)</param>
         /// <param name="saveToFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
-        public SourceScreenshotResponse TakeSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null)
+        public SourceScreenshotResponse SaveSourceScreenshot(string sourceName, string embedPictureFormat = null, string saveToFilePath = null)
         {
-            return TakeSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath, -1, -1);
+            return SaveSourceScreenshot(sourceName, embedPictureFormat, saveToFilePath, -1, -1);
         }
 
         /// <summary>
@@ -117,9 +121,9 @@ namespace OBSWebsocketDotNet
         /// Get the current scene info along with its items
         /// </summary>
         /// <returns>An <see cref="OBSScene"/> object describing the current scene</returns>
-        public OBSScene GetCurrentScene()
+        public OBSScene GetCurrentProgramScene()
         {
-            JObject response = SendRequest("GetCurrentScene");
+            JObject response = SendRequest("GetCurrentProgramScene");
             return new OBSScene(response);
         }
 
@@ -127,20 +131,21 @@ namespace OBSWebsocketDotNet
         /// Set the current scene to the specified one
         /// </summary>
         /// <param name="sceneName">The desired scene name</param>
-        public void SetCurrentScene(string sceneName)
+        public void SetCurrentProgramScene(string sceneName)
         {
             var requestFields = new JObject
             {
-                { "scene-name", sceneName }
+                { "sceneName", sceneName }
             };
 
-            SendRequest("SetCurrentScene", requestFields);
+            SendRequest("SetCurrentProgramScene", requestFields);
         }
 
         /// <summary>
         /// Get the filename formatting string
         /// </summary>
         /// <returns>Current filename formatting string</returns>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public string GetFilenameFormatting()
         {
             JObject response = SendRequest("GetFilenameFormatting");
@@ -153,7 +158,7 @@ namespace OBSWebsocketDotNet
         public OBSStats GetStats()
         {
             JObject response = SendRequest("GetStats");
-            return JsonConvert.DeserializeObject<OBSStats>(response["stats"].ToString());
+            return JsonConvert.DeserializeObject<OBSStats>(response.ToString());
         }
 
         /// <summary>
@@ -180,6 +185,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the scene to reorder (defaults to current)</param>
         /// <param name="sceneItems">List of items to reorder, only ID or Name required</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void ReorderSceneItems(List<SceneItemStub> sceneItems, string sceneName = null)
         {
             var requestFields = new JObject();
@@ -199,14 +205,14 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the scene to return the override info</param>
         /// <returns>TransitionOverrideInfo</returns>
-        public TransitionOverrideInfo GetSceneTransitionOverride(string sceneName)
+        public TransitionOverrideInfo GetSceneSceneTransitionOverride(string sceneName)
         {
             var requestFields = new JObject
             {
                 { "sceneName", sceneName }
             };
 
-            JObject response = SendRequest("GetSceneTransitionOverride", requestFields);
+            JObject response = SendRequest("GetSceneSceneTransitionOverride", requestFields);
             return response.ToObject<TransitionOverrideInfo>();
         }
 
@@ -216,7 +222,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Name of the scene to set the transition override</param>
         /// <param name="transitionName">Name of the transition to use</param>
         /// <param name="transitionDuration">Duration in milliseconds of the transition if transition is not fixed. Defaults to the current duration specified in the UI if there is no current override and this value is not given</param>
-        public void SetSceneTransitionOverride(string sceneName, string transitionName, int transitionDuration = -1)
+        public void SetSceneSceneTransitionOverride(string sceneName, string transitionName, int transitionDuration = -1)
         {
             var requestFields = new JObject
             {
@@ -229,13 +235,14 @@ namespace OBSWebsocketDotNet
                 requestFields.Add("transitionDuration", transitionDuration);
             }
 
-            SendRequest("SetSceneTransitionOverride", requestFields);
+            SendRequest("SetSceneSceneTransitionOverride", requestFields);
         }
 
         /// <summary>
         /// Remove any transition override from a specific scene
         /// </summary>
         /// <param name="sceneName">Name of the scene to remove the transition override</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void RemoveSceneTransitionOverride(string sceneName)
         {
             var requestFields = new JObject
@@ -258,6 +265,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all sources available in the running OBS instance
         /// </summary>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public List<SourceInfo> GetSourcesList()
         {
             throw new NotImplementedException(); // See https://docs.google.com/spreadsheets/d/1LfCZrbT8e7cSaKo_TuPDd-CJiptL7RSuo8iE63vMmMs/edit#gid=1232838276
@@ -269,6 +277,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List all sources available in the running OBS instance
         /// </summary>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public List<SourceType> GetSourceTypesList()
         {
             JObject response = SendRequest("GetSourceTypesList");
@@ -281,6 +290,7 @@ namespace OBSWebsocketDotNet
         /// <param name="itemName">Scene item which visiblity will be changed</param>
         /// <param name="visible">Desired visiblity</param>
         /// <param name="sceneName">Scene name of the specified item</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void SetSourceRender(string itemName, bool visible, string sceneName = null)
         {
             var requestFields = new JObject
@@ -302,6 +312,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="itemName">The name of the source</param>
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public SceneItemProperties GetSceneItemProperties(string itemName, string sceneName = null)
         {
             return JsonConvert.DeserializeObject<SceneItemProperties>(GetSceneItemPropertiesJson(itemName, sceneName).ToString());
@@ -313,6 +324,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="itemName">The name of the source</param>
         /// <param name="sceneName">The name of the scene that the source item belongs to. Defaults to the current scene.</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public JObject GetSceneItemPropertiesJson(string itemName, string sceneName = null)
         {
             var requestFields = new JObject
@@ -332,6 +344,7 @@ namespace OBSWebsocketDotNet
         /// Get the current properties of a Text GDI Plus source.
         /// </summary>
         /// <param name="sourceName">The name of the source</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public TextGDIPlusProperties GetTextGDIPlusProperties(string sourceName)
         {
             var requestFields = new JObject
@@ -367,6 +380,7 @@ namespace OBSWebsocketDotNet
         /// Set the current properties of a Text GDI Plus source.
         /// </summary>
         /// <param name="properties">properties for the source</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void SetTextGDIPlusProperties(TextGDIPlusProperties properties)
         {
             var requestFields = JObject.Parse(JsonConvert.SerializeObject(properties));
@@ -381,6 +395,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Scene Name</param>
         /// <param name="filterName">Filter Name</param>
         /// <param name="movement">Direction to move</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void MoveSourceFilter(string sourceName, string filterName, FilterMovementType movement)
         {
             var requestFields = new JObject
@@ -399,6 +414,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Scene Name</param>
         /// <param name="filterName">Filter Name</param>
         /// <param name="newIndex">Desired position of the filter in the chain</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void ReorderSourceFilter(string sourceName, string filterName, int newIndex)
         {
             var requestFields = new JObject
@@ -417,13 +433,15 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source with filter</param>
         /// <param name="filterName">Filter name</param>
         /// <param name="filterSettings">Filter settings</param>
-        public void SetSourceFilterSettings(string sourceName, string filterName, JObject filterSettings)
+        /// <param name="isOverlay">Apply over existing settings?</param>
+        public void SetSourceFilterSettings(string sourceName, string filterName, JObject filterSettings, bool isOverlay = false)
         {
             var requestFields = new JObject
             {
                 { "sourceName", sourceName },
                 { "filterName", filterName },
-                { "filterSettings", filterSettings }
+                { "filterSettings", filterSettings },
+                { "overlay", isOverlay }
             };
 
             SendRequest("SetSourceFilterSettings", requestFields);
@@ -435,7 +453,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         /// <param name="filterName">Source filter name</param>
         /// <param name="filterEnabled">New filter state</param>
-        public void SetSourceFilterVisibility(string sourceName, string filterName, bool filterEnabled)
+        public void SetSourceFilterEnabled(string sourceName, string filterName, bool filterEnabled)
         {
             var requestFields = new JObject
             {
@@ -444,14 +462,14 @@ namespace OBSWebsocketDotNet
                 { "filterEnabled", filterEnabled }
             };
 
-            SendRequest("SetSourceFilterVisibility", requestFields);
+            SendRequest("SetSourceFilterEnabled", requestFields);
         }
 
         /// <summary>
         /// Return a list of all filters on a source
         /// </summary>
         /// <param name="sourceName">Source name</param>
-        public List<FilterSettings> GetSourceFilters(string sourceName)
+        public List<FilterSettings> GetSourceFilterList(string sourceName)
         {
             return this.GetSourceFilterList(sourceName);
         }
@@ -476,7 +494,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="filterName">Filter name</param>
-        public FilterSettings GetSourceFilterInfo(string sourceName, string filterName)
+        public FilterSettings GetSourceFilter(string sourceName, string filterName)
         {
             var requestFields = new JObject
             {
@@ -484,13 +502,14 @@ namespace OBSWebsocketDotNet
                 { "filterName", filterName }
             };
 
-            JObject response = SendRequest("GetSourceFilterInfo", requestFields);
+            JObject response = SendRequest("GetSourceFilter", requestFields);
             return JsonConvert.DeserializeObject<FilterSettings>(response.ToString());
         }
 
         /// <summary>
         /// Release the T-Bar (like a user releasing their mouse button after moving it). YOU MUST CALL THIS if you called SetTBarPosition with the release parameter set to false.
         /// </summary>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void ReleaseTBar()
         {
             SendRequest("ReleaseTBar");
@@ -501,7 +520,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName"></param>
         /// <param name="filterName"></param>
-        public bool RemoveFilterFromSource(string sourceName, string filterName)
+        public bool RemoveSourceFilter(string sourceName, string filterName)
         {
             var requestFields = new JObject
             {
@@ -510,7 +529,7 @@ namespace OBSWebsocketDotNet
             };
             try
             {
-                SendRequest("RemoveFilterFromSource", requestFields);
+                SendRequest("RemoveSourceFilter", requestFields);
                 return true;
             }
             catch (Exception e)
@@ -525,45 +544,45 @@ namespace OBSWebsocketDotNet
         /// Add a filter to a source
         /// </summary>
         /// <param name="sourceName">Name of the source for the filter</param>
-        /// <param name="filterName">Name of the filter</param>
+        /// <param name="filterKind">Name of the filter</param>
         /// <param name="filterType">Type of filter</param>
         /// <param name="filterSettings">Filter settings object</param>
-        public void AddFilterToSource(string sourceName, string filterName, string filterType, JObject filterSettings)
+        public void CreateSourceFilter(string sourceName, string filterKind, string filterType, JObject filterSettings)
         {
             var requestFields = new JObject
             {
                 { "sourceName", sourceName },
-                { "filterType", filterType },
-                { "filterName", filterName },
+                { "filterKind", filterType },
+                { "filterName", filterKind },
                 { "filterSettings", filterSettings }
             };
 
-            SendRequest("AddFilterToSource", requestFields);
+            SendRequest("CreateSourceFilter", requestFields);
         }
 
         /// <summary>
         /// Start/Stop the streaming output
         /// </summary>
-        public void ToggleStreaming()
+        public void ToggleStream()
         {
-            SendRequest("StartStopStreaming");
+            SendRequest("ToggleStream");
         }
 
         /// <summary>
         /// Start/Stop the recording output
         /// </summary>
-        public void ToggleRecording()
+        public void ToggleRecord()
         {
-            SendRequest("StartStopRecording");
+            SendRequest("ToggleRecord");
         }
 
         /// <summary>
         /// Get the current status of the streaming and recording outputs
         /// </summary>
         /// <returns>An <see cref="OutputStatus"/> object describing the current outputs states</returns>
-        public OutputStatus GetStreamingStatus()
+        public OutputStatus GetStreamStatus()
         {
-            JObject response = SendRequest("GetStreamingStatus");
+            JObject response = SendRequest("GetStreamStatus");
             var outputStatus = new OutputStatus(response);
             return outputStatus;
         }
@@ -589,7 +608,7 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="TransitionSettings"/> object with the current transition name and duration</returns>
         public TransitionSettings GetCurrentTransition()
         {
-            JObject respBody = SendRequest("GetCurrentTransition");
+            JObject respBody = SendRequest("GetCurrentSceneTransition");
             return new TransitionSettings(respBody);
         }
 
@@ -597,163 +616,142 @@ namespace OBSWebsocketDotNet
         /// Set the current transition to the specified one
         /// </summary>
         /// <param name="transitionName">Desired transition name</param>
-        public void SetCurrentTransition(string transitionName)
+        public void SetCurrentSceneTransition(string transitionName)
         {
             var requestFields = new JObject
             {
-                { "transition-name", transitionName }
+                { "transitionName", transitionName }
             };
 
-            SendRequest("SetCurrentTransition", requestFields);
+            SendRequest("SetCurrentSceneTransition", requestFields);
         }
 
         /// <summary>
         /// Change the transition's duration
         /// </summary>
         /// <param name="duration">Desired transition duration (in milliseconds)</param>
-        public void SetTransitionDuration(int duration)
+        public void SetCurrentSceneTransitionDuration(int duration)
         {
             var requestFields = new JObject
             {
-                { "duration", duration }
+                { "transitionDuration", duration }
             };
 
-            SendRequest("SetTransitionDuration", requestFields);
+            SendRequest("SetCurrentSceneTransitionDuration", requestFields);
         }
 
         /// <summary>
         /// Change the current settings of a transition
         /// </summary>
-        /// <param name="transitionName">Transition name</param>
         /// <param name="transitionSettings">Transition settings (they can be partial)</param>
+        /// <param name="isOverlay">Whether to overlay over the current settins or replace them</param>
         /// <returns>Updated transition settings</returns>
-        public JObject SetTransitionSettings(string transitionName, JObject transitionSettings)
+        public void SetCurrentSceneTransitionSettings(JObject transitionSettings, bool isOverlay)
         {
             var requestFields = new JObject
             {
-                { "transitionName", transitionName },
-                { "transitionSettings", JToken.FromObject(transitionSettings)}
+                { "transitionSettings", JToken.FromObject(transitionSettings)},
+                { "overlay", isOverlay }
             };
 
-            var response = SendRequest("SetTransitionSettings", requestFields);
-            return (JObject) response.SelectToken("transitionSettings");
+            var response = SendRequest("SetCurrentSceneTransitionSettings", requestFields);
         }
 
         /// <summary>
         /// Change the volume of the specified source
         /// </summary>
-        /// <param name="sourceName">Name of the source which volume will be changed</param>
-        /// <param name="volume">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
+        /// <param name="inputName">Name of the source which volume will be changed</param>
+        /// <param name="inputVolumeMul">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
         /// <param name="useDecibel">Interperet `volume` data as decibels instead of amplitude/mul.</param>
-        public void SetVolume(string sourceName, float volume, bool useDecibel = false)
+        public void SetInputVolume(string inputName, float inputVolumeMul, bool useDecibel = false)
         {
             var requestFields = new JObject
             {
-                { "source", sourceName },
-                { "volume", volume },
-                { "useDecibel", useDecibel }
+                { "inputName", inputName },
+                { "inputVolumeMul", inputVolumeMul },
+                { "inputVolumeDb", useDecibel }
             };
 
-            SendRequest("SetVolume", requestFields);
+            SendRequest("SetInputVolume", requestFields);
         }
 
         /// <summary>
         /// Get the volume of the specified source
         /// Volume is between `0.0` and `1.0` if using amplitude/mul (useDecibel is false), under `0.0` if using dB (useDecibel is true).
         /// </summary>
-        /// <param name="sourceName">Source name</param>
-        /// <param name="useDecibel">Output volume in decibels of attenuation instead of amplitude/mul.</param>
+        /// <param name="inputName">Source name</param>
         /// <returns>An <see cref="VolumeInfo"/>Object containing the volume and mute state of the specified source.</returns>
-        public VolumeInfo GetVolume(string sourceName, bool useDecibel = false)
+        public VolumeInfo GetInputVolume(string inputName)
         {
             var requestFields = new JObject
             {
-                { "source", sourceName },
-                { "useDecibel", useDecibel }
+                { "source", inputName }
             };
 
-            var response = SendRequest("GetVolume", requestFields);
+            var response = SendRequest("GetInputVolume", requestFields);
             return new VolumeInfo(response);
+        }
+
+        /// <summary>
+        /// Get if the specified source is muted
+        /// </summary>
+        /// <param name="inputName">Source name</param>
+        /// <returns>Source mute status (on/off)</returns>
+        public bool GetInputMute(string inputName)
+        {
+            var requestFields = new JObject
+            {
+                { "source", inputName }
+            };
+
+            var response = SendRequest("GetInputMute", requestFields);
+            return (bool)response["inputMuted"];
         }
 
         /// <summary>
         /// Set the mute state of the specified source
         /// </summary>
-        /// <param name="sourceName">Name of the source which mute state will be changed</param>
-        /// <param name="mute">Desired mute state</param>
-        public void SetMute(string sourceName, bool mute)
+        /// <param name="inputName">Name of the source which mute state will be changed</param>
+        /// <param name="inputMuted">Desired mute state</param>
+        public void SetInputMute(string inputName, bool inputMuted)
         {
             var requestFields = new JObject
             {
-                { "source", sourceName },
-                { "mute", mute }
+                { "inputName", inputName },
+                { "inputMuted", inputMuted }
             };
 
-            SendRequest("SetMute", requestFields);
+            SendRequest("SetInputMute", requestFields);
         }
 
         /// <summary>
         /// Toggle the mute state of the specified source
         /// </summary>
-        /// <param name="sourceName">Name of the source which mute state will be toggled</param>
-        public void ToggleMute(string sourceName)
+        /// <param name="inputName">Name of the source which mute state will be toggled</param>
+        public void ToggleInputMute(string inputName)
         {
             var requestFields = new JObject
             {
-                { "source", sourceName }
+                { "inputName", inputName }
             };
 
-            SendRequest("ToggleMute", requestFields);
+            SendRequest("ToggleInputMute", requestFields);
         }
 
         /// <summary>
-        /// Set the position of the specified scene item
+        /// Sets the transform and crop info of a scene item
         /// </summary>
-        /// <param name="itemName">Name of the scene item which position will be changed</param>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-        /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
-        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
-        public void SetSceneItemPosition(string itemName, float x, float y, string sceneName = null)
+        /// <param name="sceneName"></param>
+        /// <param name="sceneItemId"></param>
+        /// <param name="sceneItemTransform"></param>
+        public void SetSceneItemTransform(string sceneName, int sceneItemId, JObject sceneItemTransform)
         {
             var requestFields = new JObject
             {
-                { "item", itemName },
-                { "x", x },
-                { "y", y }
+                { "sceneName", sceneName },
+                { "sceneItemId", sceneItemId },
+                { "sceneItemTransform", sceneItemTransform }
             };
-
-            if (sceneName != null)
-            {
-                requestFields.Add("scene-name", sceneName);
-            }
-
-            SendRequest("SetSceneItemPosition", requestFields);
-        }
-
-        /// <summary>
-        /// Set the scale and rotation of the specified scene item
-        /// </summary>
-        /// <param name="itemName">Name of the scene item which transform will be changed</param>
-        /// <param name="rotation">Rotation in Degrees</param>
-        /// <param name="xScale">Horizontal scale factor</param>
-        /// <param name="yScale">Vertical scale factor</param>
-        /// <param name="sceneName">(optional) name of the scene the item belongs to</param>
-        [Obsolete("Deprecated! Please use SetSceneItemProperties(). Will be removed in a future update")]
-        public void SetSceneItemTransform(string itemName, float rotation = 0, float xScale = 1, float yScale = 1, string sceneName = null)
-        {
-            var requestFields = new JObject
-            {
-                { "item", itemName },
-                { "x-scale", xScale },
-                { "y-scale", yScale },
-                { "rotation", rotation }
-            };
-
-            if (sceneName != null)
-            {
-                requestFields.Add("scene-name", sceneName);
-            }
 
             SendRequest("SetSceneItemTransform", requestFields);
         }
@@ -763,6 +761,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="props">Object containing changes</param>
         /// <param name="sceneName">Option scene name</param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void SetSceneItemProperties(SceneItemProperties props, string sceneName = null)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings
@@ -789,6 +788,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="sceneName"></param>
+        [Obsolete("Deprecated and removed from v5.0.0")]
         public void SetSceneItemProperties(JObject obj, string sceneName = null)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings
@@ -813,12 +813,12 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Set the current scene collection to the specified one
         /// </summary>
-        /// <param name="scName">Desired scene collection name</param>
-        public void SetCurrentSceneCollection(string scName)
+        /// <param name="sceneCollectionName">Desired scene collection name</param>
+        public void SetCurrentSceneCollection(string sceneCollectionName)
         {
             var requestFields = new JObject
             {
-                { "sc-name", scName }
+                { "sceneCollectionName", sceneCollectionName }
             };
 
             SendRequest("SetCurrentSceneCollection", requestFields);
@@ -830,23 +830,24 @@ namespace OBSWebsocketDotNet
         /// <returns>Name of the current scene collection</returns>
         public string GetCurrentSceneCollection()
         {
-            var response = SendRequest("GetCurrentSceneCollection");
-            return (string)response["sc-name"];
+            var response = SendRequest("GetSceneCollectionList");
+            var currentCollectionName = response["currentSceneCollectionName"];
+            return (string)currentCollectionName;
         }
 
         /// <summary>
         /// List all scene collections
         /// </summary>
         /// <returns>A <see cref="List{T}"/> of the names of all scene collections</returns>
-        public List<string> ListSceneCollections()
+        public List<string> GetSceneCollectionList()
         {
-            var response = SendRequest("ListSceneCollections");
-            var items = (JArray)response["scene-collections"];
+            var response = SendRequest("GetSceneCollectionList");
+            var items = (JArray)response["sceneCollections"];
 
             List<string> sceneCollections = new List<string>();
-            foreach (JObject item in items)
+            foreach (JValue item in items)
             {
-                sceneCollections.Add((string)item["sc-name"]);
+                sceneCollections.Add(item.Value.ToString());
             }
 
             return sceneCollections;
@@ -860,7 +861,7 @@ namespace OBSWebsocketDotNet
         {
             var requestFields = new JObject
             {
-                { "profile-name", profileName }
+                { "profileName", profileName }
             };
 
             SendRequest("SetCurrentProfile", requestFields);
@@ -872,23 +873,23 @@ namespace OBSWebsocketDotNet
         /// <returns>Name of the current profile</returns>
         public string GetCurrentProfile()
         {
-            var response = SendRequest("GetCurrentProfile");
-            return (string)response["profile-name"];
+            var response = SendRequest("GetProfileList");
+            return (string)response["currentProfileName"];
         }
 
         /// <summary>
         /// List all profiles
         /// </summary>
         /// <returns>A <see cref="List{T}"/> of the names of all profiles</returns>
-        public List<string> ListProfiles()
+        public List<string> GetProfileList()
         {
-            var response = SendRequest("ListProfiles");
+            var response = SendRequest("GetProfileList");
             var items = (JArray)response["profiles"];
 
             List<string> profiles = new List<string>();
-            foreach (JObject item in items)
+            foreach (JValue item in items)
             {
-                profiles.Add((string)item["profile-name"]);
+                profiles.Add(item.Value.ToString());
             }
 
             return profiles;
@@ -898,71 +899,56 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Start streaming. Will trigger an error if streaming is already active
         /// </summary>
-        public void StartStreaming()
+        public void StartStream()
         {
-            SendRequest("StartStreaming");
+            SendRequest("StartStream");
         }
 
         /// <summary>
         /// Stop streaming. Will trigger an error if streaming is not active.
         /// </summary>
-        public void StopStreaming()
+        public void StopStream()
         {
-            SendRequest("StopStreaming");
-        }
-
-        /// <summary>
-        /// Toggle Streaming
-        /// </summary>
-        public void StartStopStreaming()
-        {
-            SendRequest("StartStopStreaming");
+            SendRequest("StopStream");
         }
 
         /// <summary>
         /// Start recording. Will trigger an error if recording is already active.
         /// </summary>
-        public void StartRecording()
+        public void StartRecord()
         {
-            SendRequest("StartRecording");
+            SendRequest("StartRecord");
         }
 
         /// <summary>
         /// Stop recording. Will trigger an error if recording is not active.
         /// </summary>
-        public void StopRecording()
+        public void StopRecord()
         {
-            SendRequest("StopRecording");
-        }
-
-        /// <summary>
-        /// Toggle recording
-        /// </summary>
-        public void StartStopRecording()
-        {
-            SendRequest("StartStopRecording");
+            SendRequest("StopRecord");
         }
 
         /// <summary>
         /// Pause the current recording. Returns an error if recording is not active or already paused.
         /// </summary>
-        public void PauseRecording()
+        public void PauseRecord()
         {
-            SendRequest("PauseRecording");
+            SendRequest("PauseRecord");
         }
 
         /// <summary>
         /// Resume/unpause the current recording (if paused). Returns an error if recording is not active or not paused.
         /// </summary>
-        public void ResumeRecording()
+        public void ResumeRecord()
         {
-            SendRequest("ResumeRecording");
+            SendRequest("ResumeRecord");
         }
 
         /// <summary>
         /// Change the current recording folder
         /// </summary>
         /// <param name="recFolder">Recording folder path</param>
+        [Obsolete("Deprecated and removed from v5.0.0 API")]
         public void SetRecordingFolder(string recFolder)
         {
             var requestFields = new JObject
@@ -977,19 +963,19 @@ namespace OBSWebsocketDotNet
         /// Get the path of the current recording folder
         /// </summary>
         /// <returns>Current recording folder path</returns>
-        public string GetRecordingFolder()
+        public string GetRecordDirectory()
         {
-            var response = SendRequest("GetRecordingFolder");
-            return (string)response["rec-folder"];
+            var response = SendRequest("GetRecordDirectory");
+            return (string)response["recordDirectory"];
         }
 
         /// <summary>
         /// Get current recording status.
         /// </summary>
         /// <returns></returns>
-        public RecordingStatus GetRecordingStatus()
+        public RecordingStatus GetRecordStatus()
         {
-            var response = SendRequest("GetRecordingStatus");
+            var response = SendRequest("GetRecordStatus");
             return JsonConvert.DeserializeObject<RecordingStatus>(response.ToString());
         }
 
@@ -1000,7 +986,7 @@ namespace OBSWebsocketDotNet
         public bool GetReplayBufferStatus()
         {
             var response = SendRequest("GetReplayBufferStatus");
-            return (bool)response["isReplayBufferActive"];
+            return (bool)response["outputActive"];
         }
 
         /// <summary>
@@ -1008,6 +994,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="transitionName">Transition name</param>
         /// <returns>Current transition settings</returns>
+        [Obsolete("Deprecated and removed from v5.0.0 API")]
         public JObject GetTransitionSettings(string transitionName)
         {
             var requestFields = new JObject
@@ -1018,10 +1005,12 @@ namespace OBSWebsocketDotNet
             var response = SendRequest("GetTransitionSettings", requestFields);
             return (JObject)response.SelectToken("transitionSettings");
         }
+
         /// <summary>
         /// Get duration of the currently selected transition (if supported)
         /// </summary>
         /// <returns>Current transition duration (in milliseconds)</returns>
+        [Obsolete("Deprecated and removed from v5.0.0 API")]
         public int GetTransitionDuration()
         {
             var response = SendRequest("GetTransitionDuration");
@@ -1043,11 +1032,9 @@ namespace OBSWebsocketDotNet
         /// Get duration of the currently selected transition (if supported)
         /// </summary>
         /// <returns>Current transition duration (in milliseconds)</returns>
-        public GetTransitionListInfo GetTransitionList()
+        public GetTransitionListInfo GetSceneTransitionList()
         {
-            throw new NotSupportedException();
-
-            var response = SendRequest("GetTransitionList");
+            var response = SendRequest("GetSceneTransitionList");
 
             return JsonConvert.DeserializeObject<GetTransitionListInfo>(response.ToString());
         }
@@ -1057,6 +1044,7 @@ namespace OBSWebsocketDotNet
         /// Note: Returns 1.0 when not active.
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Deprecated and removed from v5.0.0 API")]
         public double GetTransitionPosition()
         {
             var response = SendRequest("GetTransitionPosition");
@@ -1068,55 +1056,24 @@ namespace OBSWebsocketDotNet
         /// Get status of Studio Mode
         /// </summary>
         /// <returns>Studio Mode status (on/off)</returns>
-        public bool StudioModeEnabled()
+        public bool GetStudioModeEnabled()
         {
-            var response = SendRequest("GetStudioModeStatus");
-            return (bool)response["studio-mode"];
+            var response = SendRequest("GetStudioModeEnabled");
+            return (bool)response["studioModeEnabled"];
         }
 
         /// <summary>
-        /// Disable Studio Mode
+        /// Enables or disables studio mode
         /// </summary>
-        public void DisableStudioMode()
+        /// <param name="enableStudioMode"></param>
+        public void SetStudioModeEnabled(bool enableStudioMode)
         {
-            SendRequest("DisableStudioMode");
-        }
+            var requestFields = new JObject
+            {
+                { "studioModeEnabled", enableStudioMode }
+            };
 
-        /// <summary>
-        /// Enable Studio Mode
-        /// </summary>
-        public void EnableStudioMode()
-        {
-            SendRequest("EnableStudioMode");
-        }
-
-        /// <summary>
-        /// Enable Studio Mode
-        /// </summary>
-        public bool GetStudioModeStatus()
-        {
-            var response = SendRequest("GetStudioModeStatus");
-            return (bool)response["studio-mode"];
-        }
-
-        /// <summary>
-        /// Enable/disable Studio Mode
-        /// </summary>
-        /// <param name="enable">Desired Studio Mode status</param>
-        public void SetStudioMode(bool enable)
-        {
-            if (enable)
-                EnableStudioMode();
-            else
-                DisableStudioMode();
-        }
-
-        /// <summary>
-        /// Toggle Studio Mode status (on to off or off to on)
-        /// </summary>
-        public void ToggleStudioMode()
-        {
-            SendRequest("ToggleStudioMode");
+            SendRequest("SetStudioModeEnabled", requestFields);
         }
 
         /// <summary>
@@ -1124,9 +1081,10 @@ namespace OBSWebsocketDotNet
         /// if Studio Mode is disabled
         /// </summary>
         /// <returns>Preview scene object</returns>
-        public OBSScene GetPreviewScene()
+        public OBSScene GetCurrentPreviewScene()
         {
-            var response = SendRequest("GetPreviewScene");
+            var response = SendRequest("GetCurrentPreviewScene");
+            response.Add(GetSceneItemList((string)response["currentPreviewSceneName"]));
             return new OBSScene(response);
         }
 
@@ -1134,15 +1092,15 @@ namespace OBSWebsocketDotNet
         /// Change the currently active preview scene to the one specified.
         /// Triggers an error if Studio Mode is disabled
         /// </summary>
-        /// <param name="previewScene">Preview scene name</param>
-        public void SetPreviewScene(string previewScene)
+        /// <param name="previewSceneName">Preview scene name</param>
+        public void SetCurrentPreviewScene(string previewSceneName)
         {
             var requestFields = new JObject
             {
-                { "scene-name", previewScene }
+                { "sceneName", previewSceneName }
             };
 
-            SendRequest("SetPreviewScene", requestFields);
+            SendRequest("SetCurrentPreviewScene", requestFields);
         }
 
         /// <summary>
@@ -1150,9 +1108,9 @@ namespace OBSWebsocketDotNet
         /// Triggers an error if Studio Mode is disabled.
         /// </summary>
         /// <param name="previewScene">Preview scene object</param>
-        public void SetPreviewScene(OBSScene previewScene)
+        public void SetCurrentPreviewScene(OBSScene previewScene)
         {
-            SetPreviewScene(previewScene.Name);
+            SetCurrentPreviewScene(previewScene.Name);
         }
 
         /// <summary>
@@ -1160,6 +1118,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="transitionDuration">(optional) Transition duration</param>
         /// <param name="transitionName">(optional) Name of transition to use</param>
+        [Obsolete("Deprecated! Changed to simple TriggerStudioModeTransition method in v5.0.0")]
         public void TransitionToProgram(int transitionDuration = -1, string transitionName = null)
         {
             var requestFields = new JObject();
@@ -1185,19 +1144,11 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Get if the specified source is muted
+        /// Triggers the current scene transition. Same functionality as the `Transition` button in Studio Mode
         /// </summary>
-        /// <param name="sourceName">Source name</param>
-        /// <returns>Source mute status (on/off)</returns>
-        public bool GetMute(string sourceName)
+        public void TriggerStudioModeTransition()
         {
-            var requestFields = new JObject
-            {
-                { "source", sourceName }
-            };
-
-            var response = SendRequest("GetMute", requestFields);
-            return (bool)response["muted"];
+            SendRequest("TriggerStudioModeTransition");
         }
 
         /// <summary>

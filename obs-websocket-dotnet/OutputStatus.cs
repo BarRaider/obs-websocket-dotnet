@@ -15,15 +15,51 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// True if streaming is started and running, false otherwise
         /// </summary>
-        [JsonProperty(PropertyName = "streaming")]
+        [JsonProperty(PropertyName = "outputActive")]
 
         public readonly bool IsStreaming;
 
         /// <summary>
-        /// True if recording is started and running, false otherwise
+        /// Whether the output is currently reconnectins
         /// </summary>
-        [JsonProperty(PropertyName = "recording")]
-        public readonly bool IsRecording;
+        [JsonProperty(PropertyName = "outputReconnecting")]
+        public bool IsReconnecting { get; set; }
+
+        /// <summary>
+        /// Current formatted timecode string for the output
+        /// </summary>
+        [JsonProperty(PropertyName = "outputTimecode")]
+        public string TimeCode { get; set; }
+
+        /// <summary>
+        /// Current duration in milliseconds for the output
+        /// </summary>
+        [JsonProperty(PropertyName = "outputDuration")]
+        public int Duration { get; set; }
+
+        /// <summary>
+        /// Congestion of the output
+        /// </summary>
+        [JsonProperty(PropertyName = "outputCongestion")]
+        public double Congestion { get; set; }
+
+        /// <summary>
+        /// Nubmer of bytes sent by the output
+        /// </summary>
+        [JsonProperty(PropertyName = "outputBytes")]
+        public int Bytes { get; set; }
+
+        /// <summary>
+        /// Number of frames skipped by the output's process
+        /// </summary>
+        [JsonProperty(PropertyName = "outputSkippedFrames")]
+        public int SkippedFrames { get; set; }
+
+        /// <summary>
+        /// Total number of frames delivered by the output's process
+        /// </summary>
+        [JsonProperty(PropertyName = "outputTotalFrames")]
+        public int TotalFrames { get; set; }
 
         /// <summary>
         /// Builds the object from the JSON response body

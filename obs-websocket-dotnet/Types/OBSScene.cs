@@ -25,7 +25,7 @@ namespace OBSWebsocketDotNet.Types
         /// Scene item list
         /// </summary>
         [JsonProperty(PropertyName = "sources")]
-        public List<SceneItem> Items;
+        public List<SceneItemDetails> Items;
 
         /// <summary>
         /// Builds the object from the JSON description
@@ -38,6 +38,11 @@ namespace OBSWebsocketDotNet.Types
                 ObjectCreationHandling = ObjectCreationHandling.Auto,
                 NullValueHandling = NullValueHandling.Include
             };
+            if (data.ContainsKey("currentProgramSceneName"))
+            {
+                var newToken = JToken.FromObject(data["currentProgramSceneName"]);
+                data.Add("sceneName", newToken);
+            }
             JsonConvert.PopulateObject(data.ToString(), this, settings);
         }
 

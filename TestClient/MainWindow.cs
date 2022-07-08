@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
@@ -78,15 +79,16 @@ namespace TestClient
                 btnGetCurrentTransition.PerformClick();
 
                 btnGetTransitionDuration.PerformClick();
-                tbFolderPath.Text = obs.GetRecordingFolder().ToString();
+                tbFolderPath.Text = obs.GetRecordDirectory().ToString();
 
-                var streamStatus = obs.GetStreamingStatus();
+                var streamStatus = obs.GetStreamStatus();
                 if (streamStatus.IsStreaming)
                     onStreamingStateChange(obs, OutputState.Started);
                 else
                     onStreamingStateChange(obs, OutputState.Stopped);
 
-                if (streamStatus.IsRecording)
+                var recordStatus = obs.GetRecordStatus();
+                if (recordStatus.IsRecording)
                     onRecordingStateChange(obs, OutputState.Started);
                 else
                     onRecordingStateChange(obs, OutputState.Stopped);
@@ -294,6 +296,8 @@ namespace TestClient
                 foreach (var scene in scenes)
                 {
                     var node = new TreeNode(scene.Name);
+                scene.Items = new List<SceneItemDetails>();
+                scene.Items.AddRange(obs.GetSceneItemList(scene.Name));
                     foreach (var item in scene.Items)
                     {
                         node.Nodes.Add(item.SourceName);
@@ -305,12 +309,12 @@ namespace TestClient
 
             private void btnGetCurrentScene_Click(object sender, EventArgs e)
             {
-                tbCurrentScene.Text = obs.GetCurrentScene().Name;
+                tbCurrentScene.Text = obs.GetCurrentProgramScene().Name;
             }
 
             private void btnSetCurrentScene_Click(object sender, EventArgs e)
             {
-                obs.SetCurrentScene(tbCurrentScene.Text);
+                obs.SetCurrentProgramScene(tbCurrentScene.Text);
             }
 
             private void tvScenes_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -323,7 +327,7 @@ namespace TestClient
 
             private void btnListSceneCol_Click(object sender, EventArgs e)
             {
-                var sc = obs.ListSceneCollections();
+                var sc = obs.GetSceneCollectionList();
 
                 tvSceneCols.Nodes.Clear();
                 foreach (var sceneCol in sc)
@@ -352,7 +356,7 @@ namespace TestClient
 
             private void btnListProfiles_Click(object sender, EventArgs e)
             {
-                var profiles = obs.ListProfiles();
+                var profiles = obs.GetProfileList();
 
                 tvProfiles.Nodes.Clear();
                 foreach (var profile in profiles)
@@ -381,12 +385,12 @@ namespace TestClient
 
             private void btnToggleStreaming_Click(object sender, EventArgs e)
             {
-                obs.ToggleStreaming();
+                obs.ToggleStream();
             }
 
             private void btnToggleRecording_Click(object sender, EventArgs e)
             {
-                obs.ToggleRecording();
+                obs.ToggleRecord();
             }
 
             private void btnListTransitions_Click(object sender, EventArgs e)
@@ -407,7 +411,7 @@ namespace TestClient
 
             private void btnSetCurrentTransition_Click(object sender, EventArgs e)
             {
-                obs.SetCurrentTransition(tbTransition.Text);
+                obs.SetCurrentSceneTransition(tbTransition.Text);
             }
 
             private void tvTransitions_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -425,7 +429,7 @@ namespace TestClient
 
             private void btnSetTransitionDuration_Click(object sender, EventArgs e)
             {
-                obs.SetTransitionDuration((int)tbTransitionDuration.Value);
+                obs.SetCurrentSceneTransitionDuration((int)tbTransitionDuration.Value);
             }
 
             private void btnAdvanced_Click(object sender, EventArgs e)

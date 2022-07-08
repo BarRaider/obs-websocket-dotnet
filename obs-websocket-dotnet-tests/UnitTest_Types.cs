@@ -203,7 +203,7 @@ namespace OBSWebsocketDotNet.Tests
 
             var volumeInfo = new VolumeInfo(data);
 
-            Assert.AreEqual(volumeLevel, volumeInfo.Volume);
+            Assert.AreEqual(volumeLevel, volumeInfo.VolumeMul);
             Assert.IsTrue(volumeInfo.Muted);
         }
     }

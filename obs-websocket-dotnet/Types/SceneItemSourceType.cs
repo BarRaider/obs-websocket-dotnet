@@ -8,7 +8,7 @@
         /// <summary>
         /// Input
         /// </summary>
-        Input,
+        OBS_SOURCE_TYPE_INPUT,
 
         /// <summary>
         /// Group
@@ -18,6 +18,6 @@
         /// <summary>
         /// Scene
         /// </summary>
-        Scene
+        OBS_SOURCE_TYPE_SCENE
     }
 }
