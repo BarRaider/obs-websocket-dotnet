@@ -290,7 +290,7 @@ namespace TestClient
             try
             {
                 LogMessage($"Getting tracks for source {SOURCE_NAME}:");
-                var tracks = obs.GetAudioTracks(SOURCE_NAME);
+                var tracks = obs.GetInputAudioTracks(SOURCE_NAME);
                 if (tracks == null)
                 {
                     LogMessage("ERROR: No tracks returned");
@@ -301,8 +301,8 @@ namespace TestClient
                 bool trackToggle = !tracks.IsTrack3Active;
                 LogMessage($"Setting Track 3 to {trackToggle}");
 
-                obs.SetAudioTrack(SOURCE_NAME, 3, trackToggle);
-                tracks = obs.GetAudioTracks(SOURCE_NAME);
+                obs.SetInputAudioTracks(SOURCE_NAME, 3, trackToggle);
+                tracks = obs.GetInputAudioTracks(SOURCE_NAME);
                 LogMessage($"Active Tracks: 1 {tracks.IsTrack1Active}, 2 {tracks.IsTrack2Active}, 3 {tracks.IsTrack3Active}, 4 {tracks.IsTrack4Active}, 5 {tracks.IsTrack5Active}, 6 {tracks.IsTrack6Active}");
                 LogMessage($"Value is {tracks.IsTrack3Active} expected {trackToggle}");
                 
@@ -315,8 +315,8 @@ namespace TestClient
                 trackToggle = !tracks.IsTrack3Active;
                 LogMessage($"Setting Track 3 back to to {trackToggle}");
 
-                obs.SetAudioTrack(SOURCE_NAME, 3, trackToggle);
-                tracks = obs.GetAudioTracks(SOURCE_NAME);
+                obs.SetInputAudioTracks(SOURCE_NAME, 3, trackToggle);
+                tracks = obs.GetInputAudioTracks(SOURCE_NAME);
                 LogMessage($"Active Tracks: 1 {tracks.IsTrack1Active}, 2 {tracks.IsTrack2Active}, 3 {tracks.IsTrack3Active}, 4 {tracks.IsTrack4Active}, 5 {tracks.IsTrack5Active}, 6 {tracks.IsTrack6Active}");
                 LogMessage($"Value is {tracks.IsTrack3Active} expected {trackToggle}");
 
