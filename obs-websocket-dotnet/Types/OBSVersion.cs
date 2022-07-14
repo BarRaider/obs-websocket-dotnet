@@ -7,7 +7,7 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// Version info of the plugin, the API and OBS Studio
     /// </summary>
-    public class OBSVersion
+    public class ObsVersion
     {
         /// <summary>
         /// obs-websocket plugin version
@@ -55,7 +55,7 @@ namespace OBSWebsocketDotNet.Types
         /// Builds the object from the JSON response body
         /// </summary>
         /// <param name="data">JSON response body as a <see cref="JObject"/></param>
-        public OBSVersion(JObject data)
+        public ObsVersion(JObject data)
         {
             JsonConvert.PopulateObject(data.ToString(), this);
         }
@@ -63,7 +63,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Empty constructor for jsonconvert
         /// </summary>
-        public OBSVersion() { }
+        public ObsVersion() { }
 
     }
 }

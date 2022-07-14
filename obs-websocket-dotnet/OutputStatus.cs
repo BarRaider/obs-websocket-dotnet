@@ -16,7 +16,6 @@ namespace OBSWebsocketDotNet
         /// True if streaming is started and running, false otherwise
         /// </summary>
         [JsonProperty(PropertyName = "outputActive")]
-
         public readonly bool IsStreaming;
 
         /// <summary>

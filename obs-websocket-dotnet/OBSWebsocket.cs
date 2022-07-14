@@ -525,16 +525,6 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Requests version info regarding obs-websocket, the API and OBS Studio
-        /// </summary>
-        /// <returns>Version info in an <see cref="OBSVersion"/> object</returns>
-        public OBSVersion GetVersion()
-        {
-            JObject response = SendRequest("GetVersion");
-            return new OBSVersion(response);
-        }
-
-        /// <summary>
         /// Request authentication data. You don't have to call this manually.
         /// </summary>
         /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
@@ -747,7 +737,7 @@ namespace OBSWebsocketDotNet
                     SourceAudioSyncOffsetChanged?.Invoke(this, (string)body["sourceName"], (int)body["syncOffset"]);
                     break;
                 case "SourceCreated":
-                    SourceCreated?.Invoke(this, new SourceSettings(body));
+                    SourceCreated?.Invoke(this, new InputSettings(body));
                     break;
                 case "SourceDestroyed":
                     SourceDestroyed?.Invoke(this, (string)body["sourceName"], (string)body["sourceType"], (string)body["sourceKind"]);

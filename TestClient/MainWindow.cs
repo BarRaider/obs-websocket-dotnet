@@ -395,7 +395,7 @@ namespace TestClient
 
             private void btnListTransitions_Click(object sender, EventArgs e)
             {
-                var transitions = obs.ListTransitions();
+                var transitions = obs.GetTransitionNameList();
 
                 tvTransitions.Nodes.Clear();
                 foreach (var transition in transitions)
@@ -406,7 +406,7 @@ namespace TestClient
 
             private void btnGetCurrentTransition_Click(object sender, EventArgs e)
             {
-                tbTransition.Text = obs.GetCurrentTransition().Name;
+                tbTransition.Text = obs.GetCurrentSceneTransition().Name;
             }
 
             private void btnSetCurrentTransition_Click(object sender, EventArgs e)
@@ -424,7 +424,7 @@ namespace TestClient
 
             private void btnGetTransitionDuration_Click(object sender, EventArgs e)
             {
-                tbTransitionDuration.Value = obs.GetCurrentTransition().Duration;
+                tbTransitionDuration.Value = obs.GetCurrentSceneTransition().Duration;
             }
 
             private void btnSetTransitionDuration_Click(object sender, EventArgs e)
@@ -450,7 +450,8 @@ namespace TestClient
 
             private void btnSetPath_Click(object sender, EventArgs e)
             {
-                obs.SetRecordingFolder(tbFolderPath.Text);
+                // TODO: Need a method here, or the button must be removed
+                //obs.SetRecordingFolder(tbFolderPath.Text);
             }
 
             private void onVirtualCameraStopped(object sender, EventArgs e)

@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,5 +41,19 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "outputBytes")]
         public int RecordingBytes { set; get; }
+
+        /// <summary>
+        /// Builds the object from the JSON response body
+        /// </summary>
+        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
+        public RecordingStatus(JObject data)
+        {
+            JsonConvert.PopulateObject(data.ToString(), this);
+        }
+
+        /// <summary>
+        /// Default Constructor for deserialization
+        /// </summary>
+        public RecordingStatus() { }
     }
 }

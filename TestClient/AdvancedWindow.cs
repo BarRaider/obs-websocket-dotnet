@@ -157,6 +157,7 @@ namespace TestClient
 
         private void btnProjector_Click(object sender, EventArgs e)
         {
+            /* This needs to be refactored for v5.0.0 if possible
             const string SCENE_NAME = "Webcam Full";
             obs.OpenProjector();
             MessageBox.Show("Press Ok to continue");
@@ -168,13 +169,14 @@ namespace TestClient
             obs.OpenProjector("source", 0, null, SOURCE_NAME);
             MessageBox.Show("Press Ok to continue");
             obs.OpenProjector("scene", 0, null, SCENE_NAME);
+            */
         }
 
         private void btnRename_Click(object sender, EventArgs e)
         {
             var active = obs.GetSourceActive(SOURCE_NAME);
             LogMessage($"GetSourceActive for {SOURCE_NAME}: {active}. Renaming source");
-            obs.SetSourceName(SOURCE_NAME, SOURCE_NAME + random.Next(100));
+            obs.SetInputName(SOURCE_NAME, SOURCE_NAME + random.Next(100));
         }
 
         private void btnSourceFilters_Click(object sender, EventArgs e)
@@ -226,7 +228,8 @@ namespace TestClient
 
         private void btnOutputs_Click(object sender, EventArgs e)
         {
-            LogMessage("Testing ListOutputs:");
+            // TODO refactor for v5.0.0
+            /*LogMessage("Testing ListOutputs:");
             var outputs = obs.ListOutputs();
             foreach (var output in outputs)
             {
@@ -239,7 +242,7 @@ namespace TestClient
             {
                 LogMessage($"ERROR: No outputs retrieved!");
                 return;
-            }
+            }*/
 
             // TODO: Reuse when properly works on Windows
             /* Output information does not work properly on OBS Websocket Window
@@ -280,7 +283,7 @@ namespace TestClient
             LogMessage($"Found {transitions.Transitions.Count} transitions. Active: {transitions.CurrentTransition}");
             foreach (var transition in transitions.Transitions)
             {
-                var info = obs.GetTransitionSettings(transition.Name);
+                var info = transition.Settings;
                 LogMessage($"Transition: {transition.Name} has {info.Count} settings");
             }
         }
@@ -291,6 +294,7 @@ namespace TestClient
             {
                 LogMessage($"Getting tracks for source {SOURCE_NAME}:");
                 var tracks = obs.GetInputAudioTracks(SOURCE_NAME);
+
                 if (tracks == null)
                 {
                     LogMessage("ERROR: No tracks returned");
@@ -301,7 +305,8 @@ namespace TestClient
                 bool trackToggle = !tracks.IsTrack3Active;
                 LogMessage($"Setting Track 3 to {trackToggle}");
 
-                obs.SetInputAudioTracks(SOURCE_NAME, 3, trackToggle);
+                // TODO: Get track settings structure to set track values appropriately
+                //obs.SetInputAudioTracks(SOURCE_NAME, 3, trackToggle);
                 tracks = obs.GetInputAudioTracks(SOURCE_NAME);
                 LogMessage($"Active Tracks: 1 {tracks.IsTrack1Active}, 2 {tracks.IsTrack2Active}, 3 {tracks.IsTrack3Active}, 4 {tracks.IsTrack4Active}, 5 {tracks.IsTrack5Active}, 6 {tracks.IsTrack6Active}");
                 LogMessage($"Value is {tracks.IsTrack3Active} expected {trackToggle}");
@@ -315,7 +320,8 @@ namespace TestClient
                 trackToggle = !tracks.IsTrack3Active;
                 LogMessage($"Setting Track 3 back to to {trackToggle}");
 
-                obs.SetInputAudioTracks(SOURCE_NAME, 3, trackToggle);
+                // TODO: Get track settings structure to set track values appropriately
+                //obs.SetInputAudioTracks(SOURCE_NAME, 3, trackToggle);
                 tracks = obs.GetInputAudioTracks(SOURCE_NAME);
                 LogMessage($"Active Tracks: 1 {tracks.IsTrack1Active}, 2 {tracks.IsTrack2Active}, 3 {tracks.IsTrack3Active}, 4 {tracks.IsTrack4Active}, 5 {tracks.IsTrack5Active}, 6 {tracks.IsTrack6Active}");
                 LogMessage($"Value is {tracks.IsTrack3Active} expected {trackToggle}");

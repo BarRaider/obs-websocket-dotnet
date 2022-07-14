@@ -170,7 +170,7 @@ namespace OBSWebsocketDotNet
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="settings">Newly created source settings</param>
-    public delegate void SourceCreatedCallback(OBSWebsocket sender, SourceSettings settings);
+    public delegate void SourceCreatedCallback(OBSWebsocket sender, InputSettings settings);
 
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceDestroyed"/>

@@ -7,7 +7,7 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// Describes a scene in OBS, along with its items
     /// </summary>
-    public class OBSScene
+    public class ObsScene
     {
         /// <summary>
         /// OBS Scene name
@@ -31,7 +31,7 @@ namespace OBSWebsocketDotNet.Types
         /// Builds the object from the JSON description
         /// </summary>
         /// <param name="data">JSON scene description as a <see cref="JObject" /></param>
-        public OBSScene(JObject data)
+        public ObsScene(JObject data)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -49,6 +49,6 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Default Constructor for deserialization
         /// </summary>
-        public OBSScene() { }
+        public ObsScene() { }
     }
 }

@@ -78,7 +78,7 @@ namespace OBSWebsocketDotNet.Types
         /// OBS Stats
         /// </summary>
         [JsonProperty(PropertyName = "stats")]
-        public OBSStats Stats { set; get; }
+        public ObsStats Stats { set; get; }
 
         /// <summary>
         /// Create a heartbeat

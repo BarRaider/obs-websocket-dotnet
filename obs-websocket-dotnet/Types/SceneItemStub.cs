@@ -15,12 +15,12 @@ namespace OBSWebsocketDotNet.Types
         /// Source name
         /// </summary>
         [JsonProperty(PropertyName = "name")]
-        public string SourceName;
+        public string Name;
 
         /// <summary>
         /// Scene item ID
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public int ID { set; get; }
+        public int Id { set; get; }
     }
 }

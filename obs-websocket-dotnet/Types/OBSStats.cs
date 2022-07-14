@@ -5,7 +5,7 @@ namespace OBSWebsocketDotNet.Types
     /// <summary>
     /// OBS Stats
     /// </summary>
-    public class OBSStats
+    public class ObsStats
     {
         /// <summary>
         /// Current framerate.

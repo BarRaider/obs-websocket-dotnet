@@ -42,7 +42,7 @@ namespace OBSWebsocketDotNet.Types
         /// Object of settings for the transition. 'null' if transition is not configurable
         /// </summary>
         [JsonProperty(PropertyName = "transitionSettings")]
-        public object Settings { get; set; }
+        public JObject Settings { get; set; }
 
         /// <summary>
         /// Builds the object from the JSON response body
