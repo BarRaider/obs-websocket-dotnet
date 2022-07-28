@@ -13,4 +13,4 @@ NOTE: We will no longer be updating the v4.x branch as we move towards v5.0 (whi
 - v5.0.x - Implement obs-websocket v5.0.x API
 
 ## Dev Discussions
-**Discord:** Discuss in #developers-chat in [Bar Raiders](https://discord.gg/khpafQa)
+**Discord:** Discuss in #developers-chat in [Bar Raiders](http://discord.barraider.com)
