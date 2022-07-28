@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -507,7 +507,7 @@ namespace OBSWebsocketDotNet
             tcs.Task.Wait();
 
             if (tcs.Task.IsCanceled)
-                throw new ErrorResponseException("Request canceled");
+                throw new ErrorResponseException("Request canceled", 0);
 
             // Throw an exception if the server returned an error.
             // An error occurs if authentication fails or one if the request body is invalid.
@@ -516,7 +516,7 @@ namespace OBSWebsocketDotNet
             if (!(bool)result["requestStatus"]["result"])
             {
                 var status = (JObject)result["requestStatus"];
-                throw new ErrorResponseException($"ErrorCode: {status["code"]}{(status.ContainsKey("comment") ? $", Comment: {status["comment"]}" : "")}");
+                throw new ErrorResponseException($"ErrorCode: {status["code"]}{(status.ContainsKey("comment") ? $", Comment: {status["comment"]}" : "")}", (int)status["code"]);
             }
 
             if (result.ContainsKey("responseData")) // ResponseData is optional
