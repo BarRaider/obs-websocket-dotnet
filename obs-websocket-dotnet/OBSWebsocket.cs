@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -512,11 +512,17 @@ namespace OBSWebsocketDotNet
             // Throw an exception if the server returned an error.
             // An error occurs if authentication fails or one if the request body is invalid.
             var result = tcs.Task.Result;
-            
-            if ((string)result["status"] == "error")
-                throw new ErrorResponseException((string)result["error"]);
 
-            return result["responseData"].ToObject<JObject>();
+            if (!(bool)result["requestStatus"]["result"])
+            {
+                var status = (JObject)result["requestStatus"];
+                throw new ErrorResponseException($"ErrorCode: {status["code"]}{(status.ContainsKey("comment") ? $", Comment: {status["comment"]}" : "")}");
+            }
+
+            if (result.ContainsKey("responseData")) // ResponseData is optional
+                return result["responseData"].ToObject<JObject>();
+
+            return new JObject();
         }
 
         /// <summary>
