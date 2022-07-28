@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -422,14 +422,12 @@ namespace OBSWebsocketDotNet
             ServerMessage msg = JsonConvert.DeserializeObject<ServerMessage>(e.Text);
             JObject body = msg.Data;
 
-            if (msg.OperationCode == MessageTypes.Hello && body.ContainsKey("authentication"))
-            {
-                HandleAuthentication((JObject)body["authentication"]);
-                return;
-            }
-
             switch (msg.OperationCode)
             {
+                case MessageTypes.Hello:
+                    // First message received after connection, this may ask us for authentication
+                    HandleHello(body);
+                    break;
                 case MessageTypes.Identified:
                     Connected?.Invoke(this, EventArgs.Empty);
                     break;
@@ -545,16 +543,21 @@ namespace OBSWebsocketDotNet
         /// <param name="password">User password</param>
         /// <param name="authInfo">Authentication data</param>
         /// <returns>true if authentication succeeds, false otherwise</returns>
-        public bool Authenticate(string password, OBSAuthInfo authInfo)
+        protected bool SendIdentify(string password, OBSAuthInfo authInfo = null)
         {
-            string secret = HashEncode(password + authInfo.PasswordSalt);
-            string authResponse = HashEncode(secret + authInfo.Challenge);
-
             var requestFields = new JObject
             {
-                { "authentication", authResponse },
                 { "rpcVersion", SUPPORTED_RPC_VERSION }
             };
+
+            if (authInfo != null)
+            {
+                // Authorization required
+
+                string secret = HashEncode(password + authInfo.PasswordSalt);
+                string authResponse = HashEncode(secret + authInfo.Challenge);
+                requestFields.Add("authentication", authResponse);
+            }
 
             try
             {
@@ -852,15 +855,21 @@ namespace OBSWebsocketDotNet
             return result;
         }
 
-        private void HandleAuthentication(JObject payload)
+        private void HandleHello(JObject payload)
         {
             if (!WSConnection.IsStarted)
             {
                 return;
             }
 
-            OBSAuthInfo authInfo = new OBSAuthInfo(payload);
-            Authenticate(connectionPassword, authInfo);
+            OBSAuthInfo authInfo = null;
+            if (payload.ContainsKey("authentication"))
+            {
+                // Authentication required
+                authInfo = new OBSAuthInfo((JObject)payload["authentication"]);
+            }
+            
+            SendIdentify(connectionPassword, authInfo);
             
             connectionPassword = null;
         }
