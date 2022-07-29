@@ -31,29 +31,27 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// At least embedPictureFormat or saveToFilePath must be specified.
-        /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
+        /// Saves a screenshot of a source to the filesystem.
+        /// The `imageWidth` and `imageHeight` parameters are treated as \"scale to inner\", meaning the smallest ratio will be used and the aspect ratio of the original resolution is kept.
+        /// If `imageWidth` and `imageHeight` are not specified, the compressed image will use the full resolution of the source.
+        /// **Compatible with inputs and scenes.**
         /// </summary>
-        /// <param name="sourceName"></param>
-        /// <param name="imageFormat">Format of the Data URI encoded picture. Can be "png", "jpg", "jpeg" or "bmp" (or any other value supported by Qt's Image module)</param>
-        /// <param name="imageFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
-        /// <param name="imageWidth">Screenshot width. Defaults to the source's base width.</param>
-        /// <param name="imageHeight">Screenshot height. Defaults to the source's base height.</param>
-        public SourceScreenshotResponse SaveSourceScreenshot(string sourceName, string imageFormat = null, string imageFilePath = null, int imageWidth = -1, int imageHeight = -1, int imageCompressionQuality = -1)
+        /// <param name="sourceName">Name of the source to take a screenshot of</param>
+        /// <param name="imageFormat">Image compression format to use. Use `GetVersion` to get compatible image formats</param>
+        /// <param name="imageFilePath">Path to save the screenshot file to. Eg. `C:\\Users\\user\\Desktop\\screenshot.png`</param>
+        /// <param name="imageWidth">Width to scale the screenshot to</param>
+        /// <param name="imageHeight">Height to scale the screenshot to</param>
+        /// <param name="imageCompressionQuality">Compression quality to use. 0 for high compression, 100 for uncompressed. -1 to use \"default\" (whatever that means, idk)</param>
+        /// <returns>Base64-encoded screenshot string</returns>
+        public string SaveSourceScreenshot(string sourceName, string imageFormat, string imageFilePath, int imageWidth = -1, int imageHeight = -1, int imageCompressionQuality = -1)
         {
             var request = new JObject
             {
-                { nameof(sourceName), sourceName }
+                { nameof(sourceName), sourceName },
+                { nameof(imageFormat), imageFormat },
+                { nameof(imageFilePath), imageFilePath }
             };
 
-            if (imageFormat != null)
-            {
-                request.Add(nameof(imageFormat), imageFormat);
-            }
-            if (imageFilePath != null)
-            {
-                request.Add(nameof(imageFilePath), imageFilePath);
-            }
             if (imageWidth > -1)
             {
                 request.Add(nameof(imageWidth), imageWidth);
@@ -68,17 +66,20 @@ namespace OBSWebsocketDotNet
             }
 
             var response = SendRequest(nameof(SaveSourceScreenshot), request);
-            return JsonConvert.DeserializeObject<SourceScreenshotResponse>(response.ToString());
+            return (string)response["imageData"];
         }
 
         /// <summary>
-        /// At least embedPictureFormat or saveToFilePath must be specified.
-        /// Clients can specify width and height parameters to receive scaled pictures. Aspect ratio is preserved if only one of these two parameters is specified.
+        /// Saves a screenshot of a source to the filesystem.
+        /// The `imageWidth` and `imageHeight` parameters are treated as \"scale to inner\", meaning the smallest ratio will be used and the aspect ratio of the original resolution is kept.
+        /// If `imageWidth` and `imageHeight` are not specified, the compressed image will use the full resolution of the source.
+        /// **Compatible with inputs and scenes.**
         /// </summary>
-        /// <param name="sourceName"></param>
-        /// <param name="imageFormat">Format of the Data URI encoded picture. Can be "png", "jpg", "jpeg" or "bmp" (or any other value supported by Qt's Image module)</param>
-        /// <param name="imageFilePath">Full file path (file extension included) where the captured image is to be saved. Can be in a format different from pictureFormat. Can be a relative path.</param>
-        public SourceScreenshotResponse SaveSourceScreenshot(string sourceName, string imageFormat = null, string imageFilePath = null)
+        /// <param name="sourceName">Name of the source to take a screenshot of</param>
+        /// <param name="imageFormat">Image compression format to use. Use `GetVersion` to get compatible image formats</param>
+        /// <param name="imageFilePath">Path to save the screenshot file to. Eg. `C:\\Users\\user\\Desktop\\screenshot.png`</param>
+        /// <returns>Base64-encoded screenshot string</returns>
+        public string SaveSourceScreenshot(string sourceName, string imageFormat, string imageFilePath)
         {
             return SaveSourceScreenshot(sourceName, imageFormat, imageFilePath, -1, -1);
         }
@@ -279,6 +280,11 @@ namespace OBSWebsocketDotNet
             };
 
             JObject response = SendRequest(nameof(GetSourceFilterList), request);
+            if (!response.HasValues)
+            {
+                return new List<FilterSettings>();
+            }
+
             return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"].ToString());
         }
 
@@ -1196,11 +1202,12 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Gets the active and show state of a source.\n\n**Compatible with inputs and scenes.**
+        /// Gets the active and show state of a source.
+        /// **Compatible with inputs and scenes.**
         /// </summary>
         /// <param name="sourceName">Name of the source to get the active state of</param>
         /// <returns>Whether the source is showing in Program</returns>
-        public bool GetSourceActive(string sourceName)
+        public SourceActiveInfo GetSourceActive(string sourceName)
         {
             var request = new JObject
             {
@@ -1208,7 +1215,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest(nameof(GetSourceActive), request);
-            return (bool)response["videoActive"];
+            return new SourceActiveInfo(response);
         }
 
         /// <summary>
@@ -1549,7 +1556,8 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Gets the settings of an input.\n\nNote: Does not include defaults. To create the entire settings object, overlay `inputSettings` over the `defaultInputSettings` provided by `GetInputDefaultSettings`.
+        /// Gets the settings of an input.
+        /// Note: Does not include defaults. To create the entire settings object, overlay `inputSettings` over the `defaultInputSettings` provided by `GetInputDefaultSettings`.
         /// </summary>
         /// <param name="inputName">Name of the input to get the settings of</param>
         /// <returns>New populated InputSettings object</returns>
@@ -1561,7 +1569,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest(nameof(GetInputSettings), request);
-            response.Add(request);
+            response.Merge(request);
             return new InputSettings(response);
         }
 
@@ -1991,16 +1999,26 @@ namespace OBSWebsocketDotNet
         /// <param name="imageHeight">Height to scale the screenshot to</param>
         /// <param name="imageCompressionQuality">Compression quality to use. 0 for high compression, 100 for uncompressed. -1 to use \"default\" (whatever that means, idk)</param>
         /// <returns>Base64-encoded screenshot</returns>
-        public string GetSourceScreenshot(string sourceName, string imageFormat, int imageWidth, int imageHeight, int imageCompressionQuality)
+        public string GetSourceScreenshot(string sourceName, string imageFormat, int imageWidth = -1, int imageHeight = -1, int imageCompressionQuality = -1)
         {
             var request = new JObject
             {
                 { nameof(sourceName), sourceName },
-                { nameof(imageFormat), imageFormat },
-                { nameof(imageWidth), imageWidth },
-                { nameof(imageHeight), imageHeight },
-                { nameof(imageCompressionQuality), imageCompressionQuality }
+                { nameof(imageFormat), imageFormat }
             };
+
+            if (imageWidth > -1)
+            {
+                request.Add(nameof(imageWidth), imageWidth);
+            }
+            if (imageHeight > -1)
+            {
+                request.Add(nameof(imageHeight), imageHeight);
+            }
+            if (imageCompressionQuality > -1)
+            {
+                request.Add(nameof(imageCompressionQuality), imageCompressionQuality);
+            }
 
             var response = SendRequest(nameof(GetSourceScreenshot), request);
             return (string)response["imageData"];

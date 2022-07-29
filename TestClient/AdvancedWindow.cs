@@ -45,99 +45,81 @@ namespace TestClient
                 return;
             }
 
-            obs.RecordingStateChanged += OBS_RecordingStateChanged;
-            obs.TransitionBegin += OBS_TransitionBegin;
-            obs.TransitionEnd += OBS_TransitionEnd;
-            obs.TransitionVideoEnd += OBS_TransitionVideoEnd;
-            obs.RecordingPaused += OBS_RecordingPaused;
-            obs.RecordingResumed += OBS_RecordingResumed;
-            obs.SourceFilterAdded += OBS_SourceFilterAdded;
-            obs.SourceFilterRemoved += OBS_SourceFilterRemoved;
-            obs.SourceFilterVisibilityChanged += OBS_SourceFilterVisibilityChanged;
-            obs.SourceOrderChanged += OBS_SourceOrderChanged;
-            obs.SourceFiltersReordered += OBS_SourceFiltersReordered;
-            obs.SceneItemLockChanged += OBS_SceneItemLockChanged;
-            obs.SceneItemVisibilityChanged += OBS_SceneItemVisibilityChanged;
-            obs.SourceRenamed += OBS_SourceRenamed;
-            obs.SourceVolumeChanged += Obs_SourceVolumeChanged;
+            obs.RecordStateChanged += OBS_onRecordStateChanged;
+            obs.SceneTransitionStarted += OBS_onSceneTransitionStarted;
+            obs.SceneTransitionEnded += OBS_onSceneTransitionEnded;
+            obs.SceneTransitionVideoEnded += OBS_onSceneTransitionVideoEnded;
+            obs.SourceFilterCreated += OBS_onSourceFilterCreated;
+            obs.SourceFilterRemoved += OBS_onSourceFilterRemoved;
+            obs.SourceFilterEnableStateChanged += OBS_onSourceFilterEnableStateChanged;
+            obs.SceneItemListReindexed += OBS_onSceneItemListIndexingChanged;
+            obs.SourceFilterListReindexed += OBS_onSourceFilterListReindexed;
+            obs.SceneItemLockStateChanged += OBS_onSceneItemLockStateChanged;
+            obs.SceneItemEnableStateChanged += OBS_onSceneItemEnableStateChanged;
+            obs.InputVolumeChanged += OBS_onInputVolumeChanged;
         }
-        private void Obs_SourceVolumeChanged(OBSWebsocket sender, SourceVolume volume)
+        private void OBS_onInputVolumeChanged(OBSWebsocket sender, InputVolume volume)
         {
-            LogMessage($"[SourceVolumeChanged] Source: {volume.SourceName} Volume: {volume.Volume} VolumeDB: {volume.VolumeDb}");
+            LogMessage($"[SourceVolumeChanged] Source: {volume.InputName} Volume: {volume.InputVolumeMul} VolumeDB: {volume.InputVolumeDb}");
         }
 
-        private void OBS_SourceRenamed(OBSWebsocket sender, string newName, string previousName)
+        private void OBS_onSceneItemEnableStateChanged(OBSWebsocket sender, string sceneName, int sceneItemId, bool sceneItemEnabled)
         {
-            LogMessage($"[SourceRenamed] Previous Name: {previousName} New Name: {newName}");
+            LogMessage($"[SceneItemEnableStateChanged] Scene: {sceneName} ItemId: {sceneItemId} Enabled?: {sceneItemEnabled}");
         }
 
-        private void OBS_SceneItemVisibilityChanged(OBSWebsocket sender, string sceneName, string itemName, bool isVisible)
+        private void OBS_onSceneItemLockStateChanged(OBSWebsocket sender, string sceneName, int scenItemId, bool sceneItemLocked)
         {
-            LogMessage($"[SceneItemLockChanged] Scene: {sceneName} Item: {itemName} IsVisible: {isVisible}");
+            LogMessage($"[SceneItemLockStateChanged] Scene: {sceneName} ItemId: {scenItemId} IsLocked: {sceneItemLocked}");
         }
 
-        private void OBS_SceneItemLockChanged(OBSWebsocket sender, string sceneName, string itemName, int itemId, bool isLocked)
+        private void OBS_onSourceFilterListReindexed(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters)
         {
-            LogMessage($"[SceneItemLockChanged] Scene: {sceneName} Item: {itemName} ItemId: {itemId} IsLocked: {isLocked}");
-        }
-
-        private void OBS_SourceFiltersReordered(OBSWebsocket sender, string sourceName, List<OBSWebsocketDotNet.Types.FilterReorderItem> filters)
-        {
-            LogMessage($"[SourceFiltersReordered] Source: {sourceName}");
+            LogMessage($"[SourceFilterListReindexed] Source: {sourceName}");
             foreach(var filter in filters)
             {
                 LogMessage($"\t{filter.Name}");
             }
         }
 
-        private void OBS_SourceOrderChanged(OBSWebsocket sender, string sceneName)
+        private void OBS_onSceneItemListIndexingChanged(OBSWebsocket sender, string sceneName, List<JObject> sceneItems)
         {
-            LogMessage($"[SourceOrderChanged] Scene: {sceneName}");
+            LogMessage($"[SceneItemListReindexed] Scene: {sceneName}{ Environment.NewLine}\tSceneItems: {sceneItems}");
         }
 
-        private void OBS_SourceFilterVisibilityChanged(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled)
+        private void OBS_onSourceFilterEnableStateChanged(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled)
         {
-            LogMessage($"[SourceFilterVisibilityChanged] Source: {sourceName} Filter: {filterName} Visible: {filterEnabled}");
+            LogMessage($"[SourceFilterEnableStateChanged] Source: {sourceName} Filter: {filterName} Enabled: {filterEnabled}");
         }
 
-        private void OBS_SourceFilterRemoved(OBSWebsocket sender, string sourceName, string filterName)
+        private void OBS_onSourceFilterRemoved(OBSWebsocket sender, string sourceName, string filterName)
         {
             LogMessage($"[SourceFilterRemoved] Source: {sourceName} Filter: {filterName}");
         }
 
-        private void OBS_SourceFilterAdded(OBSWebsocket sender, string sourceName, string filterName, string filterType, JObject filterSettings)
+        private void OBS_onSourceFilterCreated(OBSWebsocket sender, string sourceName, string filterName, string filterKind, int filterIndex, JObject filterSettings, JObject defaultFilterSettings)
         {
-            LogMessage($"[SourceFilterAdded] Source: {sourceName} Filter: {filterName} FilterType: {filterType}{Environment.NewLine}\tSettings: {filterSettings}");
+            LogMessage($"[SourceFilterCreated] Source: {sourceName} Filter: {filterName} FilterKind: {filterKind} FilterIndex: {filterIndex}{Environment.NewLine}\tSettings: {filterSettings}{Environment.NewLine}\tDefaultSettings: {defaultFilterSettings}");
         }
 
-        private void OBS_RecordingResumed(object sender, EventArgs e)
+        private void OBS_onSceneTransitionVideoEnded(OBSWebsocket sender, string transitionName)
         {
-            LogMessage($"[RecordingResumed]");
+            LogMessage($"[SceneTransitionVideoEnded] Name: {transitionName}");
         }
 
-        private void OBS_RecordingPaused(object sender, EventArgs e)
+        private void OBS_onSceneTransitionEnded(OBSWebsocket sender, string transitionName)
         {
-            LogMessage($"[RecordingPaused]");
+            LogMessage($"[SceneTransitionEnded] Name: {transitionName}");
         }
 
-        private void OBS_TransitionVideoEnd(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene)
+        private void OBS_onSceneTransitionStarted(OBSWebsocket sender, string transitionName)
         {
-            LogMessage($"[TransitionVideoEnd] Name: {transitionName} Type: {transitionType} Duration: {duration} From: {fromScene} To: {toScene}");
+            LogMessage($"[SceneTransitionStarted] Name: {transitionName}");
         }
 
-        private void OBS_TransitionEnd(OBSWebsocket sender, string transitionName, string transitionType, int duration, string toScene)
+        private void OBS_onRecordStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
         {
-            LogMessage($"[TransitionEnd] Name: {transitionName} Type: {transitionType} Duration: {duration} To: {toScene}");
-        }
-
-        private void OBS_TransitionBegin(OBSWebsocket sender, string transitionName, string transitionType, int duration, string fromScene, string toScene)
-        {
-            LogMessage($"[TransitionBegin] Name: {transitionName} Type: {transitionType} Duration: {duration} From: {fromScene} To: {toScene}");
-        }
-
-        private void OBS_RecordingStateChanged(OBSWebsocket sender, OBSWebsocketDotNet.Types.OutputState type)
-        {
-            LogMessage($"[RecordingStateChanged] State: {type}");
+            LogMessage($"[RecordStateChanged] State: {outputState}");
         }
 
         private void LogMessage(string message)
@@ -174,7 +156,7 @@ namespace TestClient
 
         private void btnRename_Click(object sender, EventArgs e)
         {
-            var active = obs.GetSourceActive(SOURCE_NAME);
+            var active = obs.GetSourceActive(SOURCE_NAME).VideoActive;
             LogMessage($"GetSourceActive for {SOURCE_NAME}: {active}. Renaming source");
             obs.SetInputName(SOURCE_NAME, SOURCE_NAME + random.Next(100));
         }
@@ -281,11 +263,16 @@ namespace TestClient
             var transitions = obs.GetSceneTransitionList();
 
             LogMessage($"Found {transitions.Transitions.Count} transitions. Active: {transitions.CurrentTransition}");
+            var enteringTransition = obs.GetCurrentSceneTransition();
             foreach (var transition in transitions.Transitions)
             {
-                var info = transition.Settings;
+                obs.SetCurrentSceneTransition(transition.Name);
+                var activeTransition = obs.GetCurrentSceneTransition();
+                var info = activeTransition.Settings;
+                info ??= new JObject();
                 LogMessage($"Transition: {transition.Name} has {info.Count} settings");
             }
+            obs.SetCurrentSceneTransition(enteringTransition.Name);
         }
 
         private void btnTracks_Click(object sender, EventArgs e)
@@ -335,6 +322,20 @@ namespace TestClient
             catch (Exception ex)
             {
                 LogMessage($"ERROR: {ex}");
+            }
+        }
+
+        private void btnToggleVidCapDvc_Click(object sender, EventArgs e)
+        {
+            var scene = obs.GetCurrentProgramScene();
+            var sourceItems = obs.GetSceneItemList(scene.Name);
+            var vidCapItems = sourceItems.Where(x => x.SourceKind.Equals("dshow_input"));
+            var itemListSettings = new List<InputSettings>();
+            foreach (var vidCapItem in vidCapItems)
+            {
+                var enabled = obs.GetSceneItemEnabled(scene.Name, vidCapItem.ItemId);
+                obs.SetSceneItemEnabled(scene.Name, vidCapItem.ItemId, enabled ? false : true);
+                tbLog.AppendText($"{vidCapItem.SourceName} active button toggled.");
             }
         }
 #pragma warning restore IDE1006 // Naming Styles

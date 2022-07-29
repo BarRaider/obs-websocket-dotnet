@@ -18,7 +18,7 @@ namespace OBSWebsocketDotNet.Types
         /// Transition duration in milliseconds
         /// </summary>
         [JsonProperty(PropertyName = "transitionDuration")]
-        public int Duration { internal set; get; }
+        public int? Duration { internal set; get; }
 
         /// <summary>
         /// Kind of the transition

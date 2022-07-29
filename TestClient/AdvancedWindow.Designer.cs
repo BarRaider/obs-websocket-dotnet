@@ -37,6 +37,7 @@
             this.btnOutputs = new System.Windows.Forms.Button();
             this.btnTransition = new System.Windows.Forms.Button();
             this.btnTracks = new System.Windows.Forms.Button();
+            this.btnToggleVidCapDvc = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbLog
@@ -139,11 +140,22 @@
             this.btnTracks.UseVisualStyleBackColor = true;
             this.btnTracks.Click += new System.EventHandler(this.btnTracks_Click);
             // 
+            // btnToggleVidCapDvc
+            // 
+            this.btnToggleVidCapDvc.Location = new System.Drawing.Point(807, 281);
+            this.btnToggleVidCapDvc.Name = "btnToggleVidCapDvc";
+            this.btnToggleVidCapDvc.Size = new System.Drawing.Size(112, 27);
+            this.btnToggleVidCapDvc.TabIndex = 9;
+            this.btnToggleVidCapDvc.Text = "Toggle VidCapDvc";
+            this.btnToggleVidCapDvc.UseVisualStyleBackColor = true;
+            this.btnToggleVidCapDvc.Click += new System.EventHandler(this.btnToggleVidCapDvc_Click);
+            // 
             // AdvancedWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 519);
+            this.Controls.Add(this.btnToggleVidCapDvc);
             this.Controls.Add(this.btnTracks);
             this.Controls.Add(this.btnTransition);
             this.Controls.Add(this.btnOutputs);
@@ -176,5 +188,6 @@
         private System.Windows.Forms.Button btnOutputs;
         private System.Windows.Forms.Button btnTransition;
         private System.Windows.Forms.Button btnTracks;
+        private System.Windows.Forms.Button btnToggleVidCapDvc;
     }
 }
