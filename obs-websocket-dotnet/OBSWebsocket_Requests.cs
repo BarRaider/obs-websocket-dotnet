@@ -1490,8 +1490,8 @@ namespace OBSWebsocketDotNet
         /// Gets an array of all inputs in OBS.
         /// </summary>
         /// <param name="inputKind">Restrict the array to only inputs of the specified kind</param>
-        /// <returns></returns>
-        public List<JObject> GetInputList(string inputKind = null)
+        /// <returns>List of Inputs in OBS</returns>
+        public List<Input> GetInputList(string inputKind = null)
         {
             var request = new JObject
             {
@@ -1502,7 +1502,13 @@ namespace OBSWebsocketDotNet
                 ? SendRequest(nameof(GetInputList))
                 : SendRequest(nameof(GetInputList), request);
 
-            return JsonConvert.DeserializeObject<List<JObject>>((string)response["inputs"]);
+            var returnList = new List<Input>();
+            foreach (var input in response["inputs"])
+            {
+                returnList.Add(new Input(input as JObject));
+            }
+
+            return returnList;
         }
 
         /// <summary>
@@ -1684,14 +1690,14 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="inputName">Name of the media input</param>
         /// <returns>Object containing string mediaState, int mediaDuration, int mediaCursor properties</returns>
-        public JObject GetMediaInputStatus(string inputName)
+        public MediaInputStatus GetMediaInputStatus(string inputName)
         {
             var request = new JObject
             {
                 { nameof(inputName), inputName }
             };
 
-            return SendRequest(nameof(GetMediaInputStatus), request);
+            return new MediaInputStatus(SendRequest(nameof(GetMediaInputStatus), request));
         }
 
         /// <summary>
@@ -1729,6 +1735,7 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Currently BROKEN in obs-websocket/obs-studio
         /// Basically GetSceneItemList, but for groups.
         /// Using groups at all in OBS is discouraged, as they are very broken under the hood.
         /// Groups only
@@ -2092,10 +2099,17 @@ namespace OBSWebsocketDotNet
         /// Gets a list of connected monitors and information about them.
         /// </summary>
         /// <returns>a list of detected monitors with some information</returns>
-        public List<JObject> GetMonitorList()
+        public List<Monitor> GetMonitorList()
         {
             var response = SendRequest(nameof(GetMonitorList));
-            return JsonConvert.DeserializeObject<List<JObject>>((string)response["monitors"]);
+            var monitors = new List<Monitor>();
+
+            foreach(var monitor in response["monitors"])
+            {
+                monitors.Add(new Monitor((JObject)monitor));
+            }
+
+            return monitors;
         }
     }
 }

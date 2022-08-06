@@ -210,7 +210,7 @@ namespace TestClient
 
         private void btnOutputs_Click(object sender, EventArgs e)
         {
-            // TODO refactor for v5.0.0
+            // TODO refactor for v5.0.0 if possible
             /*LogMessage("Testing ListOutputs:");
             var outputs = obs.ListOutputs();
             foreach (var output in outputs)
@@ -335,8 +335,40 @@ namespace TestClient
             {
                 var enabled = obs.GetSceneItemEnabled(scene.Name, vidCapItem.ItemId);
                 obs.SetSceneItemEnabled(scene.Name, vidCapItem.ItemId, enabled ? false : true);
-                tbLog.AppendText($"{vidCapItem.SourceName} active button toggled.");
+                LogMessage($"{vidCapItem.SourceName} active button toggled.");
             }
+        }
+
+        private void btn_GetInputList_Click(object sender, EventArgs e)
+        {
+            LogMessage("Getting OBS Input List...");
+            var inputList = obs.GetInputList();
+            foreach (var input in inputList)
+            {
+                LogMessage($"{input.Name} {input.Kind} {input.UnversionedKind}");
+            }
+            LogMessage("Input List Complete...");
+        }
+
+        private void btn_GetGroupList_Click(object sender, EventArgs e)
+        {
+            LogMessage("Getting Group Item List...");
+            var groupItems = obs.GetGroupItemList(obs.GetCurrentProgramScene().Name);
+            foreach(var groupItem in groupItems)
+            {
+                LogMessage(groupItem.ToString());
+            }
+        }
+
+        private void btn_GetMonitorList_Click(object sender, EventArgs e)
+        {
+            LogMessage("Getting Monitor List...");
+            var monitorList = obs.GetMonitorList();
+            foreach(var monitor in monitorList)
+            {
+                LogMessage($"{monitor.Index} {monitor.Name} {monitor.Width}x{monitor.Height} {monitor.PositionX},{monitor.PositionY}");
+            }
+
         }
 #pragma warning restore IDE1006 // Naming Styles
     }
