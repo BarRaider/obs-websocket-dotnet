@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
-    ///
+    /// Scene Item Properties
     /// </summary>
     public class SceneItemProperties
     {

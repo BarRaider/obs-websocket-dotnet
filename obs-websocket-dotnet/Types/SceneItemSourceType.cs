@@ -11,9 +11,14 @@
         OBS_SOURCE_TYPE_INPUT,
 
         /// <summary>
-        /// Group
+        /// Filter
         /// </summary>
-        Group,
+        OBS_SOURCE_TYPE_FILTER,
+
+        /// <summary>
+        /// Transition
+        /// </summary>
+        OBS_SOURCE_TYPE_TRANSITION,
 
         /// <summary>
         /// Scene
