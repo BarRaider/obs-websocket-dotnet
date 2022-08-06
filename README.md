@@ -7,7 +7,7 @@ This library is available on the [NuGet gallery](https://www.nuget.org/packages/
 See the `TestClient` project for a working example.  
   
 ## What's New
-- v4.9.x incrementally adds all the features introduced in obs-websocket v4.9
+- v5.0.x - Implement obs-websocket v5.0.x API
 
 ## Dev Discussions
 **Discord:** Discuss in #developers-chat in [Bar Raiders](https://discord.gg/khpafQa)

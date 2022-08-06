@@ -633,7 +633,6 @@ namespace OBSWebsocketDotNet
             return profiles;
         }
 
-        // TODO: needs updating
         /// <summary>
         /// Start streaming. Will trigger an error if streaming is already active
         /// </summary>
@@ -865,7 +864,7 @@ namespace OBSWebsocketDotNet
         /// Scenes only.
         /// </summary>
         /// <param name="sceneItemId">Scene item id</param>
-        /// /// <param name="sceneName">Scene name from which to delete item</param>
+        /// <param name="sceneName">Scene name from which to delete item</param>
         public void RemoveSceneItem(string sceneName, int sceneItemId)
         {
             var requestFields = new JObject

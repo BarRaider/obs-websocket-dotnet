@@ -166,7 +166,6 @@ namespace OBSWebsocketDotNet
                     break;
                 case MessageTypes.Event:
                     // Handle events
-                    //string eventType = body["update-type"].ToString();
                     string eventType = body["eventType"].ToString();
                     Task.Run(() => { ProcessEventType(eventType, body); });
                     break;
