@@ -1665,7 +1665,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="inputName">Name of the input</param>
         /// <param name="propertyName">Name of the button property to press</param>
-        public void PressInputPropertiesbutton(string inputName, string propertyName)
+        public void PressInputPropertiesButton(string inputName, string propertyName)
         {
             var request = new JObject
             {
@@ -1673,7 +1673,7 @@ namespace OBSWebsocketDotNet
                 { nameof(propertyName), propertyName }
             };
 
-            SendRequest(nameof(PressInputPropertiesbutton), request);
+            SendRequest(nameof(PressInputPropertiesButton), request);
         }
 
         /// <summary>
