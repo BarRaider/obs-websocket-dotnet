@@ -973,6 +973,12 @@
             </summary>
             <param name="sourceName">Source name</param>
         </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceFilterList(System.String)">
+          <summary>
+            Returns a list of all filters assigned to a source (input, scene)
+          </summary>
+          <param name="sourceName">Source name</param>
+        </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceFilterInfo(System.String,System.String)">
             <summary>
             Return a list of all filters on a source

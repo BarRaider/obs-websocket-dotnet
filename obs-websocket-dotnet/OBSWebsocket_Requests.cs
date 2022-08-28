@@ -453,12 +453,21 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         public List<FilterSettings> GetSourceFilters(string sourceName)
         {
+            return this.GetSourceFilterList(sourceName);
+        }
+
+        /// <summary>
+        /// Returns a list of all filters assigned to a source (input, scene)
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        public List<FilterSettings> GetSourceFilterList(string sourceName)
+        {
             var requestFields = new JObject
             {
                 { "sourceName", sourceName }
             };
 
-            JObject response = SendRequest("GetSourceFilters", requestFields);
+            JObject response = SendRequest("GetSourceFilterList", requestFields);
             return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"].ToString());
         }
 
