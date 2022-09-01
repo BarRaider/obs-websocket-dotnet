@@ -247,10 +247,21 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Get a list of all inputs in the scene collection
+        /// </summary>
+        public List<InputInfo> GetInputList()
+        {
+            JObject response = SendRequest("GetInputList");
+            return JsonConvert.DeserializeObject<List<InputInfo>>(response["inputs"].ToString());
+        }
+
+        /// <summary>
         /// List all sources available in the running OBS instance
         /// </summary>
         public List<SourceInfo> GetSourcesList()
         {
+            throw new NotImplementedException(); // See https://docs.google.com/spreadsheets/d/1LfCZrbT8e7cSaKo_TuPDd-CJiptL7RSuo8iE63vMmMs/edit#gid=1232838276
+
             JObject response = SendRequest("GetSourcesList");
             return JsonConvert.DeserializeObject<List<SourceInfo>>(response["sources"].ToString());
         }
@@ -442,12 +453,21 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         public List<FilterSettings> GetSourceFilters(string sourceName)
         {
+            return this.GetSourceFilterList(sourceName);
+        }
+
+        /// <summary>
+        /// Returns a list of all filters assigned to a source (input, scene)
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        public List<FilterSettings> GetSourceFilterList(string sourceName)
+        {
             var requestFields = new JObject
             {
                 { "sourceName", sourceName }
             };
 
-            JObject response = SendRequest("GetSourceFilters", requestFields);
+            JObject response = SendRequest("GetSourceFilterList", requestFields);
             return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"].ToString());
         }
 
@@ -554,12 +574,11 @@ namespace OBSWebsocketDotNet
         /// <returns>A <see cref="List{T}"/> of all transition names</returns>
         public List<string> ListTransitions()
         {
-            var transitions = GetTransitionList();
+            var transitions = GetTransitionKindList();
 
             List<string> transitionNames = new List<string>();
-            foreach (var item in transitions.Transitions)
-                transitionNames.Add(item.Name);
-
+            foreach (var item in transitions.Kinds)
+                transitionNames.Add(item);
 
             return transitionNames;
         }
@@ -1010,11 +1029,24 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Gets a list of all available transition kinds
+        /// </summary>
+        /// <returns>List of all available transition kinds</returns>
+        public GetTransitionKindListInfo GetTransitionKindList()
+        {
+            var response = SendRequest("GetTransitionKindList");
+
+            return JsonConvert.DeserializeObject<GetTransitionKindListInfo>(response.ToString());
+        }
+        
+        /// <summary>
         /// Get duration of the currently selected transition (if supported)
         /// </summary>
         /// <returns>Current transition duration (in milliseconds)</returns>
         public GetTransitionListInfo GetTransitionList()
         {
+            throw new NotSupportedException();
+
             var response = SendRequest("GetTransitionList");
 
             return JsonConvert.DeserializeObject<GetTransitionListInfo>(response.ToString());

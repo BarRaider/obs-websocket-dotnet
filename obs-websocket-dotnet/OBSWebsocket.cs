@@ -497,7 +497,7 @@ namespace OBSWebsocketDotNet
                 // Message id already exists, retry with a new one.
             } while (true);
             // Send the message 
-            WSConnection.SendInstant(message.ToString());
+            WSConnection.Send(message.ToString());
             if (!waitForReply)
             {
                 return null;
