@@ -13,4 +13,4 @@ NOTE: We will no longer be updating the v4.x branch as we move towards v5.0 (whi
 - v4.9.x incrementally adds all the features introduced in obs-websocket v4.9
 
 ## Dev Discussions
-**Discord:** Discuss in #developers-chat in [Bar Raiders](https://discord.gg/khpafQa)
+**Discord:** Discuss in #developers-chat in [Bar Raiders](http://discord.barraider.com)
