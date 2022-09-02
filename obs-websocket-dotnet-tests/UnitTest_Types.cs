@@ -123,38 +123,35 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSStreamStatus_BuildFromJSON()
         {
-            int bytesPerSec = 294400;
-            int kbitsPerSec = 2300;
-            float strain = 0.5f;
-            int streamTime = 120;
-            int totalFrames = 2000;
-            int droppedFrames = 12;
-            float fps = 29.97f;
+            string outputTimecode = "00:01:22.666";
+            int outputDuration = 230;
+            double outputCongestion = 23.32;
+            int outputBytes = 451241;
+            int outputSkippedFrames = 120;
+            int outputTotalFrames = 2000;
 
             var data = new JObject
             {
-                { "streaming", true },
-                { "recording", true },
-                { "bytes-per-sec", bytesPerSec },
-                { "kbits-per-sec", kbitsPerSec },
-                { "strain", strain },
-                { "total-stream-time", streamTime },
-                { "num-total-frames", totalFrames },
-                { "num-dropped-frames", droppedFrames },
-                { "fps", fps }
+                { "outputActive", true },
+                { "outputReconnecting", true },
+                { "outputTimecode", outputTimecode },
+                { "outputDuration", outputDuration },
+                { "outputCongestion", outputCongestion },
+                { "outputBytes", outputBytes },
+                { "outputSkippedFrames", outputSkippedFrames },
+                { "outputTotalFrames", outputTotalFrames }
             };
 
-            var streamStatus = new StreamStatus(data);
+            var streamStatus = new OutputStatus(data);
 
-            Assert.IsTrue(streamStatus.Streaming);
-            Assert.IsTrue(streamStatus.Recording);
-            Assert.AreEqual(bytesPerSec, streamStatus.BytesPerSec);
-            Assert.AreEqual(kbitsPerSec, streamStatus.KbitsPerSec);
-            Assert.AreEqual(strain, streamStatus.Strain);
-            Assert.AreEqual(streamTime, streamStatus.TotalStreamTime);
-            Assert.AreEqual(totalFrames, streamStatus.TotalFrames);
-            Assert.AreEqual(droppedFrames, streamStatus.DroppedFrames);
-            Assert.AreEqual(fps, streamStatus.FPS);
+            Assert.IsTrue(streamStatus.IsActive);
+            Assert.IsTrue(streamStatus.IsReconnecting);
+            Assert.AreEqual(outputTimecode, streamStatus.TimeCode);
+            Assert.AreEqual(outputDuration, streamStatus.Duration);
+            Assert.AreEqual(outputCongestion, streamStatus.Congestion);
+            Assert.AreEqual(outputBytes, streamStatus.BytesSent);
+            Assert.AreEqual(outputSkippedFrames, streamStatus.SkippedFrames);
+            Assert.AreEqual(outputTotalFrames, streamStatus.TotalFrames);
         }
 
         [TestMethod]
@@ -168,7 +165,7 @@ namespace OBSWebsocketDotNet.Tests
             var outputState = new OutputStatus(data);
             var recordState = new RecordingStatus(data);
 
-            Assert.IsTrue(outputState.IsStreaming);
+            Assert.IsTrue(outputState.IsActive);
             Assert.IsTrue(recordState.IsRecording);
         }
 
