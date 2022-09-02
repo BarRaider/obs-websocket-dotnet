@@ -107,6 +107,9 @@ namespace TestClient
             this.lblRendered = new System.Windows.Forms.Label();
             this.streamPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblStreamSkippedFrames = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
             this.lblStreamOutputBytes = new System.Windows.Forms.Label();
             this.lblStreamTotalFrames = new System.Windows.Forms.Label();
             this.lblStreamCongestion = new System.Windows.Forms.Label();
@@ -160,9 +163,7 @@ namespace TestClient
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
-            this.lblStreamSkippedFrames = new System.Windows.Forms.Label();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -184,6 +185,7 @@ namespace TestClient
             this.groupBox3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -1011,6 +1013,44 @@ namespace TestClient
             this.tableLayoutPanel2.Size = new System.Drawing.Size(278, 208);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
+            // lblStreamSkippedFrames
+            // 
+            this.lblStreamSkippedFrames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblStreamSkippedFrames.AutoSize = true;
+            this.lblStreamSkippedFrames.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lblStreamSkippedFrames.Location = new System.Drawing.Point(139, 120);
+            this.lblStreamSkippedFrames.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lblStreamSkippedFrames.Name = "lblStreamSkippedFrames";
+            this.lblStreamSkippedFrames.Size = new System.Drawing.Size(134, 19);
+            this.lblStreamSkippedFrames.TabIndex = 17;
+            this.lblStreamSkippedFrames.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label32
+            // 
+            this.label32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label32.Location = new System.Drawing.Point(5, 20);
+            this.label32.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(124, 19);
+            this.label32.TabIndex = 16;
+            this.label32.Text = "Reconnecting:";
+            this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label31
+            // 
+            this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label31.Location = new System.Drawing.Point(5, 0);
+            this.label31.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(124, 19);
+            this.label31.TabIndex = 15;
+            this.label31.Text = "Streaming:";
+            this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // lblStreamOutputBytes
             // 
             this.lblStreamOutputBytes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -1669,43 +1709,10 @@ namespace TestClient
             this.tableLayoutPanel4.Size = new System.Drawing.Size(200, 100);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
-            // label31
+            // fileSystemWatcher1
             // 
-            this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label31.AutoSize = true;
-            this.label31.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label31.Location = new System.Drawing.Point(5, 0);
-            this.label31.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(124, 19);
-            this.label31.TabIndex = 15;
-            this.label31.Text = "Streaming:";
-            this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label32
-            // 
-            this.label32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label32.AutoSize = true;
-            this.label32.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label32.Location = new System.Drawing.Point(5, 20);
-            this.label32.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(124, 19);
-            this.label32.TabIndex = 16;
-            this.label32.Text = "Reconnecting:";
-            this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStreamSkippedFrames
-            // 
-            this.lblStreamSkippedFrames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblStreamSkippedFrames.AutoSize = true;
-            this.lblStreamSkippedFrames.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblStreamSkippedFrames.Location = new System.Drawing.Point(139, 120);
-            this.lblStreamSkippedFrames.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.lblStreamSkippedFrames.Name = "lblStreamSkippedFrames";
-            this.lblStreamSkippedFrames.Size = new System.Drawing.Size(134, 19);
-            this.lblStreamSkippedFrames.TabIndex = 17;
-            this.lblStreamSkippedFrames.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
             // 
             // MainWindow
             // 
@@ -1754,6 +1761,7 @@ namespace TestClient
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1877,6 +1885,7 @@ namespace TestClient
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label lblStreamSkippedFrames;
+        private System.IO.FileSystemWatcher fileSystemWatcher1;
     }
 }
 

@@ -207,7 +207,7 @@ namespace OBSWebsocketDotNet
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="transform">Transform data</param>
-    public delegate void SceneItemTransformCallback(OBSWebsocket sender, SceneItemTransformInfo transform);
+    public delegate void SceneItemTransformCallback(OBSWebsocket sender, string sceneName, string sceneItemId, SceneItemTransformInfo transform);
 
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.InputAudioSyncOffsetChanged"/>
@@ -790,7 +790,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneItemEnableStateChanged):
-                    SceneItemEnableStateChanged?.Invoke(this, (string)body["sceneName"], (int)body["sceneItemId"], (bool)body["sceneitemEnabled"]);
+                    SceneItemEnableStateChanged?.Invoke(this, (string)body["sceneName"], (int)body["sceneItemId"], (bool)body["sceneItemEnabled"]);
                     break;
 
                 case nameof(SceneItemLockStateChanged):
@@ -862,7 +862,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneItemTransformChanged):
-                    SceneItemTransformChanged?.Invoke(this, new SceneItemTransformInfo(body));
+                    SceneItemTransformChanged?.Invoke(this, (string)body["sceneName"], (string)body["sceneItemId"], new SceneItemTransformInfo((JObject)body["sceneItemTransform"]));
                     break;
 
                 case nameof(InputAudioSyncOffsetChanged):

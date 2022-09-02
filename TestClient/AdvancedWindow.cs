@@ -85,7 +85,6 @@ namespace TestClient
 
             obs.StudioModeStateChanged += Obs_StudioModeStateChanged;           
         }
-
         private void Obs_InputActiveStateChanged(OBSWebsocket sender, string inputName, bool videoActive)
         {
             LogMessage($"[InputActiveStateChanged] Name: {inputName} Video Active: {videoActive}");
@@ -96,9 +95,9 @@ namespace TestClient
             LogMessage($"[InputMuteStateChanged] Name: {inputName} Muted: {inputMuted}");
         }
 
-        private void Obs_SceneItemTransformChanged(OBSWebsocket sender, SceneItemTransformInfo transform)
+        private void Obs_SceneItemTransformChanged(OBSWebsocket sender, string sceneName, string sceneItemId, SceneItemTransformInfo transform)
         {
-            LogMessage($"[SceneItemTransformChanged] Scene: {transform.SceneName} ItemId: {transform.ItemID} Transform: {transform.Transform.ItemName}");
+            LogMessage($"[SceneItemTransformChanged] Scene: {sceneName} ItemId: {sceneItemId} Transform: {transform.X},{transform.Y}");
         }
 
         private void Obs_SceneItemSelected(OBSWebsocket sender, string sceneName, string sceneItemId)
@@ -299,6 +298,38 @@ namespace TestClient
             var active = obs.GetSourceActive(SOURCE_NAME).VideoActive;
             LogMessage($"GetSourceActive for {SOURCE_NAME}: {active}. Renaming source");
             obs.SetInputName(SOURCE_NAME, SOURCE_NAME + random.Next(100));
+        }
+
+
+        private void btnSourceInfo_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(tbSceneName.Text))
+            {
+                MessageBox.Show("Enter name of Scene in input box");
+                return;
+            }
+
+            if (String.IsNullOrEmpty(tbSourceName.Text))
+            {
+                MessageBox.Show("Enter name of Source in input box");
+                return;
+            }
+
+            string scene = tbSceneName.Text;
+            string source = tbSourceName.Text;
+
+            int itemId = obs.GetSceneItemId(scene, source, 0);
+            LogMessage($"Item Id for {source} is {itemId}");
+
+            bool isEnabled = obs.GetSceneItemEnabled(scene, itemId);
+            LogMessage($"Source Enabled: {isEnabled}");
+
+            bool isLocked = obs.GetSceneItemLocked(scene, itemId);
+            LogMessage($"Source Locked: {isLocked}");
+
+            var transform = obs.GetSceneItemTransform(scene, itemId);
+            LogMessage($" X: {transform.X}, Y: {transform.Y}, ScaleX: {transform.ScaleX}, ScaleY: {transform.ScaleY}, Height: {transform.Height}, Width: {transform.Width}, SourceHeight: {transform.SourceHeight}, SourceWidth: {transform.SourceWidth}, Rotation: {transform.Rotation}, Crop Top: {transform.CropTop}, Crop Bottom: {transform.CropBottom}, Crop Left: {transform.CropLeft}, Crop Right: {transform.CropRight}");
+            LogMessage($"Alignment: {transform.Alignnment}, BoundsHeight: {transform.BoundsHeight}, BoundsWidth: {transform.BoundsWidth}, BoundsType: {transform.BoundsType}");
         }
 
         private void btnSourceFilters_Click(object sender, EventArgs e)

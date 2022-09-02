@@ -1749,7 +1749,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest(nameof(GetSceneItemTransform), request);
-            return JsonConvert.DeserializeObject<SceneItemTransformInfo>((string)response);
+            return JsonConvert.DeserializeObject<SceneItemTransformInfo>(response["sceneItemTransform"].ToString());
         }
 
         /// <summary>
