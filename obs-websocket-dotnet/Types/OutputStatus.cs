@@ -8,7 +8,7 @@ using System.Text;
 namespace OBSWebsocketDotNet
 {
     /// <summary>
-    /// Status of streaming output and recording output
+    /// Status of streaming output
     /// </summary>
     public class OutputStatus
     {
@@ -16,7 +16,7 @@ namespace OBSWebsocketDotNet
         /// True if streaming is started and running, false otherwise
         /// </summary>
         [JsonProperty(PropertyName = "outputActive")]
-        public readonly bool IsStreaming;
+        public readonly bool IsActive;
 
         /// <summary>
         /// Whether the output is currently reconnectins
@@ -46,7 +46,7 @@ namespace OBSWebsocketDotNet
         /// Nubmer of bytes sent by the output
         /// </summary>
         [JsonProperty(PropertyName = "outputBytes")]
-        public int Bytes { get; set; }
+        public int BytesSent { get; set; }
 
         /// <summary>
         /// Number of frames skipped by the output's process
