@@ -11,12 +11,19 @@ namespace OBSWebsocketDotNet.Tests
         public void OBSScene_BuildFromJSON()
         {
             string sceneName = "Scene name äëôû";
+            bool isGroup = true;
             string itemName = "First item name äëôû";
+            SceneItemSourceType sourceType = SceneItemSourceType.OBS_SOURCE_TYPE_INPUT;
+            string inputKind = "BarRaider";
+            int sceneItemId = 22;
+            
 
             JObject itemData = new JObject
             {
-                { "name", itemName },
-                { "type", "dummy_source" },
+                { "sourceName", itemName },
+                { "sourceType", (int)sourceType },
+                { "inputKind", inputKind},
+                { "sceneItemId", sceneItemId },
                 { "volume", 1.0f },
                 { "x", 0.0f },
                 { "y", 0.0f },
@@ -33,15 +40,21 @@ namespace OBSWebsocketDotNet.Tests
 
             var data = new JObject
             {
-                { "name", sceneName },
-                { "sources", items }
+                { "sceneName", sceneName },
+                { "sources", items },
+                { "isGroup", isGroup }
             };
 
             var scene = new ObsScene(data);
 
             Assert.AreEqual(sceneName, scene.Name);
             Assert.AreEqual(1, scene.Items.Count);
+            Assert.AreEqual(isGroup, scene.IsGroup);
             Assert.AreEqual(itemName, scene.Items[0].SourceName);
+            Assert.AreEqual(sourceType, scene.Items[0].SourceType);
+            Assert.AreEqual(inputKind, scene.Items[0].SourceKind);
+            Assert.AreEqual(sceneItemId, scene.Items[0].ItemId);
+
         }
 
         [TestMethod]
@@ -105,19 +118,34 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSVersion_BuildFromJSON()
         {
-            string pluginVersion = "4.0.0";
-            string obsVersion = "18.0.1";
+            string pluginVersion = "5.0.1";
+            string obsVersion = "28.0.1";
+            double rpcVersion = 1.1;
+            string availableRequests = "GetVersion,BarRaider,Test";
+            string platform = "windows";
+            string supportedImageFormats = "png,jpg";
+
+            var requests = new JArray(availableRequests.Split(','));
+            var images = new JArray(supportedImageFormats.Split(','));
 
             var data = new JObject
             {
-                { "obs-websocket-version", pluginVersion },
-                { "obs-studio-version", obsVersion }
+                { "obsWebSocketVersion", pluginVersion },
+                { "obsVersion", obsVersion },
+                { "rpcVersion", rpcVersion},
+                { "availableRequests", requests},
+                { "platform", platform},
+                { "supportedImageFormats", images}
             };
 
             var version = new ObsVersion(data);
 
             Assert.AreEqual(pluginVersion, version.PluginVersion);
             Assert.AreEqual(obsVersion, version.OBSStudioVersion);
+            Assert.AreEqual(rpcVersion, version.Version);
+            Assert.AreEqual(platform, version.Platform);
+            Assert.AreEqual(3, version.AvailableRequests.Count);
+            Assert.AreEqual(2, version.SupportedImageFormats.Count);
         }
 
         [TestMethod]
@@ -174,33 +202,44 @@ namespace OBSWebsocketDotNet.Tests
         {
             string transitionName = "Transition name éèïöü";
             int duration = 2000;
+            string kind = "TBD";
+            bool transitionFixed = true;
+            bool transitionConfigurable = true;
 
             var data = new JObject
             {
-                { "name", transitionName },
-                { "duration", duration }
+                { "transitionName", transitionName },
+                { "transitionDuration", duration },
+                { "transitionKind", kind },
+                { "transitionFixed", transitionFixed },
+                { "transitionConfigurable", transitionConfigurable }
             };
 
             var transitionInfo = new TransitionSettings(data);
 
             Assert.AreEqual(transitionName, transitionInfo.Name);
             Assert.AreEqual(duration, transitionInfo.Duration);
+            Assert.AreEqual(kind, transitionInfo.Kind);
+            Assert.AreEqual(transitionFixed, transitionInfo.IsFixed);
+            Assert.AreEqual(transitionConfigurable, transitionInfo.IsConfigurable);
         }
 
         [TestMethod]
         public void OBSVolumeInfo_BuildFromJSON()
         {
-            float volumeLevel = 0.50f;
+            float volumeMul = 0.50f;
+            float volumeDB = 45.4f;
 
             var data = new JObject
             {
-                { "volume", volumeLevel },
-                { "muted", true }
+                { "inputVolumeMul", volumeMul },
+                { "inputVolumeDb", volumeDB }
             };
 
             var volumeInfo = new VolumeInfo(data);
 
-            Assert.AreEqual(volumeLevel, volumeInfo.VolumeMul);
+            Assert.AreEqual(volumeMul, volumeInfo.VolumeMul);
+            Assert.AreEqual(volumeDB, volumeInfo.VolumeDb);
         }
     }
 }
