@@ -21,10 +21,10 @@ namespace OBSWebsocketDotNet.Types
         public string Kind { set; get; }
 
         /// <summary>
-        /// Index of the specified filter
+        /// Index of the filter in the list, beginning at 0
         /// </summary>
         [JsonProperty(PropertyName = "filterIndex")]
-        public int Index { set; get; }
+        public int Index { get; set; }
 
         /// <summary>
         /// Status of the specified filter
@@ -37,11 +37,5 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "filterSettings")]
         public JObject Settings { set; get; }
-
-        /// <summary>
-        /// Index of the filter in the list, beginning at 0
-        /// </summary>
-        [JsonProperty(PropertyName = "filterIndex")]
-        public int Index { get; set; }
     }
 }
