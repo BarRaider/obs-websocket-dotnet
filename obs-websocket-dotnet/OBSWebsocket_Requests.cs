@@ -13,14 +13,6 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public partial class OBSWebsocket
     {
-        #region Private Members
-
-        private const string SOURCE_TYPE_JSON_FIELD = "sourceType";
-        private const string SOURCE_TYPE_BROWSER_SOURCE = "browser_source";
-        private JToken previewSceneName;
-
-        #endregion
-
         /// <summary>
         /// Get basic OBS video information
         /// </summary>
