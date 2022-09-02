@@ -29,6 +29,10 @@ namespace TestClient
         [STAThread]
         static void Main()
         {
+            // Set the unhandled exception mode to force all Windows Forms errors
+            // to go through our handler.
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
