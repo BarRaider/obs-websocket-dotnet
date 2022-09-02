@@ -58,6 +58,12 @@ namespace TestClient
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbControls = new System.Windows.Forms.GroupBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.lblVirtualCamStatus = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnVirtualCamToggle = new System.Windows.Forms.Button();
+            this.btnVirtualCamStop = new System.Windows.Forms.Button();
+            this.btnVirtualCamStart = new System.Windows.Forms.Button();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.tbFolderPath = new System.Windows.Forms.TextBox();
@@ -113,14 +119,9 @@ namespace TestClient
             this.button3 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.btnVirtualCamStop = new System.Windows.Forms.Button();
-            this.btnVirtualCamStart = new System.Windows.Forms.Button();
-            this.btnVirtualCamToggle = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lblVirtualCamStatus = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.gbControls.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbTransitionDuration)).BeginInit();
@@ -132,7 +133,6 @@ namespace TestClient
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -155,7 +155,7 @@ namespace TestClient
             this.txtServerIP.Name = "txtServerIP";
             this.txtServerIP.Size = new System.Drawing.Size(132, 23);
             this.txtServerIP.TabIndex = 2;
-            this.txtServerIP.Text = "ws://127.0.0.1:4444";
+            this.txtServerIP.Text = "ws://127.0.0.1:4455";
             // 
             // txtServerPassword
             // 
@@ -288,6 +288,80 @@ namespace TestClient
             this.gbControls.TabIndex = 9;
             this.gbControls.TabStop = false;
             // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.lblVirtualCamStatus);
+            this.groupBox9.Controls.Add(this.label4);
+            this.groupBox9.Controls.Add(this.btnVirtualCamToggle);
+            this.groupBox9.Controls.Add(this.btnVirtualCamStop);
+            this.groupBox9.Controls.Add(this.btnVirtualCamStart);
+            this.groupBox9.Location = new System.Drawing.Point(492, 428);
+            this.groupBox9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.groupBox9.Size = new System.Drawing.Size(170, 67);
+            this.groupBox9.TabIndex = 13;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Virtual Cam";
+            // 
+            // lblVirtualCamStatus
+            // 
+            this.lblVirtualCamStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblVirtualCamStatus.Location = new System.Drawing.Point(57, 17);
+            this.lblVirtualCamStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblVirtualCamStatus.Name = "lblVirtualCamStatus";
+            this.lblVirtualCamStatus.Size = new System.Drawing.Size(107, 15);
+            this.lblVirtualCamStatus.TabIndex = 8;
+            this.lblVirtualCamStatus.Text = "Unknown";
+            this.lblVirtualCamStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 17);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(42, 15);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Status:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnVirtualCamToggle
+            // 
+            this.btnVirtualCamToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnVirtualCamToggle.Location = new System.Drawing.Point(109, 33);
+            this.btnVirtualCamToggle.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnVirtualCamToggle.Name = "btnVirtualCamToggle";
+            this.btnVirtualCamToggle.Size = new System.Drawing.Size(56, 27);
+            this.btnVirtualCamToggle.TabIndex = 3;
+            this.btnVirtualCamToggle.Text = "Toggle";
+            this.btnVirtualCamToggle.UseVisualStyleBackColor = true;
+            this.btnVirtualCamToggle.Click += new System.EventHandler(this.btnVirtualCamToggle_Click);
+            // 
+            // btnVirtualCamStop
+            // 
+            this.btnVirtualCamStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnVirtualCamStop.Location = new System.Drawing.Point(59, 33);
+            this.btnVirtualCamStop.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnVirtualCamStop.Name = "btnVirtualCamStop";
+            this.btnVirtualCamStop.Size = new System.Drawing.Size(47, 27);
+            this.btnVirtualCamStop.TabIndex = 2;
+            this.btnVirtualCamStop.Text = "Stop";
+            this.btnVirtualCamStop.UseVisualStyleBackColor = true;
+            this.btnVirtualCamStop.Click += new System.EventHandler(this.btnVirtualCamStop_Click);
+            // 
+            // btnVirtualCamStart
+            // 
+            this.btnVirtualCamStart.Location = new System.Drawing.Point(6, 33);
+            this.btnVirtualCamStart.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnVirtualCamStart.Name = "btnVirtualCamStart";
+            this.btnVirtualCamStart.Size = new System.Drawing.Size(48, 27);
+            this.btnVirtualCamStart.TabIndex = 1;
+            this.btnVirtualCamStart.Text = "Start";
+            this.btnVirtualCamStart.UseVisualStyleBackColor = true;
+            this.btnVirtualCamStart.Click += new System.EventHandler(this.btnVirtualCamStart_Click);
+            // 
             // groupBox8
             // 
             this.groupBox8.Controls.Add(this.btnBrowse);
@@ -303,6 +377,7 @@ namespace TestClient
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowse.Enabled = false;
             this.btnBrowse.Location = new System.Drawing.Point(242, 22);
             this.btnBrowse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnBrowse.Name = "btnBrowse";
@@ -324,6 +399,7 @@ namespace TestClient
             // btnSetPath
             // 
             this.btnSetPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetPath.Enabled = false;
             this.btnSetPath.Location = new System.Drawing.Point(319, 21);
             this.btnSetPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnSetPath.Name = "btnSetPath";
@@ -977,80 +1053,6 @@ namespace TestClient
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // groupBox9
-            // 
-            this.groupBox9.Controls.Add(this.lblVirtualCamStatus);
-            this.groupBox9.Controls.Add(this.label4);
-            this.groupBox9.Controls.Add(this.btnVirtualCamToggle);
-            this.groupBox9.Controls.Add(this.btnVirtualCamStop);
-            this.groupBox9.Controls.Add(this.btnVirtualCamStart);
-            this.groupBox9.Location = new System.Drawing.Point(492, 428);
-            this.groupBox9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox9.Size = new System.Drawing.Size(170, 67);
-            this.groupBox9.TabIndex = 13;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Virtual Cam";
-            // 
-            // btnVirtualCamStop
-            // 
-            this.btnVirtualCamStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnVirtualCamStop.Location = new System.Drawing.Point(59, 33);
-            this.btnVirtualCamStop.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnVirtualCamStop.Name = "btnVirtualCamStop";
-            this.btnVirtualCamStop.Size = new System.Drawing.Size(47, 27);
-            this.btnVirtualCamStop.TabIndex = 2;
-            this.btnVirtualCamStop.Text = "Stop";
-            this.btnVirtualCamStop.UseVisualStyleBackColor = true;
-            this.btnVirtualCamStop.Click += new System.EventHandler(this.btnVirtualCamStop_Click);
-            // 
-            // btnVirtualCamStart
-            // 
-            this.btnVirtualCamStart.Location = new System.Drawing.Point(6, 33);
-            this.btnVirtualCamStart.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnVirtualCamStart.Name = "btnVirtualCamStart";
-            this.btnVirtualCamStart.Size = new System.Drawing.Size(48, 27);
-            this.btnVirtualCamStart.TabIndex = 1;
-            this.btnVirtualCamStart.Text = "Start";
-            this.btnVirtualCamStart.UseVisualStyleBackColor = true;
-            this.btnVirtualCamStart.Click += new System.EventHandler(this.btnVirtualCamStart_Click);
-            // 
-            // btnVirtualCamToggle
-            // 
-            this.btnVirtualCamToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnVirtualCamToggle.Location = new System.Drawing.Point(109, 33);
-            this.btnVirtualCamToggle.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnVirtualCamToggle.Name = "btnVirtualCamToggle";
-            this.btnVirtualCamToggle.Size = new System.Drawing.Size(56, 27);
-            this.btnVirtualCamToggle.TabIndex = 3;
-            this.btnVirtualCamToggle.Text = "Toggle";
-            this.btnVirtualCamToggle.UseVisualStyleBackColor = true;
-            this.btnVirtualCamToggle.Click += new System.EventHandler(this.btnVirtualCamToggle_Click);
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 17);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 15);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Status:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblVirtualCamStatus
-            // 
-            this.lblVirtualCamStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblVirtualCamStatus.Location = new System.Drawing.Point(57, 17);
-            this.lblVirtualCamStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblVirtualCamStatus.Name = "lblVirtualCamStatus";
-            this.lblVirtualCamStatus.Size = new System.Drawing.Size(107, 15);
-            this.lblVirtualCamStatus.TabIndex = 8;
-            this.lblVirtualCamStatus.Text = "Unknown";
-            this.lblVirtualCamStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1068,6 +1070,8 @@ namespace TestClient
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbControls.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -1085,8 +1089,6 @@ namespace TestClient
             this.groupBox3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

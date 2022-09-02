@@ -18,13 +18,13 @@ namespace OBSWebsocketDotNet.Types
         /// Type of the specified filter
         /// </summary>
         [JsonProperty(PropertyName = "filterKind")]
-        public string Type { set; get; }
+        public string Kind { set; get; }
 
         /// <summary>
-        /// Index of the specified filter
+        /// Index of the filter in the list, beginning at 0
         /// </summary>
         [JsonProperty(PropertyName = "filterIndex")]
-        public int Index { set; get; }
+        public int Index { get; set; }
 
         /// <summary>
         /// Status of the specified filter

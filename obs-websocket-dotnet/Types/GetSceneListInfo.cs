@@ -18,6 +18,6 @@ namespace OBSWebsocketDotNet.Types
         /// Ordered list of the current profile's scenes
         /// </summary>
         [JsonProperty(PropertyName = "scenes")]
-        public List<OBSScene> Scenes { set; get; }
+        public List<ObsScene> Scenes { set; get; }
     }
 }

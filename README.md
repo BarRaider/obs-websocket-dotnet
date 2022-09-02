@@ -6,8 +6,11 @@ Official .NET library (written in C#) to communicate with an obs-websocket serve
 This library is available on the [NuGet gallery](https://www.nuget.org/packages/obs-websocket-dotnet)  
 See the `TestClient` project for a working example.  
   
+## EOL for v4.x branch
+NOTE: We will no longer be updating the v4.x branch as we move towards v5.0 (which is NOT backwards compatible). Any PRs should be done on the `v5-dev` branch.
+
 ## What's New
-- v4.9.x incrementally adds all the features introduced in obs-websocket v4.9
+- v5.0.x - Implement obs-websocket v5.0.x API
 
 ## Dev Discussions
-**Discord:** Discuss in #developers-chat in [Bar Raiders](https://discord.gg/khpafQa)
+**Discord:** Discuss in #developers-chat in [Bar Raiders](http://discord.barraider.com)

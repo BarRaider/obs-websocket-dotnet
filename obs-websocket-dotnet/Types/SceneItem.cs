@@ -13,7 +13,7 @@ namespace OBSWebsocketDotNet.Types
         /// Source name
         /// </summary>
         [JsonProperty(PropertyName = "name")]
-        public string SourceName;
+        public string Name;
 
         /// <summary>
         /// Source type. Value is one of the following: "input", "filter", "transition", "scene" or "unknown"
@@ -79,7 +79,7 @@ namespace OBSWebsocketDotNet.Types
         /// Scene item ID
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public int ID { set; get; }
+        public int Id { set; get; }
 
         /// <summary>
         /// Name of the item's parent (if this item belongs to a group)

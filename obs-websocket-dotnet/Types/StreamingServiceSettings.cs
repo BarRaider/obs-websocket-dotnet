@@ -22,7 +22,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Indicates whether authentication should be used when connecting to the streaming server
         /// </summary>
-        [JsonProperty(PropertyName = "use-auth")]
+        [JsonProperty(PropertyName = "use_auth")]
         public bool UseAuth { set; get; }
 
         /// <summary>

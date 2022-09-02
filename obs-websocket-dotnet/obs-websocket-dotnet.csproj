@@ -6,7 +6,7 @@
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
 		<Copyright>Copyright © Stéphane Lepin, BarRaider 2021</Copyright>
 		<LangVersion>8</LangVersion>
-		<Version>4.9.1</Version>
+		<Version>5.0.0</Version>
 		<Authors>Stéphane Lepin, BarRaider</Authors>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BarRaider/obs-websocket-dotnet</PackageProjectUrl>

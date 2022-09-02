@@ -6,23 +6,23 @@
     public enum OutputState
     {
         /// <summary>
-        /// The output is initializing and doesn't produces frames yet
+        /// The output is initializing and doesn't produce frames yet
         /// </summary>
-        Starting,
+        OBS_WEBSOCKET_OUTPUT_STARTING,
 
         /// <summary>
         /// The output is running and produces frames
         /// </summary>
-        Started,
+        OBS_WEBSOCKET_OUTPUT_STARTED,
 
         /// <summary>
         /// The output is stopping and sends the last remaining frames in its buffer
         /// </summary>
-        Stopping,
+        OBS_WEBSOCKET_OUTPUT_STOPPING,
 
         /// <summary>
         /// The output is completely stopped
         /// </summary>
-        Stopped
+        OBS_WEBSOCKET_OUTPUT_STOPPED
     }
 }

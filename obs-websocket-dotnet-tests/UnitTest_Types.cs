@@ -37,7 +37,7 @@ namespace OBSWebsocketDotNet.Tests
                 { "sources", items }
             };
 
-            var scene = new OBSScene(data);
+            var scene = new ObsScene(data);
 
             Assert.AreEqual(sceneName, scene.Name);
             Assert.AreEqual(1, scene.Items.Count);
@@ -72,7 +72,7 @@ namespace OBSWebsocketDotNet.Tests
 
             var item = new SceneItem(data);
 
-            Assert.AreEqual(name, item.SourceName);
+            Assert.AreEqual(name, item.Name);
             Assert.AreEqual(type, item.InternalType);
             Assert.AreEqual(volume, item.AudioVolume);
             Assert.AreEqual(x, item.XPos);
@@ -114,7 +114,7 @@ namespace OBSWebsocketDotNet.Tests
                 { "obs-studio-version", obsVersion }
             };
 
-            var version = new OBSVersion(data);
+            var version = new ObsVersion(data);
 
             Assert.AreEqual(pluginVersion, version.PluginVersion);
             Assert.AreEqual(obsVersion, version.OBSStudioVersion);
@@ -162,14 +162,14 @@ namespace OBSWebsocketDotNet.Tests
         {
             var data = new JObject
             {
-                { "streaming", true },
-                { "recording", true }
+                { "outputActive", true }
             };
 
             var outputState = new OutputStatus(data);
+            var recordState = new RecordingStatus(data);
 
             Assert.IsTrue(outputState.IsStreaming);
-            Assert.IsTrue(outputState.IsRecording);
+            Assert.IsTrue(recordState.IsRecording);
         }
 
         [TestMethod]
@@ -203,8 +203,7 @@ namespace OBSWebsocketDotNet.Tests
 
             var volumeInfo = new VolumeInfo(data);
 
-            Assert.AreEqual(volumeLevel, volumeInfo.Volume);
-            Assert.IsTrue(volumeInfo.Muted);
+            Assert.AreEqual(volumeLevel, volumeInfo.VolumeMul);
         }
     }
 }

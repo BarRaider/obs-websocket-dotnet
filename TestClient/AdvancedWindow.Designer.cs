@@ -37,6 +37,10 @@
             this.btnOutputs = new System.Windows.Forms.Button();
             this.btnTransition = new System.Windows.Forms.Button();
             this.btnTracks = new System.Windows.Forms.Button();
+            this.btnToggleVidCapDvc = new System.Windows.Forms.Button();
+            this.btn_GetInputList = new System.Windows.Forms.Button();
+            this.btn_GetGroupList = new System.Windows.Forms.Button();
+            this.btn_GetMonitorList = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbLog
@@ -139,11 +143,55 @@
             this.btnTracks.UseVisualStyleBackColor = true;
             this.btnTracks.Click += new System.EventHandler(this.btnTracks_Click);
             // 
+            // btnToggleVidCapDvc
+            // 
+            this.btnToggleVidCapDvc.Location = new System.Drawing.Point(806, 281);
+            this.btnToggleVidCapDvc.Name = "btnToggleVidCapDvc";
+            this.btnToggleVidCapDvc.Size = new System.Drawing.Size(113, 27);
+            this.btnToggleVidCapDvc.TabIndex = 9;
+            this.btnToggleVidCapDvc.Text = "Toggle VidCapDvc";
+            this.btnToggleVidCapDvc.UseVisualStyleBackColor = true;
+            this.btnToggleVidCapDvc.Click += new System.EventHandler(this.btnToggleVidCapDvc_Click);
+            // 
+            // btn_GetInputList
+            // 
+            this.btn_GetInputList.Location = new System.Drawing.Point(806, 314);
+            this.btn_GetInputList.Name = "btn_GetInputList";
+            this.btn_GetInputList.Size = new System.Drawing.Size(112, 23);
+            this.btn_GetInputList.TabIndex = 10;
+            this.btn_GetInputList.Text = "GetInputList";
+            this.btn_GetInputList.UseVisualStyleBackColor = true;
+            this.btn_GetInputList.Click += new System.EventHandler(this.btn_GetInputList_Click);
+            // 
+            // btn_GetGroupList
+            // 
+            this.btn_GetGroupList.Location = new System.Drawing.Point(806, 343);
+            this.btn_GetGroupList.Name = "btn_GetGroupList";
+            this.btn_GetGroupList.Size = new System.Drawing.Size(112, 23);
+            this.btn_GetGroupList.TabIndex = 11;
+            this.btn_GetGroupList.Text = "GetGroupList";
+            this.btn_GetGroupList.UseVisualStyleBackColor = true;
+            this.btn_GetGroupList.Click += new System.EventHandler(this.btn_GetGroupList_Click);
+            // 
+            // btn_GetMonitorList
+            // 
+            this.btn_GetMonitorList.Location = new System.Drawing.Point(806, 372);
+            this.btn_GetMonitorList.Name = "btn_GetMonitorList";
+            this.btn_GetMonitorList.Size = new System.Drawing.Size(112, 23);
+            this.btn_GetMonitorList.TabIndex = 12;
+            this.btn_GetMonitorList.Text = "GetMonitorList";
+            this.btn_GetMonitorList.UseVisualStyleBackColor = true;
+            this.btn_GetMonitorList.Click += new System.EventHandler(this.btn_GetMonitorList_Click);
+            // 
             // AdvancedWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 519);
+            this.Controls.Add(this.btn_GetMonitorList);
+            this.Controls.Add(this.btn_GetGroupList);
+            this.Controls.Add(this.btn_GetInputList);
+            this.Controls.Add(this.btnToggleVidCapDvc);
             this.Controls.Add(this.btnTracks);
             this.Controls.Add(this.btnTransition);
             this.Controls.Add(this.btnOutputs);
@@ -176,5 +224,9 @@
         private System.Windows.Forms.Button btnOutputs;
         private System.Windows.Forms.Button btnTransition;
         private System.Windows.Forms.Button btnTracks;
+        private System.Windows.Forms.Button btnToggleVidCapDvc;
+        private System.Windows.Forms.Button btn_GetInputList;
+        private System.Windows.Forms.Button btn_GetGroupList;
+        private System.Windows.Forms.Button btn_GetMonitorList;
     }
 }
