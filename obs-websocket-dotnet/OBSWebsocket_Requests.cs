@@ -385,11 +385,11 @@ namespace OBSWebsocketDotNet
         /// <returns>A <see cref="List{string}"/> of all transition names</returns>
         public List<string> GetTransitionNameList()
         {
-            var transitions = GetTransitionKindList();
+            var transitionKinds = GetTransitionKindList();
 
             List<string> transitionNames = new List<string>();
-            foreach (var item in transitions.Transitions)
-                transitionNames.Add(item.Name);
+            foreach (var item in transitionKinds)
+                transitionNames.Add(item);
 
             return transitionNames;
         }
