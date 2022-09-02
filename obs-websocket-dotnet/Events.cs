@@ -764,8 +764,6 @@ namespace OBSWebsocketDotNet
         /// <param name="body">full JSON message body</param>
         protected void ProcessEventType(string eventType, JObject body)
         {
-            StreamStatus status;
-
             body = (JObject)body["eventData"];
 
             switch (eventType)
