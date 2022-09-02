@@ -4,30 +4,18 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<AssemblyName>obs-websocket-dotnet</AssemblyName>
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
-		<Copyright>Copyright © Stéphane Lepin, BarRaider 2021</Copyright>
+		<Copyright>Copyright © BarRaider 2022</Copyright>
 		<LangVersion>8</LangVersion>
-		<Version>4.9.1</Version>
-		<Authors>Stéphane Lepin, BarRaider</Authors>
+		<Version>5.0.0-Beta1</Version>
+		<Authors>BarRaider</Authors>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BarRaider/obs-websocket-dotnet</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/BarRaider/obs-websocket-dotnet</RepositoryUrl>
 		<Description>Official obs-websocket .NET library. Written in C#. Supports .NET Standard</Description>
 		<PackageTags>OBS obs-websocket websocket official obs-websocket-dotnet obs.websocket.net obs-websocket-net</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageReleaseNotes>Added Events:
-`VirtualCameraStarted`
-`VirtualCameraStopped`
-
-Added Requests:
-`StartVirtualCam`
-`StopVirtualCam`
-`ToggleVirtualCam`
-`GetVirtualCamStatus`
-`GetSourceActive`
-`GetAudioTracks`
-`SetAudioTrack`
-
-- Bug Fixes</PackageReleaseNotes>
+		<PackageReleaseNotes>Ported to use new OBS Websocket v5.0
+WARNING: This version is not backwards compatible with v4.9.x</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -36,7 +24,7 @@ Added Requests:
 
 	<ItemGroup>
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-	  <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+	  <PackageReference Include="Websocket.Client" Version="4.4.43" />
 	</ItemGroup>
 
 	<ItemGroup>

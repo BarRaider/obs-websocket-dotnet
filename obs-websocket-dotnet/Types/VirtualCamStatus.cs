@@ -9,16 +9,10 @@ namespace OBSWebsocketDotNet
     public class VirtualCamStatus
     {
         /// <summary>
-        /// The current virtual camera status
+        /// Whether the output is active
         /// </summary>
-        [JsonProperty(PropertyName = "isVirtualCam")]
+        [JsonProperty(PropertyName = "outputActive")]
         public bool IsActive { get; set; }
-
-        /// <summary>
-        /// Time elapsed since virtual camera started (only present if virtual cam currently active)
-        /// </summary>
-        [JsonProperty(PropertyName = "virtualCamTimecode")]
-        public string Timecode { get; set; }
 
         /// <summary>
         /// Builds the object from the JSON response body

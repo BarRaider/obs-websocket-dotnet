@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OBSWebsocketDotNet.Types
+﻿namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
     /// OBS Hotkeys as defined here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h

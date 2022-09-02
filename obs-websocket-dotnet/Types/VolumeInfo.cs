@@ -11,14 +11,14 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Source volume in linear scale (0.0 to 1.0)
         /// </summary>
-        [JsonProperty(PropertyName = "volume")]
-        public float Volume { internal set; get; }
+        [JsonProperty(PropertyName = "inputVolumeMul")]
+        public float VolumeMul { internal set; get; }
 
         /// <summary>
-        /// True if source is muted, false otherwise
+        /// Volume setting in dB
         /// </summary>
-        [JsonProperty(PropertyName = "muted")]
-        public bool Muted { internal set; get; }
+        [JsonProperty(PropertyName = "inputVolumeDb")]
+        public float VolumeDb { internal set; get; }
 
         /// <summary>
         /// Builds the object from the JSON response body

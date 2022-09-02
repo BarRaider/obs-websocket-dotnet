@@ -878,6 +878,11 @@
             </summary>
             <param name="sceneName">Name of the scene to remove the transition override</param>
         </member>
+      <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetInputList">
+        <summary>
+          Get a list of all inputs in the scene collection
+        </summary>
+      </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourcesList">
             <summary>
             List all sources available in the running OBS instance
@@ -967,6 +972,12 @@
             Return a list of all filters on a source
             </summary>
             <param name="sourceName">Source name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceFilterList(System.String)">
+          <summary>
+            Returns a list of all filters assigned to a source (input, scene)
+          </summary>
+          <param name="sourceName">Source name</param>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceFilterInfo(System.String,System.String)">
             <summary>
@@ -1219,6 +1230,12 @@
             Get duration of the currently selected transition (if supported)
             </summary>
             <returns>Current transition duration (in milliseconds)</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionKindList">
+            <summary>
+              Gets an array of all available transition kinds.\n\nSimilar to `GetInputKindList
+            </summary>
+            <returns>Array of all available transition kinds.</returns>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionList">
             <summary>
@@ -2004,6 +2021,11 @@
             <summary>
             Ordered list of the current profile's scenes
             </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.GetTransitionKindListInfo">
+          <summary>
+            Response from <see cref="M:OBSWebsocketDotNet.OBSWebsocket.GetTransitionKindList"/>
+          </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.GetTransitionListInfo">
             <summary>

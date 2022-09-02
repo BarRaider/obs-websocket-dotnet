@@ -17,16 +17,22 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
-using static System.Windows.Forms.AxHost;
 
 namespace TestClient
 {
     public partial class MainWindow : Form
     {
         protected OBSWebsocket obs;
+
+
+        private CancellationTokenSource keepAliveTokenSource;
+        private readonly int keepAliveInterval = 500;
 
         public MainWindow()
         {
@@ -36,19 +42,16 @@ namespace TestClient
             obs.Connected += onConnect;
             obs.Disconnected += onDisconnect;
 
-            obs.SceneChanged += onSceneChange;
-            obs.SceneCollectionChanged += onSceneColChange;
-            obs.ProfileChanged += onProfileChange;
-            obs.TransitionChanged += onTransitionChange;
-            obs.TransitionDurationChanged += onTransitionDurationChange;
+            obs.CurrentProgramSceneChanged += onCurrentProgramSceneChanged;
+            obs.CurrentSceneCollectionChanged += onSceneCollectionChanged;
+            obs.CurrentProfileChanged += onCurrentProfileChanged;
+            obs.CurrentSceneTransitionChanged += onCurrentSceneTransitionChanged;
+            obs.CurrentSceneTransitionDurationChanged += onCurrentSceneTransitionDurationChanged;
 
-            obs.StreamingStateChanged += onStreamingStateChange;
-            obs.RecordingStateChanged += onRecordingStateChange;
+            obs.StreamStateChanged += onStreamStateChanged;
+            obs.RecordStateChanged += onRecordStateChanged;
 
-            obs.VirtualCameraStarted += onVirtualCameraStarted;
-            obs.VirtualCameraStopped += onVirtualCameraStopped;
-
-            obs.StreamStatus += onStreamData;
+            obs.VirtualcamStateChanged += onVirtualCamStateChanged;
         }
 
         private void onConnect(object sender, EventArgs e)
@@ -78,44 +81,111 @@ namespace TestClient
                 btnGetCurrentTransition.PerformClick();
 
                 btnGetTransitionDuration.PerformClick();
-                tbFolderPath.Text = obs.GetRecordingFolder().ToString();
+                tbFolderPath.Text = obs.GetRecordDirectory().ToString();
 
-                var streamStatus = obs.GetStreamingStatus();
-                if (streamStatus.IsStreaming)
-                    onStreamingStateChange(obs, OutputState.Started);
+                var streamStatus = obs.GetStreamStatus();
+                if (streamStatus.IsActive)
+                {
+                    onStreamStateChanged(obs, true, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED));
+                }
                 else
-                    onStreamingStateChange(obs, OutputState.Stopped);
+                {
+                    onStreamStateChanged(obs, false, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED));
+                }
 
-                if (streamStatus.IsRecording)
-                    onRecordingStateChange(obs, OutputState.Started);
+                var recordStatus = obs.GetRecordStatus();
+                if (recordStatus.IsRecording)
+                {
+                    onRecordStateChanged(obs, true, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED));
+                }
                 else
-                    onRecordingStateChange(obs, OutputState.Stopped);
+                {
+                    onRecordStateChanged(obs, false, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED));
+                }
 
                 var camStatus = obs.GetVirtualCamStatus();
                 if (camStatus.IsActive)
                 {
-                    onVirtualCameraStarted(this, EventArgs.Empty);
+                    onVirtualCamStateChanged(this, true, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED));
                 }
                 else
                 {
-                    onVirtualCameraStopped(this, EventArgs.Empty);
+                    onVirtualCamStateChanged(this, false, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED));
                 }
+
+                keepAliveTokenSource = new CancellationTokenSource();
+                CancellationToken keepAliveToken = keepAliveTokenSource.Token;
+                Task statPollKeepAlive = Task.Factory.StartNew(() =>
+                {
+                    while (true)
+                    {
+                        Thread.Sleep(keepAliveInterval);
+                        if (keepAliveToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        BeginInvoke((MethodInvoker)(() =>
+                        {
+                            switch (tabStats.SelectedIndex)
+                            {
+                                case 0: // OBS
+                                    var stats = obs.GetStats();
+                                    UpdateOBSStats(stats);
+                                    break;
+                                case 1: // Stream
+                                    var streamStats = obs.GetStreamStatus();
+                                    UpdateStreamStats(streamStats);
+                                    break;
+
+                                case 2: // Recording
+                                    var recStats = obs.GetRecordStatus();
+                                    UpdateRecordingStats(recStats);
+                                    break;
+                            }
+                        }));
+
+
+
+                    }
+                }, keepAliveToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
             }));
         }
 
-        private void onDisconnect(object sender, EventArgs e)
+        private void onDisconnect(object sender, Websocket.Client.DisconnectionInfo e)
         {
             BeginInvoke((MethodInvoker)(() =>
             {
+                keepAliveTokenSource.Cancel();
                 gbControls.Enabled = false;
 
                 txtServerIP.Enabled = true;
                 txtServerPassword.Enabled = true;
                 btnConnect.Text = "Connect";
+
+                if (e.Exception != null)
+                {
+                    if (e.Exception is AuthFailureException)
+                    {
+                        MessageBox.Show("Authentication failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                    else if (e.Exception is ErrorResponseException ere)
+                    {
+                        MessageBox.Show($"Connection failed: {ere.Message}\nType: {e.Type}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Connection failed: Status: {e.CloseStatus} Desc: {e.CloseStatusDescription}\nType: {e.Type}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
             }));
+
         }
 
-        private void onSceneChange(OBSWebsocket sender, string newSceneName)
+        private void onCurrentProgramSceneChanged(OBSWebsocket sender, string newSceneName)
         {
             BeginInvoke((MethodInvoker)delegate
             {
@@ -123,7 +193,7 @@ namespace TestClient
             });
         }
 
-        private void onSceneColChange(object sender, EventArgs e)
+        private void onSceneCollectionChanged(object sender, string sceneCollectionName)
         {
             BeginInvoke((MethodInvoker)delegate
             {
@@ -131,7 +201,7 @@ namespace TestClient
             });
         }
 
-        private void onProfileChange(object sender, EventArgs e)
+        private void onCurrentProfileChanged(object sender, string profileName)
         {
             BeginInvoke((MethodInvoker)delegate
             {
@@ -139,7 +209,7 @@ namespace TestClient
             });
         }
 
-        private void onTransitionChange(OBSWebsocket sender, string newTransitionName)
+        private void onCurrentSceneTransitionChanged(OBSWebsocket sender, string newTransitionName)
         {
             BeginInvoke((MethodInvoker)delegate
             {
@@ -147,7 +217,7 @@ namespace TestClient
             });
         }
 
-        private void onTransitionDurationChange(OBSWebsocket sender, int newDuration)
+        private void onCurrentSceneTransitionDurationChanged(OBSWebsocket sender, int newDuration)
         {
             BeginInvoke((MethodInvoker)delegate
             {
@@ -155,33 +225,25 @@ namespace TestClient
             });
         }
 
-        private void onStreamingStateChange(OBSWebsocket sender, OutputState newState)
+        private void onStreamStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
         {
             string state = "";
-            switch (newState)
+            switch (Enum.Parse<OutputState>(outputState))
             {
-                case OutputState.Starting:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "Stream starting...";
                     break;
 
-                case OutputState.Started:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STARTED:
                     state = "Stop streaming";
-                    BeginInvoke((MethodInvoker)delegate
-                    {
-                        gbStatus.Enabled = true;
-                    });
                     break;
 
-                case OutputState.Stopping:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPING:
                     state = "Stream stopping...";
                     break;
 
-                case OutputState.Stopped:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED:
                     state = "Start streaming";
-                    BeginInvoke((MethodInvoker)delegate
-                    {
-                        gbStatus.Enabled = false;
-                    });
                     break;
 
                 default:
@@ -195,25 +257,29 @@ namespace TestClient
             });
         }
 
-        private void onRecordingStateChange(OBSWebsocket sender, OutputState newState)
+        private void onRecordStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
         {
             string state = "";
-            switch (newState)
+            switch (Enum.Parse<OutputState>(outputState))
             {
-                case OutputState.Starting:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "Recording starting...";
                     break;
 
-                case OutputState.Started:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STARTED:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_RESUMED:
                     state = "Stop recording";
                     break;
 
-                case OutputState.Stopping:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPING:
                     state = "Recording stopping...";
                     break;
 
-                case OutputState.Stopped:
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED:
                     state = "Start recording";
+                    break;
+                case OutputState.OBS_WEBSOCKET_OUTPUT_PAUSED:
+                    state = "(P) Stop recording";
                     break;
 
                 default:
@@ -227,39 +293,25 @@ namespace TestClient
             });
         }
 
-        private void onStreamData(OBSWebsocket sender, StreamStatus data)
-        {
-            BeginInvoke((MethodInvoker)delegate
-            {
-                txtStreamTime.Text = data.TotalStreamTime.ToString() + " sec";
-                txtKbitsSec.Text = data.KbitsPerSec.ToString() + " kbit/s";
-                txtBytesSec.Text = data.BytesPerSec.ToString() + " bytes/s";
-                txtFramerate.Text = data.FPS.ToString() + " FPS";
-                txtStrain.Text = (data.Strain * 100).ToString() + " %";
-                txtDroppedFrames.Text = data.DroppedFrames.ToString();
-                txtTotalFrames.Text = data.TotalFrames.ToString();
-            });
-        }
-
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if(!obs.IsConnected)
+            if (!obs.IsConnected)
             {
-                try
+                System.Threading.Tasks.Task.Run(() =>
                 {
-                    obs.Connect(txtServerIP.Text, txtServerPassword.Text);
-                }
-                catch (AuthFailureException)
-                {
-                    MessageBox.Show("Authentication failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-                catch (ErrorResponseException ex)
-                {
-                    MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-
+                    try
+                    {
+                        obs.Connect(txtServerIP.Text, txtServerPassword.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        BeginInvoke((MethodInvoker)delegate
+                        {
+                            MessageBox.Show("Connect failed : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        });
+                    }
+                });
             }
             else
             {
@@ -275,6 +327,8 @@ namespace TestClient
             foreach (var scene in scenes)
             {
                 var node = new TreeNode(scene.Name);
+                scene.Items = new List<SceneItemDetails>();
+                scene.Items.AddRange(obs.GetSceneItemList(scene.Name));
                 foreach (var item in scene.Items)
                 {
                     node.Nodes.Add(item.SourceName);
@@ -286,12 +340,12 @@ namespace TestClient
 
         private void btnGetCurrentScene_Click(object sender, EventArgs e)
         {
-            tbCurrentScene.Text = obs.GetCurrentScene().Name;
+            tbCurrentScene.Text = obs.GetCurrentProgramScene().Name;
         }
 
         private void btnSetCurrentScene_Click(object sender, EventArgs e)
         {
-            obs.SetCurrentScene(tbCurrentScene.Text);
+            obs.SetCurrentProgramScene(tbCurrentScene.Text);
         }
 
         private void tvScenes_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -304,7 +358,7 @@ namespace TestClient
 
         private void btnListSceneCol_Click(object sender, EventArgs e)
         {
-            var sc = obs.ListSceneCollections();
+            var sc = obs.GetSceneCollectionList();
 
             tvSceneCols.Nodes.Clear();
             foreach (var sceneCol in sc)
@@ -333,7 +387,7 @@ namespace TestClient
 
         private void btnListProfiles_Click(object sender, EventArgs e)
         {
-            var profiles = obs.ListProfiles();
+            var profiles = obs.GetProfileList();
 
             tvProfiles.Nodes.Clear();
             foreach (var profile in profiles)
@@ -362,33 +416,33 @@ namespace TestClient
 
         private void btnToggleStreaming_Click(object sender, EventArgs e)
         {
-            obs.ToggleStreaming();
+            obs.ToggleStream();
         }
 
         private void btnToggleRecording_Click(object sender, EventArgs e)
         {
-            obs.ToggleRecording();
+            obs.ToggleRecord();
         }
 
         private void btnListTransitions_Click(object sender, EventArgs e)
         {
-            var transitions = obs.ListTransitions();
+            var transitions = obs.GetSceneTransitionList();
 
             tvTransitions.Nodes.Clear();
-            foreach (var transition in transitions)
+            foreach (var transition in transitions.Transitions)
             {
-                tvTransitions.Nodes.Add(transition);
+                tvTransitions.Nodes.Add(transition.Name);
             }
         }
 
         private void btnGetCurrentTransition_Click(object sender, EventArgs e)
         {
-            tbTransition.Text = obs.GetCurrentTransition().Name;
+            tbTransition.Text = obs.GetCurrentSceneTransition().Name;
         }
 
         private void btnSetCurrentTransition_Click(object sender, EventArgs e)
         {
-            obs.SetCurrentTransition(tbTransition.Text);
+            obs.SetCurrentSceneTransition(tbTransition.Text);
         }
 
         private void tvTransitions_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -401,12 +455,12 @@ namespace TestClient
 
         private void btnGetTransitionDuration_Click(object sender, EventArgs e)
         {
-            tbTransitionDuration.Value = obs.GetCurrentTransition().Duration;
+            tbTransitionDuration.Value = obs.GetCurrentSceneTransition().Duration ?? 0;
         }
 
         private void btnSetTransitionDuration_Click(object sender, EventArgs e)
         {
-            obs.SetTransitionDuration((int)tbTransitionDuration.Value);
+            obs.SetCurrentSceneTransitionDuration((int)tbTransitionDuration.Value);
         }
 
         private void btnAdvanced_Click(object sender, EventArgs e)
@@ -427,22 +481,39 @@ namespace TestClient
 
         private void btnSetPath_Click(object sender, EventArgs e)
         {
-            obs.SetRecordingFolder(tbFolderPath.Text);
-        }
-       
-        private void onVirtualCameraStopped(object sender, EventArgs e)
-        {
-            BeginInvoke((MethodInvoker)delegate
-{
-                lblVirtualCamStatus.Text = "Stopped";
-            });
+            // TODO: Need a method here, or the button must be removed
+            //obs.SetRecordingFolder(tbFolderPath.Text);
         }
 
-        private void onVirtualCameraStarted(object sender, EventArgs e)
+        private void onVirtualCamStateChanged(object sender, bool outputActive, string outputState)
         {
+            string state = "";
+            switch (Enum.Parse<OutputState>(outputState))
+            {
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
+                    state = "VirtualCam starting...";
+                    break;
+
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STARTED:
+                    state = "VirtualCam Started";
+                    break;
+
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPING:
+                    state = "VirtualCam stopping...";
+                    break;
+
+                case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED:
+                    state = "VirtualCam Stopped";
+                    break;
+
+                default:
+                    state = "State unknown";
+                    break;
+            }
+
             BeginInvoke((MethodInvoker)delegate
             {
-                lblVirtualCamStatus.Text = "Started";
+                lblVirtualCamStatus.Text = state;
             });
         }
 
@@ -459,6 +530,85 @@ namespace TestClient
         private void btnVirtualCamToggle_Click(object sender, EventArgs e)
         {
             obs.ToggleVirtualCam();
+        }
+
+        private void UpdateOBSStats(ObsStats data)
+        {
+            BeginInvoke((MethodInvoker)delegate
+            {
+                lblRendered.Text = $"{data.RenderTotalFrames} frames";
+                lblMissed.Text = $"{data.RenderMissedFrames} frames";
+                lblOutputTotal.Text = $"{data.OutputTotalFrames} frames";
+                lblSkipped.Text = $"{data.OutputSkippedFrames} frames";
+                lblAvgRender.Text = $"{data.AverageFrameTime:F2} ms";
+                lblFPS.Text = $"{(int)data.FPS}";
+                lblCPU.Text = $"{data.CpuUsage:F2}%";
+                lblMemory.Text = $"{data.MemoryUsage:F2} MB";
+                lblDisk.Text = $"{data.FreeDiskSpace:F2} MB";
+                lblIncomingMessages.Text = $"{data.SessionIncomingMessages}";
+                lblOutgoingMessages.Text = $"{data.SessionOutgoingMessages}";
+            });
+        }
+
+        private void UpdateStreamStats(OutputStatus data)
+        {
+            BeginInvoke((MethodInvoker)delegate
+            {
+                lblStreamActive.Text = $"{(data.IsActive ? "True" : "False")}";
+                lblStreamReconnect.Text = $"{(data.IsReconnecting? "True" : "False")}";
+                lblStreamTimeCode.Text = $"{data.TimeCode}";
+                lblStreamDuration.Text = $"{data.Duration} ms";
+                lblStreamCongestion.Text = $"{data.Congestion:F2}";
+                lblStreamTotalFrames.Text = $"{data.TotalFrames} frames";
+                lblStreamSkippedFrames.Text = $"{data.SkippedFrames} frames";
+                lblStreamOutputBytes.Text = $"{data.BytesSent} bytes";
+            });
+        }
+
+        private void UpdateRecordingStats(RecordingStatus data)
+        {
+            BeginInvoke((MethodInvoker)delegate
+            {
+                lblRecording.Text = $"{(data.IsRecording ? "True" : "False")}";
+                lblRecordingPaused.Text = $"{(data.IsRecordingPaused ? "True" : "False")}";
+                lblRecordingTimeCode.Text = $"{data.RecordTimecode}";
+                lblRecordingDuration.Text = $"{data.RecordingDuration} ms";
+                lblRecordingBytes.Text = $"{data.RecordingBytes:F2} bytes";
+            });
+        }
+
+        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label17_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            // Add the event handler for handling UI thread exceptions to the event.
+            Application.ThreadException += Application_ThreadException;
+
+            // Add the event handler for handling non-UI thread exceptions to the event. 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show($"{((Exception)e.ExceptionObject).Message}", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            MessageBox.Show($"{((Exception)e.Exception).Message}", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        private void btnPauseRecording_Click(object sender, EventArgs e)
+        {
+            obs.PauseRecord();
         }
     }
 }
