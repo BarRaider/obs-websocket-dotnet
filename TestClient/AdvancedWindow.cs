@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using static System.TimeZoneInfo;
 
 namespace TestClient
 {
@@ -41,19 +42,167 @@ namespace TestClient
                 return;
             }
 
-            obs.RecordStateChanged += OBS_onRecordStateChanged;
-            obs.SceneTransitionStarted += OBS_onSceneTransitionStarted;
-            obs.SceneTransitionEnded += OBS_onSceneTransitionEnded;
-            obs.SceneTransitionVideoEnded += OBS_onSceneTransitionVideoEnded;
-            obs.SourceFilterCreated += OBS_onSourceFilterCreated;
-            obs.SourceFilterRemoved += OBS_onSourceFilterRemoved;
-            obs.SourceFilterEnableStateChanged += OBS_onSourceFilterEnableStateChanged;
-            obs.SceneItemListReindexed += OBS_onSceneItemListIndexingChanged;
-            obs.SourceFilterListReindexed += OBS_onSourceFilterListReindexed;
+
+            obs.StreamStateChanged += Obs_StreamStateChanged;
+            obs.RecordStateChanged += Obs_RecordStateChanged;
+            obs.Disconnected += Obs_Disconnected;
+                        
+            obs.CurrentProgramSceneChanged += Obs_CurrentProgramSceneChanged;
+            obs.CurrentPreviewSceneChanged += Obs_CurrentPreviewSceneChanged;
+            obs.CurrentSceneCollectionChanged += Obs_CurrentSceneCollectionChanged;
+            obs.CurrentSceneTransitionChanged += Obs_CurrentSceneTransitionChanged;
+            obs.CurrentSceneTransitionDurationChanged += Obs_CurrentSceneTransitionDurationChanged;
+            obs.CurrentProfileChanged += Obs_CurrentProfileChanged;
+
+            obs.InputActiveStateChanged += Obs_InputActiveStateChanged;
+            obs.InputMuteStateChanged += Obs_InputMuteStateChanged;
+            obs.InputVolumeChanged += OBS_onInputVolumeChanged;
+
+            obs.ProfileListChanged += Obs_ProfileListChanged;
+            obs.ReplayBufferStateChanged += Obs_ReplayBufferStateChanged;
+            obs.ReplayBufferSaved += Obs_ReplayBufferSaved;
+
+            obs.SceneCollectionListChanged += Obs_SceneCollectionListChanged;
+
+            obs.SceneItemCreated += Obs_SceneItemCreated;
+            obs.SceneItemRemoved += Obs_SceneItemRemoved;
+            obs.SceneItemSelected += Obs_SceneItemSelected;
             obs.SceneItemLockStateChanged += OBS_onSceneItemLockStateChanged;
             obs.SceneItemEnableStateChanged += OBS_onSceneItemEnableStateChanged;
-            obs.InputVolumeChanged += OBS_onInputVolumeChanged;
+            obs.SceneItemTransformChanged += Obs_SceneItemTransformChanged;
+
+            obs.SceneItemListReindexed += OBS_onSceneItemListIndexingChanged;
+            obs.SceneListChanged += Obs_SceneListChanged;
+
+            obs.SceneTransitionStarted += OBS_onSceneTransitionStarted;
+            obs.SceneTransitionEnded += OBS_onSceneTransitionEnded;
+            obs.SceneTransitionVideoEnded += OBS_onSceneTransitionVideoEnded;         
+
+            obs.SourceFilterCreated += OBS_onSourceFilterCreated;
+            obs.SourceFilterEnableStateChanged += OBS_onSourceFilterEnableStateChanged;
+            obs.SourceFilterRemoved += OBS_onSourceFilterRemoved;
+            obs.SourceFilterListReindexed += OBS_onSourceFilterListReindexed;
+
+            obs.StudioModeStateChanged += Obs_StudioModeStateChanged;           
         }
+
+        private void Obs_InputActiveStateChanged(OBSWebsocket sender, string inputName, bool videoActive)
+        {
+            LogMessage($"[InputActiveStateChanged] Name: {inputName} Video Active: {videoActive}");
+        }
+
+        private void Obs_InputMuteStateChanged(OBSWebsocket sender, string inputName, bool inputMuted)
+        {
+            LogMessage($"[InputMuteStateChanged] Name: {inputName} Muted: {inputMuted}");
+        }
+
+        private void Obs_SceneItemTransformChanged(OBSWebsocket sender, SceneItemTransformInfo transform)
+        {
+            LogMessage($"[SceneItemTransformChanged] Scene: {transform.SceneName} ItemId: {transform.ItemID} Transform: {transform.Transform.ItemName}");
+        }
+
+        private void Obs_SceneItemSelected(OBSWebsocket sender, string sceneName, string sceneItemId)
+        {
+            LogMessage($"[SceneItemSelected] Scene: {sceneName} ItemId: {sceneItemId}");
+        }
+
+        private void Obs_Disconnected(object sender, Websocket.Client.DisconnectionInfo e)
+        {
+            LogMessage($"[OBS DISCONNECTED] Desc: {e.CloseStatusDescription} Exceoption: {e.Exception?.Message}");
+        }
+
+        private void Obs_StudioModeStateChanged(OBSWebsocket sender, bool studioModeEnabled)
+        {
+            LogMessage($"[Preview/Studio ModeChanged] Enabled: {studioModeEnabled}");
+        }
+
+        private void Obs_ReplayBufferSaved(OBSWebsocket sender, string savedReplayPath)
+        {
+            LogMessage($"[ReplayBufferSaved] Save Location: {savedReplayPath}");
+        }
+
+        private void Obs_ReplayBufferStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        {
+            LogMessage($"[ReplayBufferStateChanged] Active: {outputActive} State: {outputState}");
+        }
+
+        private void Obs_RecordStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        {
+            LogMessage($"[RecordingStateChanged] Active: {outputActive} State: {outputState}");
+        }
+
+        private void Obs_StreamStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        {
+            LogMessage($"[StreamStateChanged] Active: {outputActive} State: {outputState}");
+        }
+
+        private void Obs_ProfileListChanged(OBSWebsocket sender, List<string> profiles)
+        {
+            LogMessage($"[ProfileListchanged] Count: {profiles.Count}");
+            foreach (var profile in profiles)
+            {
+                LogMessage($"\t{profile}");
+            }
+        }
+
+        private void Obs_CurrentProfileChanged(OBSWebsocket sender, string profileName)
+        {
+            LogMessage($"[CurrentProfileChanged] Current: {profileName}");
+        }
+
+        private void Obs_CurrentSceneTransitionDurationChanged(OBSWebsocket sender, int transitionDuration)
+{
+            LogMessage($"[CurrentSceneTransitionDurationChanged] Current: {transitionDuration}");
+        }
+
+        private void Obs_CurrentSceneTransitionChanged(OBSWebsocket sender, string transitionName)
+        {
+            LogMessage($"[CurrentSceneTransitionChanged] Current: {transitionName}");
+        }
+
+        private void Obs_SceneCollectionListChanged(OBSWebsocket sender, List<string> sceneCollections)
+        {
+            LogMessage($"[SceneCollectionListChanged] Count: {sceneCollections.Count}");
+            foreach (var sc in sceneCollections)
+            {
+                LogMessage($"\t{sc}");
+            }
+        }
+
+        private void Obs_CurrentSceneCollectionChanged(OBSWebsocket sender, string sceneCollectionName)
+        {
+            LogMessage($"[CurrentSceneCollectionChanged] Current: {sceneCollectionName}");
+        }
+
+        private void Obs_SceneItemRemoved(OBSWebsocket sender, string sceneName, string sourceName, int sceneItemId)
+        {
+            LogMessage($"[SceneItemRemoved] Scene: {sourceName} Source: {sourceName} ItemId: {sceneItemId}");
+        }
+
+        private void Obs_SceneItemCreated(OBSWebsocket sender, string sceneName, string sourceName, int sceneItemId, int sceneItemIndex)
+        {
+            LogMessage($"[SceneItemCreated] Scene: {sourceName} Source: {sourceName} ItemId: {sceneItemId} ItemIndex: {sceneItemIndex}");
+        }
+
+        private void Obs_SceneListChanged(OBSWebsocket sender, List<JObject> scenes)
+        {
+            LogMessage($"[SceneListChanged] Count: {scenes.Count}");
+            foreach (var scene in scenes)
+            {
+                LogMessage($"\n{scene}");
+            }
+        }
+
+        private void Obs_CurrentProgramSceneChanged(OBSWebsocket sender, string newSceneName)
+        {
+            LogMessage($"[SceneChanged] Current: {newSceneName}");
+        }
+
+        private void Obs_CurrentPreviewSceneChanged(OBSWebsocket sender, string sceneName)
+        {
+            LogMessage($"[Preview/Studio SceneChanged] Current: {sceneName}");
+        }
+
         private void OBS_onInputVolumeChanged(OBSWebsocket sender, InputVolume volume)
         {
             LogMessage($"[SourceVolumeChanged] Source: {volume.InputName} Volume: {volume.InputVolumeMul} VolumeDB: {volume.InputVolumeDb}");
@@ -111,11 +260,6 @@ namespace TestClient
         private void OBS_onSceneTransitionStarted(OBSWebsocket sender, string transitionName)
         {
             LogMessage($"[SceneTransitionStarted] Name: {transitionName}");
-        }
-
-        private void OBS_onRecordStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
-        {
-            LogMessage($"[RecordStateChanged] State: {outputState}");
         }
 
         private void LogMessage(string message)
