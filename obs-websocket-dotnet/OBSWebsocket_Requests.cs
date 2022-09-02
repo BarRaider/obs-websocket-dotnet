@@ -565,15 +565,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetSceneCollectionList()
         {
             var response = SendRequest(nameof(GetSceneCollectionList));
-            var items = (JArray)response["sceneCollections"];
-
-            List<string> sceneCollections = new List<string>();
-            foreach (JValue item in items)
-            {
-                sceneCollections.Add(item.Value.ToString());
-            }
-
-            return sceneCollections;
+            return JsonConvert.DeserializeObject<List<string>>(response["sceneCollections"].ToString());
         }
 
         /// <summary>
@@ -607,15 +599,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetProfileList()
         {
             var response = SendRequest(nameof(GetProfileList));
-            var items = (JArray)response["profiles"];
-
-            List<string> profiles = new List<string>();
-            foreach (JValue item in items)
-            {
-                profiles.Add(item.Value.ToString());
-            }
-
-            return profiles;
+            return JsonConvert.DeserializeObject<List<string>>(response["profiles"].ToString());
         }
 
         /// <summary>
@@ -1451,7 +1435,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetHotkeyList()
         {
             var response = SendRequest(nameof(GetHotkeyList));
-            return JsonConvert.DeserializeObject<List<string>>((string)response["hotkeys"]);
+            return JsonConvert.DeserializeObject<List<string>>(response["hotkeys"].ToString());
         }
 
         /// <summary>
@@ -1511,7 +1495,7 @@ namespace OBSWebsocketDotNet
                 ? SendRequest(nameof(GetInputKindList))
                 : SendRequest(nameof(GetInputKindList), request);
 
-            return JsonConvert.DeserializeObject<List<string>>((string)response["inputKinds"]);
+            return JsonConvert.DeserializeObject<List<string>>(response["inputKinds"].ToString());
         }
 
         /// <summary>
@@ -1726,14 +1710,14 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the group to get the items of</param>
         /// <returns>Array of scene items in the group</returns>
-        public List<JObject> GetGroupItemList(string sceneName)
+        public List<JObject> GetGroupSceneItemList(string sceneName)
         {
             var request = new JObject
             {
                 { nameof(sceneName), sceneName }
             };
 
-            var response = SendRequest(nameof(GetGroupItemList), request);
+            var response = SendRequest(nameof(GetGroupSceneItemList), request);
             return JsonConvert.DeserializeObject<List<JObject>>((string)response["sceneItems"]);
         }
 
@@ -1945,7 +1929,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetGroupList()
         {
             var response = SendRequest(nameof(GetGroupList));
-            return JsonConvert.DeserializeObject<List<string>>((string)response["groups"]);
+            return JsonConvert.DeserializeObject<List<string>>(response["groups"].ToString());
         }
 
         /// <summary>
@@ -2023,10 +2007,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetTransitionKindList()
         {
             var response = SendRequest(nameof(GetTransitionKindList));
-            List<string> transitionNames = new List<string>();
-            foreach (var item in response["transitionKinds"])
-                transitionNames.Add(item.Value<string>());
-            return transitionNames;
+            return JsonConvert.DeserializeObject<List<string>>(response["transitionKinds"].ToString());
         }
 
         /// <summary>

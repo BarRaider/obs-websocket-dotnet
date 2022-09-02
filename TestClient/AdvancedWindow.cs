@@ -349,7 +349,7 @@ namespace TestClient
         private void btn_GetGroupList_Click(object sender, EventArgs e)
         {
             LogMessage("Getting Group Item List...");
-            var groupItems = obs.GetGroupItemList(obs.GetCurrentProgramScene().Name);
+            var groupItems = obs.GetGroupList();
             foreach(var groupItem in groupItems)
             {
                 LogMessage(groupItem.ToString());
