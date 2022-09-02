@@ -30,6 +30,7 @@ namespace OBSWebsocketDotNet
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="sceneName">Name of the scene where items where reordered</param>
+    /// /// <param name="sceneItems">List of all scene items as JObject</param>
     public delegate void SceneItemListReindexedCallback(OBSWebsocket sender, string sceneName, List<JObject> sceneItems);
 
     /// <summary>

@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// Status of a Media Input
+    /// </summary>
     public class MediaInputStatus
     {
         /// <summary>

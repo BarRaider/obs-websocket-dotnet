@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// Information on a specific Input
+    /// </summary>
     public class Input
     {
         /// <summary>

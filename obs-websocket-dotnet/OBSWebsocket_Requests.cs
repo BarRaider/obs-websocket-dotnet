@@ -326,8 +326,8 @@ namespace OBSWebsocketDotNet
         /// Add a filter to a source
         /// </summary>
         /// <param name="sourceName">Name of the source for the filter</param>
-        /// <param name="filterKind">Name of the filter</param>
-        /// <param name="filterType">Type of filter</param>
+        /// <param name="filterName">Name of the filter</param>
+        /// <param name="filterKind">Type of filter</param>
         /// <param name="filterSettings">Filter settings object</param>
         public void CreateSourceFilter(string sourceName, string filterName, string filterKind, JObject filterSettings)
         {
@@ -398,7 +398,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Change the transition's duration
         /// </summary>
-        /// <param name="duration">Desired transition duration (in milliseconds)</param>
+        /// <param name="transitionDuration">Desired transition duration (in milliseconds)</param>
         public void SetCurrentSceneTransitionDuration(int transitionDuration)
         {
             var request = new JObject
@@ -723,7 +723,7 @@ namespace OBSWebsocketDotNet
         /// Change the currently active preview scene to the one specified.
         /// Triggers an error if Studio Mode is disabled
         /// </summary>
-        /// <param name="previewSceneName">Preview scene name</param>
+        /// <param name="sceneName">Preview scene name</param>
         public void SetCurrentPreviewScene(string sceneName)
         {
             var requestFields = new JObject

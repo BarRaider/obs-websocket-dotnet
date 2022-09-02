@@ -14,12 +14,16 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public class ErrorResponseException : Exception
     {
+        /// <summary>
+        /// Error Code of exception
+        /// </summary>
         public int ErrorCode { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">Exception Message</param>
+        /// /// <param name="errorCode">Error Code</param>
         public ErrorResponseException(string message, int errorCode) : base(message)
         {
             ErrorCode = errorCode;

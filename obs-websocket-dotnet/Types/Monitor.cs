@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// Information on a connected Monitor
+    /// </summary>
     public class Monitor
     {
         /// <summary>
@@ -41,6 +44,10 @@ namespace OBSWebsocketDotNet.Types
         [JsonProperty(PropertyName = "monitorPositionY")]
         public int PositionY { get; set; }
 
+        /// <summary>
+        /// Constructor to auto populate
+        /// </summary>
+        /// <param name="data"></param>
         public Monitor (JObject data)
         {
             JsonConvert.PopulateObject(data.ToString(), this);
