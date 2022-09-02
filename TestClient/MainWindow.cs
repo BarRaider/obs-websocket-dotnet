@@ -411,12 +411,12 @@ namespace TestClient
 
         private void btnListTransitions_Click(object sender, EventArgs e)
         {
-            var transitions = obs.GetTransitionKindList();
+            var transitions = obs.GetSceneTransitionList();
 
             tvTransitions.Nodes.Clear();
-            foreach (var transition in transitions)
+            foreach (var transition in transitions.Transitions)
             {
-                tvTransitions.Nodes.Add(transition);
+                tvTransitions.Nodes.Add(transition.Name);
             }
         }
 
