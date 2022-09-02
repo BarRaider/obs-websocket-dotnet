@@ -23,6 +23,16 @@
         /// <summary>
         /// The output is completely stopped
         /// </summary>
-        OBS_WEBSOCKET_OUTPUT_STOPPED
+        OBS_WEBSOCKET_OUTPUT_STOPPED,
+
+        /// <summary>
+        /// The output is paused (usually recording output)
+        /// </summary>
+        OBS_WEBSOCKET_OUTPUT_PAUSED,
+
+        /// <summary>
+        /// The output is resumed (i.e. no longer paused) - usually recording output
+        /// </summary>
+        OBS_WEBSOCKET_OUTPUT_RESUMED
     }
 }
