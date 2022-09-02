@@ -411,7 +411,7 @@ namespace TestClient
 
         private void btnListTransitions_Click(object sender, EventArgs e)
         {
-            var transitions = obs.GetTransitionNameList();
+            var transitions = obs.GetTransitionKindList();
 
             tvTransitions.Nodes.Clear();
             foreach (var transition in transitions)

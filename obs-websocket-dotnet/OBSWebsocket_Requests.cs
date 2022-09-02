@@ -380,21 +380,6 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Get list of transition names.
-        /// </summary>
-        /// <returns>A <see cref="List{string}"/> of all transition names</returns>
-        public List<string> GetTransitionNameList()
-        {
-            var transitionKinds = GetTransitionKindList();
-
-            List<string> transitionNames = new List<string>();
-            foreach (var item in transitionKinds)
-                transitionNames.Add(item);
-
-            return transitionNames;
-        }
-
-        /// <summary>
         /// Get the current transition name and duration
         /// </summary>
         /// <returns>An <see cref="TransitionSettings"/> object with the current transition name and duration</returns>
@@ -2038,7 +2023,10 @@ namespace OBSWebsocketDotNet
         public List<string> GetTransitionKindList()
         {
             var response = SendRequest(nameof(GetTransitionKindList));
-            return JsonConvert.DeserializeObject<List<string>>((string)response["transitionKinds"]);
+            List<string> transitionNames = new List<string>();
+            foreach (var item in response["transitionKinds"])
+                transitionNames.Add(item.Value<string>());
+            return transitionNames;
         }
 
         /// <summary>
