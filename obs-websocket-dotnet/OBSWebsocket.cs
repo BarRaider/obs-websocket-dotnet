@@ -39,7 +39,7 @@ namespace OBSWebsocketDotNet
         #region Private Members
         private const string WEBSOCKET_URL_PREFIX = "ws://";
         private const int SUPPORTED_RPC_VERSION = 1;
-        private TimeSpan wsTimeout = TimeSpan.FromSeconds(60);
+        private TimeSpan wsTimeout = TimeSpan.FromSeconds(10);
         private string connectionPassword = null;
 
         // Random should never be created inside a function
@@ -218,7 +218,7 @@ namespace OBSWebsocketDotNet
             }
 
             // Wait for a response (received and notified by the websocket response handler)
-            tcs.Task.Wait();
+            tcs.Task.Wait(wsTimeout.Milliseconds);
 
             if (tcs.Task.IsCanceled)
                 throw new ErrorResponseException("Request canceled", 0);
