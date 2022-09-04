@@ -152,33 +152,39 @@ namespace TestClient
             }));
         }
 
-        private void onDisconnect(object sender, Websocket.Client.DisconnectionInfo e)
+        private void onDisconnect(object sender, OBSWebsocketDotNet.Communication.ObsDisconnectionInfo e)
         {
             BeginInvoke((MethodInvoker)(() =>
             {
-                keepAliveTokenSource.Cancel();
+                if (keepAliveTokenSource != null)
+                {
+                    keepAliveTokenSource.Cancel();
+                }
                 gbControls.Enabled = false;
 
                 txtServerIP.Enabled = true;
                 txtServerPassword.Enabled = true;
                 btnConnect.Text = "Connect";
 
-                if (e.Exception != null)
+                if (e.ObsCloseCode == OBSWebsocketDotNet.Communication.ObsCloseCodes.AuthenticationFailed)
                 {
-                    if (e.Exception is AuthFailureException)
+                    MessageBox.Show("Authentication failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+                else if (e.WebsocketDisconnectionInfo != null)
+                {
+                    if (e.WebsocketDisconnectionInfo.Exception != null)
                     {
-                        MessageBox.Show("Authentication failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
+                        MessageBox.Show($"Connection failed: CloseCode: {e.ObsCloseCode} Desc: {e.WebsocketDisconnectionInfo?.CloseStatusDescription} Exception:{e.WebsocketDisconnectionInfo?.Exception?.Message}\nType: {e.WebsocketDisconnectionInfo.Type}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
-                    else if (e.Exception is ErrorResponseException ere)
+                    else
                     {
-                        MessageBox.Show($"Connection failed: {ere.Message}\nType: {e.Type}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
+                        MessageBox.Show($"Connection failed: CloseCode: {e.ObsCloseCode} Desc: {e.WebsocketDisconnectionInfo?.CloseStatusDescription}\nType: {e.WebsocketDisconnectionInfo.Type}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation); 
                     }
                 }
                 else
                 {
-                    MessageBox.Show($"Connection failed: Status: {e.CloseStatus} Desc: {e.CloseStatusDescription}\nType: {e.Type}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show($"Connection failed: CloseCode: {e.ObsCloseCode}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }));
@@ -321,6 +327,7 @@ namespace TestClient
 
         private void btnListScenes_Click(object sender, EventArgs e)
         {
+            /*wwwww
             var scenes = obs.ListScenes();
 
             tvScenes.Nodes.Clear();
@@ -336,6 +343,7 @@ namespace TestClient
 
                 tvScenes.Nodes.Add(node);
             }
+            */
         }
 
         private void btnGetCurrentScene_Click(object sender, EventArgs e)
