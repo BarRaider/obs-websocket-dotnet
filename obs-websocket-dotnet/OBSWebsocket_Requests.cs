@@ -575,23 +575,13 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Get the name of the current profile
-        /// </summary>
-        /// <returns>Name of the current profile</returns>
-        public string GetCurrentProfile()
-        {
-            var response = SendRequest(nameof(GetProfileList));
-            return (string)response["currentProfileName"];
-        }
-
-        /// <summary>
         /// List all profiles
         /// </summary>
         /// <returns>A <see cref="List{T}"/> of the names of all profiles</returns>
-        public List<string> GetProfileList()
+        public GetProfileListInfo GetProfileList()
         {
             var response = SendRequest(nameof(GetProfileList));
-            return JsonConvert.DeserializeObject<List<string>>(response["profiles"].ToString());
+            return JsonConvert.DeserializeObject<GetProfileListInfo>(response.ToString());
         }
 
         /// <summary>

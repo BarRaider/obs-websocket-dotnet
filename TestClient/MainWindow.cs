@@ -205,7 +205,7 @@ namespace TestClient
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbProfile.Text = obs.GetCurrentProfile();
+                tbProfile.Text = obs.GetProfileList().CurrentProfileName;
             });
         }
 
@@ -390,7 +390,7 @@ namespace TestClient
             var profiles = obs.GetProfileList();
 
             tvProfiles.Nodes.Clear();
-            foreach (var profile in profiles)
+            foreach (var profile in profiles.Profiles)
             {
                 tvProfiles.Nodes.Add(profile);
             }
@@ -398,7 +398,7 @@ namespace TestClient
 
         private void btnGetCurrentProfile_Click(object sender, EventArgs e)
         {
-            tbProfile.Text = obs.GetCurrentProfile();
+            tbProfile.Text = obs.GetProfileList().CurrentProfileName;
         }
 
         private void btnSetCurrentProfile_Click(object sender, EventArgs e)
