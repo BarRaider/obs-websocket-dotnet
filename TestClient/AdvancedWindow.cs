@@ -84,7 +84,10 @@ namespace TestClient
             obs.SourceFilterListReindexed += OBS_onSourceFilterListReindexed;
 
             obs.StudioModeStateChanged += Obs_StudioModeStateChanged;
+
+            obs.VirtualcamStateChanged += Obs_VirtualcamStateChanged;
         }
+
         private void Obs_InputActiveStateChanged(OBSWebsocket sender, string inputName, bool videoActive)
         {
             LogMessage($"[InputActiveStateChanged] Name: {inputName} Video Active: {videoActive}");
@@ -107,7 +110,7 @@ namespace TestClient
 
         private void Obs_Disconnected(object sender, OBSWebsocketDotNet.Communication.ObsDisconnectionInfo e)
         {
-            LogMessage($"[OBS DISCONNECTED] CloseCode: {e.ObsCloseCode} DisconnectInfo: {e.WebsocketDisconnectionInfo?.CloseStatusDescription} Exceoption: {e.WebsocketDisconnectionInfo?.Exception?.Message}");
+            LogMessage($"[OBS DISCONNECTED] CloseCode: {e.ObsCloseCode} Reason: {e.DisconnectReason} Type: {e.WebsocketDisconnectionInfo?.Type} Exception: {e.WebsocketDisconnectionInfo?.Exception?.Message}");
         }
 
         private void Obs_StudioModeStateChanged(OBSWebsocket sender, bool studioModeEnabled)
@@ -120,20 +123,26 @@ namespace TestClient
             LogMessage($"[ReplayBufferSaved] Save Location: {savedReplayPath}");
         }
 
-        private void Obs_ReplayBufferStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        private void Obs_ReplayBufferStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
         {
-            LogMessage($"[ReplayBufferStateChanged] Active: {outputActive} State: {outputState}");
+            LogMessage($"[ReplayBufferStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
         }
 
-        private void Obs_RecordStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        private void Obs_RecordStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
         {
-            LogMessage($"[RecordingStateChanged] Active: {outputActive} State: {outputState}");
+            LogMessage($"[RecordingStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
         }
 
-        private void Obs_StreamStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        private void Obs_StreamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
         {
-            LogMessage($"[StreamStateChanged] Active: {outputActive} State: {outputState}");
+            LogMessage($"[StreamStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
         }
+
+        private void Obs_VirtualcamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
+        {
+            LogMessage($"[VirtualcamStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
+        }
+
 
         private void Obs_ProfileListChanged(OBSWebsocket sender, List<string> profiles)
         {
@@ -436,18 +445,6 @@ namespace TestClient
             retrievedOutput = obs.GetOutputInfo(outputName);
             LogOutput(retrievedOutput);
             */
-        }
-
-        private void LogOutput(OBSOutputInfo output)
-        {
-            if (output == null)
-            {
-                LogMessage("ERROR: Output is null!");
-                return;
-            }
-            LogMessage($"Output: {output.Name} Type: {output.Type} Width: {output.Width} Height: {output.Height} Active: {output.IsActive} Reconnecting: {output.IsReconnecting} Congestion: {output.Congestion} TotalFrames: {output.TotalFrames} DroppedFrames: {output.DroppedFrames} TotalBytes: {output.TotalBytes}");
-            LogMessage($"\tFlags: {output.Flags.RawValue} Audio: {output.Flags.IsAudio} Video: {output.Flags.IsVideo} Encoded: {output.Flags.IsEncoded} MultiTrack: {output.Flags.IsMultiTrack} Service: {output.Flags.IsService}");
-            LogMessage($"\tSettings: {output.Settings}");
         }
 
         private void btnTransition_Click(object sender, EventArgs e)

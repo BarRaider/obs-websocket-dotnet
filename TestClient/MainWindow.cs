@@ -86,31 +86,31 @@ namespace TestClient
                 var streamStatus = obs.GetStreamStatus();
                 if (streamStatus.IsActive)
                 {
-                    onStreamStateChanged(obs, true, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED));
+                    onStreamStateChanged(obs, new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) });
                 }
                 else
                 {
-                    onStreamStateChanged(obs, false, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED));
+                    onStreamStateChanged(obs, new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) });
                 }
 
                 var recordStatus = obs.GetRecordStatus();
                 if (recordStatus.IsRecording)
                 {
-                    onRecordStateChanged(obs, true, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED));
+                    onRecordStateChanged(obs, new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) });
                 }
                 else
                 {
-                    onRecordStateChanged(obs, false, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED));
+                    onRecordStateChanged(obs, new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) });
                 }
 
                 var camStatus = obs.GetVirtualCamStatus();
                 if (camStatus.IsActive)
                 {
-                    onVirtualCamStateChanged(this, true, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED));
+                    onVirtualCamStateChanged(this, new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) });
                 }
                 else
                 {
-                    onVirtualCamStateChanged(this, false, nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED));
+                    onVirtualCamStateChanged(this, new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) });
                 }
 
                 keepAliveTokenSource = new CancellationTokenSource();
@@ -231,10 +231,10 @@ namespace TestClient
             });
         }
 
-        private void onStreamStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        private void onStreamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
         {
             string state = "";
-            switch (Enum.Parse<OutputState>(outputState))
+            switch (outputState.State)
             {
                 case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "Stream starting...";
@@ -263,10 +263,10 @@ namespace TestClient
             });
         }
 
-        private void onRecordStateChanged(OBSWebsocket sender, bool outputActive, string outputState)
+        private void onRecordStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
         {
             string state = "";
-            switch (Enum.Parse<OutputState>(outputState))
+            switch (outputState.State)
             {
                 case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "Recording starting...";
@@ -493,10 +493,10 @@ namespace TestClient
             //obs.SetRecordingFolder(tbFolderPath.Text);
         }
 
-        private void onVirtualCamStateChanged(object sender, bool outputActive, string outputState)
+        private void onVirtualCamStateChanged(object sender, OutputStateChanged outputState)
         {
             string state = "";
-            switch (Enum.Parse<OutputState>(outputState))
+            switch (outputState.State)
             {
                 case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "VirtualCam starting...";
