@@ -886,44 +886,23 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Set the relative crop coordinates of the specified source item
+        /// Duplicates a scene item
         /// </summary>
-        /// <param name="fromScene">Source of the scene item</param>
-        /// <param name="toScene">Destination for the scene item</param>
-        /// <param name="sceneItem">Scene item, requires name or id</param>
-        public void DuplicateSceneItem(string fromScene, string toScene, SceneItem sceneItem)
-        {
-            var requestFields = new JObject
-            {
-                { nameof(fromScene), fromScene },
-                { nameof(toScene), toScene }
-            };
-
-            JObject item = new JObject();
-            if (sceneItem.Name != null)
-            {
-                item.Add(nameof(sceneItem.Name).ToLower(), sceneItem.Name);
-            }
-            item.Add(nameof(sceneItem.Id).ToLower(), sceneItem.Id);
-            requestFields.Add(nameof(item), item);
-
-            SendRequest(nameof(DuplicateSceneItem), requestFields);
-        }
-
-        /// <summary>
-        /// Duplicates a scene item, copying all transform and crop info.\n\nScenes only
-        /// </summary>
-        /// <param name="sceneName">Source of the scene item</param>
-        /// <param name="sceneItemId">Scene item id to duplicate</param>
-        /// <param name="destinationScene">Destination for the scene item</param>
-        public void DuplicateSceneItem(string sceneName, int sceneItemId, string destinationScene = null)
+        /// <param name="sceneName">Name of the scene that has the SceneItem</param>
+        /// <param name="sceneItemId">Id of the Scene Item</param>
+        /// <param name="destinationSceneName">Name of scene to add the new duplicated Scene Item. If not specified will assume sceneName</param>
+        public void DuplicateSceneItem(string sceneName, int sceneItemId, string destinationSceneName = null)
         {
             var requestFields = new JObject
             {
                 { nameof(sceneName), sceneName },
-                { nameof(sceneItemId), sceneItemId },
-                { nameof(destinationScene), destinationScene }
+                { nameof(sceneItemId), sceneItemId }
             };
+
+            if (!String.IsNullOrEmpty(destinationSceneName))
+            {
+                requestFields.Add(nameof(destinationSceneName), destinationSceneName);
+            }
 
             SendRequest(nameof(DuplicateSceneItem), requestFields);
         }
