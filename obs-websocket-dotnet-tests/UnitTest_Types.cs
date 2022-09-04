@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using OBSWebsocketDotNet.Communication;
 using OBSWebsocketDotNet.Types;
 
 namespace OBSWebsocketDotNet.Tests
@@ -55,45 +56,6 @@ namespace OBSWebsocketDotNet.Tests
             Assert.AreEqual(inputKind, scene.Items[0].SourceKind);
             Assert.AreEqual(sceneItemId, scene.Items[0].ItemId);
 
-        }
-
-        [TestMethod]
-        public void OBSSceneItem_BuildFromJSON()
-        {
-            string name = "Source name éèüïöîô";
-            string type = "dummy_source";
-            float volume = 0.5f;
-            float x = 10.0005f;
-            float y = 15.0002f;
-            int sourceWidth = 1280;
-            int sourceHeight = 720;
-            float width = sourceWidth * 2.002f;
-            float height = sourceHeight * 2.002f;
-
-            var data = new JObject
-            {
-                { "name", name },
-                { "type", type },
-                { "volume", volume },
-                { "x", x },
-                { "y", y },
-                { "source_cx", sourceWidth },
-                { "source_cy", sourceHeight },
-                { "cx", width },
-                { "cy", height }
-            };
-
-            var item = new SceneItem(data);
-
-            Assert.AreEqual(name, item.Name);
-            Assert.AreEqual(type, item.InternalType);
-            Assert.AreEqual(volume, item.AudioVolume);
-            Assert.AreEqual(x, item.XPos);
-            Assert.AreEqual(y, item.YPos);
-            Assert.AreEqual(sourceWidth, item.SourceWidth);
-            Assert.AreEqual(sourceHeight, item.SourceHeight);
-            Assert.AreEqual(width, item.Width);
-            Assert.AreEqual(height, item.Height);
         }
 
         [TestMethod]
