@@ -148,7 +148,7 @@ namespace OBSWebsocketDotNet
         /// List every available scene
         /// </summary>
         /// <returns>A <see cref="List{ObsScene}" /> of <see cref="ObsScene"/> objects describing each scene</returns>
-        public List<ObsScene> ListScenes()
+        public List<SceneBasicInfo> ListScenes()
         {
             var response = GetSceneList();
             return response.Scenes;
@@ -227,7 +227,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source with filter</param>
         /// <param name="filterName">Filter name</param>
-        /// <param name="filterSettings">Filter settings</param>
+        /// <param name="filterSettings">JObject with filter settings</param>
         /// <param name="overlay">Apply over existing settings?</param>
         public void SetSourceFilterSettings(string sourceName, string filterName, JObject filterSettings, bool overlay = false)
         {
@@ -241,6 +241,20 @@ namespace OBSWebsocketDotNet
 
             SendRequest(nameof(SetSourceFilterSettings), request);
         }
+
+        /// <summary>
+        /// Apply settings to a source filter
+        /// </summary>
+        /// <param name="sourceName">Source with filter</param>
+        /// <param name="filterName">Filter name</param>
+        /// <param name="filterSettings">Filter settings</param>
+        /// <param name="overlay">Apply over existing settings?</param>
+        public void SetSourceFilterSettings(string sourceName, string filterName, FilterSettings filterSettings, bool overlay = false)
+        {
+            SetSourceFilterSettings(sourceName, filterName, JObject.FromObject(filterSettings), overlay);
+        }
+
+
 
         /// <summary>
         /// Modify the Source Filter's visibility
@@ -281,7 +295,7 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Return a list of all filters on a source
+        /// Return a list of settings for a specific filter
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="filterName">Filter name</param>
@@ -328,7 +342,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Name of the source for the filter</param>
         /// <param name="filterName">Name of the filter</param>
         /// <param name="filterKind">Type of filter</param>
-        /// <param name="filterSettings">Filter settings object</param>
+        /// <param name="filterSettings">JObject holding filter settings object</param>
         public void CreateSourceFilter(string sourceName, string filterName, string filterKind, JObject filterSettings)
         {
             var request = new JObject
@@ -340,6 +354,18 @@ namespace OBSWebsocketDotNet
             };
 
             SendRequest(nameof(CreateSourceFilter), request);
+        }
+
+        /// <summary>
+        /// Add a filter to a source
+        /// </summary>
+        /// <param name="sourceName">Name of the source for the filter</param>
+        /// <param name="filterName">Name of the filter</param>
+        /// <param name="filterKind">Type of filter</param>
+        /// <param name="filterSettings">Filter settings object</param>
+        public void CreateSourceFilter(string sourceName, string filterName, string filterKind, FilterSettings filterSettings)
+        {
+            CreateSourceFilter(sourceName, filterName, filterKind, JObject.FromObject(filterSettings));
         }
 
         /// <summary>
@@ -436,10 +462,17 @@ namespace OBSWebsocketDotNet
         {
             var requestFields = new JObject
             {
-                { nameof(inputName), inputName },
-                { nameof(inputVolumeMul), inputVolumeMul },
-                { nameof(inputVolumeDb), inputVolumeDb }
+                { nameof(inputName), inputName }
             };
+
+            if (inputVolumeDb)
+            {
+                requestFields.Add(nameof(inputVolumeDb), inputVolumeDb);
+            }
+            else
+            {
+                requestFields.Add(nameof(inputVolumeMul), inputVolumeMul);
+            }
 
             SendRequest(nameof(SetInputVolume), requestFields);
         }
@@ -510,9 +543,9 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Sets the transform and crop info of a scene item
         /// </summary>
-        /// <param name="sceneName"></param>
-        /// <param name="sceneItemId"></param>
-        /// <param name="sceneItemTransform"></param>
+        /// <param name="sceneName">Name of the scene that has the SceneItem</param>
+        /// <param name="sceneItemId">Id of the Scene Item</param>
+        /// <param name="sceneItemTransform">JObject holding transform settings</param>
         public void SetSceneItemTransform(string sceneName, int sceneItemId, JObject sceneItemTransform)
         {
             var requestFields = new JObject
@@ -523,6 +556,17 @@ namespace OBSWebsocketDotNet
             };
 
             SendRequest(nameof(SetSceneItemTransform), requestFields);
+        }
+
+        /// <summary>
+        /// Sets the transform and crop info of a scene item
+        /// </summary>
+        /// <param name="sceneName">Name of the scene that has the SceneItem</param>
+        /// <param name="sceneItemId">Id of the Scene Item</param>
+        /// <param name="sceneItemTransform">Transform settings</param>
+        public void SetSceneItemTransform(string sceneName, int sceneItemId, SceneItemTransformInfo sceneItemTransform)
+        {
+            SetSceneItemTransform(sceneName, sceneItemId, JObject.FromObject(sceneItemTransform));
         }
 
         /// <summary>
@@ -710,7 +754,7 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Change the currently active preview scene to the one specified.
+        /// Change the currently active preview/studio scene to the one specified.
         /// Triggers an error if Studio Mode is disabled
         /// </summary>
         /// <param name="sceneName">Preview scene name</param>
@@ -725,7 +769,7 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Change the currently active preview scene to the one specified.
+        /// Change the currently active preview/studio scene to the one specified.
         /// Triggers an error if Studio Mode is disabled.
         /// </summary>
         /// <param name="previewScene">Preview scene object</param>
@@ -1021,7 +1065,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Name of the scene to add the input to as a scene item</param>
         /// <param name="inputName">Name of the new input to created</param>
         /// <param name="inputKind">The kind of input to be created</param>
-        /// <param name="inputSettings">Settings object to initialize the input with</param>
+        /// <param name="inputSettings">Jobject holding the settings object to initialize the input with</param>
         /// <param name="sceneItemEnabled">Whether to set the created scene item to enabled or disabled</param>
         /// <returns>ID of the SceneItem in the scene.</returns>
         public int CreateInput(string sceneName, string inputName, string inputKind, JObject inputSettings, bool? sceneItemEnabled)
@@ -1069,7 +1113,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the scene to get the items of</param>
         /// <returns>Array of scene items in the scene</returns>
-        public IEnumerable<SceneItemDetails> GetSceneItemList(string sceneName)
+        public List<SceneItemDetails> GetSceneItemList(string sceneName)
         {
             JObject request = null;
             if (!string.IsNullOrEmpty(sceneName))
@@ -1081,7 +1125,7 @@ namespace OBSWebsocketDotNet
             }
 
             var response = SendRequest(nameof(GetSceneItemList), request);
-            return response["sceneItems"].Select(m => new SceneItemDetails((JObject)m));
+            return response["sceneItems"].Select(m => new SceneItemDetails((JObject)m)).ToList();
         }
 
         /// <summary>
@@ -1139,7 +1183,7 @@ namespace OBSWebsocketDotNet
         /// Sets the enable state of audio tracks of an input.
         /// </summary>
         /// <param name="inputName">Name of the input</param>
-        /// <param name="inputAudioTracks">Track settings to apply</param>
+        /// <param name="inputAudioTracks">JObject holding track settings to apply</param>
         public void SetInputAudioTracks(string inputName, JObject inputAudioTracks)
         {
             var request = new JObject
@@ -1150,6 +1194,16 @@ namespace OBSWebsocketDotNet
 
             SendRequest(nameof(SetInputAudioTracks), request);
         }
+
+        /// <summary>
+        /// Sets the enable state of audio tracks of an input.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputAudioTracks">Track settings to apply</param>
+        public void SetInputAudioTracks(string inputName, SourceTracks inputAudioTracks)
+        {
+            SetInputAudioTracks(inputName, JObject.FromObject(inputAudioTracks));
+        }       
 
         /// <summary>
         /// Gets the active and show state of a source.
@@ -1732,14 +1786,26 @@ namespace OBSWebsocketDotNet
         /// <returns>Object containing scene item transform info</returns>
         public SceneItemTransformInfo GetSceneItemTransform(string sceneName, int sceneItemId)
         {
+            var response = GetSceneItemTransformRaw(sceneName, sceneItemId);
+            return JsonConvert.DeserializeObject<SceneItemTransformInfo>(response["sceneItemTransform"].ToString());
+        }
+
+        /// <summary>
+        /// Gets the JObject of transform settings for a scene item. Use this one you don't want it populated with default values.
+        /// Scenes and Groups
+        /// </summary>
+        /// <param name="sceneName">Name of the scene the item is in</param>
+        /// <param name="sceneItemId">Numeric ID of the scene item</param>
+        /// <returns>Object containing scene item transform info</returns>
+        public JObject GetSceneItemTransformRaw(string sceneName, int sceneItemId)
+        {
             var request = new JObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
             };
 
-            var response = SendRequest(nameof(GetSceneItemTransform), request);
-            return JsonConvert.DeserializeObject<SceneItemTransformInfo>(response["sceneItemTransform"].ToString());
+            return SendRequest(nameof(GetSceneItemTransform), request);
         }
 
         /// <summary>
