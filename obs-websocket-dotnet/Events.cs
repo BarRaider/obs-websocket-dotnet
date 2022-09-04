@@ -156,18 +156,16 @@ namespace OBSWebsocketDotNet
     /// The state of the stream output has changed.
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputActive">Whether the output is active</param>
     /// <param name="outputState">The specific state of the output</param>
-    public delegate void StreamStateChangedCallback(OBSWebsocket sender, bool outputActive, string outputState);
+    public delegate void StreamStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
 
     /// <summary>
     /// Called by <see cref="OBSWebsocket.RecordStateChanged"/>
     /// The state of the record output has changed.
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputActive">Whether the output is active</param>
     /// <param name="outputState">The specific state of the output</param>
-    public delegate void RecordStateChangedCallback(OBSWebsocket sender, bool outputActive, string outputState);
+    public delegate void RecordStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
 
     /// <summary>
     /// Called by <see cref="OBSWebsocket.CurrentPreviewSceneChanged"/>
@@ -185,13 +183,12 @@ namespace OBSWebsocketDotNet
     public delegate void StudioModeStateChangedCallback(OBSWebsocket sender, bool studioModeEnabled);
 
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.StudioModeStateChanged"/>
+    /// Called by <see cref="OBSWebsocket.ReplayBufferStateChanged"/>
     /// The state of the replay buffer output has changed.
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputActive">Whether the output is active</param>
     /// <param name="outputState">The specific state of the output</param>
-    public delegate void ReplayBufferStateChangedCallback(OBSWebsocket sender, bool outputActive, string outputState);
+    public delegate void ReplayBufferStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
 
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SceneItemSelected"/>
@@ -319,12 +316,11 @@ namespace OBSWebsocketDotNet
     /// The state of the virtualcam output has changed.
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputActive">Whether the output is active</param>
     /// <param name="outputState">The specific state of the output</param>
-    public delegate void VirtualcamStateChangedCallback(OBSWebsocket sender, bool outputActive, string outputState);
+    public delegate void VirtualcamStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
 
     /// <summary>
-    /// Callback by <see cref="OBSWebsocket.VirtualcamStateChanged"/>
+    /// Callback by <see cref="OBSWebsocket.CurrentSceneCollectionChanging"/>
     /// The current scene collection has begun changing.
     /// Note: We recommend using this event to trigger a pause of all polling requests, as performing any requests during a
     /// scene collection change is considered undefined behavior and can cause crashes!
@@ -836,11 +832,11 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(StreamStateChanged):
-                    StreamStateChanged?.Invoke(this, (bool)body["outputActive"], (string)body["outputState"]);
+                    StreamStateChanged?.Invoke(this, new OutputStateChanged(body));
                     break;
 
                 case nameof(RecordStateChanged):
-                    RecordStateChanged?.Invoke(this, (bool)body["outputActive"], (string)body["outputState"]);
+                    RecordStateChanged?.Invoke(this, new OutputStateChanged(body));
                     break;
 
                 case nameof(CurrentPreviewSceneChanged):
@@ -852,7 +848,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(ReplayBufferStateChanged):
-                    ReplayBufferStateChanged?.Invoke(this, (bool)body["outputActive"], (string)body["outputState"]);
+                    ReplayBufferStateChanged?.Invoke(this, new OutputStateChanged(body));
                     break;
 
                 case nameof(ExitStarted):
@@ -918,7 +914,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(VirtualcamStateChanged):
-                    VirtualcamStateChanged?.Invoke(this, (bool)body["outputActive"], (string)body["outputState"]);
+                    VirtualcamStateChanged?.Invoke(this, new OutputStateChanged(body));
                     break;
 
                 case nameof(CurrentSceneCollectionChanging):
