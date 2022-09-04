@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OBSWebsocketDotNet.Communication;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Websocket.Client;
 
 namespace OBSWebsocketDotNet
 {
@@ -598,7 +598,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when disconnected from an obs-websocket server
         /// </summary>
-        public event EventHandler<DisconnectionInfo> Disconnected;
+        public event EventHandler<ObsDisconnectionInfo> Disconnected;
 
         /// <summary>
         /// A scene item is selected in the UI
