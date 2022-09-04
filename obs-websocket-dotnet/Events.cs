@@ -206,6 +206,8 @@ namespace OBSWebsocketDotNet
     /// Callback by <see cref="OBSWebsocket.SceneItemTransformChanged"/>
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
+    /// /// <param name="sceneName">Name of the scene item is in</param>
+    /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="transform">Transform data</param>
     public delegate void SceneItemTransformCallback(OBSWebsocket sender, string sceneName, string sceneItemId, SceneItemTransformInfo transform);
 
