@@ -6,6 +6,9 @@ using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// Data when Stream/Record/Instant_Replay change states
+    /// </summary>
     public class OutputStateChanged
     {
         private OutputState? state;
@@ -21,6 +24,9 @@ namespace OBSWebsocketDotNet.Types
         [JsonProperty(PropertyName = "outputState")]
         public string StateStr { set; get; }
 
+        /// <summary>
+        /// OutputState enum of current state
+        /// </summary>
         public OutputState State {
             get
             {
@@ -57,7 +63,10 @@ namespace OBSWebsocketDotNet.Types
             }
         }
 
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="body"></param>
         public OutputStateChanged(JObject body)
         {
             JsonConvert.PopulateObject(body.ToString(), this);
