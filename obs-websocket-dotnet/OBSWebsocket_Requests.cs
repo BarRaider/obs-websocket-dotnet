@@ -13,6 +13,16 @@ namespace OBSWebsocketDotNet
     /// </summary>
     public partial class OBSWebsocket
     {
+        #region Private Constants
+
+        private const string REQUEST_FIELD_VOLUME_DB = "inputVolumeDb";
+        private const string REQUEST_FIELD_VOLUME_MUL = "inputVolumeMul";
+
+        private const string RESPONSE_FIELD_IMAGE_DATA = "imageData";
+
+
+        #endregion
+
         /// <summary>
         /// Get basic OBS video information
         /// </summary>
@@ -456,9 +466,9 @@ namespace OBSWebsocketDotNet
         /// Change the volume of the specified source
         /// </summary>
         /// <param name="inputName">Name of the source which volume will be changed</param>
-        /// <param name="inputVolumeMul">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
+        /// <param name="inputVolume">Desired volume. Must be between `0.0` and `1.0` for amplitude/mul (useDecibel is false), and under 0.0 for dB (useDecibel is true). Note: OBS will interpret dB values under -100.0 as Inf.</param>
         /// <param name="inputVolumeDb">Interperet `volume` data as decibels instead of amplitude/mul.</param>
-        public void SetInputVolume(string inputName, float inputVolumeMul, bool inputVolumeDb = false)
+        public void SetInputVolume(string inputName, float inputVolume, bool inputVolumeDb = false)
         {
             var requestFields = new JObject
             {
@@ -467,11 +477,11 @@ namespace OBSWebsocketDotNet
 
             if (inputVolumeDb)
             {
-                requestFields.Add(nameof(inputVolumeDb), inputVolumeDb);
+                requestFields.Add(REQUEST_FIELD_VOLUME_DB, inputVolume);
             }
             else
             {
-                requestFields.Add(nameof(inputVolumeMul), inputVolumeMul);
+                requestFields.Add(REQUEST_FIELD_VOLUME_MUL, inputVolume);
             }
 
             SendRequest(nameof(SetInputVolume), requestFields);
