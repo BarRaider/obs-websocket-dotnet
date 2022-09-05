@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using OBSWebsocketDotNet.Types;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -211,6 +210,10 @@ namespace OBSWebsocketDotNet
         /// <returns>The server's JSON response as a JObject</returns>
         internal JObject SendRequest(MessageTypes operationCode, string requestType, JObject additionalFields = null, bool waitForReply = true)
         {
+            if (wsConnection == null)
+            {
+                throw new NullReferenceException("Websocket is not initialized");
+            }
             
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
