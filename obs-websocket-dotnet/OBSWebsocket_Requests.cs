@@ -157,7 +157,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// List every available scene
         /// </summary>
-        /// <returns>A <see cref="List{ObsScene}" /> of <see cref="ObsScene"/> objects describing each scene</returns>
+        /// <returns>A <see cref="List{SceneBasicInfo}" /> of <see cref="SceneBasicInfo"/> objects describing each scene</returns>
         public List<SceneBasicInfo> ListScenes()
         {
             var response = GetSceneList();
@@ -1485,7 +1485,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="inputKind">Restrict the array to only inputs of the specified kind</param>
         /// <returns>List of Inputs in OBS</returns>
-        public List<Input> GetInputList(string inputKind = null)
+        public List<InputBasicInfo> GetInputList(string inputKind = null)
         {
             var request = new JObject
             {
@@ -1496,10 +1496,10 @@ namespace OBSWebsocketDotNet
                 ? SendRequest(nameof(GetInputList))
                 : SendRequest(nameof(GetInputList), request);
 
-            var returnList = new List<Input>();
+            var returnList = new List<InputBasicInfo>();
             foreach (var input in response["inputs"])
             {
-                returnList.Add(new Input(input as JObject));
+                returnList.Add(new InputBasicInfo(input as JObject));
             }
 
             return returnList;

@@ -337,61 +337,6 @@
             </summary>
             <param name="message"></param>
         </member>
-        <member name="T:OBSWebsocketDotNet.FFMpegSourceSettings">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.ClearOnMediaEnd">
-            <summary>
-            Clear window when media ends
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.CloseWhenInactive">
-            <summary>
-            Close when inactive
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.ColorRange">
-            <summary>
-            Color Range
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.HWDecode">
-            <summary>
-            HW Decoder
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.Looping">
-            <summary>
-            Looping
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.RestartOnActivate">
-            <summary>
-            Restart when activated
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.IsLocalFile">
-            <summary>
-            Is Local file
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.LocalFile">
-            <summary>
-            Local filename
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.FFMpegSourceSettings.SpeedPercent">
-            <summary>
-            Speed percentage
-            </summary>
-        </member>
-        <member name="M:OBSWebsocketDotNet.FFMpegSourceSettings.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:OBSWebsocketDotNet.MediaSourceSettings">
             <summary>
             

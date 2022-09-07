@@ -4,27 +4,21 @@ using Newtonsoft.Json.Linq;
 namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
-    /// Information on a specific Input
+    /// Abstract class with information on a specific Input
     /// </summary>
-    public class Input
+    public abstract class Input
     {
         /// <summary>
         /// Name of the Input
         /// </summary>
         [JsonProperty(PropertyName = "inputName")]
-        public string Name { get; set; }
+        public string InputName { get; set; }
 
         /// <summary>
         /// Kind of the Input
         /// </summary>
         [JsonProperty(PropertyName = "inputKind")]
-        public string Kind { get; set; }
-
-        /// <summary>
-        /// Unversioned Kind of the Input
-        /// </summary>
-        [JsonProperty(PropertyName = "unversionedInputKind")]
-        public string UnversionedKind { get; set; }
+        public string InputKind { get; set; }
 
         /// <summary>
         /// Instantiate object from response data
