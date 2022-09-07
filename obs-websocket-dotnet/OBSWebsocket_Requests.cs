@@ -122,13 +122,13 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Get the current scene info along with its items
+        /// Get the name of the currently active scene. 
         /// </summary>
-        /// <returns>An <see cref="ObsScene"/> object describing the current scene</returns>
-        public ObsScene GetCurrentProgramScene()
+        /// <returns>Name of the current scene</returns>
+        public string GetCurrentProgramScene()
         {
             JObject response = SendRequest(nameof(GetCurrentProgramScene));
-            return new ObsScene(response);
+            return (string)response["currentProgramSceneName"];
         }
 
         /// <summary>
@@ -754,15 +754,14 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Get the currently selected preview scene. Triggers an error
-        /// if Studio Mode is disabled
+        /// Get the name of the currently selected preview scene. 
+        /// Note: Triggers an error if Studio Mode is disabled
         /// </summary>
-        /// <returns>Preview scene object</returns>
-        public ObsScene GetCurrentPreviewScene()
+        /// <returns>Preview scene name</returns>
+        public string GetCurrentPreviewScene()
         {
             var response = SendRequest(nameof(GetCurrentPreviewScene));
-            response.Add(GetSceneItemList((string)response["currentPreviewSceneName"]));
-            return new ObsScene(response);
+            return (string)response["currentPreviewSceneName"];
         }
 
         /// <summary>

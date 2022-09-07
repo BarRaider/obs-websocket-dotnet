@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Linq;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
 
@@ -327,28 +328,26 @@ namespace TestClient
 
         private void btnListScenes_Click(object sender, EventArgs e)
         {
-            /*wwwww
             var scenes = obs.ListScenes();
 
             tvScenes.Nodes.Clear();
             foreach (var scene in scenes)
             {
                 var node = new TreeNode(scene.Name);
-                scene.Items = new List<SceneItemDetails>();
-                scene.Items.AddRange(obs.GetSceneItemList(scene.Name));
-                foreach (var item in scene.Items)
+                var sources = new List<SceneItemDetails>();
+                sources.AddRange(obs.GetSceneItemList(scene.Name));
+                foreach (var item in sources)
                 {
                     node.Nodes.Add(item.SourceName);
                 }
 
                 tvScenes.Nodes.Add(node);
             }
-            */
         }
 
         private void btnGetCurrentScene_Click(object sender, EventArgs e)
         {
-            tbCurrentScene.Text = obs.GetCurrentProgramScene().Name;
+            tbCurrentScene.Text = obs.GetCurrentProgramScene();
         }
 
         private void btnSetCurrentScene_Click(object sender, EventArgs e)

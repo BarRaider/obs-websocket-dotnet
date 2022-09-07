@@ -524,14 +524,14 @@ namespace TestClient
 
         private void btnToggleVidCapDvc_Click(object sender, EventArgs e)
         {
-            var scene = obs.GetCurrentProgramScene();
-            var sourceItems = obs.GetSceneItemList(scene.Name);
+            var sceneName = obs.GetCurrentProgramScene();
+            var sourceItems = obs.GetSceneItemList(sceneName);
             var vidCapItems = sourceItems.Where(x => x.SourceKind.Equals("dshow_input"));
             var itemListSettings = new List<InputSettings>();
             foreach (var vidCapItem in vidCapItems)
             {
-                var enabled = obs.GetSceneItemEnabled(scene.Name, vidCapItem.ItemId);
-                obs.SetSceneItemEnabled(scene.Name, vidCapItem.ItemId, enabled ? false : true);
+                var enabled = obs.GetSceneItemEnabled(sceneName, vidCapItem.ItemId);
+                obs.SetSceneItemEnabled(sceneName, vidCapItem.ItemId, enabled ? false : true);
                 LogMessage($"{vidCapItem.SourceName} active button toggled.");
             }
         }
