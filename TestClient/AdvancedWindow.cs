@@ -128,9 +128,9 @@ namespace TestClient
             LogMessage($"[ReplayBufferStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
         }
 
-        private void Obs_RecordStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
+        private void Obs_RecordStateChanged(OBSWebsocket sender, RecordStateChanged outputState)
         {
-            LogMessage($"[RecordingStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
+            LogMessage($"[RecordingStateChanged] Active: {outputState.IsActive} Output: {outputState.OutputPath} State: {outputState.StateStr} {outputState.State}");
         }
 
         private void Obs_StreamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
@@ -596,6 +596,12 @@ namespace TestClient
                 var sources = obs.GetSceneItemList(scene.Name);
                 LogMessage($"\t Total Items: {sources.Count} \tItems' Names: {String.Join(',', sources.Select(i => i.SourceName).ToArray())}");
             }
+        }
+
+        private void btnStopRecord_Click(object sender, EventArgs e)
+        {
+            string output = obs.StopRecord();
+            LogMessage($"Stop record: Output is {output}");
         }
 #pragma warning restore IDE1006 // Naming Styles
     }

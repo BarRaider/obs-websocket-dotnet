@@ -664,10 +664,12 @@ namespace OBSWebsocketDotNet
 
         /// <summary>
         /// Stop recording. Will trigger an error if recording is not active.
+        /// <returns>File name for the saved recording</returns>
         /// </summary>
-        public void StopRecord()
+        public string StopRecord()
         {
-            SendRequest(nameof(StopRecord));
+            var response = SendRequest(nameof(StopRecord));
+            return (string)response["outputPath"];
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ using System.Text;
 namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
-    /// Data when Stream/Record/Instant_Replay change states
+    /// Data when Stream/Recording/Instant_Replay change states
     /// </summary>
     public class OutputStateChanged
     {

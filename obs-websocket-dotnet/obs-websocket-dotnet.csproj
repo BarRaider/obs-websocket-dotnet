@@ -15,7 +15,9 @@
 		<PackageTags>OBS obs-websocket websocket official obs-websocket-dotnet obs.websocket.net obs-websocket-net</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>Ported to use new OBS Websocket v5.0
-WARNING: This version is not backwards compatible with v4.9.x</PackageReleaseNotes>
+NOTE: As OBS Websocket v5.0 is not backward compatible with 4.9.x, neither is the .Net version.
+
+Please note this is the first non-Beta release, there may still be some bugs. Please report them if found.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

@@ -165,7 +165,7 @@ namespace OBSWebsocketDotNet
     /// </summary>
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="outputState">The specific state of the output</param>
-    public delegate void RecordStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
+    public delegate void RecordStateChangedCallback(OBSWebsocket sender, RecordStateChanged outputState);
 
     /// <summary>
     /// Called by <see cref="OBSWebsocket.CurrentPreviewSceneChanged"/>
@@ -836,7 +836,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(RecordStateChanged):
-                    RecordStateChanged?.Invoke(this, new OutputStateChanged(body));
+                    RecordStateChanged?.Invoke(this, new RecordStateChanged(body));
                     break;
 
                 case nameof(CurrentPreviewSceneChanged):
