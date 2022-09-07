@@ -101,11 +101,11 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// EExecutes hotkey routine, identified by bound combination of keys. A single key combination might trigger multiple hotkey routines depending on user settings
+        /// Triggers a hotkey using a sequence of keys.
         /// </summary>
         /// <param name="keyId">Main key identifier (e.g. OBS_KEY_A for key "A"). Available identifiers are here: https://github.com/obsproject/obs-studio/blob/master/libobs/obs-hotkeys.h</param>
         /// <param name="keyModifier">Optional key modifiers object. You can combine multiple key operators. e.g. KeyModifier.Shift | KeyModifier.Control</param>
-        public void TriggerHotkeyBySequence(OBSHotkey keyId, KeyModifier keyModifier = KeyModifier.None)
+        public void TriggerHotkeyByKeySequence(OBSHotkey keyId, KeyModifier keyModifier = KeyModifier.None)
         {
             var request = new JObject
             {
@@ -118,7 +118,7 @@ namespace OBSWebsocketDotNet
                 }
             };
 
-            SendRequest(nameof(TriggerHotkeyBySequence), request);
+            SendRequest(nameof(TriggerHotkeyByKeySequence), request);
         }
 
         /// <summary>
