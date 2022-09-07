@@ -285,23 +285,6 @@ namespace TestClient
             }
         }
 
-        private void btnProjector_Click(object sender, EventArgs e)
-        {
-            /* This needs to be refactored for v5.0.0 if possible
-            const string SCENE_NAME = "Webcam Full";
-            obs.OpenProjector();
-            MessageBox.Show("Press Ok to continue");
-            obs.OpenProjector("preview", 0);
-            MessageBox.Show("Press Ok to continue");
-            // Should not do anything as sceneName only works in "Source" and "Scene"
-            obs.OpenProjector("preview", 0, null, SOURCE_NAME);
-            MessageBox.Show("Press Ok to continue");
-            obs.OpenProjector("source", 0, null, SOURCE_NAME);
-            MessageBox.Show("Press Ok to continue");
-            obs.OpenProjector("scene", 0, null, SCENE_NAME);
-            */
-        }
-
         private void btnRename_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(tbSourceName.Text))
@@ -542,7 +525,7 @@ namespace TestClient
             var inputList = obs.GetInputList();
             foreach (var input in inputList)
             {
-                LogMessage($"{input.Name} {input.Kind} {input.UnversionedKind}");
+                LogMessage($"{input.InputName} {input.InputKind} {input.UnversionedKind}");
             }
             LogMessage("Getting Input Kind list");
             var inputKinds = obs.GetInputKindList();
@@ -584,7 +567,10 @@ namespace TestClient
             string input = tbSourceName.Text;
 
             var inputSettings = obs.GetInputSettings(input);
-            LogMessage($"Name: {inputSettings.InputName} Kind: {inputSettings.InputKind} Type: {inputSettings.InputType} \nSettings: {inputSettings.Settings}");
+            LogMessage($"Name: {inputSettings.InputName} Kind: {inputSettings.InputKind} \r\nSettings: {inputSettings.Settings}");
+
+            var defaults = obs.GetInputDefaultSettings(inputSettings.InputKind);
+            LogMessage($"*** Defaults for {inputSettings.InputKind} ***:\r\n {defaults}");
         }
 
         private void btnSourcesList_Click(object sender, EventArgs e)

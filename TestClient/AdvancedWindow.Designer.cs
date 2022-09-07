@@ -46,12 +46,11 @@
             this.btnGetInputList = new System.Windows.Forms.Button();
             this.btnSourcesList = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnStopRecord = new System.Windows.Forms.Button();
             this.btnRename = new System.Windows.Forms.Button();
             this.btnToggleVidCapDvc = new System.Windows.Forms.Button();
             this.btnTracks = new System.Windows.Forms.Button();
             this.btnCreateScene = new System.Windows.Forms.Button();
-            this.btnProjector = new System.Windows.Forms.Button();
-            this.btnStopRecord = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -144,7 +143,7 @@
             this.btnInputInfo.Name = "btnInputInfo";
             this.btnInputInfo.Size = new System.Drawing.Size(149, 36);
             this.btnInputInfo.TabIndex = 15;
-            this.btnInputInfo.Text = "Get Input Info";
+            this.btnInputInfo.Text = "Get Input Settings";
             this.btnInputInfo.UseVisualStyleBackColor = true;
             this.btnInputInfo.Click += new System.EventHandler(this.btnInputInfo_Click);
             // 
@@ -249,7 +248,6 @@
             this.tabPage2.Controls.Add(this.btnToggleVidCapDvc);
             this.tabPage2.Controls.Add(this.btnTracks);
             this.tabPage2.Controls.Add(this.btnCreateScene);
-            this.tabPage2.Controls.Add(this.btnProjector);
             this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -257,6 +255,17 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btnStopRecord
+            // 
+            this.btnStopRecord.Location = new System.Drawing.Point(2, 230);
+            this.btnStopRecord.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnStopRecord.Name = "btnStopRecord";
+            this.btnStopRecord.Size = new System.Drawing.Size(149, 36);
+            this.btnStopRecord.TabIndex = 25;
+            this.btnStopRecord.Text = "Stop Record";
+            this.btnStopRecord.UseVisualStyleBackColor = true;
+            this.btnStopRecord.Click += new System.EventHandler(this.btnStopRecord_Click);
             // 
             // btnRename
             // 
@@ -300,28 +309,6 @@
             this.btnCreateScene.Text = "Create Scene";
             this.btnCreateScene.UseVisualStyleBackColor = true;
             this.btnCreateScene.Click += new System.EventHandler(this.btnCreateScene_Click);
-            // 
-            // btnProjector
-            // 
-            this.btnProjector.Location = new System.Drawing.Point(2, 96);
-            this.btnProjector.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.btnProjector.Name = "btnProjector";
-            this.btnProjector.Size = new System.Drawing.Size(149, 36);
-            this.btnProjector.TabIndex = 20;
-            this.btnProjector.Text = "Projector";
-            this.btnProjector.UseVisualStyleBackColor = true;
-            this.btnProjector.Click += new System.EventHandler(this.btnProjector_Click);
-            // 
-            // btnStopRecord
-            // 
-            this.btnStopRecord.Location = new System.Drawing.Point(2, 230);
-            this.btnStopRecord.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnStopRecord.Name = "btnStopRecord";
-            this.btnStopRecord.Size = new System.Drawing.Size(149, 36);
-            this.btnStopRecord.TabIndex = 25;
-            this.btnStopRecord.Text = "Stop Record";
-            this.btnStopRecord.UseVisualStyleBackColor = true;
-            this.btnStopRecord.Click += new System.EventHandler(this.btnStopRecord_Click);
             // 
             // AdvancedWindow
             // 
@@ -372,7 +359,6 @@
         private System.Windows.Forms.Button btnToggleVidCapDvc;
         private System.Windows.Forms.Button btnTracks;
         private System.Windows.Forms.Button btnCreateScene;
-        private System.Windows.Forms.Button btnProjector;
         private System.Windows.Forms.Button btnRename;
         private System.Windows.Forms.Button btnStopRecord;
     }
