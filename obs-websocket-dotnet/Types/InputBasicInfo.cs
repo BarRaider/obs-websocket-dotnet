@@ -6,6 +6,9 @@ using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// Input class which also shows the Unversioned Input Kind
+    /// </summary>
     public class InputBasicInfo : Input
     {
         /// <summary>

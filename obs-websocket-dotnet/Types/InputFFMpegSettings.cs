@@ -6,6 +6,10 @@ using System.Text;
 
 namespace OBSWebsocketDotNet.Types
 {
+    /// <summary>
+    /// Input class dedicated for the ffmpeg_source input kind.
+    /// Usage: InputFFMpegSettings.FromInputSettings(InputSettings)
+    /// </summary>
     public class InputFFMpegSettings : Input
     {
         private const string SUPPORTED_INPUT_KIND = "ffmpeg_source";
@@ -82,6 +86,12 @@ namespace OBSWebsocketDotNet.Types
         [JsonProperty(PropertyName = "speed_percent")]
         public int SpeedPercent { get; set; } = 100;
 
+        /// <summary>
+        /// Static constructor to instanciate a InputFFMpegSettings object
+        /// Requires an InputSettings class with InputKind of ffmpeg_source to create
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public static InputFFMpegSettings FromInputSettings(InputSettings settings)
         {
             return new InputFFMpegSettings(settings);
