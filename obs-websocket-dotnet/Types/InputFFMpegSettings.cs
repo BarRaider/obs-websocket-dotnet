@@ -90,7 +90,7 @@ namespace OBSWebsocketDotNet.Types
         /// Static constructor to instanciate a InputFFMpegSettings object
         /// Requires an InputSettings class with InputKind of ffmpeg_source to create
         /// </summary>
-        /// <param name="settings"></param>
+        /// <param name="settings">Setings object</param>
         /// <returns></returns>
         public static InputFFMpegSettings FromInputSettings(InputSettings settings)
         {
