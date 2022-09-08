@@ -51,6 +51,7 @@
             this.btnToggleVidCapDvc = new System.Windows.Forms.Button();
             this.btnTracks = new System.Windows.Forms.Button();
             this.btnCreateScene = new System.Windows.Forms.Button();
+            this.btnDoNothing = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -159,6 +160,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnDoNothing);
             this.tabPage1.Controls.Add(this.btnSourceInfo);
             this.tabPage1.Controls.Add(this.btnGetMonitorList);
             this.tabPage1.Controls.Add(this.btnInputInfo);
@@ -310,6 +312,17 @@
             this.btnCreateScene.UseVisualStyleBackColor = true;
             this.btnCreateScene.Click += new System.EventHandler(this.btnCreateScene_Click);
             // 
+            // btnDoNothing
+            // 
+            this.btnDoNothing.Location = new System.Drawing.Point(2, 545);
+            this.btnDoNothing.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.btnDoNothing.Name = "btnDoNothing";
+            this.btnDoNothing.Size = new System.Drawing.Size(149, 36);
+            this.btnDoNothing.TabIndex = 22;
+            this.btnDoNothing.Text = "Do Nothing";
+            this.btnDoNothing.UseVisualStyleBackColor = true;
+            this.btnDoNothing.Click += new System.EventHandler(this.btnDoNothing_Click);
+            // 
             // AdvancedWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -361,5 +374,6 @@
         private System.Windows.Forms.Button btnCreateScene;
         private System.Windows.Forms.Button btnRename;
         private System.Windows.Forms.Button btnStopRecord;
+        private System.Windows.Forms.Button btnDoNothing;
     }
 }

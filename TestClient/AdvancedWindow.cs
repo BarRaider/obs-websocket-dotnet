@@ -589,6 +589,11 @@ namespace TestClient
             string output = obs.StopRecord();
             LogMessage($"Stop record: Output is {output}");
         }
+
+        private void btnDoNothing_Click(object sender, EventArgs e)
+        {
+
+        }
 #pragma warning restore IDE1006 // Naming Styles
     }
 }
