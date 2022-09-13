@@ -126,14 +126,14 @@ namespace TestClient
             LogMessage($"[ReplayBufferStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
         }
 
-        private void Obs_RecordStateChanged(OBSWebsocket sender, RecordStateChanged outputState)
+        private void Obs_RecordStateChanged(object sender, RecordStateChangedEventArgs args)
         {
-            LogMessage($"[RecordingStateChanged] Active: {outputState.IsActive} Output: {outputState.OutputPath} State: {outputState.StateStr} {outputState.State}");
+            LogMessage($"[RecordingStateChanged] Active: {args.OutputState.IsActive} Output: {args.OutputState.OutputPath} State: {args.OutputState.StateStr} {args.OutputState.State}");
         }
 
-        private void Obs_StreamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
+        private void Obs_StreamStateChanged(object sender, StreamStateChangedEventArgs args)
         {
-            LogMessage($"[StreamStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
+            LogMessage($"[StreamStateChanged] Active: {args.OutputState.IsActive} State: {args.OutputState.StateStr} {args.OutputState.State}");
         }
 
         private void Obs_VirtualcamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
@@ -142,10 +142,10 @@ namespace TestClient
         }
 
 
-        private void Obs_ProfileListChanged(OBSWebsocket sender, List<string> profiles)
+        private void Obs_ProfileListChanged(object sender, ProfileListChangedEventArgs args)
         {
-            LogMessage($"[ProfileListchanged] Count: {profiles.Count}");
-            foreach (var profile in profiles)
+            LogMessage($"[ProfileListchanged] Count: {args.Profiles.Count}");
+            foreach (var profile in args.Profiles)
             {
                 LogMessage($"\t{profile}");
             }

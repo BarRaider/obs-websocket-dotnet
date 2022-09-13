@@ -10,31 +10,7 @@ using OBSWebsocketDotNet.Types.Events;
 namespace OBSWebsocketDotNet
 {
     #region EventDelegates
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.ProfileListChanged"/>
-    /// The profile list has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="profiles">Updated list of profiles</param>
-    public delegate void ProfileListChangedCallback(OBSWebsocket sender, List<string> profiles);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.StreamStateChanged"/>
-    /// The state of the stream output has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputState">The specific state of the output</param>
-    public delegate void StreamStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.RecordStateChanged"/>
-    /// The state of the record output has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputState">The specific state of the output</param>
-    public delegate void RecordStateChangedCallback(OBSWebsocket sender, RecordStateChanged outputState);
-
+    
     /// <summary>
     /// Called by <see cref="OBSWebsocket.CurrentPreviewSceneChanged"/>
     /// The current preview scene has changed.
@@ -422,17 +398,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when a profile is created, imported, removed or renamed
         /// </summary>
-        public event ProfileListChangedCallback ProfileListChanged;
+        public event EventHandler<ProfileListChangedEventArgs> ProfileListChanged;
 
         /// <summary>
         /// Triggered when the streaming output state changes
         /// </summary>
-        public event StreamStateChangedCallback StreamStateChanged;
+        public event EventHandler<StreamStateChangedEventArgs> StreamStateChanged;
 
         /// <summary>
         /// Triggered when the recording output state changes
         /// </summary>
-        public event RecordStateChangedCallback RecordStateChanged;
+        public event EventHandler<RecordStateChangedEventArgs> RecordStateChanged;
 
         /// <summary>
         /// Triggered when state of the replay buffer changes
@@ -696,15 +672,15 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(ProfileListChanged):
-                    ProfileListChanged?.Invoke(this, JsonConvert.DeserializeObject<List<string>>((string)body["profiles"]));
+                    ProfileListChanged?.Invoke(this, new ProfileListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["profiles"])));
                     break;
 
                 case nameof(StreamStateChanged):
-                    StreamStateChanged?.Invoke(this, new OutputStateChanged(body));
+                    StreamStateChanged?.Invoke(this, new StreamStateChangedEventArgs(new OutputStateChanged(body)));
                     break;
 
                 case nameof(RecordStateChanged):
-                    RecordStateChanged?.Invoke(this, new RecordStateChanged(body));
+                    RecordStateChanged?.Invoke(this, new RecordStateChangedEventArgs(new RecordStateChanged(body)));
                     break;
 
                 case nameof(CurrentPreviewSceneChanged):

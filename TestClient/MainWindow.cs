@@ -88,21 +88,21 @@ namespace TestClient
                 var streamStatus = obs.GetStreamStatus();
                 if (streamStatus.IsActive)
                 {
-                    onStreamStateChanged(obs, new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) });
+                    onStreamStateChanged(obs, new StreamStateChangedEventArgs(new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) }));
                 }
                 else
                 {
-                    onStreamStateChanged(obs, new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) });
+                    onStreamStateChanged(obs, new StreamStateChangedEventArgs(new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) }));
                 }
 
                 var recordStatus = obs.GetRecordStatus();
                 if (recordStatus.IsRecording)
                 {
-                    onRecordStateChanged(obs, new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) });
+                    onRecordStateChanged(obs, new RecordStateChangedEventArgs(new RecordStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) }));
                 }
                 else
                 {
-                    onRecordStateChanged(obs, new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) });
+                    onRecordStateChanged(obs, new RecordStateChangedEventArgs(new RecordStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) }));
                 }
 
                 var camStatus = obs.GetVirtualCamStatus();
@@ -233,10 +233,10 @@ namespace TestClient
             });
         }
 
-        private void onStreamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
+        private void onStreamStateChanged(object sender, StreamStateChangedEventArgs args)
         {
             string state = "";
-            switch (outputState.State)
+            switch (args.OutputState.State)
             {
                 case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "Stream starting...";
@@ -265,10 +265,10 @@ namespace TestClient
             });
         }
 
-        private void onRecordStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
+        private void onRecordStateChanged(object sender, RecordStateChangedEventArgs args)
         {
             string state = "";
-            switch (outputState.State)
+            switch (args.OutputState.State)
             {
                 case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "Recording starting...";
