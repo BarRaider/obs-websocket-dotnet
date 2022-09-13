@@ -10,92 +10,7 @@ using OBSWebsocketDotNet.Types.Events;
 namespace OBSWebsocketDotNet
 {
     #region EventDelegates
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterRemoved"/>
-    /// A filter has been removed from a source.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of the source the filter was on</param>
-    /// <param name="filterName">Name of the filter</param>
-    public delegate void SourceFilterRemovedCallback(OBSWebsocket sender, string sourceName, string filterName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterCreated"/>
-    /// A filter has been added to a source.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of the source the filter was added to</param>
-    /// <param name="filterName">Name of the filter</param>
-    /// <param name="filterKind">The kind of the filter</param>
-    /// <param name="filterIndex">Index position of the filter</param>
-    /// <param name="filterSettings">The settings configured to the filter when it was created</param>
-    /// <param name="defaultFilterSettings">The default settings for the filter</param>
-    public delegate void SourceFilterCreatedCallback(OBSWebsocket sender, string sourceName, string filterName, string filterKind, int filterIndex, JObject filterSettings, JObject defaultFilterSettings);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterListReindexed"/>
-    /// A source's filter list has been reindexed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of the source</param>
-    /// <param name="filters">Array of filter objects</param>
-    public delegate void SourceFilterListReindexedCallback(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterEnableStateChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">Name of the source the filter is on</param>
-    /// <param name="filterName">Name of the filter</param>
-    /// <param name="filterEnabled">Whether the filter is enabled</param>
-    public delegate void SourceFilterEnableStateChangedCallback(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.VendorEvent"/>
-    /// An event has been emitted from a vendor.
-    /// A vendor is a unique name registered by a third-party plugin or script, which allows for custom requests and events to be added to obs-websocket.
-    /// If a plugin or script implements vendor requests or events, documentation is expected to be provided with them.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="vendorName">Name of the vendor emitting the event</param>
-    /// <param name="eventType">Vendor-provided event typedef</param>
-    /// <param name="eventData">Vendor-provided event data. {} if event does not provide any data</param>
-    public delegate void VendorEventCallback(OBSWebsocket sender, string vendorName, string eventType, JObject eventData);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.MediaInputPlaybackEnded"/>
-    /// A media input has finished playing.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    public delegate void MediaInputPlaybackEndedCallback(OBSWebsocket sender, string inputName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.MediaInputPlaybackStarted"/>
-    /// A media input has started playing.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    public delegate void MediaInputPlaybackStartedCallback(OBSWebsocket sender, string inputName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.MediaInputActionTriggered"/>
-    /// An action has been performed on an input.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    /// <param name="mediaAction">Action performed on the input. See `ObsMediaInputAction` enum</param>
-    public delegate void MediaInputActionTriggeredCallback(OBSWebsocket sender, string inputName, string mediaAction);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.VirtualcamStateChanged"/>
-    /// The state of the virtualcam output has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputState">The specific state of the output</param>
-    public delegate void VirtualcamStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
-
+    
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.CurrentSceneCollectionChanging"/>
     /// The current scene collection has begun changing.
@@ -391,22 +306,22 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// A filter was added to a source
         /// </summary>
-        public event SourceFilterCreatedCallback SourceFilterCreated;
+        public event EventHandler<SourceFilterCreatedEventArgs> SourceFilterCreated;
 
         /// <summary>
         /// A filter was removed from a source
         /// </summary>
-        public event SourceFilterRemovedCallback SourceFilterRemoved;
+        public event EventHandler<SourceFilterRemovedEventArgs> SourceFilterRemoved;
 
         /// <summary>
         /// Filters in a source have been reordered
         /// </summary>
-        public event SourceFilterListReindexedCallback SourceFilterListReindexed;
+        public event EventHandler<SourceFilterListReindexedEventArgs> SourceFilterListReindexed;
 
         /// <summary>
         /// Triggered when the visibility of a filter has changed
         /// </summary>
-        public event SourceFilterEnableStateChangedCallback SourceFilterEnableStateChanged;
+        public event EventHandler<SourceFilterEnableStateChangedEventArgs> SourceFilterEnableStateChanged;
 
         /// <summary>
         /// A source has been muted or unmuted
@@ -421,27 +336,27 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// A custom broadcast message was received
         /// </summary>
-        public event VendorEventCallback VendorEvent;
+        public event EventHandler<VendorEventArgs> VendorEvent;
 
         /// <summary>
         /// These events are emitted by the OBS sources themselves. For example when the media file ends. The behavior depends on the type of media source being used.
         /// </summary>
-        public event MediaInputPlaybackEndedCallback MediaInputPlaybackEnded;
+        public event EventHandler<MediaInputPlaybackEndedEventArgs> MediaInputPlaybackEnded;
 
         /// <summary>
         /// These events are emitted by the OBS sources themselves. For example when the media file starts playing. The behavior depends on the type of media source being used.
         /// </summary>
-        public event MediaInputPlaybackStartedCallback MediaInputPlaybackStarted;
+        public event EventHandler<MediaInputPlaybackStartedEventArgs> MediaInputPlaybackStarted;
 
         /// <summary>
         /// This event is only emitted when something actively controls the media/VLC source. In other words, the source will never emit this on its own naturally.
         /// </summary>
-        public event MediaInputActionTriggeredCallback MediaInputActionTriggered;
+        public event EventHandler<MediaInputActionTriggeredEventArgs> MediaInputActionTriggered;
 
         /// <summary>
         /// The virtual cam state has changed.
         /// </summary>
-        public event VirtualcamStateChangedCallback VirtualcamStateChanged;
+        public event EventHandler<VirtualcamStateChangedEventArgs> VirtualcamStateChanged;
 
         /// <summary>
         /// The current scene collection has begun changing.
@@ -653,11 +568,11 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SourceFilterCreated):
-                    SourceFilterCreated?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (string)body["filterKind"], (int)body["filterIndex"], (JObject)body["filterSettings"], (JObject)body["defaultFilterSettings"]);
+                    SourceFilterCreated?.Invoke(this, new SourceFilterCreatedEventArgs((string)body["sourceName"], (string)body["filterName"], (string)body["filterKind"], (int)body["filterIndex"], (JObject)body["filterSettings"], (JObject)body["defaultFilterSettings"]));
                     break;
 
                 case nameof(SourceFilterRemoved):
-                    SourceFilterRemoved?.Invoke(this, (string)body["sourceName"], (string)body["filterName"]);
+                    SourceFilterRemoved?.Invoke(this, new SourceFilterRemovedEventArgs((string)body["sourceName"], (string)body["filterName"]));
                     break;
 
                 case nameof(SourceFilterListReindexed):
@@ -666,32 +581,32 @@ namespace OBSWebsocketDotNet
                         List<FilterReorderItem> filters = new List<FilterReorderItem>();
                         JsonConvert.PopulateObject(body["filters"].ToString(), filters);
 
-                        SourceFilterListReindexed?.Invoke(this, (string)body["sourceName"], filters);
+                        SourceFilterListReindexed?.Invoke(this, new SourceFilterListReindexedEventArgs((string)body["sourceName"], filters));
                     }
                     break;
 
                 case nameof(SourceFilterEnableStateChanged):
-                    SourceFilterEnableStateChanged?.Invoke(this, (string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]);
+                    SourceFilterEnableStateChanged?.Invoke(this, new SourceFilterEnableStateChangedEventArgs((string)body["sourceName"], (string)body["filterName"], (bool)body["filterEnabled"]));
                     break;
 
                 case nameof(VendorEvent):
-                    VendorEvent?.Invoke(this, (string)body["vendorName"], (string)body["eventType"], body);
+                    VendorEvent?.Invoke(this, new VendorEventArgs((string)body["vendorName"], (string)body["eventType"], body));
                     break;
 
                 case nameof(MediaInputPlaybackEnded):
-                    MediaInputPlaybackEnded?.Invoke(this, (string)body["inputName"]);
+                    MediaInputPlaybackEnded?.Invoke(this, new MediaInputPlaybackEndedEventArgs((string)body["inputName"]));
                     break;
 
                 case nameof(MediaInputPlaybackStarted):
-                    MediaInputPlaybackStarted?.Invoke(this, (string)body["sourceName"]);
+                    MediaInputPlaybackStarted?.Invoke(this, new MediaInputPlaybackStartedEventArgs((string)body["sourceName"]));
                     break;
 
                 case nameof(MediaInputActionTriggered):
-                    MediaInputActionTriggered?.Invoke(this, (string)body["inputName"], (string)body["mediaAction"]);
+                    MediaInputActionTriggered?.Invoke(this, new MediaInputActionTriggeredEventArgs((string)body["inputName"], (string)body["mediaAction"]));
                     break;
 
                 case nameof(VirtualcamStateChanged):
-                    VirtualcamStateChanged?.Invoke(this, new OutputStateChanged(body));
+                    VirtualcamStateChanged?.Invoke(this, new VirtualcamStateChangedEventArgs(new OutputStateChanged(body)));
                     break;
 
                 case nameof(CurrentSceneCollectionChanging):

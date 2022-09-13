@@ -136,11 +136,10 @@ namespace TestClient
             LogMessage($"[StreamStateChanged] Active: {args.OutputState.IsActive} State: {args.OutputState.StateStr} {args.OutputState.State}");
         }
 
-        private void Obs_VirtualcamStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
+        private void Obs_VirtualcamStateChanged(object sender, VirtualcamStateChangedEventArgs args)
         {
-            LogMessage($"[VirtualcamStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
+            LogMessage($"[VirtualcamStateChanged] Active: {args.OutputState.IsActive} State: {args.OutputState.StateStr} {args.OutputState.State}");
         }
-
 
         private void Obs_ProfileListChanged(object sender, ProfileListChangedEventArgs args)
         {
@@ -224,10 +223,10 @@ namespace TestClient
             LogMessage($"[SceneItemLockStateChanged] Scene: {args.SceneName} ItemId: {args.SceneItemId} IsLocked: {args.SceneItemLocked}");
         }
 
-        private void OBS_onSourceFilterListReindexed(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters)
+        private void OBS_onSourceFilterListReindexed(object sender, SourceFilterListReindexedEventArgs args)
         {
-            LogMessage($"[SourceFilterListReindexed] Source: {sourceName}");
-            foreach (var filter in filters)
+            LogMessage($"[SourceFilterListReindexed] Source: {args.SourceName}");
+            foreach (var filter in args.Filters)
             {
                 LogMessage($"\t{filter.Name}");
             }
@@ -238,19 +237,19 @@ namespace TestClient
             LogMessage($"[SceneItemListReindexed] Scene: {args.SceneName}{Environment.NewLine}\tSceneItems: {args.SceneItems}");
         }
 
-        private void OBS_onSourceFilterEnableStateChanged(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled)
+        private void OBS_onSourceFilterEnableStateChanged(object sender, SourceFilterEnableStateChangedEventArgs args)
         {
-            LogMessage($"[SourceFilterEnableStateChanged] Source: {sourceName} Filter: {filterName} Enabled: {filterEnabled}");
+            LogMessage($"[SourceFilterEnableStateChanged] Source: {args.SourceName} Filter: {args.FilterName} Enabled: {args.FilterEnabled}");
         }
 
-        private void OBS_onSourceFilterRemoved(OBSWebsocket sender, string sourceName, string filterName)
+        private void OBS_onSourceFilterRemoved(object sender, SourceFilterRemovedEventArgs args)
         {
-            LogMessage($"[SourceFilterRemoved] Source: {sourceName} Filter: {filterName}");
+            LogMessage($"[SourceFilterRemoved] Source: {args.SourceName} Filter: {args.FilterName}");
         }
 
-        private void OBS_onSourceFilterCreated(OBSWebsocket sender, string sourceName, string filterName, string filterKind, int filterIndex, JObject filterSettings, JObject defaultFilterSettings)
+        private void OBS_onSourceFilterCreated(object sender, SourceFilterCreatedEventArgs args)
         {
-            LogMessage($"[SourceFilterCreated] Source: {sourceName} Filter: {filterName} FilterKind: {filterKind} FilterIndex: {filterIndex}{Environment.NewLine}\tSettings: {filterSettings}{Environment.NewLine}\tDefaultSettings: {defaultFilterSettings}");
+            LogMessage($"[SourceFilterCreated] Source: {args.SourceName} Filter: {args.FilterName} FilterKind: {args.FilterKind} FilterIndex: {args.FilterIndex}{Environment.NewLine}\tSettings: {args.FilterSettings}{Environment.NewLine}\tDefaultSettings: {args.DefaultFilterSettings}");
         }
 
         private void OBS_onSceneTransitionVideoEnded(object sender, SceneTransitionVideoEndedEventArgs args)

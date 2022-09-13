@@ -108,11 +108,11 @@ namespace TestClient
                 var camStatus = obs.GetVirtualCamStatus();
                 if (camStatus.IsActive)
                 {
-                    onVirtualCamStateChanged(this, new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) });
+                    onVirtualCamStateChanged(this, new VirtualcamStateChangedEventArgs(new OutputStateChanged() { IsActive = true, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STARTED) }));
                 }
                 else
                 {
-                    onVirtualCamStateChanged(this, new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) });
+                    onVirtualCamStateChanged(this, new VirtualcamStateChangedEventArgs(new OutputStateChanged() { IsActive = false, StateStr = nameof(OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED) }));
                 }
 
                 keepAliveTokenSource = new CancellationTokenSource();
@@ -493,10 +493,10 @@ namespace TestClient
             //obs.SetRecordingFolder(tbFolderPath.Text);
         }
 
-        private void onVirtualCamStateChanged(object sender, OutputStateChanged outputState)
+        private void onVirtualCamStateChanged(object sender, VirtualcamStateChangedEventArgs args)
         {
             string state = "";
-            switch (outputState.State)
+            switch (args.OutputState.State)
             {
                 case OutputState.OBS_WEBSOCKET_OUTPUT_STARTING:
                     state = "VirtualCam starting...";
