@@ -180,9 +180,9 @@ namespace TestClient
             LogMessage($"[CurrentSceneCollectionChanged] Current: {sceneCollectionName}");
         }
 
-        private void Obs_SceneItemRemoved(OBSWebsocket sender, string sceneName, string sourceName, int sceneItemId)
+        private void Obs_SceneItemRemoved(object sender, SceneItemRemovedEventArgs args)
         {
-            LogMessage($"[SceneItemRemoved] Scene: {sourceName} Source: {sourceName} ItemId: {sceneItemId}");
+            LogMessage($"[SceneItemRemoved] Scene: {args.SourceName} Source: {args.SourceName} ItemId: {args.SceneItemId}");
         }
 
         private void Obs_SceneItemCreated(object sender, SceneItemCreatedEventArgs args)
@@ -214,14 +214,14 @@ namespace TestClient
             LogMessage($"[SourceVolumeChanged] Source: {volume.InputName} Volume: {volume.InputVolumeMul} VolumeDB: {volume.InputVolumeDb}");
         }
 
-        private void OBS_onSceneItemEnableStateChanged(OBSWebsocket sender, string sceneName, int sceneItemId, bool sceneItemEnabled)
+        private void OBS_onSceneItemEnableStateChanged(object sender, SceneItemEnableStateChangedEventArgs args)
         {
-            LogMessage($"[SceneItemEnableStateChanged] Scene: {sceneName} ItemId: {sceneItemId} Enabled?: {sceneItemEnabled}");
+            LogMessage($"[SceneItemEnableStateChanged] Scene: {args.SceneName} ItemId: {args.SceneItemId} Enabled?: {args.SceneItemEnabled}");
         }
 
-        private void OBS_onSceneItemLockStateChanged(OBSWebsocket sender, string sceneName, int scenItemId, bool sceneItemLocked)
+        private void OBS_onSceneItemLockStateChanged(object sender, SceneItemLockStateChangedEventArgs args)
         {
-            LogMessage($"[SceneItemLockStateChanged] Scene: {sceneName} ItemId: {scenItemId} IsLocked: {sceneItemLocked}");
+            LogMessage($"[SceneItemLockStateChanged] Scene: {args.SceneName} ItemId: {args.SceneItemId} IsLocked: {args.SceneItemLocked}");
         }
 
         private void OBS_onSourceFilterListReindexed(OBSWebsocket sender, string sourceName, List<FilterReorderItem> filters)

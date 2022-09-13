@@ -10,45 +10,6 @@ using OBSWebsocketDotNet.Types.Events;
 namespace OBSWebsocketDotNet
 {
     #region EventDelegates
-    
-    
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene where the item is</param>
-    /// <param name="sourceName">Name of the concerned item</param>
-    /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    /// <param name="sceneItemIndex">Index position of the item</param>
-    public delegate void SceneItemCreatedCallback(OBSWebsocket sender, string sceneName, string sourceName, int sceneItemId, int sceneItemIndex);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemRemoved"/>
-    /// A scene item has been removed.
-    /// This event is not emitted when the scene the item is in is removed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene the item was removed from</param>
-    /// <param name="sourceName">Name of the underlying source (input/scene)</param>
-    /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public delegate void SceneItemRemovedCallback(OBSWebsocket sender, string sceneName, string sourceName, int sceneItemId);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemEnableStateChanged"/>
-    /// A scene item's enable state has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene the item is in</param>
-    /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    /// <param name="sceneItemEnabled">Whether the scene item is enabled (visible)</param>
-    public delegate void SceneItemEnableStateChangedCallback(OBSWebsocket sender, string sceneName, int sceneItemId, bool sceneItemEnabled);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemLockStateChanged"/>
-    /// A scene item's lock state has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene the item is in</param>
-    /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    /// <param name="sceneItemLocked">Whether the scene item is locked</param>
-    public delegate void SceneItemLockStateChangedCallback(OBSWebsocket sender, string sceneName, int sceneItemId, bool sceneItemLocked);
 
     /// <summary>
     /// Called by <see cref="OBSWebsocket.CurrentSceneCollectionChanged"/>
@@ -475,17 +436,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when an item is removed from the item list of the specified scene
         /// </summary>
-        public event SceneItemRemovedCallback SceneItemRemoved;
+        public event EventHandler<SceneItemRemovedEventArgs> SceneItemRemoved;
 
         /// <summary>
         /// Triggered when the visibility of a scene item changes
         /// </summary>
-        public event SceneItemEnableStateChangedCallback SceneItemEnableStateChanged;
+        public event EventHandler<SceneItemEnableStateChangedEventArgs> SceneItemEnableStateChanged;
 
         /// <summary>
         /// Triggered when the lock status of a scene item changes
         /// </summary>
-        public event SceneItemLockStateChangedCallback SceneItemLockStateChanged;
+        public event EventHandler<SceneItemLockStateChangedEventArgs> SceneItemLockStateChanged;
 
         /// <summary>
         /// Triggered when switching to another scene collection
@@ -760,15 +721,15 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneItemRemoved):
-                    SceneItemRemoved?.Invoke(this, (string)body["sceneName"], (string)body["sourceName"], (int)body["sceneItemId"]);
+                    SceneItemRemoved?.Invoke(this, new SceneItemRemovedEventArgs((string)body["sceneName"], (string)body["sourceName"], (int)body["sceneItemId"]));
                     break;
 
                 case nameof(SceneItemEnableStateChanged):
-                    SceneItemEnableStateChanged?.Invoke(this, (string)body["sceneName"], (int)body["sceneItemId"], (bool)body["sceneItemEnabled"]);
+                    SceneItemEnableStateChanged?.Invoke(this, new SceneItemEnableStateChangedEventArgs((string)body["sceneName"], (int)body["sceneItemId"], (bool)body["sceneItemEnabled"]));
                     break;
 
                 case nameof(SceneItemLockStateChanged):
-                    SceneItemLockStateChanged?.Invoke(this, (string)body["sceneName"], (int)body["sceneItemId"], (bool)body["sceneItemLocked"]);
+                    SceneItemLockStateChanged?.Invoke(this, new SceneItemLockStateChangedEventArgs((string)body["sceneName"], (int)body["sceneItemId"], (bool)body["sceneItemLocked"]));
                     break;
 
                 case nameof(CurrentSceneCollectionChanged):
