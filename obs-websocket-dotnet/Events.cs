@@ -5,37 +5,13 @@ using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using OBSWebsocketDotNet.Types.Events;
 
 namespace OBSWebsocketDotNet
 {
     #region EventDelegates
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.CurrentProgramSceneChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="newSceneName">Name of the new current scene</param>
-    public delegate void CurrentProgramSceneChangeCallback(OBSWebsocket sender, string newSceneName);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneListChanged"/>
-    /// The list of scenes has changed.
-    /// TODO: Make OBS fire this event when scenes are reordered.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="scenes">Updated array of scenes</param>
-    public delegate void SceneListChangedCallback(OBSWebsocket sender, List<JObject> scenes);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemListReindexed"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene where items where reordered</param>
-    /// /// <param name="sceneItems">List of all scene items as JObject</param>
-    public delegate void SceneItemListReindexedCallback(OBSWebsocket sender, string sceneName, List<JObject> sceneItems);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneItemCreated"/>
-    /// </summary>
+    
+    
     /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
     /// <param name="sceneName">Name of the scene where the item is</param>
     /// <param name="sourceName">Name of the concerned item</param>
@@ -478,23 +454,23 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// The current program scene has changed.
         /// </summary>
-        public event CurrentProgramSceneChangeCallback CurrentProgramSceneChanged;
+        public event EventHandler<ProgramSceneChangedEventArgs> CurrentProgramSceneChanged;
 
         /// <summary>
         /// The list of scenes has changed.
         /// TODO: Make OBS fire this event when scenes are reordered.
         /// </summary>
-        public event SceneListChangedCallback SceneListChanged;
+        public event EventHandler<SceneListChangedEventArgs> SceneListChanged;
 
         /// <summary>
         /// Triggered when the scene item list of the specified scene is reordered
         /// </summary>
-        public event SceneItemListReindexedCallback SceneItemListReindexed;
+        public event EventHandler<SceneItemListReindexedEventArgs> SceneItemListReindexed;
 
         /// <summary>
         /// Triggered when a new item is added to the item list of the specified scene
         /// </summary>
-        public event SceneItemCreatedCallback SceneItemCreated;
+        public event EventHandler<SceneItemCreatedEventArgs> SceneItemCreated;
 
         /// <summary>
         /// Triggered when an item is removed from the item list of the specified scene
@@ -768,19 +744,19 @@ namespace OBSWebsocketDotNet
             switch (eventType)
             {
                 case nameof(CurrentProgramSceneChanged):
-                    CurrentProgramSceneChanged?.Invoke(this, (string)body["sceneName"]);
+                    CurrentProgramSceneChanged?.Invoke(this, new ProgramSceneChangedEventArgs((string)body["sceneName"]));
                     break;
 
                 case nameof(SceneListChanged):
-                    SceneListChanged?.Invoke(this, JsonConvert.DeserializeObject<List<JObject>>((string)body["scenes"]));
+                    SceneListChanged?.Invoke(this, new SceneListChangedEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["scenes"])));
                     break;
 
                 case nameof(SceneItemListReindexed):
-                    SceneItemListReindexed?.Invoke(this, (string)body["sceneName"], JsonConvert.DeserializeObject<List<JObject>>((string)body["sceneItems"]));
+                    SceneItemListReindexed?.Invoke(this, new SceneItemListReindexedEventArgs((string)body["sceneName"], JsonConvert.DeserializeObject<List<JObject>>((string)body["sceneItems"])));
                     break;
 
                 case nameof(SceneItemCreated):
-                    SceneItemCreated?.Invoke(this, (string)body["sceneName"], (string)body["sourceName"], (int)body["sceneItemId"], (int)body["sceneItemIndex"]);
+                    SceneItemCreated?.Invoke(this, new SceneItemCreatedEventArgs((string)body["sceneName"], (string)body["sourceName"], (int)body["sceneItemId"], (int)body["sceneItemIndex"]));
                     break;
 
                 case nameof(SceneItemRemoved):

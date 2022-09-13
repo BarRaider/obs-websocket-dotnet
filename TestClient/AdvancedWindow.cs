@@ -3,11 +3,9 @@ using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using static System.TimeZoneInfo;
+using OBSWebsocketDotNet.Types.Events;
 
 namespace TestClient
 {
@@ -187,23 +185,23 @@ namespace TestClient
             LogMessage($"[SceneItemRemoved] Scene: {sourceName} Source: {sourceName} ItemId: {sceneItemId}");
         }
 
-        private void Obs_SceneItemCreated(OBSWebsocket sender, string sceneName, string sourceName, int sceneItemId, int sceneItemIndex)
+        private void Obs_SceneItemCreated(object sender, SceneItemCreatedEventArgs args)
         {
-            LogMessage($"[SceneItemCreated] Scene: {sourceName} Source: {sourceName} ItemId: {sceneItemId} ItemIndex: {sceneItemIndex}");
+            LogMessage($"[SceneItemCreated] Scene: {args.SourceName} Source: {args.SourceName} ItemId: {args.SceneItemId} ItemIndex: {args.SceneItemIndex}");
         }
 
-        private void Obs_SceneListChanged(OBSWebsocket sender, List<JObject> scenes)
+        private void Obs_SceneListChanged(object sender, SceneListChangedEventArgs args)
         {
-            LogMessage($"[SceneListChanged] Count: {scenes.Count}");
-            foreach (var scene in scenes)
+            LogMessage($"[SceneListChanged] Count: {args.Scenes.Count}");
+            foreach (var scene in args.Scenes)
             {
                 LogMessage($"\n{scene}");
             }
         }
 
-        private void Obs_CurrentProgramSceneChanged(OBSWebsocket sender, string newSceneName)
+        private void Obs_CurrentProgramSceneChanged(object sender, ProgramSceneChangedEventArgs args)
         {
-            LogMessage($"[SceneChanged] Current: {newSceneName}");
+            LogMessage($"[SceneChanged] Current: {args.SceneName}");
         }
 
         private void Obs_CurrentPreviewSceneChanged(OBSWebsocket sender, string sceneName)
@@ -235,9 +233,9 @@ namespace TestClient
             }
         }
 
-        private void OBS_onSceneItemListIndexingChanged(OBSWebsocket sender, string sceneName, List<JObject> sceneItems)
+        private void OBS_onSceneItemListIndexingChanged(object sender, SceneItemListReindexedEventArgs args)
         {
-            LogMessage($"[SceneItemListReindexed] Scene: {sceneName}{Environment.NewLine}\tSceneItems: {sceneItems}");
+            LogMessage($"[SceneItemListReindexed] Scene: {args.SceneName}{Environment.NewLine}\tSceneItems: {args.SceneItems}");
         }
 
         private void OBS_onSourceFilterEnableStateChanged(OBSWebsocket sender, string sourceName, string filterName, bool filterEnabled)

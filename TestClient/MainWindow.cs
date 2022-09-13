@@ -24,6 +24,7 @@ using System.Windows.Forms;
 using System.Linq;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
+using OBSWebsocketDotNet.Types.Events;
 
 namespace TestClient
 {
@@ -192,11 +193,11 @@ namespace TestClient
 
         }
 
-        private void onCurrentProgramSceneChanged(OBSWebsocket sender, string newSceneName)
+        private void onCurrentProgramSceneChanged(object sender, ProgramSceneChangedEventArgs args)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbCurrentScene.Text = newSceneName;
+                tbCurrentScene.Text = args.SceneName;
             });
         }
 
