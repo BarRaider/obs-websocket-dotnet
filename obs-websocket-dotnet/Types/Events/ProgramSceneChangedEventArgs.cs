@@ -5,6 +5,9 @@
     /// </summary>
     public class ProgramSceneChangedEventArgs
     {
+        /// <summary>
+        /// The new scene name
+        /// </summary>
         public string SceneName { get; }
 
         public ProgramSceneChangedEventArgs(string sceneName)

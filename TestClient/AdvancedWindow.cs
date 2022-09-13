@@ -161,23 +161,23 @@ namespace TestClient
             LogMessage($"[CurrentSceneTransitionDurationChanged] Current: {transitionDuration}");
         }
 
-        private void Obs_CurrentSceneTransitionChanged(OBSWebsocket sender, string transitionName)
+        private void Obs_CurrentSceneTransitionChanged(object sender, CurrentSceneTransitionChangedEventArgs args)
         {
-            LogMessage($"[CurrentSceneTransitionChanged] Current: {transitionName}");
+            LogMessage($"[CurrentSceneTransitionChanged] Current: {args.TransitionName}");
         }
 
-        private void Obs_SceneCollectionListChanged(OBSWebsocket sender, List<string> sceneCollections)
+        private void Obs_SceneCollectionListChanged(object sender, SceneCollectionListChangedEventArgs args)
         {
-            LogMessage($"[SceneCollectionListChanged] Count: {sceneCollections.Count}");
-            foreach (var sc in sceneCollections)
+            LogMessage($"[SceneCollectionListChanged] Count: {args.SceneCollections.Count}");
+            foreach (var sc in args.SceneCollections)
             {
                 LogMessage($"\t{sc}");
             }
         }
 
-        private void Obs_CurrentSceneCollectionChanged(OBSWebsocket sender, string sceneCollectionName)
+        private void Obs_CurrentSceneCollectionChanged(object sender, CurrentSceneCollectionChangedEventArgs args)
         {
-            LogMessage($"[CurrentSceneCollectionChanged] Current: {sceneCollectionName}");
+            LogMessage($"[CurrentSceneCollectionChanged] Current: {args.SceneCollectionName}");
         }
 
         private void Obs_SceneItemRemoved(object sender, SceneItemRemovedEventArgs args)

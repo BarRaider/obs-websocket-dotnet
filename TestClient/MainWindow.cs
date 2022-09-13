@@ -201,7 +201,7 @@ namespace TestClient
             });
         }
 
-        private void onSceneCollectionChanged(object sender, string sceneCollectionName)
+        private void onSceneCollectionChanged(object sender, CurrentSceneCollectionChangedEventArgs args)
         {
             BeginInvoke((MethodInvoker)delegate
             {
@@ -217,11 +217,11 @@ namespace TestClient
             });
         }
 
-        private void onCurrentSceneTransitionChanged(OBSWebsocket sender, string newTransitionName)
+        private void onCurrentSceneTransitionChanged(object sender, CurrentSceneTransitionChangedEventArgs args)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbTransition.Text = newTransitionName;
+                tbTransition.Text = args.TransitionName;
             });
         }
 

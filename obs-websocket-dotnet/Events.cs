@@ -12,31 +12,6 @@ namespace OBSWebsocketDotNet
     #region EventDelegates
 
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.CurrentSceneCollectionChanged"/>
-    /// The current scene collection has changed.
-    /// Note: If polling has been paused during `CurrentSceneCollectionChanging`, this is the que to restart polling.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneCollectionName">Name of the new scene collection</param>
-    public delegate void CurrentSceneCollectionChangedCallback(OBSWebsocket sender, string sceneCollectionName);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneCollectionListChanged"/>
-    /// The scene collection list has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneCollections">Updated list of scene collections</param>
-    public delegate void SceneCollectionListChangedCallback(OBSWebsocket sender, List<string> sceneCollections);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.CurrentSceneTransitionChanged"/>
-    /// The current scene transition has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionName">Name of the new transition</param>
-    public delegate void CurrentSceneTransitionChangedCallback(OBSWebsocket sender, string transitionName);
-
-    /// <summary>
     /// Called by <see cref="OBSWebsocket.CurrentSceneTransitionDurationChanged"/>
     /// The current scene transition duration has changed.
     /// </summary>
@@ -451,17 +426,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when switching to another scene collection
         /// </summary>
-        public event CurrentSceneCollectionChangedCallback CurrentSceneCollectionChanged;
+        public event EventHandler<CurrentSceneCollectionChangedEventArgs> CurrentSceneCollectionChanged;
 
         /// <summary>
         /// Triggered when a scene collection is created, deleted or renamed
         /// </summary>
-        public event SceneCollectionListChangedCallback SceneCollectionListChanged;
+        public event EventHandler<SceneCollectionListChangedEventArgs> SceneCollectionListChanged;
 
         /// <summary>
         /// Triggered when switching to another transition
         /// </summary>
-        public event CurrentSceneTransitionChangedCallback CurrentSceneTransitionChanged;
+        public event EventHandler<CurrentSceneTransitionChangedEventArgs> CurrentSceneTransitionChanged;
 
         /// <summary>
         /// Triggered when the current transition duration is changed
@@ -733,15 +708,15 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(CurrentSceneCollectionChanged):
-                    CurrentSceneCollectionChanged?.Invoke(this, (string)body["sceneCollectionName"]);
+                    CurrentSceneCollectionChanged?.Invoke(this, new CurrentSceneCollectionChangedEventArgs((string)body["sceneCollectionName"]));
                     break;
 
                 case nameof(SceneCollectionListChanged):
-                    SceneCollectionListChanged?.Invoke(this, JsonConvert.DeserializeObject<List<string>>((string)body["sceneCollections"]));
+                    SceneCollectionListChanged?.Invoke(this, new SceneCollectionListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["sceneCollections"])));
                     break;
 
                 case nameof(CurrentSceneTransitionChanged):
-                    CurrentSceneTransitionChanged?.Invoke(this, (string)body["transitionName"]);
+                    CurrentSceneTransitionChanged?.Invoke(this, new CurrentSceneTransitionChangedEventArgs((string)body["transitionName"]));
                     break;
 
                 case nameof(CurrentSceneTransitionDurationChanged):
