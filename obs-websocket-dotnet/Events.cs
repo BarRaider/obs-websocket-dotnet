@@ -12,50 +12,6 @@ namespace OBSWebsocketDotNet
     #region EventDelegates
 
     /// <summary>
-    /// Called by <see cref="OBSWebsocket.CurrentSceneTransitionDurationChanged"/>
-    /// The current scene transition duration has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionDuration">Transition duration in milliseconds</param>
-    public delegate void CurrentSceneTransitionDurationChangedCallback(OBSWebsocket sender, int transitionDuration);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneTransitionStarted"/>
-    /// A scene transition has started.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionName">Transition name</param>
-    public delegate void SceneTransitionStartedCallback(OBSWebsocket sender, string transitionName);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneTransitionEnded"/>
-    /// A scene transition has completed fully.
-    /// Note: Does not appear to trigger when the transition is interrupted by the user.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionName">Scene transition name</param>
-    public delegate void SceneTransitionEndedCallback(OBSWebsocket sender, string transitionName);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.SceneTransitionVideoEnded"/>
-    /// A scene transition's video has completed fully.
-    /// Useful for stinger transitions to tell when the video *actually* ends.
-    /// `SceneTransitionEnded` only signifies the cut point, not the completion of transition playback.
-    /// Note: Appears to be called by every transition, regardless of relevance.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="transitionName">Scene transition name</param>
-    public delegate void SceneTransitionVideoEndedCallback(OBSWebsocket sender, string transitionName);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.CurrentProfileChanged"/>
-    /// The current profile has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="profileName">Name of the new profile</param>
-    public delegate void CurrentProfileChangedCallback(OBSWebsocket sender, string profileName);
-
-    /// <summary>
     /// Called by <see cref="OBSWebsocket.ProfileListChanged"/>
     /// The profile list has changed.
     /// </summary>
@@ -441,27 +397,27 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when the current transition duration is changed
         /// </summary>
-        public event CurrentSceneTransitionDurationChangedCallback CurrentSceneTransitionDurationChanged;
+        public event EventHandler<CurrentSceneTransitionDurationChangedEventArgs> CurrentSceneTransitionDurationChanged;
 
         /// <summary>
         /// Triggered when a transition between two scenes starts. Followed by <see cref="CurrentProgramSceneChanged"/>
         /// </summary>
-        public event SceneTransitionStartedCallback SceneTransitionStarted;
+        public event EventHandler<SceneTransitionStartedEventArgs> SceneTransitionStarted;
 
         /// <summary>
         /// Triggered when a transition (other than "cut") has ended. Please note that the from-scene field is not available in TransitionEnd
         /// </summary>
-        public event SceneTransitionEndedCallback SceneTransitionEnded;
+        public event EventHandler<SceneTransitionEndedEventArgs> SceneTransitionEnded;
 
         /// <summary>
         /// Triggered when a stinger transition has finished playing its video
         /// </summary>
-        public event SceneTransitionVideoEndedCallback SceneTransitionVideoEnded;
+        public event EventHandler<SceneTransitionVideoEndedEventArgs> SceneTransitionVideoEnded;
 
         /// <summary>
         /// Triggered when switching to another profile
         /// </summary>
-        public event CurrentProfileChangedCallback CurrentProfileChanged;
+        public event EventHandler<CurrentProfileChangedEventArgs> CurrentProfileChanged;
 
         /// <summary>
         /// Triggered when a profile is created, imported, removed or renamed
@@ -720,23 +676,23 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(CurrentSceneTransitionDurationChanged):
-                    CurrentSceneTransitionDurationChanged?.Invoke(this, (int)body["transitionDuration"]);
+                    CurrentSceneTransitionDurationChanged?.Invoke(this, new CurrentSceneTransitionDurationChangedEventArgs((int)body["transitionDuration"]));
                     break;
 
                 case nameof(SceneTransitionStarted):
-                    SceneTransitionStarted?.Invoke(this, (string)body["transitionName"]);
+                    SceneTransitionStarted?.Invoke(this, new SceneTransitionStartedEventArgs((string)body["transitionName"]));
                     break;
 
                 case nameof(SceneTransitionEnded):
-                    SceneTransitionEnded?.Invoke(this, (string)body["transitionName"]);
+                    SceneTransitionEnded?.Invoke(this, new SceneTransitionEndedEventArgs((string)body["transitionName"]));
                     break;
 
                 case nameof(SceneTransitionVideoEnded):
-                    SceneTransitionVideoEnded?.Invoke(this, (string)body["transitionName"]);
+                    SceneTransitionVideoEnded?.Invoke(this, new SceneTransitionVideoEndedEventArgs((string)body["transitionName"]));
                     break;
 
                 case nameof(CurrentProfileChanged):
-                    CurrentProfileChanged?.Invoke(this, (string)body["profileName"]);
+                    CurrentProfileChanged?.Invoke(this, new CurrentProfileChangedEventArgs((string)body["profileName"]));
                     break;
 
                 case nameof(ProfileListChanged):

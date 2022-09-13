@@ -209,7 +209,7 @@ namespace TestClient
             });
         }
 
-        private void onCurrentProfileChanged(object sender, string profileName)
+        private void onCurrentProfileChanged(object sender, CurrentProfileChangedEventArgs args)
         {
             BeginInvoke((MethodInvoker)delegate
             {
@@ -225,11 +225,11 @@ namespace TestClient
             });
         }
 
-        private void onCurrentSceneTransitionDurationChanged(OBSWebsocket sender, int newDuration)
+        private void onCurrentSceneTransitionDurationChanged(object sender, CurrentSceneTransitionDurationChangedEventArgs args)
         {
             BeginInvoke((MethodInvoker)delegate
             {
-                tbTransitionDuration.Value = newDuration;
+                tbTransitionDuration.Value = args.TransitionDuration;
             });
         }
 

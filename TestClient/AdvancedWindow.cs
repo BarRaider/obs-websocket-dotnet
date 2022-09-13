@@ -151,14 +151,14 @@ namespace TestClient
             }
         }
 
-        private void Obs_CurrentProfileChanged(OBSWebsocket sender, string profileName)
+        private void Obs_CurrentProfileChanged(object sender, CurrentProfileChangedEventArgs args)
         {
-            LogMessage($"[CurrentProfileChanged] Current: {profileName}");
+            LogMessage($"[CurrentProfileChanged] Current: {args.ProfileName}");
         }
 
-        private void Obs_CurrentSceneTransitionDurationChanged(OBSWebsocket sender, int transitionDuration)
+        private void Obs_CurrentSceneTransitionDurationChanged(object sender, CurrentSceneTransitionDurationChangedEventArgs args)
         {
-            LogMessage($"[CurrentSceneTransitionDurationChanged] Current: {transitionDuration}");
+            LogMessage($"[CurrentSceneTransitionDurationChanged] Current: {args.TransitionDuration}");
         }
 
         private void Obs_CurrentSceneTransitionChanged(object sender, CurrentSceneTransitionChangedEventArgs args)
@@ -253,19 +253,19 @@ namespace TestClient
             LogMessage($"[SourceFilterCreated] Source: {sourceName} Filter: {filterName} FilterKind: {filterKind} FilterIndex: {filterIndex}{Environment.NewLine}\tSettings: {filterSettings}{Environment.NewLine}\tDefaultSettings: {defaultFilterSettings}");
         }
 
-        private void OBS_onSceneTransitionVideoEnded(OBSWebsocket sender, string transitionName)
+        private void OBS_onSceneTransitionVideoEnded(object sender, SceneTransitionVideoEndedEventArgs args)
         {
-            LogMessage($"[SceneTransitionVideoEnded] Name: {transitionName}");
+            LogMessage($"[SceneTransitionVideoEnded] Name: {args.TransitionName}");
         }
 
-        private void OBS_onSceneTransitionEnded(OBSWebsocket sender, string transitionName)
+        private void OBS_onSceneTransitionEnded(object sender, SceneTransitionEndedEventArgs args)
         {
-            LogMessage($"[SceneTransitionEnded] Name: {transitionName}");
+            LogMessage($"[SceneTransitionEnded] Name: {args.TransitionName}");
         }
 
-        private void OBS_onSceneTransitionStarted(OBSWebsocket sender, string transitionName)
+        private void OBS_onSceneTransitionStarted(object sender, SceneTransitionStartedEventArgs args)
         {
-            LogMessage($"[SceneTransitionStarted] Name: {transitionName}");
+            LogMessage($"[SceneTransitionStarted] Name: {args.TransitionName}");
         }
 
         private void LogMessage(string message)
