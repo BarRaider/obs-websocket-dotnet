@@ -10,73 +10,6 @@ using OBSWebsocketDotNet.Types.Events;
 namespace OBSWebsocketDotNet
 {
     #region EventDelegates
-    
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.CurrentPreviewSceneChanged"/>
-    /// The current preview scene has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene that was switched to</param>
-    public delegate void CurrentPreviewSceneChangedCallback(OBSWebsocket sender, string sceneName);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.StudioModeStateChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="studioModeEnabled">New Studio Mode status</param>
-    public delegate void StudioModeStateChangedCallback(OBSWebsocket sender, bool studioModeEnabled);
-
-    /// <summary>
-    /// Called by <see cref="OBSWebsocket.ReplayBufferStateChanged"/>
-    /// The state of the replay buffer output has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="outputState">The specific state of the output</param>
-    public delegate void ReplayBufferStateChangedCallback(OBSWebsocket sender, OutputStateChanged outputState);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneItemSelected"/>
-    /// A scene item has been selected in the Ui.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the scene item is in</param>
-    /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public delegate void SceneItemSelectedCallback(OBSWebsocket sender, string sceneName, string sceneItemId);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneItemTransformChanged"/>
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// /// <param name="sceneName">Name of the scene item is in</param>
-    /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    /// <param name="transform">Transform data</param>
-    public delegate void SceneItemTransformCallback(OBSWebsocket sender, string sceneName, string sceneItemId, SceneItemTransformInfo transform);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputAudioSyncOffsetChanged"/>
-    /// The sync offset of an input has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    /// <param name="inputAudioSyncOffset">New sync offset in milliseconds</param>
-    public delegate void InputAudioSyncOffsetChangedCallback(OBSWebsocket sender, string inputName, int inputAudioSyncOffset);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputMuteStateChanged"/>
-    /// An input's mute state has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    /// <param name="inputMuted">Whether the input is muted</param>
-    public delegate void InputMuteStateChangedCallback(OBSWebsocket sender, string inputName, bool inputMuted);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputVolumeChanged"/>
-    /// An input's volume level has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="volume">Current volume levels of source</param>
-    public delegate void InputVolumeChangedCallback(OBSWebsocket sender, InputVolume volume);
 
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SourceFilterRemoved"/>
@@ -413,17 +346,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Triggered when state of the replay buffer changes
         /// </summary>
-        public event ReplayBufferStateChangedCallback ReplayBufferStateChanged;
+        public event EventHandler<ReplayBufferStateChangedEventArgs> ReplayBufferStateChanged;
 
         /// <summary>
         /// Triggered when the preview scene selection changes (Studio Mode only)
         /// </summary>
-        public event CurrentPreviewSceneChangedCallback CurrentPreviewSceneChanged;
+        public event EventHandler<CurrentPreviewSceneChangedEventArgs> CurrentPreviewSceneChanged;
 
         /// <summary>
         /// Triggered when Studio Mode is turned on or off
         /// </summary>
-        public event StudioModeStateChangedCallback StudioModeStateChanged;
+        public event EventHandler<StudioModeStateChangedEventArgs> StudioModeStateChanged;
 
         /// <summary>
         /// Triggered when OBS exits
@@ -443,17 +376,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// A scene item is selected in the UI
         /// </summary>
-        public event SceneItemSelectedCallback SceneItemSelected;
+        public event EventHandler<SceneItemSelectedEventArgs> SceneItemSelected;
 
         /// <summary>
         /// A scene item transform has changed
         /// </summary>
-        public event SceneItemTransformCallback SceneItemTransformChanged;
+        public event EventHandler<SceneItemTransformEventArgs> SceneItemTransformChanged;
 
         /// <summary>
         /// The audio sync offset of an input has changed
         /// </summary>
-        public event InputAudioSyncOffsetChangedCallback InputAudioSyncOffsetChanged;
+        public event EventHandler<InputAudioSyncOffsetChangedEventArgs> InputAudioSyncOffsetChanged;
 
         /// <summary>
         /// A filter was added to a source
@@ -478,12 +411,12 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// A source has been muted or unmuted
         /// </summary>
-        public event InputMuteStateChangedCallback InputMuteStateChanged;
+        public event EventHandler<InputMuteStateChangedEventArgs> InputMuteStateChanged;
 
         /// <summary>
         /// The volume of a source has changed
         /// </summary>
-        public event InputVolumeChangedCallback InputVolumeChanged;
+        public event EventHandler<InputVolumeChangedEventArgs> InputVolumeChanged;
 
         /// <summary>
         /// A custom broadcast message was received
@@ -684,15 +617,15 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(CurrentPreviewSceneChanged):
-                    CurrentPreviewSceneChanged?.Invoke(this, (string)body["sceneName"]);
+                    CurrentPreviewSceneChanged?.Invoke(this, new CurrentPreviewSceneChangedEventArgs((string)body["sceneName"]));
                     break;
 
                 case nameof(StudioModeStateChanged):
-                    StudioModeStateChanged?.Invoke(this, (bool)body["studioModeEnabled"]);
+                    StudioModeStateChanged?.Invoke(this, new StudioModeStateChangedEventArgs((bool)body["studioModeEnabled"]));
                     break;
 
                 case nameof(ReplayBufferStateChanged):
-                    ReplayBufferStateChanged?.Invoke(this, new OutputStateChanged(body));
+                    ReplayBufferStateChanged?.Invoke(this, new ReplayBufferStateChangedEventArgs(new OutputStateChanged(body)));
                     break;
 
                 case nameof(ExitStarted):
@@ -700,23 +633,23 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneItemSelected):
-                    SceneItemSelected?.Invoke(this, (string)body["sceneName"], (string)body["sceneItemId"]);
+                    SceneItemSelected?.Invoke(this, new SceneItemSelectedEventArgs((string)body["sceneName"], (string)body["sceneItemId"]));
                     break;
 
                 case nameof(SceneItemTransformChanged):
-                    SceneItemTransformChanged?.Invoke(this, (string)body["sceneName"], (string)body["sceneItemId"], new SceneItemTransformInfo((JObject)body["sceneItemTransform"]));
+                    SceneItemTransformChanged?.Invoke(this, new SceneItemTransformEventArgs((string)body["sceneName"], (string)body["sceneItemId"], new SceneItemTransformInfo((JObject)body["sceneItemTransform"])));
                     break;
 
                 case nameof(InputAudioSyncOffsetChanged):
-                    InputAudioSyncOffsetChanged?.Invoke(this, (string)body["inputName"], (int)body["inputAudioSyncOffset"]);
+                    InputAudioSyncOffsetChanged?.Invoke(this, new InputAudioSyncOffsetChangedEventArgs((string)body["inputName"], (int)body["inputAudioSyncOffset"]));
                     break;
 
                 case nameof(InputMuteStateChanged):
-                    InputMuteStateChanged?.Invoke(this, (string)body["inputName"], (bool)body["inputMuted"]);
+                    InputMuteStateChanged?.Invoke(this, new InputMuteStateChangedEventArgs((string)body["inputName"], (bool)body["inputMuted"]));
                     break;
 
                 case nameof(InputVolumeChanged):
-                    InputVolumeChanged?.Invoke(this, new InputVolume(body));
+                    InputVolumeChanged?.Invoke(this, new InputVolumeChangedEventArgs(new InputVolume(body)));
                     break;
 
                 case nameof(SourceFilterCreated):

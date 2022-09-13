@@ -91,19 +91,19 @@ namespace TestClient
             LogMessage($"[InputActiveStateChanged] Name: {inputName} Video Active: {videoActive}");
         }
 
-        private void Obs_InputMuteStateChanged(OBSWebsocket sender, string inputName, bool inputMuted)
+        private void Obs_InputMuteStateChanged(object sender, InputMuteStateChangedEventArgs args)
         {
-            LogMessage($"[InputMuteStateChanged] Name: {inputName} Muted: {inputMuted}");
+            LogMessage($"[InputMuteStateChanged] Name: {args.InputName} Muted: {args.InputMuted}");
         }
 
-        private void Obs_SceneItemTransformChanged(OBSWebsocket sender, string sceneName, string sceneItemId, SceneItemTransformInfo transform)
+        private void Obs_SceneItemTransformChanged(object sender, SceneItemTransformEventArgs args)
         {
-            LogMessage($"[SceneItemTransformChanged] Scene: {sceneName} ItemId: {sceneItemId} Transform: {transform.X},{transform.Y}");
+            LogMessage($"[SceneItemTransformChanged] Scene: {args.SceneName} ItemId: {args.SceneItemId} Transform: {args.Transform.X},{args.Transform.Y}");
         }
 
-        private void Obs_SceneItemSelected(OBSWebsocket sender, string sceneName, string sceneItemId)
+        private void Obs_SceneItemSelected(object sender, SceneItemSelectedEventArgs args)
         {
-            LogMessage($"[SceneItemSelected] Scene: {sceneName} ItemId: {sceneItemId}");
+            LogMessage($"[SceneItemSelected] Scene: {args.SceneName} ItemId: {args.SceneItemId}");
         }
 
         private void Obs_Disconnected(object sender, OBSWebsocketDotNet.Communication.ObsDisconnectionInfo e)
@@ -111,9 +111,9 @@ namespace TestClient
             LogMessage($"[OBS DISCONNECTED] CloseCode: {e.ObsCloseCode} Reason: {e.DisconnectReason} Type: {e.WebsocketDisconnectionInfo?.Type} Exception: {e.WebsocketDisconnectionInfo?.Exception?.Message}");
         }
 
-        private void Obs_StudioModeStateChanged(OBSWebsocket sender, bool studioModeEnabled)
+        private void Obs_StudioModeStateChanged(object sender, StudioModeStateChangedEventArgs args)
         {
-            LogMessage($"[Preview/Studio ModeChanged] Enabled: {studioModeEnabled}");
+            LogMessage($"[Preview/Studio ModeChanged] Enabled: {args.StudioModeEnabled}");
         }
 
         private void Obs_ReplayBufferSaved(OBSWebsocket sender, string savedReplayPath)
@@ -121,9 +121,9 @@ namespace TestClient
             LogMessage($"[ReplayBufferSaved] Save Location: {savedReplayPath}");
         }
 
-        private void Obs_ReplayBufferStateChanged(OBSWebsocket sender, OutputStateChanged outputState)
+        private void Obs_ReplayBufferStateChanged(object sender, ReplayBufferStateChangedEventArgs args)
         {
-            LogMessage($"[ReplayBufferStateChanged] Active: {outputState.IsActive} State: {outputState.StateStr} {outputState.State}");
+            LogMessage($"[ReplayBufferStateChanged] Active: {args.OutputState.IsActive} State: {args.OutputState.StateStr} {args.OutputState.State}");
         }
 
         private void Obs_RecordStateChanged(object sender, RecordStateChangedEventArgs args)
@@ -204,14 +204,14 @@ namespace TestClient
             LogMessage($"[SceneChanged] Current: {args.SceneName}");
         }
 
-        private void Obs_CurrentPreviewSceneChanged(OBSWebsocket sender, string sceneName)
+        private void Obs_CurrentPreviewSceneChanged(object sender, CurrentPreviewSceneChangedEventArgs args)
         {
-            LogMessage($"[Preview/Studio SceneChanged] Current: {sceneName}");
+            LogMessage($"[Preview/Studio SceneChanged] Current: {args.SceneName}");
         }
 
-        private void OBS_onInputVolumeChanged(OBSWebsocket sender, InputVolume volume)
+        private void OBS_onInputVolumeChanged(object sender, InputVolumeChangedEventArgs args)
         {
-            LogMessage($"[SourceVolumeChanged] Source: {volume.InputName} Volume: {volume.InputVolumeMul} VolumeDB: {volume.InputVolumeDb}");
+            LogMessage($"[SourceVolumeChanged] Source: {args.Volume.InputName} Volume: {args.Volume.InputVolumeMul} VolumeDB: {args.Volume.InputVolumeDb}");
         }
 
         private void OBS_onSceneItemEnableStateChanged(object sender, SceneItemEnableStateChangedEventArgs args)
