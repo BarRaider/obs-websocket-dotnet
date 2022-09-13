@@ -10,72 +10,6 @@ using OBSWebsocketDotNet.Types.Events;
 namespace OBSWebsocketDotNet
 {
     #region EventDelegates
-    
-    /// <summary>
-    /// An input's active state has changed.
-    /// When an input is active, it means it's being shown by the program feed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    /// <param name="videoActive">Whether the input is active</param>
-    public delegate void InputActiveStateChangedCallback(OBSWebsocket sender, string inputName, bool videoActive);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputShowStateChanged"/>
-    /// An input's show state has changed.
-    /// When an input is showing, it means it's being shown by the preview or a dialog.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    /// <param name="videoShowing">Whether the input is showing</param>
-    public delegate void InputShowStateChangedCallback(OBSWebsocket sender, string inputName, bool videoShowing);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputAudioBalanceChanged"/>
-    /// The audio balance value of an input has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the affected input</param>
-    /// <param name="inputAudioBalance">New audio balance value of the input</param>
-    public delegate void InputAudioBalanceChangedCallback(OBSWebsocket sender, string inputName, double inputAudioBalance);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputAudioTracksChanged"/>
-    /// The audio tracks of an input have changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    /// <param name="inputAudioTracks">Object of audio tracks along with their associated enable states</param>
-    public delegate void InputAudioTracksChangedCallback(OBSWebsocket sender, string inputName, JObject inputAudioTracks);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputAudioMonitorTypeChanged"/>
-    /// The monitor type of an input has changed.
-    /// Available types are:
-    /// - `OBS_MONITORING_TYPE_NONE`
-    /// - `OBS_MONITORING_TYPE_MONITOR_ONLY`
-    /// - `OBS_MONITORING_TYPE_MONITOR_AND_OUTPUT`
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    /// <param name="monitorType">New monitor type of the input</param>
-    public delegate void InputAudioMonitorTypeChangedCallback(OBSWebsocket sender, string inputName, string monitorType);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputVolumeMeters"/>
-    /// A high-volume event providing volume levels of all active inputs every 50 milliseconds.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputs">Array of active inputs with their associated volume levels</param>
-    public delegate void InputVolumeMetersCallback(OBSWebsocket sender, List<JObject> inputs);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.ReplayBufferSaved"/>
-    /// The replay buffer has been saved.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="savedReplayPath">Path of the saved replay file</param>
-    public delegate void ReplayBufferSavedCallback(OBSWebsocket sender, string savedReplayPath);
 
     /// <summary>
     /// Callback by <see cref="OBSWebsocket.SceneCreated"/>
@@ -335,23 +269,23 @@ namespace OBSWebsocketDotNet
         /// An input's active state has changed.
         /// When an input is active, it means it's being shown by the program feed.
         /// </summary>
-        public event InputActiveStateChangedCallback InputActiveStateChanged;
+        public event EventHandler<InputActiveStateChangedEventArgs> InputActiveStateChanged;
 
         /// <summary>
         /// An input's show state has changed.
         /// When an input is showing, it means it's being shown by the preview or a dialog.
         /// </summary>
-        public event InputShowStateChangedCallback InputShowStateChanged;
+        public event EventHandler<InputShowStateChangedEventArgs> InputShowStateChanged;
 
         /// <summary>
         /// The audio balance value of an input has changed.
         /// </summary>
-        public event InputAudioBalanceChangedCallback InputAudioBalanceChanged;
+        public event EventHandler<InputAudioBalanceChangedEventArgs> InputAudioBalanceChanged;
 
         /// <summary>
         /// The audio tracks of an input have changed.
         /// </summary>
-        public event InputAudioTracksChangedCallback InputAudioTracksChanged;
+        public event EventHandler<InputAudioTracksChangedEventArgs> InputAudioTracksChanged;
 
         /// <summary>
         /// The monitor type of an input has changed.
@@ -360,17 +294,17 @@ namespace OBSWebsocketDotNet
         /// - `OBS_MONITORING_TYPE_MONITOR_ONLY`
         /// - `OBS_MONITORING_TYPE_MONITOR_AND_OUTPUT`
         /// </summary>
-        public event InputAudioMonitorTypeChangedCallback InputAudioMonitorTypeChanged;
+        public event EventHandler<InputAudioMonitorTypeChangedEventArgs> InputAudioMonitorTypeChanged;
 
         /// <summary>
         /// A high-volume event providing volume levels of all active inputs every 50 milliseconds.
         /// </summary>
-        public event InputVolumeMetersCallback InputVolumeMeters;
+        public event EventHandler<InputVolumeMetersEventArgs> InputVolumeMeters;
 
         /// <summary>
         /// The replay buffer has been saved.
         /// </summary>
-        public event ReplayBufferSavedCallback ReplayBufferSaved;
+        public event EventHandler<ReplayBufferSavedEventArgs> ReplayBufferSaved;
 
         /// <summary>
         /// A new scene has been created.
@@ -577,31 +511,31 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(InputActiveStateChanged):
-                    InputActiveStateChanged?.Invoke(this, (string)body["inputName"], (bool)body["videoActive"]);
+                    InputActiveStateChanged?.Invoke(this, new InputActiveStateChangedEventArgs((string)body["inputName"], (bool)body["videoActive"]));
                     break;
 
                 case nameof(InputShowStateChanged):
-                    InputShowStateChanged?.Invoke(this, (string)body["inputName"], (bool)body["videoShowing"]);
+                    InputShowStateChanged?.Invoke(this, new InputShowStateChangedEventArgs((string)body["inputName"], (bool)body["videoShowing"]));
                     break;
 
                 case nameof(InputAudioBalanceChanged):
-                    InputAudioBalanceChanged?.Invoke(this, (string)body["inputName"], (double)body["inputAudioBalance"]);
+                    InputAudioBalanceChanged?.Invoke(this, new InputAudioBalanceChangedEventArgs((string)body["inputName"], (double)body["inputAudioBalance"]));
                     break;
 
                 case nameof(InputAudioTracksChanged):
-                    InputAudioTracksChanged?.Invoke(this, (string)body["inputName"], (JObject)body["inputAudioTracks"]);
+                    InputAudioTracksChanged?.Invoke(this, new InputAudioTracksChangedEventArgs((string)body["inputName"], (JObject)body["inputAudioTracks"]));
                     break;
 
                 case nameof(InputAudioMonitorTypeChanged):
-                    InputAudioMonitorTypeChanged?.Invoke(this, (string)body["inputName"], (string)body["monitorType"]);
+                    InputAudioMonitorTypeChanged?.Invoke(this, new InputAudioMonitorTypeChangedEventArgs((string)body["inputName"], (string)body["monitorType"]));
                     break;
 
                 case nameof(InputVolumeMeters):
-                    InputVolumeMeters?.Invoke(this, JsonConvert.DeserializeObject<List<JObject>>((string)body["inputs"]));
+                    InputVolumeMeters?.Invoke(this, new InputVolumeMetersEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["inputs"])));
                     break;
 
                 case nameof(ReplayBufferSaved):
-                    ReplayBufferSaved?.Invoke(this, (string)body["savedReplayPath"]);
+                    ReplayBufferSaved?.Invoke(this, new ReplayBufferSavedEventArgs((string)body["savedReplayPath"]));
                     break;
 
                 case nameof(SceneCreated):

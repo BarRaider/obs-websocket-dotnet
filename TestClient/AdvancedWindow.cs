@@ -86,9 +86,9 @@ namespace TestClient
             obs.VirtualcamStateChanged += Obs_VirtualcamStateChanged;
         }
 
-        private void Obs_InputActiveStateChanged(OBSWebsocket sender, string inputName, bool videoActive)
+        private void Obs_InputActiveStateChanged(object sender, InputActiveStateChangedEventArgs args)
         {
-            LogMessage($"[InputActiveStateChanged] Name: {inputName} Video Active: {videoActive}");
+            LogMessage($"[InputActiveStateChanged] Name: {args.InputName} Video Active: {args.VideoActive}");
         }
 
         private void Obs_InputMuteStateChanged(object sender, InputMuteStateChangedEventArgs args)
@@ -116,9 +116,9 @@ namespace TestClient
             LogMessage($"[Preview/Studio ModeChanged] Enabled: {args.StudioModeEnabled}");
         }
 
-        private void Obs_ReplayBufferSaved(OBSWebsocket sender, string savedReplayPath)
+        private void Obs_ReplayBufferSaved(object sender, ReplayBufferSavedEventArgs args)
         {
-            LogMessage($"[ReplayBufferSaved] Save Location: {savedReplayPath}");
+            LogMessage($"[ReplayBufferSaved] Save Location: {args.SavedReplayPath}");
         }
 
         private void Obs_ReplayBufferStateChanged(object sender, ReplayBufferStateChangedEventArgs args)
