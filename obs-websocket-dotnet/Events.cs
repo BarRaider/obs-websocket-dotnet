@@ -9,37 +9,6 @@ using OBSWebsocketDotNet.Types.Events;
 
 namespace OBSWebsocketDotNet
 {
-    #region EventDelegates
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneCreated"/>
-    /// A new scene has been created.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the new scene</param>
-    /// <param name="isGroup">Whether the new scene is a group</param>
-    public delegate void SceneCreatedCallback(OBSWebsocket sender, string sceneName, bool isGroup);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneRemoved"/>
-    /// A scene has been removed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneName">Name of the removed scene</param>
-    /// <param name="isGroup">Whether the scene was a group</param>
-    public delegate void SceneRemovedCallback(OBSWebsocket sender, string sceneName, bool isGroup);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SceneNameChanged"/>
-    /// The name of a scene has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="oldSceneName">Old name of the scene</param>
-    /// <param name="sceneName">New name of the scene</param>
-    public delegate void SceneNameChangedCallback(OBSWebsocket sender, string oldSceneName, string sceneName);
-
-    #endregion
-
     public partial class OBSWebsocket
     {
         #region Events
@@ -309,17 +278,17 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// A new scene has been created.
         /// </summary>
-        public event SceneCreatedCallback SceneCreated;
+        public event EventHandler<SceneCreatedEventArgs> SceneCreated;
 
         /// <summary>
         /// A scene has been removed.
         /// </summary>
-        public event SceneRemovedCallback SceneRemoved;
+        public event EventHandler<SceneRemovedEventArgs> SceneRemoved;
 
         /// <summary>
         /// The name of a scene has changed.
         /// </summary>
-        public event SceneNameChangedCallback SceneNameChanged;
+        public event EventHandler<SceneNameChangedEventArgs> SceneNameChanged;
 
         #endregion
 
@@ -539,15 +508,15 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneCreated):
-                    SceneCreated?.Invoke(this, (string)body["sceneName"], (bool)body["isGroup"]);
+                    SceneCreated?.Invoke(this, new SceneCreatedEventArgs((string)body["sceneName"], (bool)body["isGroup"]));
                     break;
 
                 case nameof(SceneRemoved):
-                    SceneRemoved?.Invoke(this, (string)body["sceneName"], (bool)body["isGroup"]);
+                    SceneRemoved?.Invoke(this, new SceneRemovedEventArgs((string)body["sceneName"], (bool)body["isGroup"]));
                     break;
 
                 case nameof(SceneNameChanged):
-                    SceneNameChanged?.Invoke(this, (string)body["oldSceneName"], (string)body["sceneName"]);
+                    SceneNameChanged?.Invoke(this, new SceneNameChangedEventArgs((string)body["oldSceneName"], (string)body["sceneName"]));
                     break;
 
                 default:
