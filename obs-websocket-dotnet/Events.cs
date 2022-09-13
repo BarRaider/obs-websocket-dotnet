@@ -12,63 +12,6 @@ namespace OBSWebsocketDotNet
     #region EventDelegates
     
     /// <summary>
-    /// Callback by <see cref="OBSWebsocket.CurrentSceneCollectionChanging"/>
-    /// The current scene collection has begun changing.
-    /// Note: We recommend using this event to trigger a pause of all polling requests, as performing any requests during a
-    /// scene collection change is considered undefined behavior and can cause crashes!
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sceneCollectionName">Name of the current scene collection</param>
-    public delegate void CurrentSceneCollectionChangingCallback(OBSWebsocket sender, string sceneCollectionName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.CurrentProfileChanging"/>
-    /// The current profile has begun changing.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="profileName">Name of the current profile</param>
-    public delegate void CurrentProfileChangingCallback(OBSWebsocket sender, string profileName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.SourceFilterNameChanged"/>
-    /// The name of a source filter has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="sourceName">The source the filter is on</param>
-    /// <param name="oldFilterName">Old name of the filter</param>
-    /// <param name="filterName">New name of the filter</param>
-    public delegate void SourceFilterNameChangedCallback(OBSWebsocket sender, string sourceName, string oldFilterName, string filterName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputCreated"/>
-    /// An input has been created.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">ame of the input</param>
-    /// <param name="inputKind">The kind of the input</param>
-    /// <param name="unversionedInputKind">The unversioned kind of input (aka no `_v2` stuff)</param>
-    /// <param name="inputSettings">The settings configured to the input when it was created</param>
-    /// <param name="defaultInputSettings">The default settings for the input</param>
-    public delegate void InputCreatedCallback(OBSWebsocket sender, string inputName, string inputKind, string unversionedInputKind, JObject inputSettings, JObject defaultInputSettings);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputRemoved"/>
-    /// An input has been removed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="inputName">Name of the input</param>
-    public delegate void InputRemovedCallback(OBSWebsocket sender, string inputName);
-
-    /// <summary>
-    /// Callback by <see cref="OBSWebsocket.InputNameChanged"/>
-    /// The name of an input has changed.
-    /// </summary>
-    /// <param name="sender"><see cref="OBSWebsocket"/> instance</param>
-    /// <param name="oldInputName">Old name of the input</param>
-    /// <param name="inputName">New name of the input</param>
-    public delegate void InputNameChangedCallback(OBSWebsocket sender, string oldInputName, string inputName);
-
-    /// <summary>
     /// An input's active state has changed.
     /// When an input is active, it means it's being shown by the program feed.
     /// </summary>
@@ -361,32 +304,32 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// The current scene collection has begun changing.
         /// </summary>
-        public event CurrentSceneCollectionChangingCallback CurrentSceneCollectionChanging;
+        public event EventHandler<CurrentSceneCollectionChangingEventArgs> CurrentSceneCollectionChanging;
 
         /// <summary>
         /// The current profile has begun changing.
         /// </summary>
-        public event CurrentProfileChangingCallback CurrentProfileChanging;
+        public event EventHandler<CurrentProfileChangingEventArgs> CurrentProfileChanging;
 
         /// <summary>
         /// The name of a source filter has changed.
         /// </summary>
-        public event SourceFilterNameChangedCallback SourceFilterNameChanged;
+        public event EventHandler<SourceFilterNameChangedEventArgs> SourceFilterNameChanged;
 
         /// <summary>
         /// An input has been created.
         /// </summary>
-        public event InputCreatedCallback InputCreated;
+        public event EventHandler<InputCreatedEventArgs> InputCreated;
 
         /// <summary>
         /// An input has been removed.
         /// </summary>
-        public event InputRemovedCallback InputRemoved;
+        public event EventHandler<InputRemovedEventArgs> InputRemoved;
 
         /// <summary>
         /// The name of an input has changed.
         /// </summary>
-        public event InputNameChangedCallback InputNameChanged;
+        public event EventHandler<InputNameChangedEventArgs> InputNameChanged;
 
         /// <summary>
         /// An input's active state has changed.
@@ -610,27 +553,27 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(CurrentSceneCollectionChanging):
-                    CurrentSceneCollectionChanging?.Invoke(this, (string)body["sceneCollectionName"]);
+                    CurrentSceneCollectionChanging?.Invoke(this, new CurrentSceneCollectionChangingEventArgs((string)body["sceneCollectionName"]));
                     break;
 
                 case nameof(CurrentProfileChanging):
-                    CurrentProfileChanging?.Invoke(this, (string)body["profileName"]);
+                    CurrentProfileChanging?.Invoke(this, new CurrentProfileChangingEventArgs((string)body["profileName"]));
                     break;
 
                 case nameof(SourceFilterNameChanged):
-                    SourceFilterNameChanged?.Invoke(this, (string)body["sourceName"], (string)body["oldFilterName"], (string)body["filterName"]);
+                    SourceFilterNameChanged?.Invoke(this, new SourceFilterNameChangedEventArgs((string)body["sourceName"], (string)body["oldFilterName"], (string)body["filterName"]));
                     break;
 
                 case nameof(InputCreated):
-                    InputCreated?.Invoke(this, (string)body["inputName"], (string)body["inputKind"], (string)body["unversionedInputKind"], (JObject)body["inputSettings"], (JObject)body["defaultInputSettings"]);
+                    InputCreated?.Invoke(this, new InputCreatedEventArgs((string)body["inputName"], (string)body["inputKind"], (string)body["unversionedInputKind"], (JObject)body["inputSettings"], (JObject)body["defaultInputSettings"]));
                     break;
 
                 case nameof(InputRemoved):
-                    InputRemoved?.Invoke(this, (string)body["inputName"]);
+                    InputRemoved?.Invoke(this, new InputRemovedEventArgs((string)body["inputName"]));
                     break;
 
                 case nameof(InputNameChanged):
-                    InputNameChanged?.Invoke(this, (string)body["oldInputName"], (string)body["inputName"]);
+                    InputNameChanged?.Invoke(this, new InputNameChangedEventArgs((string)body["oldInputName"], (string)body["inputName"]));
                     break;
 
                 case nameof(InputActiveStateChanged):
