@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace OBSWebsocketDotNet
+namespace OBSWebsocketDotNet.Types
 {
     /// <summary>
     /// VirtualCam Status
