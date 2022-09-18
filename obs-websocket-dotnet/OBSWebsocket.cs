@@ -115,7 +115,7 @@ namespace OBSWebsocketDotNet
                 catch { }
                 wsConnection = null;
             }
-            
+
             var unusedHandlers = responseHandlers.ToArray();
             responseHandlers.Clear();
             foreach (var cb in unusedHandlers)
@@ -128,7 +128,7 @@ namespace OBSWebsocketDotNet
         // This callback handles a websocket disconnection
         private void OnWebsocketDisconnect(object sender, DisconnectionInfo d)
         {
-            if (d == null)
+            if (d == null || d.CloseStatus == null)
             {
                 Disconnected?.Invoke(sender, new ObsDisconnectionInfo(ObsCloseCodes.UnknownReason, null, d));
             }
@@ -214,7 +214,7 @@ namespace OBSWebsocketDotNet
             {
                 throw new NullReferenceException("Websocket is not initialized");
             }
-            
+
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
             JObject message = null;
@@ -339,9 +339,9 @@ namespace OBSWebsocketDotNet
                 // Authentication required
                 authInfo = new OBSAuthInfo((JObject)payload["authentication"]);
             }
-            
+
             SendIdentify(connectionPassword, authInfo);
-            
+
             connectionPassword = null;
         }
     }
