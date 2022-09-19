@@ -10,9 +10,9 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// Updated list of scene collections
         /// </summary>
-        public List<string> SceneCollections { get; }
+        public IReadOnlyCollection<string> SceneCollections { get; }
 
-        public SceneCollectionListChangedEventArgs(List<string> sceneCollections)
+        public SceneCollectionListChangedEventArgs(IReadOnlyCollection<string> sceneCollections)
         {
             SceneCollections = sceneCollections;
         }

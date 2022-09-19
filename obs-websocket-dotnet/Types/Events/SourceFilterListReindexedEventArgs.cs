@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using OBSWebsocketDotNet;
 
 namespace OBSWebsocketDotNet.Types.Events
 {
@@ -16,9 +15,9 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// Array of filter objects
         /// </summary>
-        public List<FilterReorderItem> Filters { get; }
+        public IReadOnlyCollection<FilterReorderItem> Filters { get; }
 
-        public SourceFilterListReindexedEventArgs(string sourceName, List<FilterReorderItem> filters)
+        public SourceFilterListReindexedEventArgs(string sourceName, IReadOnlyCollection<FilterReorderItem> filters)
         {
             SourceName = sourceName;
             Filters = filters;
