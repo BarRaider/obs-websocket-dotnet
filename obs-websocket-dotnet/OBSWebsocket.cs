@@ -1,19 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Net.WebSockets;
 using Websocket.Client;
 using OBSWebsocketDotNet.Communication;
 
 namespace OBSWebsocketDotNet
 {
-    public partial class OBSWebsocket
+    public partial class OBSWebsocket : IOBSWebsocket
     {
         /// <summary>
         /// WebSocket request timeout, represented as a TimeSpan object
