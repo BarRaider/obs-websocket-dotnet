@@ -73,7 +73,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
-        [Obsolete("Please use ConnectAsync. Connect() will be removed in the next version")]
+        [Obsolete("Please use ConnectAsync, this function will be removed in the next version")]
         public void Connect(string url, string password)
         {
             ConnectAsync(url, password);

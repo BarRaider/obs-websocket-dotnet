@@ -12,6 +12,10 @@ namespace OBSWebsocketDotNet.Types.Events
         /// </summary>
         public OutputStateChanged OutputState { get; }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="outputState">Specific state of the output</param>
         public ReplayBufferStateChangedEventArgs(OutputStateChanged outputState)
         {
             OutputState = outputState;
