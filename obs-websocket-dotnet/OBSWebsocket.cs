@@ -13,6 +13,21 @@ namespace OBSWebsocketDotNet
 {
     public partial class OBSWebsocket : IOBSWebsocket
     {
+        #region Private Members
+        private const string WEBSOCKET_URL_PREFIX = "ws://";
+        private const int SUPPORTED_RPC_VERSION = 1;
+        private TimeSpan wsTimeout = TimeSpan.FromSeconds(10);
+        private string connectionPassword = null;
+        private WebsocketClient wsConnection;
+
+        private delegate void RequestCallback(OBSWebsocket sender, JObject body);
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
+
+        // Random should never be created inside a function
+        private static readonly Random random = new Random();
+
+        #endregion
+
         /// <summary>
         /// WebSocket request timeout, represented as a TimeSpan object
         /// </summary>
@@ -32,18 +47,7 @@ namespace OBSWebsocketDotNet
                 }
             }
         }
-
-        #region Private Members
-        private const string WEBSOCKET_URL_PREFIX = "ws://";
-        private const int SUPPORTED_RPC_VERSION = 1;
-        private TimeSpan wsTimeout = TimeSpan.FromSeconds(10);
-        private string connectionPassword = null;
-
-        // Random should never be created inside a function
-        private static readonly Random random = new Random();
-
-        #endregion
-
+      
         /// <summary>
         /// Current connection state
         /// </summary>
@@ -54,14 +58,6 @@ namespace OBSWebsocketDotNet
                 return (wsConnection != null && wsConnection.IsRunning);
             }
         }
-
-        /// <summary>
-        /// Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
-        /// </summary>
-        private WebsocketClient wsConnection;
-
-        private delegate void RequestCallback(OBSWebsocket sender, JObject body);
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
 
         /// <summary>
         /// Constructor
