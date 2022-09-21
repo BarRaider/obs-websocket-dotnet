@@ -1,9 +1,11 @@
-﻿namespace OBSWebsocketDotNet.Types.Events
+﻿using System;
+
+namespace OBSWebsocketDotNet.Types.Events
 {
     /// <summary>
     /// Event args for <see cref="OBSWebsocket.ReplayBufferStateChanged"/>
     /// </summary>
-    public class ReplayBufferStateChangedEventArgs
+    public class ReplayBufferStateChangedEventArgs : EventArgs
     {
         /// <summary>
         /// The specific state of the output
