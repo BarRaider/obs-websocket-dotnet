@@ -16,9 +16,9 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// List of all scene items as JObject
         /// </summary>
-        public List<JObject> SceneItems { get; }
+        public IReadOnlyCollection<JObject> SceneItems { get; }
 
-        public SceneItemListReindexedEventArgs(string sceneName, List<JObject> sceneItems)
+        public SceneItemListReindexedEventArgs(string sceneName, IReadOnlyCollection<JObject> sceneItems)
         {
             SceneName = sceneName;
             SceneItems = sceneItems;

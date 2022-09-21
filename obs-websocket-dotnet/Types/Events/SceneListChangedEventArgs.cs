@@ -11,9 +11,9 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// Updated array of scenes
         /// </summary>
-        public List<JObject> Scenes { get; }
+        public IReadOnlyCollection<JObject> Scenes { get; }
 
-        public SceneListChangedEventArgs(List<JObject> scenes)
+        public SceneListChangedEventArgs(IReadOnlyCollection<JObject> scenes)
         {
             Scenes = scenes;
         }
