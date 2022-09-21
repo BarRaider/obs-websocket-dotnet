@@ -8,8 +8,26 @@ using Websocket.Client;
 
 namespace OBSWebsocketDotNet
 {
+    /// <summary>
+    /// OBS Websocket Dotnet interface
+    /// </summary>
     public interface IOBSWebsocket
     {
+        #region Properties
+
+        /// <summary>
+        /// WebSocket request timeout, represented as a TimeSpan object
+        /// </summary>
+        TimeSpan WSTimeout { get; set; }
+
+        /// <summary>
+        /// Current connection state
+        /// </summary>
+        bool IsConnected { get; }
+
+        #endregion
+
+        #region Requests
         /// <summary>
         /// Get basic OBS video information
         /// </summary>
@@ -1018,21 +1036,6 @@ namespace OBSWebsocketDotNet
         List<Monitor> GetMonitorList();
 
         /// <summary>
-        /// WebSocket request timeout, represented as a TimeSpan object
-        /// </summary>
-        TimeSpan WSTimeout { get; set; }
-
-        /// <summary>
-        /// Current connection state
-        /// </summary>
-        bool IsConnected { get; }
-
-        /// <summary>
-        /// Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
-        /// </summary>
-        WebsocketClient wsConnection { get; }
-
-        /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
@@ -1057,6 +1060,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <returns>Authentication data in an <see cref="OBSAuthInfo"/> object</returns>
         OBSAuthInfo GetAuthInfo();
+
+        #endregion
+
+        #region Events
 
         /// <summary>
         /// The current program scene has changed.
@@ -1334,5 +1341,7 @@ namespace OBSWebsocketDotNet
         /// The name of a scene has changed.
         /// </summary>
         event EventHandler<SceneNameChangedEventArgs> SceneNameChanged;
+
+        #endregion
     }
 }

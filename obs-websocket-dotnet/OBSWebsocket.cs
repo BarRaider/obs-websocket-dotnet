@@ -58,7 +58,7 @@ namespace OBSWebsocketDotNet
         /// <summary>
         /// Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
         /// </summary>
-        public WebsocketClient wsConnection { get; private set; }
+        private WebsocketClient wsConnection;
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
         private readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
