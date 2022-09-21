@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet;
 
 namespace OBSWebsocketDotNet.Types.Events
@@ -6,7 +7,7 @@ namespace OBSWebsocketDotNet.Types.Events
     /// <summary>
     /// Event args for <see cref="OBSWebsocket.SourceFilterCreated"/>
     /// </summary>
-    public class SourceFilterCreatedEventArgs
+    public class SourceFilterCreatedEventArgs : EventArgs
     {
         /// <summary>
         /// Name of the source the filter was added to
@@ -38,6 +39,15 @@ namespace OBSWebsocketDotNet.Types.Events
         /// </summary>
         public JObject DefaultFilterSettings { get; }
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="sourceName">The source name</param>
+        /// <param name="filterName">The filter name</param>
+        /// <param name="filterKind">The kind of filter</param>
+        /// <param name="filterIndex">The index of the filter</param>
+        /// <param name="filterSettings">The filters settings as a JObject</param>
+        /// <param name="defaultFilterSettings">The default filter settings as a JObject</param>
         public SourceFilterCreatedEventArgs(string sourceName, string filterName, string filterKind, int filterIndex, JObject filterSettings, JObject defaultFilterSettings)
         {
             SourceName = sourceName;
