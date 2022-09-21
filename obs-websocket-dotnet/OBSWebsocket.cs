@@ -68,11 +68,24 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
+        /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
+        /// NOTE: Please subscribe to the Connected/Disconnected events (or atleast check the IsConnected property) to determine when the connection is actually fully established
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
+        [Obsolete("Please use ConnectAsync. Connect() will be removed in the next version")]
         public void Connect(string url, string password)
+        {
+            ConnectAsync(url, password);
+        }
+
+        /// <summary>
+        /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
+        /// NOTE: Please subscribe to the Connected/Disconnected events (or atleast check the IsConnected property) to determine when the connection is actually fully established
+        /// </summary>
+        /// <param name="url">Server URL in standard URL format.</param>
+        /// <param name="password">Server password</param>
+        public void ConnectAsync(string url, string password)
         {
             if (!url.ToLower().StartsWith(WEBSOCKET_URL_PREFIX))
             {
