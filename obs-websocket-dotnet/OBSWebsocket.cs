@@ -98,8 +98,11 @@ namespace OBSWebsocketDotNet
             }
 
             wsConnection = new WebsocketClient(new Uri(url));
-            wsConnection.MessageReceived.Subscribe(m => WebsocketMessageHandler(this, m));
-            wsConnection.DisconnectionHappened.Subscribe(d => OnWebsocketDisconnect(this, d));
+            wsConnection.IsReconnectionEnabled = false;
+            wsConnection.ReconnectTimeout = null;
+            wsConnection.ErrorReconnectTimeout = null;
+            wsConnection.MessageReceived.Subscribe(m => Task.Run(() => WebsocketMessageHandler(this, m)));
+            wsConnection.DisconnectionHappened.Subscribe(d => Task.Run(() => OnWebsocketDisconnect(this, d)));
 
             connectionPassword = password;
             wsConnection.StartOrFail();
@@ -164,7 +167,7 @@ namespace OBSWebsocketDotNet
                     HandleHello(body);
                     break;
                 case MessageTypes.Identified:
-                    Connected?.Invoke(this, EventArgs.Empty);
+                    Task.Run(() => Connected?.Invoke(this, EventArgs.Empty));
                     break;
                 case MessageTypes.RequestResponse:
                 case MessageTypes.RequestBatchResponse:
