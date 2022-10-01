@@ -302,7 +302,7 @@ namespace OBSWebsocketDotNet
 
             SendRequest(MessageTypes.Identify, null, requestFields, false);
         }
-        
+
         /// <summary>
         /// Encode a Base64-encoded SHA-256 hash
         /// </summary>

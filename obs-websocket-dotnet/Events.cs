@@ -2,11 +2,10 @@
 using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Communication;
 using OBSWebsocketDotNet.Types;
+using OBSWebsocketDotNet.Types.Events;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using OBSWebsocketDotNet.Types.Events;
-using System.Data.Common;
 using System.Net.WebSockets;
 using Websocket.Client;
 
