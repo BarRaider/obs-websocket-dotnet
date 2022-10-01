@@ -12,13 +12,13 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// Array of active inputs with their associated volume levels
         /// </summary>
-        public List<JObject> inputs { get; }
+        public List<InputVolumeMeter> inputs { get; }
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         /// <param name="inputs">Collection inputs as JObjects</param>
-        public InputVolumeMetersEventArgs(List<JObject> inputs)
+        public InputVolumeMetersEventArgs(List<InputVolumeMeter> inputs)
         {
             this.inputs = inputs;
         }

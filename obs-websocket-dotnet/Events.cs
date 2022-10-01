@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using OBSWebsocketDotNet.Types.Events;
+using System.Data.Common;
+using System.Net.WebSockets;
+using Websocket.Client;
 
 namespace OBSWebsocketDotNet
 {
@@ -265,10 +268,31 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<InputAudioMonitorTypeChangedEventArgs> InputAudioMonitorTypeChanged;
 
+
+        private event EventHandler<InputVolumeMetersEventArgs> inputVolumeMeters;
         /// <summary>
         /// A high-volume event providing volume levels of all active inputs every 50 milliseconds.
         /// </summary>
-        public event EventHandler<InputVolumeMetersEventArgs> InputVolumeMeters;
+        public event EventHandler<InputVolumeMetersEventArgs> InputVolumeMeters
+        {
+            // This event needs special subscription, handle that here
+            add
+            {
+                if (inputVolumeMeters == null || inputVolumeMeters.GetInvocationList().Length == 0)
+                {
+                    RegisterEvent(EventSubscription.InputVolumeMeters);
+                }
+                inputVolumeMeters += value;
+            }
+            remove
+            {
+                inputVolumeMeters -= value;
+                if (inputVolumeMeters == null || inputVolumeMeters.GetInvocationList().Length == 0)
+                {
+                    UnRegisterEvent(EventSubscription.InputVolumeMeters);
+                }
+            }
+        }
 
         /// <summary>
         /// The replay buffer has been saved.
@@ -289,6 +313,57 @@ namespace OBSWebsocketDotNet
         /// The name of a scene has changed.
         /// </summary>
         public event EventHandler<SceneNameChangedEventArgs> SceneNameChanged;
+
+        #endregion
+
+
+        #region EventSubscription
+
+        private EventSubscription registeredEvents = EventSubscription.All;
+
+        private void RegisterEvent(EventSubscription newSubscription)
+        {
+            registeredEvents |= newSubscription;
+            SendReidentify();
+        }
+
+        private void UnRegisterEvent(EventSubscription removeSubscription)
+        {
+            registeredEvents &= ~removeSubscription;
+            SendReidentify();
+        }
+
+        /// <summary>
+        /// Send a Reidentify with new event subscriptions
+        /// </summary>
+        /// <returns>true if we sent the reidentify, false if failed</returns>
+        protected bool SendReidentify()
+        {
+            if (wsConnection == null || !wsConnection.IsStarted) return false; // #TODO check if we are in Identified/Connected state, if we didn't send our Identify yet, we shouldn't send Reidentify now
+
+            var requestFields = new JObject
+            {
+                { "eventSubscriptions", (uint)registeredEvents }
+            };
+
+            try
+            {
+                // Throws ErrorResponseException if auth fails
+                SendRequest(MessageTypes.ReIdentify, null, requestFields, false);
+            }
+            catch (ErrorResponseException ex)
+            {
+                Disconnected?.Invoke(this, new ObsDisconnectionInfo(
+                    ObsCloseCodes.UnknownReason,  
+                    "Reidentify Failed", 
+                    new DisconnectionInfo(DisconnectionType.Error, WebSocketCloseStatus.ProtocolError, "Reidentify Failed", String.Empty, new AuthFailureException())
+                ));
+                Disconnect();
+                return false;
+            }
+
+            return true;
+        }
 
         #endregion
 
@@ -500,7 +575,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(InputVolumeMeters):
-                    InputVolumeMeters?.Invoke(this, new InputVolumeMetersEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["inputs"])));
+                    inputVolumeMeters?.Invoke(this, new InputVolumeMetersEventArgs(body["inputs"].ToObject<List<InputVolumeMeter>>()));
                     break;
 
                 case nameof(ReplayBufferSaved):

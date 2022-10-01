@@ -287,7 +287,8 @@ namespace OBSWebsocketDotNet
         {
             var requestFields = new JObject
             {
-                { "rpcVersion", SUPPORTED_RPC_VERSION }
+                { "rpcVersion", SUPPORTED_RPC_VERSION },
+                { "eventSubscriptions", (uint)registeredEvents }
             };
 
             if (authInfo != null)
@@ -301,7 +302,7 @@ namespace OBSWebsocketDotNet
 
             SendRequest(MessageTypes.Identify, null, requestFields, false);
         }
-
+        
         /// <summary>
         /// Encode a Base64-encoded SHA-256 hash
         /// </summary>
