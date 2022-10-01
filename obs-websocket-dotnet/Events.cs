@@ -267,8 +267,6 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<InputAudioMonitorTypeChangedEventArgs> InputAudioMonitorTypeChanged;
 
-
-        private event EventHandler<InputVolumeMetersEventArgs> inputVolumeMeters;
         /// <summary>
         /// A high-volume event providing volume levels of all active inputs every 50 milliseconds.
         /// </summary>
@@ -292,6 +290,7 @@ namespace OBSWebsocketDotNet
                 }
             }
         }
+        private event EventHandler<InputVolumeMetersEventArgs> inputVolumeMeters;
 
         /// <summary>
         /// The replay buffer has been saved.
