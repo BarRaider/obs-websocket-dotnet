@@ -85,7 +85,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
-        public void ConnectAsync(string url, string password)
+        public Task ConnectAsync(string url, string password)
         {
             if (!url.ToLower().StartsWith(WEBSOCKET_URL_PREFIX))
             {
@@ -105,7 +105,7 @@ namespace OBSWebsocketDotNet
             wsConnection.DisconnectionHappened.Subscribe(d => Task.Run(() => OnWebsocketDisconnect(this, d)));
 
             connectionPassword = password;
-            wsConnection.StartOrFail();
+            return wsConnection.StartOrFail();
         }
 
         /// <summary>
