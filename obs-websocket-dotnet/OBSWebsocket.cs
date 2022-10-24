@@ -85,6 +85,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
+        /// <returns>Returns the awaitable Task from <see cref="WebsocketClient.StartOrFail"/>.
+        /// NOTE: After awaiting, the client is still not ready to work. Please subscribe to the Connected event to determine when the connection is actually fully established</returns>
         public Task ConnectAsync(string url, string password)
         {
             if (!url.ToLower().StartsWith(WEBSOCKET_URL_PREFIX))
