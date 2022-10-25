@@ -30,13 +30,13 @@ namespace OBSWebsocketDotNet.Types
         /// Current duration in milliseconds for the output
         /// </summary>
         [JsonProperty(PropertyName = "outputDuration")]
-        public int RecordingDuration { set; get; }
+        public long RecordingDuration { set; get; }
 
         /// <summary>
         /// Number of bytes sent by the output
         /// </summary>
         [JsonProperty(PropertyName = "outputBytes")]
-        public int RecordingBytes { set; get; }
+        public long RecordingBytes { set; get; }
 
         /// <summary>
         /// Builds the object from the JSON response body
