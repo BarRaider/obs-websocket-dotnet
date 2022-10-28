@@ -9,7 +9,7 @@ See the `TestClient` project for a working example.
 # v5 Updates
 NOTE: As OBS Websocket v5.0 is not backward compatible with 4.9.x, neither is the .Net version.  
 **What's new in v5.0.0.3:**
-* Fixed issue with integer overflow for OutputStatus objects
+* Fixed issue with integer overflow for OutputStatus objects  
 (Older updates):
 * Each event now has a dedicated EventArgs class. This will break the previous event signature
 * Finished adding all v5 methods
