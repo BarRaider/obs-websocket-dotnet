@@ -11,37 +11,37 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Is the track active
         /// </summary>
-        [JsonProperty(PropertyName = "track1")]
+        [JsonProperty(PropertyName = "1")]
         public bool IsTrack1Active { set; get; }
 
         /// <summary>
         /// Is the track active
         /// </summary>
-        [JsonProperty(PropertyName = "track2")]
+        [JsonProperty(PropertyName = "2")]
         public bool IsTrack2Active { set; get; }
 
         /// <summary>
         /// Is the track active
         /// </summary>
-        [JsonProperty(PropertyName = "track3")]
+        [JsonProperty(PropertyName = "3")]
         public bool IsTrack3Active { set; get; }
 
         /// <summary>
         /// Is the track active
         /// </summary>
-        [JsonProperty(PropertyName = "track4")]
+        [JsonProperty(PropertyName = "4")]
         public bool IsTrack4Active { set; get; }
 
         /// <summary>
         /// Is the track active
         /// </summary>
-        [JsonProperty(PropertyName = "track5")]
+        [JsonProperty(PropertyName = "5")]
         public bool IsTrack5Active { set; get; }
 
         /// <summary>
         /// Is the track active
         /// </summary>
-        [JsonProperty(PropertyName = "track6")]
+        [JsonProperty(PropertyName = "6")]
         public bool IsTrack6Active { set; get; }
 
         /// <summary>
