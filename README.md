@@ -22,4 +22,4 @@ Please report issues/bugs via the [Issues Tracker](https://github.com/BarRaider/
 **Discord:** Discuss in #developers-chat in [Bar Raiders](http://discord.barraider.com)
 
 ## EOL for v4.x branch
-NOTE: We will no longer be updating the v4.x branch as we move towards v5.0 (which is NOT backwards compatible). Any PRs should be done on the `v5-dev` branch.
+NOTE: We will no longer be updating the v4.x branch as we move towards v5.0 (which is NOT backwards compatible).
