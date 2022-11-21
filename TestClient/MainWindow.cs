@@ -25,6 +25,7 @@ using System.Linq;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
 using OBSWebsocketDotNet.Types.Events;
+using Newtonsoft.Json;
 
 namespace TestClient
 {
@@ -329,17 +330,45 @@ namespace TestClient
 
         private void btnListScenes_Click(object sender, EventArgs e)
         {
-            var scenes = obs.ListScenes();
+            var scenes = obs.GetSceneList().Scenes;
 
             tvScenes.Nodes.Clear();
             foreach (var scene in scenes)
             {
                 var node = new TreeNode(scene.Name);
-                var sources = new List<SceneItemDetails>();
-                sources.AddRange(obs.GetSceneItemList(scene.Name));
-                foreach (var item in sources)
+                var itemList = obs.GetSceneItemList(scene.Name);
+                var groupList = obs.GetGroupList();
+                groupList.RemoveAll(x => !itemList.Any(y => y.SourceName.Equals(x)));
+
+                if (groupList.Count > 0)
                 {
-                    node.Nodes.Add(item.SourceName);
+                    foreach (var name in groupList)
+                    {
+                        var group = new ObsScene { Name = name, Items = new List<SceneItemDetails>() };
+                        var parentNode = node.Nodes.Add(group.Name);
+
+                        foreach (var item in obs.GetGroupSceneItemList(group.Name))
+                        {
+                            group.Items.Add(JsonConvert.DeserializeObject<SceneItemDetails>(item.ToString()));
+                        }
+
+                        if (group.Items.Count() > 0)
+                        {
+                            foreach (var groupSceneItem in group.Items)
+                            {
+                                parentNode.Nodes.Add(groupSceneItem.SourceName);
+                            }
+                        }
+                    }
+                }
+
+                var items = obs.GetSceneItemList(scene.Name).Where(x => !(bool)groupList?.Any(y => y.Equals(x.SourceName)));
+                if (items != null && items.Count() > 0)
+                {
+                    foreach (var item in items)
+                    {
+                        node.Nodes.Add(item.SourceName);
+                    }
                 }
 
                 tvScenes.Nodes.Add(node);
