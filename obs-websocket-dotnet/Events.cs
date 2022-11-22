@@ -444,7 +444,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(MediaInputPlaybackStarted):
-                    MediaInputPlaybackStarted?.Invoke(this, new MediaInputPlaybackStartedEventArgs((string)body["sourceName"]));
+                    MediaInputPlaybackStarted?.Invoke(this, new MediaInputPlaybackStartedEventArgs((string)body["inputName"]));
                     break;
 
                 case nameof(MediaInputActionTriggered):
