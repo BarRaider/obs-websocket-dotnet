@@ -32,7 +32,7 @@ What's new in v5.0.0.3
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 	  <PackageReference Include="Websocket.Client" Version="4.4.43" />
 	</ItemGroup>
 
