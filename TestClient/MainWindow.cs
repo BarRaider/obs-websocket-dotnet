@@ -305,11 +305,11 @@ namespace TestClient
         {
             if (!obs.IsConnected)
             {
-                System.Threading.Tasks.Task.Run(() =>
+                System.Threading.Tasks.Task.Run(async () =>
                 {
                     try
                     {
-                        obs.ConnectAsync(txtServerIP.Text, txtServerPassword.Text);
+                        await obs.ConnectAsync(txtServerIP.Text, txtServerPassword.Text);
                     }
                     catch (Exception ex)
                     {

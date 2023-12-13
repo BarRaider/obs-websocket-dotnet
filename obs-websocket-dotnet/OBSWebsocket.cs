@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using Websocket.Client;
 using OBSWebsocketDotNet.Communication;
+using System.Threading;
 
 namespace OBSWebsocketDotNet
 {
@@ -22,6 +23,7 @@ namespace OBSWebsocketDotNet
 
         private delegate void RequestCallback(OBSWebsocket sender, JObject body);
         private readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
+        private Action<WebsocketClient> _webSocketClientFactory = null;
 
         // Random should never be created inside a function
         private static readonly Random random = new Random();
@@ -60,11 +62,20 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Constructor
+        /// Base Constructor
         /// </summary>
         public OBSWebsocket()
         {
             responseHandlers = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
+        }
+
+        /// <summary>
+        /// Constructor with custom websocket client factory
+        /// </summary>
+        /// <param name="webSocketClientFactory"></param>
+        public OBSWebsocket(Action<WebsocketClient> webSocketClientFactory) : this()
+        {
+            _webSocketClientFactory = webSocketClientFactory;
         }
 
         /// <summary>
@@ -76,7 +87,9 @@ namespace OBSWebsocketDotNet
         [Obsolete("Please use ConnectAsync, this function will be removed in the next version")]
         public void Connect(string url, string password)
         {
-            ConnectAsync(url, password);
+            ConnectAsync(url, password, CancellationToken.None)
+                .GetAwaiter()
+                .GetResult();
         }
 
         /// <summary>
@@ -85,7 +98,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
-        public void ConnectAsync(string url, string password)
+        /// <param name="cancellationToken">Cancellation token</param>
+        public async Task ConnectAsync(string url, string password, CancellationToken cancellationToken = default)
         {
             if (!url.ToLower().StartsWith(WEBSOCKET_URL_PREFIX))
             {
@@ -97,15 +111,19 @@ namespace OBSWebsocketDotNet
                 Disconnect();
             }
 
-            wsConnection = new WebsocketClient(new Uri(url));
-            wsConnection.IsReconnectionEnabled = false;
-            wsConnection.ReconnectTimeout = null;
-            wsConnection.ErrorReconnectTimeout = null;
+            wsConnection = new WebsocketClient(new Uri(url))
+            {
+                IsReconnectionEnabled = false,
+                ReconnectTimeout = null,
+                ErrorReconnectTimeout = null
+            };
+            _webSocketClientFactory?.Invoke(wsConnection);
+
             wsConnection.MessageReceived.Subscribe(m => Task.Run(() => WebsocketMessageHandler(this, m)));
             wsConnection.DisconnectionHappened.Subscribe(d => Task.Run(() => OnWebsocketDisconnect(this, d)));
 
             connectionPassword = password;
-            wsConnection.StartOrFail();
+            await wsConnection.StartOrFail();
         }
 
         /// <summary>
@@ -227,7 +245,7 @@ namespace OBSWebsocketDotNet
 
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
-            JObject message = null;
+            JObject message;
             do
             {
                 // Generate a random message id
