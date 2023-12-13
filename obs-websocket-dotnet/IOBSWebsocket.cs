@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Communication;
 using OBSWebsocketDotNet.Types;
 using OBSWebsocketDotNet.Types.Events;
 using Websocket.Client;
+using Monitor = OBSWebsocketDotNet.Types.Monitor;
 
 namespace OBSWebsocketDotNet
 {
@@ -1050,7 +1053,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
-        void ConnectAsync(string url, string password);
+        /// <param name="cancellationToken">Cancellation token</param>
+        Task ConnectAsync(string url, string password, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Disconnect this instance from the server
