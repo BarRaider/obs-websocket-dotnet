@@ -489,8 +489,7 @@ namespace TestClient
 
         private void btnSetPath_Click(object sender, EventArgs e)
         {
-            // TODO: Need a method here, or the button must be removed
-            //obs.SetRecordingFolder(tbFolderPath.Text);
+            obs.SetRecordDirectory(tbFolderPath.Text);
         }
 
         private void onVirtualCamStateChanged(object sender, VirtualcamStateChangedEventArgs args)

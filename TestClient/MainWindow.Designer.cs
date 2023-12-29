@@ -432,7 +432,6 @@ namespace TestClient
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Enabled = false;
             this.btnBrowse.Location = new System.Drawing.Point(277, 29);
             this.btnBrowse.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.btnBrowse.Name = "btnBrowse";
@@ -454,7 +453,6 @@ namespace TestClient
             // btnSetPath
             // 
             this.btnSetPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSetPath.Enabled = false;
             this.btnSetPath.Location = new System.Drawing.Point(365, 28);
             this.btnSetPath.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.btnSetPath.Name = "btnSetPath";
