@@ -291,6 +291,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<SceneNameChangedEventArgs> SceneNameChanged;
 
+        /// <summary>
+        /// An unsupported event has been received.
+        /// </summary>
+        public event EventHandler<UnsupportedEventArgs> UnsupportedEvent;
+
         #endregion
 
         #region EventProcessing
@@ -522,8 +527,8 @@ namespace OBSWebsocketDotNet
 
                 default:
                     var message = $"Unsupported Event: {eventType}\n{body}";
-                    Logger.LogWarning(message);
-                    Debug.WriteLine(message);
+                    Logger.LogInformation(message);
+                    UnsupportedEvent?.Invoke(this, new UnsupportedEventArgs(eventType, body));
                     break;
             }
         }
