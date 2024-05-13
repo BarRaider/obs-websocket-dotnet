@@ -340,7 +340,7 @@ namespace OBSWebsocketDotNet
             catch (Exception e)
             {
                 //TODO exception handling
-                Logger.LogError(e, "Error removing filter");
+                Logger?.LogError(e, "Error removing filter");
             }
             return false;
         }

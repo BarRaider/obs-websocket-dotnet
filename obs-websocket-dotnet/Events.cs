@@ -527,7 +527,7 @@ namespace OBSWebsocketDotNet
 
                 default:
                     var message = $"Unsupported Event: {eventType}\n{body}";
-                    Logger.LogInformation(message);
+                    Logger?.LogInformation(message);
                     UnsupportedEvent?.Invoke(this, new UnsupportedEventArgs(eventType, body));
                     break;
             }
