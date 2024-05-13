@@ -8,6 +8,9 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using Websocket.Client;
 using OBSWebsocketDotNet.Communication;
+using Websocket.Client.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace OBSWebsocketDotNet
 {
@@ -58,6 +61,8 @@ namespace OBSWebsocketDotNet
                 return (wsConnection != null && wsConnection.IsRunning);
             }
         }
+
+        public ILogger<OBSWebsocket> Logger { get; set; } = NullLogger<OBSWebsocket>.Instance;
 
         /// <summary>
         /// Constructor

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using OBSWebsocketDotNet.Types.Events;
+using Microsoft.Extensions.Logging;
 
 namespace OBSWebsocketDotNet
 {
@@ -521,7 +522,7 @@ namespace OBSWebsocketDotNet
 
                 default:
                     var message = $"Unsupported Event: {eventType}\n{body}";
-                    Console.WriteLine(message);
+                    Logger.LogWarning(message);
                     Debug.WriteLine(message);
                     break;
             }

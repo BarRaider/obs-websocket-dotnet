@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
 using System;
@@ -339,7 +340,7 @@ namespace OBSWebsocketDotNet
             catch (Exception e)
             {
                 //TODO exception handling
-                Console.WriteLine(e.Message);
+                Logger.LogError(e, "Error removing filter");
             }
             return false;
         }
