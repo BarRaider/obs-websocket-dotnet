@@ -62,6 +62,9 @@ namespace OBSWebsocketDotNet
             }
         }
 
+        /// <summary>
+        /// Gets or sets the logger for this instance
+        /// </summary>
         public ILogger<OBSWebsocket> Logger { get; set; } = NullLogger<OBSWebsocket>.Instance;
 
         /// <summary>

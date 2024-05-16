@@ -28,7 +28,7 @@ What's new in v5.0.0.3
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DocumentationFile>E:\Projects\GitHub\obs-websocket-dotnet-standard\obs-websocket-dotnet\obs-websocket-dotnet.xml</DocumentationFile>
+	  <DocumentationFile>obs-websocket-dotnet.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
