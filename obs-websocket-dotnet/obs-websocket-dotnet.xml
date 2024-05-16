@@ -5208,6 +5208,21 @@
             The password to use when accessing the streaming server. Only present if use-auth is true
             </summary>
         </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Service">
+            <summary>
+            The service being used to stream
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Protocol">
+            <summary>
+            The protocol to use for the stream
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.OtherValues">
+            <summary>
+            Other values not covered by the class
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.TransitionOverrideInfo">
             <summary>
             Scene transition override settings
