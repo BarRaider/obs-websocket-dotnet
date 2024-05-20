@@ -13,7 +13,7 @@ namespace OBSWebsocketDotNet.Types
         /// State of the media input
         /// </summary>
         [JsonProperty(PropertyName = "mediaState")]
-        internal string StateString { get; set; }
+        public string StateString { get; set; }
 
         /// <summary>
         /// State of the media input
