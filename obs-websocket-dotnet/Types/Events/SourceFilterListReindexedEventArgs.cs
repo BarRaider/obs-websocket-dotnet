@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet.Types.Events
 {
     /// <summary>
     /// Event args for <see cref="OBSWebsocket.SourceFilterListReindexed"/>
     /// </summary>
-    public class SourceFilterListReindexedEventArgs
+    public class SourceFilterListReindexedEventArgs : EventArgs
     {
         /// <summary>
         /// Name of the source
@@ -17,6 +18,11 @@ namespace OBSWebsocketDotNet.Types.Events
         /// </summary>
         public IReadOnlyCollection<FilterReorderItem> Filters { get; }
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="sourceName">The source name</param>
+        /// <param name="filters">Collection of filters</param>
         public SourceFilterListReindexedEventArgs(string sourceName, IReadOnlyCollection<FilterReorderItem> filters)
         {
             SourceName = sourceName;

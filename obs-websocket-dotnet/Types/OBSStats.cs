@@ -17,25 +17,25 @@ namespace OBSWebsocketDotNet.Types
         /// Number of frames rendered
         /// </summary>
         [JsonProperty(PropertyName = "renderTotalFrames")]
-        public int RenderTotalFrames { set; get; }
+        public long RenderTotalFrames { set; get; }
 
         /// <summary>
         /// Number of frames missed due to rendering lag
         /// </summary>
         [JsonProperty(PropertyName = "renderSkippedFrames")]
-        public int RenderMissedFrames { set; get; }
+        public long RenderMissedFrames { set; get; }
 
         /// <summary>
         /// Number of frames outputted
         /// </summary>
         [JsonProperty(PropertyName = "outputTotalFrames")]
-        public int OutputTotalFrames { set; get; }
+        public long OutputTotalFrames { set; get; }
 
         /// <summary>
         /// Number of frames skipped due to encoding lag
         /// </summary>
         [JsonProperty(PropertyName = "outputSkippedFrames")]
-        public int OutputSkippedFrames { set; get; }
+        public long OutputSkippedFrames { set; get; }
 
         /// <summary>
         /// Average frame render time (in milliseconds)
@@ -65,12 +65,12 @@ namespace OBSWebsocketDotNet.Types
         /// Total number of messages received by obs-websocket from the client
         /// </summary>
         [JsonProperty(PropertyName = "webSocketSessionIncomingMessages")]
-        public int SessionIncomingMessages { get; set; }
+        public long SessionIncomingMessages { get; set; }
 
         /// <summary>
         /// Total number of messages sent by obs-websocket to the client
         /// </summary>
         [JsonProperty(PropertyName = "webSocketSessionOutgoingMessages")]
-        public int SessionOutgoingMessages { get; set; }
+        public long SessionOutgoingMessages { get; set; }
     }
 }

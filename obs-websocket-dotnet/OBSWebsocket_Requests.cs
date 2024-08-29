@@ -3,8 +3,8 @@ using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace OBSWebsocketDotNet
 {
@@ -17,9 +17,7 @@ namespace OBSWebsocketDotNet
 
         private const string REQUEST_FIELD_VOLUME_DB = "inputVolumeDb";
         private const string REQUEST_FIELD_VOLUME_MUL = "inputVolumeMul";
-
         private const string RESPONSE_FIELD_IMAGE_DATA = "imageData";
-
 
         #endregion
 
@@ -2114,8 +2112,45 @@ namespace OBSWebsocketDotNet
             {
                 monitors.Add(new Monitor((JObject)monitor));
             }
-
             return monitors;
+        }
+
+        /// <summary>
+        /// Opens a projector for a source.
+        /// Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+        /// </summary>
+        /// <param name="sourceName">Name of the source to open a projector for</param>
+        /// <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+        /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        public void OpenSourceProjector(string sourceName, string projectorGeometry, int monitorIndex = -1)
+        {
+            var request = new JObject
+            {
+                { nameof(sourceName), sourceName },
+                { nameof(projectorGeometry), projectorGeometry },
+                { nameof(monitorIndex), monitorIndex },
+            };
+
+            SendRequest(nameof(OpenSourceProjector), request);
+        }
+
+        /// <summary>
+        /// Opens a projector for a specific output video mix.
+        /// Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+        /// </summary>
+        /// <param name="videoMixType">Mix types: OBS_WEBSOCKET_VIDEO_MIX_TYPE_PREVIEW, OBS_WEBSOCKET_VIDEO_MIX_TYPE_PROGRAM, OBS_WEBSOCKET_VIDEO_MIX_TYPE_MULTIVIEW</param>
+        /// <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+        /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        public void OpenVideoMixProjector(string videoMixType, string projectorGeometry, int monitorIndex = -1)
+        {
+            var request = new JObject
+            {
+                { nameof(videoMixType), videoMixType },
+                { nameof(projectorGeometry), projectorGeometry },
+                { nameof(monitorIndex), monitorIndex },
+            };
+
+            SendRequest(nameof(OpenVideoMixProjector), request);
         }
     }
 }

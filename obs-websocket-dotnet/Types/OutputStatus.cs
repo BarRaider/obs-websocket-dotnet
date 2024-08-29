@@ -30,7 +30,7 @@ namespace OBSWebsocketDotNet.Types
         /// Current duration in milliseconds for the output
         /// </summary>
         [JsonProperty(PropertyName = "outputDuration")]
-        public int Duration { get; set; }
+        public long Duration { get; set; }
 
         /// <summary>
         /// Congestion of the output
@@ -42,19 +42,19 @@ namespace OBSWebsocketDotNet.Types
         /// Nubmer of bytes sent by the output
         /// </summary>
         [JsonProperty(PropertyName = "outputBytes")]
-        public int BytesSent { get; set; }
+        public long BytesSent { get; set; }
 
         /// <summary>
         /// Number of frames skipped by the output's process
         /// </summary>
         [JsonProperty(PropertyName = "outputSkippedFrames")]
-        public int SkippedFrames { get; set; }
+        public long SkippedFrames { get; set; }
 
         /// <summary>
         /// Total number of frames delivered by the output's process
         /// </summary>
         [JsonProperty(PropertyName = "outputTotalFrames")]
-        public int TotalFrames { get; set; }
+        public long TotalFrames { get; set; }
 
         /// <summary>
         /// Builds the object from the JSON response body

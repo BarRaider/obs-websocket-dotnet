@@ -1,20 +1,33 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Net.WebSockets;
 using Websocket.Client;
 using OBSWebsocketDotNet.Communication;
 
 namespace OBSWebsocketDotNet
 {
-    public partial class OBSWebsocket
+    public partial class OBSWebsocket : IOBSWebsocket
     {
+        #region Private Members
+        private const string WEBSOCKET_URL_PREFIX = "ws://";
+        private const int SUPPORTED_RPC_VERSION = 1;
+        private TimeSpan wsTimeout = TimeSpan.FromSeconds(10);
+        private string connectionPassword = null;
+        private WebsocketClient wsConnection;
+
+        private delegate void RequestCallback(OBSWebsocket sender, JObject body);
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
+
+        // Random should never be created inside a function
+        private static readonly Random random = new Random();
+
+        #endregion
+
         /// <summary>
         /// WebSocket request timeout, represented as a TimeSpan object
         /// </summary>
@@ -34,18 +47,7 @@ namespace OBSWebsocketDotNet
                 }
             }
         }
-
-        #region Private Members
-        private const string WEBSOCKET_URL_PREFIX = "ws://";
-        private const int SUPPORTED_RPC_VERSION = 1;
-        private TimeSpan wsTimeout = TimeSpan.FromSeconds(10);
-        private string connectionPassword = null;
-
-        // Random should never be created inside a function
-        private static readonly Random random = new Random();
-
-        #endregion
-
+      
         /// <summary>
         /// Current connection state
         /// </summary>
@@ -58,14 +60,6 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Underlying WebSocket connection to an obs-websocket server. Value is null when disconnected.
-        /// </summary>
-        public WebsocketClient wsConnection { get; private set; }
-
-        private delegate void RequestCallback(OBSWebsocket sender, JObject body);
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> responseHandlers;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public OBSWebsocket()
@@ -74,11 +68,24 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password
+        /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
+        /// NOTE: Please subscribe to the Connected/Disconnected events (or atleast check the IsConnected property) to determine when the connection is actually fully established
         /// </summary>
         /// <param name="url">Server URL in standard URL format.</param>
         /// <param name="password">Server password</param>
+        [Obsolete("Please use ConnectAsync, this function will be removed in the next version")]
         public void Connect(string url, string password)
+        {
+            ConnectAsync(url, password);
+        }
+
+        /// <summary>
+        /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
+        /// NOTE: Please subscribe to the Connected/Disconnected events (or atleast check the IsConnected property) to determine when the connection is actually fully established
+        /// </summary>
+        /// <param name="url">Server URL in standard URL format.</param>
+        /// <param name="password">Server password</param>
+        public void ConnectAsync(string url, string password)
         {
             if (!url.ToLower().StartsWith(WEBSOCKET_URL_PREFIX))
             {
@@ -91,8 +98,11 @@ namespace OBSWebsocketDotNet
             }
 
             wsConnection = new WebsocketClient(new Uri(url));
-            wsConnection.MessageReceived.Subscribe(m => WebsocketMessageHandler(this, m));
-            wsConnection.DisconnectionHappened.Subscribe(d => OnWebsocketDisconnect(this, d));
+            wsConnection.IsReconnectionEnabled = false;
+            wsConnection.ReconnectTimeout = null;
+            wsConnection.ErrorReconnectTimeout = null;
+            wsConnection.MessageReceived.Subscribe(m => Task.Run(() => WebsocketMessageHandler(this, m)));
+            wsConnection.DisconnectionHappened.Subscribe(d => Task.Run(() => OnWebsocketDisconnect(this, d)));
 
             connectionPassword = password;
             wsConnection.StartOrFail();
@@ -157,7 +167,7 @@ namespace OBSWebsocketDotNet
                     HandleHello(body);
                     break;
                 case MessageTypes.Identified:
-                    Connected?.Invoke(this, EventArgs.Empty);
+                    Task.Run(() => Connected?.Invoke(this, EventArgs.Empty));
                     break;
                 case MessageTypes.RequestResponse:
                 case MessageTypes.RequestBatchResponse:

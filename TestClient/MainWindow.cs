@@ -309,7 +309,7 @@ namespace TestClient
                 {
                     try
                     {
-                        obs.Connect(txtServerIP.Text, txtServerPassword.Text);
+                        obs.ConnectAsync(txtServerIP.Text, txtServerPassword.Text);
                     }
                     catch (Exception ex)
                     {
