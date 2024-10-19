@@ -18,6 +18,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// State of the media input
         /// </summary>
+        [JsonIgnore]
         public MediaState? State
         {
             get
