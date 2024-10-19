@@ -4381,11 +4381,6 @@
             Status of a Media Input
             </summary>
         </member>
-        <member name="P:OBSWebsocketDotNet.Types.MediaInputStatus.StateString">
-            <summary>
-            State of the media input
-            </summary>
-        </member>
         <member name="P:OBSWebsocketDotNet.Types.MediaInputStatus.State">
             <summary>
             State of the media input
@@ -4410,51 +4405,6 @@
         <member name="M:OBSWebsocketDotNet.Types.MediaInputStatus.#ctor">
             <summary>
             Default Constructor
-            </summary>
-        </member>
-        <member name="T:OBSWebsocketDotNet.Types.MediaState">
-            <summary>
-            Enum representing the state of a media input
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_NONE">
-            <summary>
-            No media is loaded
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_PLAYING">
-            <summary>
-            Media is playing
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_OPENING">
-            <summary>
-            Media is opening
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_BUFFERING">
-            <summary>
-            Media is buffering
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_PAUSED">
-            <summary>
-            Media is playing but is paused
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_STOPPED">
-            <summary>
-            Media is stopped
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_ENDED">
-            <summary>
-            Media is ended
-            </summary>
-        </member>
-        <member name="F:OBSWebsocketDotNet.Types.MediaState.OBS_MEDIA_STATE_ERROR">
-            <summary>
-            Media has errored
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.Monitor">
@@ -5206,21 +5156,6 @@
         <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Password">
             <summary>
             The password to use when accessing the streaming server. Only present if use-auth is true
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Service">
-            <summary>
-            The service being used to stream
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.Protocol">
-            <summary>
-            The protocol to use for the stream
-            </summary>
-        </member>
-        <member name="P:OBSWebsocketDotNet.Types.StreamingServiceSettings.OtherValues">
-            <summary>
-            Other values not covered by the class
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.TransitionOverrideInfo">
