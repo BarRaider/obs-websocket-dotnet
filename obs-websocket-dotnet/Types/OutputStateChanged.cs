@@ -35,11 +35,29 @@ namespace OBSWebsocketDotNet.Types
                     return state.Value;
                 }
 
-                if (!Enum.TryParse(StateStr, ignoreCase: true, out OutputState stateTmp))
+                switch (StateStr)
                 {
-                    throw new ArgumentOutOfRangeException($"Couldn't parse '{StateStr}' as {nameof(OutputState)}");
+                    case "OBS_WEBSOCKET_OUTPUT_STARTING":
+                        state = OutputState.OBS_WEBSOCKET_OUTPUT_STARTING;
+                        break;
+                    case "OBS_WEBSOCKET_OUTPUT_STARTED":
+                        state = OutputState.OBS_WEBSOCKET_OUTPUT_STARTED;
+                        break;
+                    case "OBS_WEBSOCKET_OUTPUT_STOPPING":
+                        state = OutputState.OBS_WEBSOCKET_OUTPUT_STOPPING;
+                        break;
+                    case "OBS_WEBSOCKET_OUTPUT_STOPPED":
+                        state = OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED;
+                        break;
+                    case "OBS_WEBSOCKET_OUTPUT_PAUSED":
+                        state = OutputState.OBS_WEBSOCKET_OUTPUT_PAUSED;
+                        break;
+                    case "OBS_WEBSOCKET_OUTPUT_RESUMED":
+                        state = OutputState.OBS_WEBSOCKET_OUTPUT_RESUMED;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                state = stateTmp;
 
                 return state.Value;
             }
