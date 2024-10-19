@@ -24,7 +24,7 @@ namespace OBSWebsocketDotNet.Types
         /// Position of the cursor in milliseconds. `null` if not playing
         /// </summary>
         [JsonProperty(PropertyName = "mediaCursor")]
-        public int? Cursor { get; set; }
+        public int Cursor { get; set; }
 
         /// <summary>
         /// Instantiate from JObject
