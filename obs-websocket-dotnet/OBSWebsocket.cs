@@ -1,13 +1,15 @@
 using System;
-using System.Security.Cryptography;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
-using Websocket.Client;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet.Communication;
+using Websocket.Client;
 
 namespace OBSWebsocketDotNet
 {
@@ -58,6 +60,11 @@ namespace OBSWebsocketDotNet
                 return (wsConnection != null && wsConnection.IsRunning);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the logger for this instance
+        /// </summary>
+        public ILogger<OBSWebsocket> Logger { get; set; } = NullLogger<OBSWebsocket>.Instance;
 
         /// <summary>
         /// Constructor
@@ -193,6 +200,8 @@ namespace OBSWebsocketDotNet
                     break;
                 default:
                     // Unsupported message type
+                    Logger?.LogWarning($"Unsupported message type: {msg.OperationCode}");
+                    UnsupportedEvent?.Invoke(this, new Types.Events.UnsupportedEventArgs(msg.OperationCode.ToString(), body));
                     break;
 
             }

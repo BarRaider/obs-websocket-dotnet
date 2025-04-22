@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using OBSWebsocketDotNet.Types.Events;
+using Microsoft.Extensions.Logging;
 
 namespace OBSWebsocketDotNet
 {
@@ -290,6 +291,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<SceneNameChangedEventArgs> SceneNameChanged;
 
+        /// <summary>
+        /// An unsupported event has been received.
+        /// </summary>
+        public event EventHandler<UnsupportedEventArgs> UnsupportedEvent;
+
         #endregion
 
         #region EventProcessing
@@ -521,8 +527,8 @@ namespace OBSWebsocketDotNet
 
                 default:
                     var message = $"Unsupported Event: {eventType}\n{body}";
-                    Console.WriteLine(message);
-                    Debug.WriteLine(message);
+                    Logger?.LogInformation(message);
+                    UnsupportedEvent?.Invoke(this, new UnsupportedEventArgs(eventType, body));
                     break;
             }
         }
