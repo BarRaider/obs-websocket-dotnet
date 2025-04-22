@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net9.0-windows7.0</TargetFramework>
 		<AssemblyName>TestClient</AssemblyName>
 		<RootNamespace>TestClient</RootNamespace>
 		<LangVersion>8</LangVersion>
