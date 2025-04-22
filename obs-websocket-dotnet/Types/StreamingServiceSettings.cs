@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -36,5 +38,23 @@ namespace OBSWebsocketDotNet.Types
         /// </summary>
         [JsonProperty(PropertyName = "password")]
         public string Password { set; get; }
+
+        /// <summary>
+        /// The service being used to stream
+        /// </summary>
+        [JsonProperty(PropertyName = "service")]
+        public string Service { get; set; }
+
+        /// <summary>
+        /// The protocol to use for the stream
+        /// </summary>
+        [JsonProperty(PropertyName = "protocol")]
+        public string Protocol { get; set; }
+
+        /// <summary>
+        /// Other values not covered by the class
+        /// </summary>
+        [JsonExtensionData]
+        public Dictionary<string, JToken> OtherValues { get; set; }
     }
 }

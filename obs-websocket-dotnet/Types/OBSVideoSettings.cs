@@ -11,36 +11,36 @@ namespace OBSWebsocketDotNet.Types
         /// Numerator of the fractional FPS value
         /// </summary>
         [JsonProperty(PropertyName = "fpsNumerator")]
-        public double FpsNumerator { internal set; get; }
+        public double FpsNumerator { set; get; }
 
         /// <summary>
         /// Denominator of the fractional FPS value
         /// </summary>
         [JsonProperty(PropertyName = "fpsDenominator")]
-        public double FpsDenominator { internal set; get; }
+        public double FpsDenominator { set; get; }
 
         /// <summary>
         /// Base (canvas) width
         /// </summary>
         [JsonProperty(PropertyName = "baseWidth")]
-        public int BaseWidth { internal set; get; }
+        public int BaseWidth { set; get; }
 
         /// <summary>
         /// Base (canvas) height
         /// </summary>
         [JsonProperty(PropertyName = "baseHeight")]
-        public int BaseHeight { internal set; get; }
+        public int BaseHeight { set; get; }
 
         /// <summary>
         /// Width of the output resolution in pixels
         /// </summary>
         [JsonProperty(PropertyName = "outputWidth")]
-        public int OutputWidth { internal set; get; }
+        public int OutputWidth { set; get; }
 
         /// <summary>
         /// Height of the output resolution in pixels
         /// </summary>
         [JsonProperty(PropertyName = "outputHeight")]
-        public int OutputHeight { internal set; get; }
+        public int OutputHeight { set; get; }
     }
 }
