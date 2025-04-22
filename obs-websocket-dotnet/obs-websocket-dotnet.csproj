@@ -15,7 +15,11 @@
 		<PackageTags>OBS obs-websocket websocket official obs-websocket-dotnet obs.websocket.net obs-websocket-net</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>What's new in v5.0.1
-*
+* Fixes for deserialization issues in MediaInputStatus
+* Allow OBSVideoSettings to be updated via the API
+* New ILogger support instead of writing to console
+* New UnsupportedEvent event
+
 </PackageReleaseNotes>
 	</PropertyGroup>
 
