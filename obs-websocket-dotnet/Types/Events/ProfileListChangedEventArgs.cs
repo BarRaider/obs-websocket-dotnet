@@ -8,16 +8,9 @@ namespace OBSWebsocketDotNet.Types.Events
     /// </summary>
     public class ProfileListChangedEventArgs : EventArgs
     {
-        /// <summary>
-        /// The profiles that have changed
-        /// </summary>
-        public List<string> Profiles { get; }
+        public IReadOnlyCollection<string> Profiles { get; }
 
-        /// <summary>
-        /// Default Constructor
-        /// </summary>
-        /// <param name="profiles">Collection of profile names as strings</param>
-        public ProfileListChangedEventArgs(List<string> profiles)
+        public ProfileListChangedEventArgs(IReadOnlyCollection<string> profiles)
         {
             Profiles = profiles;
         }

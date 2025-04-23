@@ -17,14 +17,14 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// List of all scene items as JObject
         /// </summary>
-        public List<JObject> SceneItems { get; }
-
+        public IReadOnlyCollection<JObject> SceneItems { get; }
+        
         /// <summary>
         /// Default Constructor
         /// </summary>
         /// <param name="sceneName">The scene name</param>
         /// <param name="sceneItems">The scene item data as a colleciton of JObjects</param>
-        public SceneItemListReindexedEventArgs(string sceneName, List<JObject> sceneItems)
+        public SceneItemListReindexedEventArgs(string sceneName, IReadOnlyCollection<JObject> sceneItems)
         {
             SceneName = sceneName;
             SceneItems = sceneItems;
