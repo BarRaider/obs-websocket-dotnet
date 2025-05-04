@@ -2153,5 +2153,21 @@ namespace OBSWebsocketDotNet
 
             SendRequest(nameof(OpenVideoMixProjector), request);
         }
+
+
+        /// <summary>
+        /// Sets the current directory that the record output writes files to.
+        /// </summary>
+        /// <param name="recordDirectory">Output directory</param>
+        public void SetRecordDirectory(string recordDirectory)
+        {
+            var requestFields = new JObject
+            {
+                { nameof(recordDirectory), recordDirectory }
+            };
+
+            SendRequest(nameof(SetRecordDirectory), requestFields);
+        }
+
     }
 }
