@@ -25,25 +25,17 @@ namespace OBSWebsocketDotNet.Types
         /// Scene item list
         /// </summary>
         [JsonPropertyName("sources")]
-        public List<SceneItemDetails> Items;
-
-        /// <summary>
+        public List<SceneItemDetails> Items;        /// <summary>
         /// Builds the object from the JSON description
         /// </summary>
-        /// <param name="data">JSON scene description as a <see cref="JObject" /></param>
+        /// <param name="data">JSON scene description as a <see cref="JsonObject" /></param>
         public ObsScene(JsonObject data)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings
-            {
-                ObjectCreationHandling = ObjectCreationHandling.Auto,
-                NullValueHandling = NullValueHandling.Include
-            };
             if (data.ContainsKey("currentProgramSceneName"))
             {
-                var newToken = JToken.FromObject(data["currentProgramSceneName"]);
-                data.Add("sceneName", newToken);
+                data.Add("sceneName", data["currentProgramSceneName"]);
             }
-            JsonConvert.PopulateObject(data.ToString(), this, settings);
+            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace OBSWebsocketDotNet.Types
         {
             if (data != null)
             {
-                JsonConvert.PopulateObject(data.ToString(), this);
+                JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
             }
         }
 

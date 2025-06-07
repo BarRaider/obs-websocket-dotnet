@@ -23,7 +23,7 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="body"></param>
         public RecordStateChanged(JsonObject body) :base(body)
         {
-            JsonConvert.PopulateObject(body.ToString(), this);
+            JsonSerializer2.PopulateObject(body.ToString(), this, AppJsonSerializerContext.Default);
         }
 
         /// <summary>

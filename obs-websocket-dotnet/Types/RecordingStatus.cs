@@ -44,7 +44,7 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public RecordingStatus(JsonObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
         }
 
         /// <summary>

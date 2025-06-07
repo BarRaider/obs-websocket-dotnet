@@ -26,7 +26,7 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="data"></param>
         public SourceActiveInfo(JsonObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
         }
 
         /// <summary>

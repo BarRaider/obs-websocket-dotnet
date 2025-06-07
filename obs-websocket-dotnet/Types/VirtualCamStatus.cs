@@ -12,15 +12,13 @@ namespace OBSWebsocketDotNet.Types
         /// Whether the output is active
         /// </summary>
         [JsonPropertyName("outputActive")]
-        public bool IsActive { get; set; }
-
-        /// <summary>
+        public bool IsActive { get; set; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
         /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public VirtualCamStatus(JsonObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
         }
 
         /// <summary>

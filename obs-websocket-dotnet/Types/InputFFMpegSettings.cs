@@ -95,15 +95,14 @@ namespace OBSWebsocketDotNet.Types
         public static InputFFMpegSettings FromInputSettings(InputSettings settings)
         {
             return new InputFFMpegSettings(settings);
-        }
-        // Private Constrctor
-        private InputFFMpegSettings(InputSettings settings) : base(JObject.FromObject(settings))
+        }        // Private Constrctor
+        private InputFFMpegSettings(InputSettings settings) : base(JsonSerializer.SerializeToNode(settings, AppJsonSerializerContext.Default.InputSettings)?.AsObject())
         {
             if (settings.InputKind != SUPPORTED_INPUT_KIND)
             {
                 throw new InvalidCastException();
             }
-            JsonConvert.PopulateObject(settings.Settings.ToString(), this);
+            JsonSerializer2.PopulateObject(settings.Settings.ToString(), this, AppJsonSerializerContext.Default);
         }
     }
 }

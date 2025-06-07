@@ -42,15 +42,13 @@ namespace OBSWebsocketDotNet.Types
         /// Object of settings for the transition. 'null' if transition is not configurable
         /// </summary>
         [JsonPropertyName("transitionSettings")]
-        public JsonObject Settings { get; set; }
-
-        /// <summary>
+        public JsonObject Settings { get; set; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
         /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public TransitionSettings(JsonObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
         }
 
         /// <summary>

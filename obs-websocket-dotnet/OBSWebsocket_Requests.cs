@@ -259,7 +259,7 @@ namespace OBSWebsocketDotNet
         /// <param name="overlay">Apply over existing settings?</param>
         public void SetSourceFilterSettings(string sourceName, string filterName, FilterSettings filterSettings, bool overlay = false)
         {
-            SetSourceFilterSettings(sourceName, filterName, JObject.FromObject(filterSettings), overlay);
+            SetSourceFilterSettings(sourceName, filterName, JsonObjectExtensions.FromObject(filterSettings, AppJsonSerializerContext.Default.JsonObject.Options).AsObject(), overlay);
         }
 
 
@@ -294,7 +294,7 @@ namespace OBSWebsocketDotNet
             };
 
             JsonObject response = SendRequest(nameof(GetSourceFilterList), request);
-            if (!response.HasValues)
+            if (!response.HasValues())
             {
                 return new List<FilterSettings>();
             }
@@ -373,7 +373,7 @@ namespace OBSWebsocketDotNet
         /// <param name="filterSettings">Filter settings object</param>
         public void CreateSourceFilter(string sourceName, string filterName, string filterKind, FilterSettings filterSettings)
         {
-            CreateSourceFilter(sourceName, filterName, filterKind, JObject.FromObject(filterSettings));
+            CreateSourceFilter(sourceName, filterName, filterKind, JsonObjectExtensions.FromObject(filterSettings, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }
 
         /// <summary>
@@ -573,7 +573,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemTransform">Transform settings</param>
         public void SetSceneItemTransform(string sceneName, int sceneItemId, SceneItemTransformInfo sceneItemTransform)
         {
-            SetSceneItemTransform(sceneName, sceneItemId, JObject.FromObject(sceneItemTransform));
+            SetSceneItemTransform(sceneName, sceneItemId, JsonObjectExtensions.FromObject(sceneItemTransform, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }
 
         /// <summary>
@@ -923,7 +923,7 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest(nameof(GetSpecialInputs));
             var sources = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, JToken> kvp in response)
+            foreach (var kvp in response)
             {
                 string key = kvp.Key;
                 string value = (string)kvp.Value;
@@ -933,9 +933,7 @@ namespace OBSWebsocketDotNet
                 }
             }
             return sources;
-        }
-
-        /// <summary>
+        }        /// <summary>
         /// Sets the current stream service settings (stream destination).
         /// Note: Simple RTMP settings can be set with type `rtmp_custom` and the settings fields `server` and `key`.
         /// </summary>
@@ -945,7 +943,7 @@ namespace OBSWebsocketDotNet
             var requestFields = new JsonObject
             {
                 { "streamServiceType", service.Type },
-                { "streamServiceSettings", JToken.FromObject(service.Settings) }
+                { "streamServiceSettings", JsonObjectExtensions.FromObject(service.Settings, AppJsonSerializerContext.Default) }
             };
 
             SendRequest(nameof(SetStreamServiceSettings), requestFields);
@@ -1091,7 +1089,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest(nameof(GetInputDefaultSettings), request);
-            return (JObject)response["defaultInputSettings"];
+            return response["defaultInputSettings"].AsObject();
         }
 
         /// <summary>
@@ -1112,7 +1110,7 @@ namespace OBSWebsocketDotNet
             }
 
             var response = SendRequest(nameof(GetSceneItemList), request);
-            return response["sceneItems"].Select(m => new SceneItemDetails((JObject)m)).ToList();
+            return response["sceneItems"].AsArray().Select(m => new SceneItemDetails(m.AsObject())).ToList();
         }
 
         /// <summary>
@@ -1189,7 +1187,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputAudioTracks">Track settings to apply</param>
         public void SetInputAudioTracks(string inputName, SourceTracks inputAudioTracks)
         {
-            SetInputAudioTracks(inputName, JObject.FromObject(inputAudioTracks));
+            SetInputAudioTracks(inputName, JsonObjectExtensions.FromObject(inputAudioTracks, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }       
 
         /// <summary>
@@ -1366,7 +1364,7 @@ namespace OBSWebsocketDotNet
         /// <param name="obsVideoSettings">Object containing video settings</param>
         public void SetVideoSettings(ObsVideoSettings obsVideoSettings)
         {
-            SendRequest(nameof(SetVideoSettings), JObject.FromObject(obsVideoSettings));
+            SendRequest(nameof(SetVideoSettings), JsonObjectExtensions.FromObject(obsVideoSettings, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }
 
         /// <summary>
@@ -1494,9 +1492,9 @@ namespace OBSWebsocketDotNet
                 : SendRequest(nameof(GetInputList), request);
 
             var returnList = new List<InputBasicInfo>();
-            foreach (var input in response["inputs"])
+            foreach (var input in response["inputs"].AsObject())
             {
-                returnList.Add(new InputBasicInfo(input as JObject));
+                returnList.Add(new InputBasicInfo(input.Value.AsObject()));
             }
 
             return returnList;
@@ -1647,7 +1645,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest(nameof(GetInputPropertiesListPropertyItems), request);
-            return response["propertyItems"].Value<List<JsonObject>>();
+            return response["propertyItems"].AsArray().Select(x => x.AsObject()).ToList();
         }
 
         /// <summary>
@@ -2107,9 +2105,9 @@ namespace OBSWebsocketDotNet
             var response = SendRequest(nameof(GetMonitorList));
             var monitors = new List<Monitor>();
 
-            foreach(var monitor in response["monitors"])
+            foreach(var monitor in response["monitors"].AsObject())
             {
-                monitors.Add(new Monitor((JObject)monitor));
+                monitors.Add(new Monitor(monitor.Value.AsObject()));
             }
             return monitors;
         }

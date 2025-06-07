@@ -135,8 +135,8 @@ namespace OBSWebsocketDotNet.Types
                 this.CropRight = transformInfo.CropRight;
                 this.CropTop = transformInfo.CropTop;
                 this.Height = transformInfo.Height;
-                this.PositionX = transformInfo.PositionX;
-                this.PositionY = transformInfo.PositionY;
+                this.X = transformInfo.X;
+                this.Y = transformInfo.Y;
                 this.Rotation = transformInfo.Rotation;
                 this.ScaleX = transformInfo.ScaleX;
                 this.ScaleY = transformInfo.ScaleY;

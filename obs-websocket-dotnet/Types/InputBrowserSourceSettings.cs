@@ -98,13 +98,13 @@ namespace OBSWebsocketDotNet.Types
             return new InputBrowserSourceSettings(settings);
         }
         // Private Constrctor
-        private InputBrowserSourceSettings(InputSettings settings) : base(JObject.FromObject(settings))
+        private InputBrowserSourceSettings(InputSettings settings) : base(JsonSerializer.SerializeToNode(settings, AppJsonSerializerContext.Default.InputSettings)?.AsObject())
         {
             if (settings.InputKind != SUPPORTED_INPUT_KIND)
             {
                 throw new InvalidCastException();
             }
-            JsonConvert.PopulateObject(settings.Settings.ToString(), this);
+            JsonSerializer2.PopulateObject(settings.Settings.ToString(), this, AppJsonSerializerContext.Default);
         }
     }
 }
