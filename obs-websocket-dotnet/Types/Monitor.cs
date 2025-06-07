@@ -42,15 +42,18 @@ namespace OBSWebsocketDotNet.Types
         /// Monitor Position Y
         /// </summary>
         [JsonPropertyName("monitorPositionY")]
-        public int PositionY { get; set; }
-
-        /// <summary>
+        public int PositionY { get; set; }        /// <summary>
         /// Constructor to auto populate
         /// </summary>
         /// <param name="data"></param>
         public Monitor (JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            Height = data["monitorHeight"]?.GetValue<int>() ?? 0;
+            Width = data["monitorWidth"]?.GetValue<int>() ?? 0;
+            Name = data["monitorName"]?.GetValue<string>() ?? string.Empty;
+            Index = data["monitorIndex"]?.GetValue<int>() ?? 0;
+            PositionX = data["monitorPositionX"]?.GetValue<int>() ?? 0;
+            PositionY = data["monitorPositionY"]?.GetValue<int>() ?? 0;
         }
 
         /// <summary>

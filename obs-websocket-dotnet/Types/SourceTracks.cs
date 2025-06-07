@@ -42,15 +42,18 @@ namespace OBSWebsocketDotNet.Types
         /// Is the track active
         /// </summary>
         [JsonPropertyName("6")]
-        public bool IsTrack6Active { set; get; }
-
-        /// <summary>
+        public bool IsTrack6Active { set; get; }        /// <summary>
         /// Builds the object from the JSON data
         /// </summary>
-        /// <param name="data">JSON item description as a <see cref="JObject"/></param>
+        /// <param name="data">JSON item description as a <see cref="JsonObject"/></param>
         public SourceTracks(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            IsTrack1Active = data["1"]?.GetValue<bool>() ?? false;
+            IsTrack2Active = data["2"]?.GetValue<bool>() ?? false;
+            IsTrack3Active = data["3"]?.GetValue<bool>() ?? false;
+            IsTrack4Active = data["4"]?.GetValue<bool>() ?? false;
+            IsTrack5Active = data["5"]?.GetValue<bool>() ?? false;
+            IsTrack6Active = data["6"]?.GetValue<bool>() ?? false;
         }
 
         /// <summary>

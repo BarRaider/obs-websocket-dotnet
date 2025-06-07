@@ -18,14 +18,14 @@ namespace OBSWebsocketDotNet.Types
         /// Volume setting in dB
         /// </summary>
         [JsonPropertyName("inputVolumeDb")]
-        public float VolumeDb { internal set; get; }
-
-        /// <summary>
+        public float VolumeDb { internal set; get; }        /// <summary>
         /// Builds the object from the JSON response body
-        /// </summary>        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
+        /// </summary>
+        /// <param name="data">JSON response body as a <see cref="JsonObject"/></param>
         public VolumeInfo(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            VolumeMul = data["inputVolumeMul"]?.GetValue<float>() ?? 0.0f;
+            VolumeDb = data["inputVolumeDb"]?.GetValue<float>() ?? 0.0f;
         }
 
         /// <summary>

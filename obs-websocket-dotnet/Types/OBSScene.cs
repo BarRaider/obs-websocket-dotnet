@@ -33,9 +33,28 @@ namespace OBSWebsocketDotNet.Types
         {
             if (data.ContainsKey("currentProgramSceneName"))
             {
-                data.Add("sceneName", data["currentProgramSceneName"]);
+                Name = data["currentProgramSceneName"]?.GetValue<string>() ?? string.Empty;
             }
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            else
+            {
+                Name = data["sceneName"]?.GetValue<string>() ?? string.Empty;
+            }
+            
+            IsGroup = data["isGroup"]?.GetValue<bool>() ?? false;
+            
+            // Handle sources list
+            var sourcesArray = data["sources"]?.AsArray();
+            Items = new List<SceneItemDetails>();
+            if (sourcesArray != null)
+            {
+                foreach (var item in sourcesArray)
+                {
+                    if (item?.AsObject() != null)
+                    {
+                        Items.Add(new SceneItemDetails(item.AsObject()));
+                    }
+                }
+            }
         }
 
         /// <summary>

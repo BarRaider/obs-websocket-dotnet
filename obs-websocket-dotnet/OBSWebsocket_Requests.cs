@@ -27,7 +27,7 @@ namespace OBSWebsocketDotNet
         public ObsVideoSettings GetVideoSettings()
         {
             JsonObject response = SendRequest(nameof(GetVideoSettings));
-            return JsonSerializer.Deserialize<ObsVideoSettings>(response.ToString());
+            return JsonSerializer.Deserialize<ObsVideoSettings>(response.ToString(), AppJsonSerializerContext.Default.ObsVideoSettings);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace OBSWebsocketDotNet
         public ObsStats GetStats()
         {
             JsonObject response = SendRequest(nameof(GetStats));
-            return JsonSerializer.Deserialize<ObsStats>(response.ToString());
+            return JsonSerializer.Deserialize<ObsStats>(response.ToString(), AppJsonSerializerContext.Default.ObsStats);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace OBSWebsocketDotNet
         public GetSceneListInfo GetSceneList()
         {
             JsonObject response = SendRequest(nameof(GetSceneList));
-            return JsonSerializer.Deserialize<GetSceneListInfo>(response.ToString());
+            return JsonSerializer.Deserialize<GetSceneListInfo>(response.ToString(), AppJsonSerializerContext.Default.GetSceneListInfo);
         }
 
         /// <summary>

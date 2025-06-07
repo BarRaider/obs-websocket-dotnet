@@ -18,15 +18,14 @@ namespace OBSWebsocketDotNet.Types
         /// Whether the source is showing in the UI (Preview, Projector, Properties)
         /// </summary>
         [JsonPropertyName("videoShowing")]
-        public bool VideoShowing { get; set; }
-
-        /// <summary>
+        public bool VideoShowing { get; set; }        /// <summary>
         /// Auto populate constructor
         /// </summary>
         /// <param name="data"></param>
         public SourceActiveInfo(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            VideoActive = data["videaActive"]?.GetValue<bool>() ?? false;
+            VideoShowing = data["videoShowing"]?.GetValue<bool>() ?? false;
         }
 
         /// <summary>

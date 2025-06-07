@@ -36,15 +36,17 @@ namespace OBSWebsocketDotNet.Types
         /// Number of bytes sent by the output
         /// </summary>
         [JsonPropertyName("outputBytes")]
-        public long RecordingBytes { set; get; }
-
-        /// <summary>
+        public long RecordingBytes { set; get; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
-        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
+        /// <param name="data">JSON response body as a <see cref="JsonObject"/></param>
         public RecordingStatus(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            IsRecording = data["outputActive"]?.GetValue<bool>() ?? false;
+            IsRecordingPaused = data["outputPaused"]?.GetValue<bool>() ?? false;
+            RecordTimecode = data["outputTimecode"]?.GetValue<string>() ?? string.Empty;
+            RecordingDuration = data["outputDuration"]?.GetValue<long>() ?? 0L;
+            RecordingBytes = data["outputBytes"]?.GetValue<long>() ?? 0L;
         }
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="body"></param>
         public InputBasicInfo(JsonObject body) : base(body)
         {
-            JsonSerializer2.PopulateObject(body.ToString(), this, AppJsonSerializerContext.Default);
+            UnversionedKind = body["unversionedInputKind"]?.GetValue<string>() ?? UnversionedKind;
         }
 
         /// <summary>

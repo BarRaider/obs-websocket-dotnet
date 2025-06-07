@@ -104,7 +104,19 @@ namespace OBSWebsocketDotNet.Types
             {
                 throw new InvalidCastException();
             }
-            JsonSerializer2.PopulateObject(settings.Settings.ToString(), this, AppJsonSerializerContext.Default);
+            CustomFPS = settings.Settings["fps_custom"]?.GetValue<bool>() ?? CustomFPS;
+            FPS = settings.Settings["fps"]?.GetValue<int>() ?? FPS;
+            RerouteAudio = settings.Settings["reroute_audio"]?.GetValue<bool>() ?? RerouteAudio;
+            Height = settings.Settings["height"]?.GetValue<int>() ?? Height;
+            Width = settings.Settings["width"]?.GetValue<int>() ?? Width;
+            CSS = settings.Settings["css"]?.GetValue<string>() ?? CSS;
+            IsLocalFile = settings.Settings["is_local_file"]?.GetValue<bool>() ?? IsLocalFile;
+            LocalFile = settings.Settings["local_file"]?.GetValue<string>() ?? LocalFile;
+            URL = settings.Settings["url"]?.GetValue<string>() ?? URL;
+            RestartWhenActive = settings.Settings["restart_when_active"]?.GetValue<bool>() ?? RestartWhenActive;
+            ShutdownWhenNotVisible = settings.Settings["shutdown"]?.GetValue<bool>() ?? ShutdownWhenNotVisible;
+            ControlLevel = settings.Settings["webpage_control_level"]?.GetValue<int>() ?? ControlLevel;
+
         }
     }
 }

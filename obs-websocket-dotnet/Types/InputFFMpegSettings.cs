@@ -102,7 +102,20 @@ namespace OBSWebsocketDotNet.Types
             {
                 throw new InvalidCastException();
             }
-            JsonSerializer2.PopulateObject(settings.Settings.ToString(), this, AppJsonSerializerContext.Default);
+
+            BufferingMB = settings.Settings["buffering_mb"]?.GetValue<int>() ?? BufferingMB;
+            ClearOnMediaEnd = settings.Settings["clear_on_media_end"]?.GetValue<bool>() ?? ClearOnMediaEnd;
+            CloseWhenInactive = settings.Settings["close_when_inactive"]?.GetValue<bool>() ?? CloseWhenInactive;
+            ColorRange = settings.Settings["color_range"]?.GetValue<int>() ?? ColorRange;
+            HWDecode = settings.Settings["hw_decode"]?.GetValue<bool>() ?? HWDecode;
+            IsLocalFile = settings.Settings["is_local_file"]?.GetValue<bool>() ?? IsLocalFile;
+            LocalFile = settings.Settings["local_file"]?.GetValue<string>() ?? string.Empty;
+            Looping = settings.Settings["looping"]?.GetValue<bool>() ?? Looping;
+            LinearAlpha = settings.Settings["linear_alpha"]?.GetValue<bool>() ?? LinearAlpha;
+            RestartOnActivate = settings.Settings["restart_on_activate"]?.GetValue<bool>() ?? RestartOnActivate;
+            Options = settings.Settings["ffmpeg_options"]?.GetValue<string>() ?? string.Empty;
+            SpeedPercent = settings.Settings["speed_percent"]?.GetValue<int>() ?? SpeedPercent;
+
         }
     }
 }

@@ -7,12 +7,11 @@ namespace OBSWebsocketDotNet.Types
     /// Status of streaming output
     /// </summary>
     public class OutputStatus
-    {
-        /// <summary>
+    {        /// <summary>
         /// True if streaming is started and running, false otherwise
         /// </summary>
         [JsonPropertyName("outputActive")]
-        public readonly bool IsActive;
+        public bool IsActive { get; private set; }
 
         /// <summary>
         /// Whether the output is currently reconnectins
@@ -54,15 +53,20 @@ namespace OBSWebsocketDotNet.Types
         /// Total number of frames delivered by the output's process
         /// </summary>
         [JsonPropertyName("outputTotalFrames")]
-        public long TotalFrames { get; set; }
-
-        /// <summary>
+        public long TotalFrames { get; set; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
-        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
+        /// <param name="data">JSON response body as a <see cref="JsonObject"/></param>
         public OutputStatus(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            IsActive = data["outputActive"]?.GetValue<bool>() ?? false;
+            IsReconnecting = data["outputReconnecting"]?.GetValue<bool>() ?? false;
+            TimeCode = data["outputTimecode"]?.GetValue<string>() ?? string.Empty;
+            Duration = data["outputDuration"]?.GetValue<long>() ?? 0L;
+            Congestion = data["outputCongestion"]?.GetValue<double>() ?? 0.0;
+            BytesSent = data["outputBytes"]?.GetValue<long>() ?? 0L;
+            SkippedFrames = data["outputSkippedFrames"]?.GetValue<long>() ?? 0L;
+            TotalFrames = data["outputTotalFrames"]?.GetValue<long>() ?? 0L;
         }
 
         /// <summary>

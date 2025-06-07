@@ -15,15 +15,13 @@ namespace OBSWebsocketDotNet.Types
         /// File name for the saved recording, if record stopped. null otherwise
         /// </summary>
         [JsonPropertyName("outputPath")]
-        public string OutputPath { set; get; }
-
-        /// <summary>
+        public string OutputPath { set; get; }        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="body"></param>
         public RecordStateChanged(JsonObject body) :base(body)
         {
-            JsonSerializer2.PopulateObject(body.ToString(), this, AppJsonSerializerContext.Default);
+            OutputPath = body["outputPath"]?.GetValue<string>() ?? string.Empty;
         }
 
         /// <summary>

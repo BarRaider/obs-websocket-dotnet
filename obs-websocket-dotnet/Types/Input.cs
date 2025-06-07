@@ -26,7 +26,8 @@ namespace OBSWebsocketDotNet.Types
         /// <param name="body"></param>
         public Input(JsonObject body)
         {
-            JsonSerializer2.PopulateObject(body.ToString(), this, AppJsonSerializerContext.Default);
+            InputName = body["inputName"]?.GetValue<string>() ?? InputName;
+            InputKind = body["inputKind"]?.GetValue<string>() ?? InputKind;
         }
 
         /// <summary>

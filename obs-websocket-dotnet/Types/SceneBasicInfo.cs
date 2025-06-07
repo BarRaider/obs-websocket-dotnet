@@ -20,6 +20,6 @@ namespace OBSWebsocketDotNet.Types
         /// Index of scene
         /// </summary>
         [JsonPropertyName("sceneIndex")]
-        public string Index { set; get; }
+        public int Index { set; get; }
     }
 }

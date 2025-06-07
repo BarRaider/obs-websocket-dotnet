@@ -49,15 +49,43 @@ namespace OBSWebsocketDotNet.Types
         /// Description of the platform, like `Windows 10 (10.0)`
         /// </summary>
         [JsonPropertyName("platformDescription")]
-        public string PlatformDescription { get; internal set; }
-
-        /// <summary>
+        public string PlatformDescription { get; internal set; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
-        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
+        /// <param name="data">JSON response body as a <see cref="JsonObject"/></param>
         public ObsVersion(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            PluginVersion = data["obsWebSocketVersion"]?.GetValue<string>() ?? string.Empty;
+            OBSStudioVersion = data["obsVersion"]?.GetValue<string>() ?? string.Empty;
+            Version = data["rpcVersion"]?.GetValue<double>() ?? 0.0;
+            
+            // Handle list properties
+            var availableRequestsArray = data["availableRequests"]?.AsArray();
+            AvailableRequests = new List<string>();
+            if (availableRequestsArray != null)
+            {
+                foreach (var item in availableRequestsArray)
+                {
+                    var value = item?.GetValue<string>();
+                    if (!string.IsNullOrEmpty(value))
+                        AvailableRequests.Add(value);
+                }
+            }
+            
+            var supportedFormatsArray = data["supportedImageFormats"]?.AsArray();
+            SupportedImageFormats = new List<string>();
+            if (supportedFormatsArray != null)
+            {
+                foreach (var item in supportedFormatsArray)
+                {
+                    var value = item?.GetValue<string>();
+                    if (!string.IsNullOrEmpty(value))
+                        SupportedImageFormats.Add(value);
+                }
+            }
+            
+            Platform = data["platform"]?.GetValue<string>() ?? string.Empty;
+            PlatformDescription = data["platformDescription"]?.GetValue<string>() ?? string.Empty;
         }
 
         /// <summary>

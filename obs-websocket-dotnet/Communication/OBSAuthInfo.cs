@@ -26,7 +26,8 @@ namespace OBSWebsocketDotNet.Communication
         /// <param name="data">JSON response body as a <see cref="JObject"/></param>
         public OBSAuthInfo(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            Challenge = data["challenge"]?.ToString();
+            PasswordSalt = data["salt"]?.ToString();
         }
 
         /// <summary>

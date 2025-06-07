@@ -22,15 +22,15 @@ namespace OBSWebsocketDotNet.Types
         /// The source volume in decibels
         /// </summary>
         [JsonPropertyName("inputVolumeDb")]
-        public float InputVolumeDb { get; set; }
-
-        /// <summary>
+        public float InputVolumeDb { get; set; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
-        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
+        /// <param name="data">JSON response body as a <see cref="JsonObject"/></param>
         public InputVolume(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            InputName = data["inputName"]?.GetValue<string>() ?? string.Empty;
+            InputVolumeMul = data["inputVolumeMul"]?.GetValue<float>() ?? 0.0f;
+            InputVolumeDb = data["inputVolumeDb"]?.GetValue<float>() ?? 0.0f;
         }
 
         /// <summary>

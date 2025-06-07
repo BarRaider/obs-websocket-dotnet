@@ -41,15 +41,15 @@ namespace OBSWebsocketDotNet.Types
         /// Position of the cursor in milliseconds. `null` if not playing
         /// </summary>
         [JsonPropertyName("mediaCursor")]
-        public long? Cursor { get; set; }
-
-        /// <summary>
+        public long? Cursor { get; set; }        /// <summary>
         /// Instantiate from JObject
         /// </summary>
         /// <param name="body"></param>
         public MediaInputStatus(JsonObject body)
         {
-            JsonSerializer2.PopulateObject(body.ToString(), this, AppJsonSerializerContext.Default);
+            StateString = body["mediaState"]?.GetValue<string>() ?? string.Empty;
+            Duration = body["mediaDuration"]?.GetValue<long?>();
+            Cursor = body["mediaCursor"]?.GetValue<long?>();
         }
 
         /// <summary>

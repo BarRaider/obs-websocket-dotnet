@@ -421,7 +421,7 @@ namespace OBSWebsocketDotNet
                     if (SourceFilterListReindexed != null)
                     {
                         List<FilterReorderItem> filters = new List<FilterReorderItem>();
-                        JsonSerializer2.PopulateObject(body["filters"].ToString(), filters, AppJsonSerializerContext.Default);
+                        filters = JsonSerializer.Deserialize<List<FilterReorderItem>>((string)body["filters"], AppJsonSerializerContext.Default.ListFilterReorderItem);
 
                         SourceFilterListReindexed?.Invoke(this, new SourceFilterListReindexedEventArgs((string)body["sourceName"], filters));
                     }

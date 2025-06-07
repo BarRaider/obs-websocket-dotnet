@@ -41,15 +41,14 @@ namespace OBSWebsocketDotNet.Types
 
                 return state.Value;
             }
-        }
-
-        /// <summary>
+        }        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="body"></param>
         public OutputStateChanged(JsonObject body)
         {
-            JsonSerializer2.PopulateObject(body.ToString(), this, AppJsonSerializerContext.Default);
+            IsActive = body["outputActive"]?.GetValue<bool>() ?? false;
+            StateStr = body["outputState"]?.GetValue<string>() ?? string.Empty;
         }
 
         /// <summary>

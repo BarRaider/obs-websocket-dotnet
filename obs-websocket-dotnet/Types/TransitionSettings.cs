@@ -45,10 +45,15 @@ namespace OBSWebsocketDotNet.Types
         public JsonObject Settings { get; set; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
-        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
+        /// <param name="data">JSON response body as a <see cref="JsonObject"/></param>
         public TransitionSettings(JsonObject data)
         {
-            JsonSerializer2.PopulateObject(data.ToString(), this, AppJsonSerializerContext.Default);
+            Name = data["transitionName"]?.GetValue<string>() ?? string.Empty;
+            Duration = data["transitionDuration"]?.GetValue<int?>();
+            Kind = data["transitionKind"]?.GetValue<string>() ?? string.Empty;
+            IsFixed = data["transitionFixed"]?.GetValue<bool>() ?? false;
+            IsConfigurable = data["transitionConfigurable"]?.GetValue<bool>() ?? false;
+            Settings = data["transitionSettings"]?.AsObject();
         }
 
         /// <summary>
