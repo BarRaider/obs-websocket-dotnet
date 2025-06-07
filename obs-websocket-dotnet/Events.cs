@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 using OBSWebsocketDotNet.Communication;
 using OBSWebsocketDotNet.Types;
 using System;
@@ -305,7 +305,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="eventType">Value of "event-type" in the JSON body</param>
         /// <param name="body">full JSON message body</param>
-        protected void ProcessEventType(string eventType, JObject body)
+        protected void ProcessEventType(string eventType, JsonObject body)
         {
             body = (JObject)body["eventData"];
 
@@ -313,14 +313,10 @@ namespace OBSWebsocketDotNet
             {
                 case nameof(CurrentProgramSceneChanged):
                     CurrentProgramSceneChanged?.Invoke(this, new ProgramSceneChangedEventArgs((string)body["sceneName"]));
-                    break;
-
-                case nameof(SceneListChanged):
-                    SceneListChanged?.Invoke(this, new SceneListChangedEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["scenes"])));
-                    break;
-
-                case nameof(SceneItemListReindexed):
-                    SceneItemListReindexed?.Invoke(this, new SceneItemListReindexedEventArgs((string)body["sceneName"], JsonConvert.DeserializeObject<List<JObject>>((string)body["sceneItems"])));
+                    break;                case nameof(SceneListChanged):
+                    SceneListChanged?.Invoke(this, new SceneListChangedEventArgs(JsonSerializer.Deserialize<List<JsonObject>>((string)body["scenes"], AppJsonSerializerContext.Default.ListJsonObject)));
+                    break;                case nameof(SceneItemListReindexed):
+                    SceneItemListReindexed?.Invoke(this, new SceneItemListReindexedEventArgs((string)body["sceneName"], JsonSerializer.Deserialize<List<JsonObject>>((string)body["sceneItems"], AppJsonSerializerContext.Default.ListJsonObject)));
                     break;
 
                 case nameof(SceneItemCreated):
@@ -341,10 +337,8 @@ namespace OBSWebsocketDotNet
 
                 case nameof(CurrentSceneCollectionChanged):
                     CurrentSceneCollectionChanged?.Invoke(this, new CurrentSceneCollectionChangedEventArgs((string)body["sceneCollectionName"]));
-                    break;
-
-                case nameof(SceneCollectionListChanged):
-                    SceneCollectionListChanged?.Invoke(this, new SceneCollectionListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["sceneCollections"])));
+                    break;                case nameof(SceneCollectionListChanged):
+                    SceneCollectionListChanged?.Invoke(this, new SceneCollectionListChangedEventArgs(JsonSerializer.Deserialize<List<string>>((string)body["sceneCollections"], AppJsonSerializerContext.Default.ListString)));
                     break;
 
                 case nameof(CurrentSceneTransitionChanged):
@@ -369,10 +363,8 @@ namespace OBSWebsocketDotNet
 
                 case nameof(CurrentProfileChanged):
                     CurrentProfileChanged?.Invoke(this, new CurrentProfileChangedEventArgs((string)body["profileName"]));
-                    break;
-
-                case nameof(ProfileListChanged):
-                    ProfileListChanged?.Invoke(this, new ProfileListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["profiles"])));
+                    break;                case nameof(ProfileListChanged):
+                    ProfileListChanged?.Invoke(this, new ProfileListChangedEventArgs(JsonSerializer.Deserialize<List<string>>((string)body["profiles"], AppJsonSerializerContext.Default.ListString)));
                     break;
 
                 case nameof(StreamStateChanged):
@@ -503,10 +495,8 @@ namespace OBSWebsocketDotNet
 
                 case nameof(InputAudioMonitorTypeChanged):
                     InputAudioMonitorTypeChanged?.Invoke(this, new InputAudioMonitorTypeChangedEventArgs((string)body["inputName"], (string)body["monitorType"]));
-                    break;
-
-                case nameof(InputVolumeMeters):
-                    InputVolumeMeters?.Invoke(this, new InputVolumeMetersEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["inputs"])));
+                    break;                case nameof(InputVolumeMeters):
+                    InputVolumeMeters?.Invoke(this, new InputVolumeMetersEventArgs(JsonSerializer.Deserialize<List<JsonObject>>((string)body["inputs"], AppJsonSerializerContext.Default.ListJsonObject)));
                     break;
 
                 case nameof(ReplayBufferSaved):

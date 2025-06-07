@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -10,13 +10,13 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Type of streaming service
         /// </summary>
-        [JsonProperty(PropertyName = "streamServiceType")]
+        [JsonPropertyName("streamServiceType")]
         public string Type { set; get; }
 
         /// <summary>
         /// Streaming service settings (JSON data)
         /// </summary>
-        [JsonProperty(PropertyName = "streamServiceSettings")]
+        [JsonPropertyName("streamServiceSettings")]
         public StreamingServiceSettings Settings { set; get; }
     }
 }

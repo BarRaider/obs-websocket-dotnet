@@ -1,6 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -12,7 +12,7 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// State of the media input
         /// </summary>
-        [JsonProperty(PropertyName = "mediaState")]
+        [JsonPropertyName("mediaState")]
         public string StateString { get; set; }
 
         /// <summary>
@@ -34,20 +34,20 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Total duration of the playing media in milliseconds. `null` if not playing
         /// </summary>
-        [JsonProperty(PropertyName = "mediaDuration")]
+        [JsonPropertyName("mediaDuration")]
         public long? Duration { get; set; }
 
         /// <summary>
         /// Position of the cursor in milliseconds. `null` if not playing
         /// </summary>
-        [JsonProperty(PropertyName = "mediaCursor")]
+        [JsonPropertyName("mediaCursor")]
         public long? Cursor { get; set; }
 
         /// <summary>
         /// Instantiate from JObject
         /// </summary>
         /// <param name="body"></param>
-        public MediaInputStatus(JObject body)
+        public MediaInputStatus(JsonObject body)
         {
             JsonConvert.PopulateObject(body.ToString(), this);
         }

@@ -626,7 +626,7 @@
             </summary>
             <param name="sourceName">Source with filter</param>
             <param name="filterName">Filter name</param>
-            <param name="filterSettings">JObject with filter settings</param>
+            <param name="filterSettings">JsonObject with filter settings</param>
             <param name="overlay">Apply over existing settings?</param>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSourceFilterSettings(System.String,System.String,OBSWebsocketDotNet.Types.FilterSettings,System.Boolean)">
@@ -673,7 +673,7 @@
             <param name="sourceName">Name of the source for the filter</param>
             <param name="filterName">Name of the filter</param>
             <param name="filterKind">Type of filter</param>
-            <param name="filterSettings">JObject holding filter settings object</param>
+            <param name="filterSettings">JsonObject holding filter settings object</param>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.CreateSourceFilter(System.String,System.String,System.String,OBSWebsocketDotNet.Types.FilterSettings)">
             <summary>
@@ -769,7 +769,7 @@
             </summary>
             <param name="sceneName">Name of the scene that has the SceneItem</param>
             <param name="sceneItemId">Id of the Scene Item</param>
-            <param name="sceneItemTransform">JObject holding transform settings</param>
+            <param name="sceneItemTransform">JsonObject holding transform settings</param>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetSceneItemTransform(System.String,System.Int32,OBSWebsocketDotNet.Types.SceneItemTransformInfo)">
             <summary>
@@ -1076,7 +1076,7 @@
             Sets the enable state of audio tracks of an input.
             </summary>
             <param name="inputName">Name of the input</param>
-            <param name="inputAudioTracks">JObject holding track settings to apply</param>
+            <param name="inputAudioTracks">JsonObject holding track settings to apply</param>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetInputAudioTracks(System.String,OBSWebsocketDotNet.Types.SourceTracks)">
             <summary>
@@ -1372,7 +1372,7 @@
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSceneItemTransformRaw(System.String,System.Int32)">
             <summary>
-            Gets the JObject of transform settings for a scene item. Use this one you don't want it populated with default values.
+            Gets the JsonObject of transform settings for a scene item. Use this one you don't want it populated with default values.
             Scenes and Groups
             </summary>
             <param name="sceneName">Name of the scene the item is in</param>
@@ -1688,7 +1688,7 @@
             </summary>
             <param name="sourceName">Source with filter</param>
             <param name="filterName">Filter name</param>
-            <param name="filterSettings">JObject with filter settings</param>
+            <param name="filterSettings">JsonObject with filter settings</param>
             <param name="overlay">Apply over existing settings?</param>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetSourceFilterSettings(System.String,System.String,OBSWebsocketDotNet.Types.FilterSettings,System.Boolean)">
@@ -1735,7 +1735,7 @@
             <param name="sourceName">Name of the source for the filter</param>
             <param name="filterName">Name of the filter</param>
             <param name="filterKind">Type of filter</param>
-            <param name="filterSettings">JObject holding filter settings object</param>
+            <param name="filterSettings">JsonObject holding filter settings object</param>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.CreateSourceFilter(System.String,System.String,System.String,OBSWebsocketDotNet.Types.FilterSettings)">
             <summary>
@@ -1831,7 +1831,7 @@
             </summary>
             <param name="sceneName">Name of the scene that has the SceneItem</param>
             <param name="sceneItemId">Id of the Scene Item</param>
-            <param name="sceneItemTransform">JObject holding transform settings</param>
+            <param name="sceneItemTransform">JsonObject holding transform settings</param>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetSceneItemTransform(System.String,System.Int32,OBSWebsocketDotNet.Types.SceneItemTransformInfo)">
             <summary>
@@ -2138,7 +2138,7 @@
             Sets the enable state of audio tracks of an input.
             </summary>
             <param name="inputName">Name of the input</param>
-            <param name="inputAudioTracks">JObject holding track settings to apply</param>
+            <param name="inputAudioTracks">JsonObject holding track settings to apply</param>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetInputAudioTracks(System.String,OBSWebsocketDotNet.Types.SourceTracks)">
             <summary>
@@ -2434,7 +2434,7 @@
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetSceneItemTransformRaw(System.String,System.Int32)">
             <summary>
-            Gets the JObject of transform settings for a scene item. Use this one you don't want it populated with default values.
+            Gets the JsonObject of transform settings for a scene item. Use this one you don't want it populated with default values.
             Scenes and Groups
             </summary>
             <param name="sceneName">Name of the scene the item is in</param>
