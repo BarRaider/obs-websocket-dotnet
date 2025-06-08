@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,16 +14,16 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Unversioned Kind of the Input
         /// </summary>
-        [JsonProperty(PropertyName = "unversionedInputKind")]
+        [JsonPropertyName("unversionedInputKind")]
         public string UnversionedKind { get; set; }
 
         /// <summary>
         /// Instantiate object from response data
         /// </summary>
         /// <param name="body"></param>
-        public InputBasicInfo(JObject body) : base(body)
+        public InputBasicInfo(JsonObject body) : base(body)
         {
-            JsonConvert.PopulateObject(body.ToString(), this);
+            UnversionedKind = body["unversionedInputKind"]?.GetValue<string>() ?? UnversionedKind;
         }
 
         /// <summary>

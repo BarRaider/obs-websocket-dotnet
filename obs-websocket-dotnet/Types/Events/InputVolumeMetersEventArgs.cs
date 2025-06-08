@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace OBSWebsocketDotNet.Types.Events
 {
@@ -12,13 +12,13 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// Array of active inputs with their associated volume levels
         /// </summary>
-        public List<JObject> inputs { get; }
+        public List<JsonObject> inputs { get; }
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         /// <param name="inputs">Collection inputs as JObjects</param>
-        public InputVolumeMetersEventArgs(List<JObject> inputs)
+        public InputVolumeMetersEventArgs(List<JsonObject> inputs)
         {
             this.inputs = inputs;
         }

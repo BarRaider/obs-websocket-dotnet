@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -11,31 +11,31 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Name of the filter
         /// </summary>
-        [JsonProperty(PropertyName = "filterName")]
+        [JsonPropertyName("filterName")]
         public string Name { set; get; }
 
         /// <summary>
         /// Type of the specified filter
         /// </summary>
-        [JsonProperty(PropertyName = "filterKind")]
+        [JsonPropertyName("filterKind")]
         public string Kind { set; get; }
 
         /// <summary>
         /// Index of the filter in the list, beginning at 0
         /// </summary>
-        [JsonProperty(PropertyName = "filterIndex")]
+        [JsonPropertyName("filterIndex")]
         public int Index { get; set; }
 
         /// <summary>
         /// Status of the specified filter
         /// </summary>
-        [JsonProperty(PropertyName = "filterEnabled")]
+        [JsonPropertyName("filterEnabled")]
         public bool IsEnabled { set; get; }
 
         /// <summary>
         /// Settings for the filter
         /// </summary>
-        [JsonProperty(PropertyName = "filterSettings")]
-        public JObject Settings { set; get; }
+        [JsonPropertyName("filterSettings")]
+        public JsonObject Settings { set; get; }
     }
 }

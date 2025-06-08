@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,15 +7,15 @@ namespace OBSWebsocketDotNet.Communication
 {
     internal static class MessageFactory
     {
-        internal static JObject BuildMessage(MessageTypes opCode, string messageType, JObject additionalFields, out string messageId)
+        internal static JsonObject BuildMessage(MessageTypes opCode, string messageType, JsonObject additionalFields, out string messageId)
         {
             messageId = Guid.NewGuid().ToString();
-            JObject payload = new JObject()
+            JsonObject payload = new JsonObject()
             {
                 { "op", (int)opCode }
             };
 
-            JObject data = new JObject();
+            JsonObject data = new JsonObject();
             
             switch (opCode)
             {

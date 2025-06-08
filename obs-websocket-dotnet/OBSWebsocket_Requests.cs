@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 using OBSWebsocketDotNet.Types;
 using System;
 using System.Collections.Generic;
@@ -22,13 +22,12 @@ namespace OBSWebsocketDotNet
 
         #endregion
 
-        /// <summary>
-        /// Get basic OBS video information
+        /// <summary>        /// Get basic OBS video information
         /// </summary>
         public ObsVideoSettings GetVideoSettings()
         {
-            JObject response = SendRequest(nameof(GetVideoSettings));
-            return JsonConvert.DeserializeObject<ObsVideoSettings>(response.ToString());
+            JsonObject response = SendRequest(nameof(GetVideoSettings));
+            return JsonSerializer.Deserialize<ObsVideoSettings>(response.ToString(), AppJsonSerializerContext.Default.ObsVideoSettings);
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Base64-encoded screenshot string</returns>
         public string SaveSourceScreenshot(string sourceName, string imageFormat, string imageFilePath, int imageWidth = -1, int imageHeight = -1, int imageCompressionQuality = -1)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(imageFormat), imageFormat },
@@ -91,7 +90,7 @@ namespace OBSWebsocketDotNet
         /// <param name="hotkeyName">Unique name of the hotkey, as defined when registering the hotkey (e.g. "ReplayBuffer.Save")</param>
         public void TriggerHotkeyByName(string hotkeyName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(hotkeyName), hotkeyName }
             };
@@ -106,10 +105,10 @@ namespace OBSWebsocketDotNet
         /// <param name="keyModifier">Optional key modifiers object. You can combine multiple key operators. e.g. KeyModifier.Shift | KeyModifier.Control</param>
         public void TriggerHotkeyByKeySequence(OBSHotkey keyId, KeyModifier keyModifier = KeyModifier.None)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(keyId), keyId.ToString() },
-                { "keyModifiers", new JObject{
+                { "keyModifiers", new JsonObject{
                     { "shift", (keyModifier & KeyModifier.Shift) == KeyModifier.Shift },
                     { "alt", (keyModifier & KeyModifier.Alt) == KeyModifier.Alt },
                     { "control", (keyModifier & KeyModifier.Control) == KeyModifier.Control },
@@ -126,7 +125,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Name of the current scene</returns>
         public string GetCurrentProgramScene()
         {
-            JObject response = SendRequest(nameof(GetCurrentProgramScene));
+            JsonObject response = SendRequest(nameof(GetCurrentProgramScene));
             return (string)response["currentProgramSceneName"];
         }
 
@@ -136,7 +135,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">The desired scene name</param>
         public void SetCurrentProgramScene(string sceneName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName }
             };
@@ -149,8 +148,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public ObsStats GetStats()
         {
-            JObject response = SendRequest(nameof(GetStats));
-            return JsonConvert.DeserializeObject<ObsStats>(response.ToString());
+            JsonObject response = SendRequest(nameof(GetStats));
+            return JsonSerializer.Deserialize<ObsStats>(response.ToString(), AppJsonSerializerContext.Default.ObsStats);
         }
 
         /// <summary>
@@ -168,8 +167,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public GetSceneListInfo GetSceneList()
         {
-            JObject response = SendRequest(nameof(GetSceneList));
-            return JsonConvert.DeserializeObject<GetSceneListInfo>(response.ToString());
+            JsonObject response = SendRequest(nameof(GetSceneList));
+            return JsonSerializer.Deserialize<GetSceneListInfo>(response.ToString(), AppJsonSerializerContext.Default.GetSceneListInfo);
         }
 
         /// <summary>
@@ -179,12 +178,12 @@ namespace OBSWebsocketDotNet
         /// <returns>TransitionOverrideInfo</returns>
         public TransitionOverrideInfo GetSceneSceneTransitionOverride(string sceneName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName }
             };
 
-            JObject response = SendRequest(nameof(GetSceneSceneTransitionOverride), request);
+            JsonObject response = SendRequest(nameof(GetSceneSceneTransitionOverride), request);
             return response.ToObject<TransitionOverrideInfo>();
         }
 
@@ -196,7 +195,7 @@ namespace OBSWebsocketDotNet
         /// <param name="transitionDuration">Duration in milliseconds of the transition if transition is not fixed. Defaults to the current duration specified in the UI if there is no current override and this value is not given</param>
         public void SetSceneSceneTransitionOverride(string sceneName, string transitionName, int transitionDuration = -1)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(transitionName), transitionName }
@@ -222,7 +221,7 @@ namespace OBSWebsocketDotNet
                 throw new ArgumentOutOfRangeException(nameof(position));
             }
 
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(position), position },
                 { nameof(release), release}
@@ -236,11 +235,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source with filter</param>
         /// <param name="filterName">Filter name</param>
-        /// <param name="filterSettings">JObject with filter settings</param>
+        /// <param name="filterSettings">JsonObject with filter settings</param>
         /// <param name="overlay">Apply over existing settings?</param>
-        public void SetSourceFilterSettings(string sourceName, string filterName, JObject filterSettings, bool overlay = false)
+        public void SetSourceFilterSettings(string sourceName, string filterName, JsonObject filterSettings, bool overlay = false)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(filterName), filterName },
@@ -260,7 +259,7 @@ namespace OBSWebsocketDotNet
         /// <param name="overlay">Apply over existing settings?</param>
         public void SetSourceFilterSettings(string sourceName, string filterName, FilterSettings filterSettings, bool overlay = false)
         {
-            SetSourceFilterSettings(sourceName, filterName, JObject.FromObject(filterSettings), overlay);
+            SetSourceFilterSettings(sourceName, filterName, JsonObjectExtensions.FromObject(filterSettings, AppJsonSerializerContext.Default.JsonObject.Options).AsObject(), overlay);
         }
 
 
@@ -273,7 +272,7 @@ namespace OBSWebsocketDotNet
         /// <param name="filterEnabled">New filter state</param>
         public void SetSourceFilterEnabled(string sourceName, string filterName, bool filterEnabled)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(filterName), filterName },
@@ -289,18 +288,18 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Source name</param>
         public List<FilterSettings> GetSourceFilterList(string sourceName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName }
             };
 
-            JObject response = SendRequest(nameof(GetSourceFilterList), request);
-            if (!response.HasValues)
+            JsonObject response = SendRequest(nameof(GetSourceFilterList), request);
+            if (!response.HasValues())
             {
                 return new List<FilterSettings>();
             }
 
-            return JsonConvert.DeserializeObject<List<FilterSettings>>(response["filters"].ToString());
+            return JsonSerializer.Deserialize<List<FilterSettings>>(response["filters"]?.ToString() ?? "[]", AppJsonSerializerContext.Default.ListFilterSettings);
         }
 
         /// <summary>
@@ -310,14 +309,14 @@ namespace OBSWebsocketDotNet
         /// <param name="filterName">Filter name</param>
         public FilterSettings GetSourceFilter(string sourceName, string filterName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(filterName), filterName }
             };
 
-            JObject response = SendRequest(nameof(GetSourceFilter), request);
-            return JsonConvert.DeserializeObject<FilterSettings>(response.ToString());
+            JsonObject response = SendRequest(nameof(GetSourceFilter), request);
+            return JsonSerializer.Deserialize<FilterSettings>(response.ToString(), AppJsonSerializerContext.Default.FilterSettings);
         }
 
         /// <summary>
@@ -327,7 +326,7 @@ namespace OBSWebsocketDotNet
         /// <param name="filterName">Name of the filter to remove</param>
         public bool RemoveSourceFilter(string sourceName, string filterName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(filterName), filterName }
@@ -351,10 +350,10 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Name of the source for the filter</param>
         /// <param name="filterName">Name of the filter</param>
         /// <param name="filterKind">Type of filter</param>
-        /// <param name="filterSettings">JObject holding filter settings object</param>
-        public void CreateSourceFilter(string sourceName, string filterName, string filterKind, JObject filterSettings)
+        /// <param name="filterSettings">JsonObject holding filter settings object</param>
+        public void CreateSourceFilter(string sourceName, string filterName, string filterKind, JsonObject filterSettings)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(filterName), filterName },
@@ -374,7 +373,7 @@ namespace OBSWebsocketDotNet
         /// <param name="filterSettings">Filter settings object</param>
         public void CreateSourceFilter(string sourceName, string filterName, string filterKind, FilterSettings filterSettings)
         {
-            CreateSourceFilter(sourceName, filterName, filterKind, JObject.FromObject(filterSettings));
+            CreateSourceFilter(sourceName, filterName, filterKind, JsonObjectExtensions.FromObject(filterSettings, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }
 
         /// <summary>
@@ -422,7 +421,7 @@ namespace OBSWebsocketDotNet
         /// <param name="transitionName">Desired transition name</param>
         public void SetCurrentSceneTransition(string transitionName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(transitionName), transitionName }
             };
@@ -436,7 +435,7 @@ namespace OBSWebsocketDotNet
         /// <param name="transitionDuration">Desired transition duration (in milliseconds)</param>
         public void SetCurrentSceneTransitionDuration(int transitionDuration)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(transitionDuration), transitionDuration }
             };
@@ -450,11 +449,10 @@ namespace OBSWebsocketDotNet
         /// <param name="transitionSettings">Transition settings (they can be partial)</param>
         /// <param name="overlay">Whether to overlay over the current settins or replace them</param>
         /// <returns>Updated transition settings</returns>
-        public void SetCurrentSceneTransitionSettings(JObject transitionSettings, bool overlay)
-        {
-            var requestFields = new JObject
+        public void SetCurrentSceneTransitionSettings(JsonObject transitionSettings, bool overlay)
+        {            var requestFields = new JsonObject
             {
-                { nameof(transitionSettings), JToken.FromObject(transitionSettings)},
+                { nameof(transitionSettings), JsonNode.Parse(JsonSerializer.Serialize(transitionSettings, AppJsonSerializerContext.Default.JsonObject)) },
                 { nameof(overlay), overlay }
             };
 
@@ -469,7 +467,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputVolumeDb">Interperet `volume` data as decibels instead of amplitude/mul.</param>
         public void SetInputVolume(string inputName, float inputVolume, bool inputVolumeDb = false)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -494,7 +492,7 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="VolumeInfo"/>Object containing the volume and mute state of the specified source.</returns>
         public VolumeInfo GetInputVolume(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -510,7 +508,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Whether the input is muted</returns>
         public bool GetInputMute(string inputName)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -526,7 +524,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputMuted">Desired mute state</param>
         public void SetInputMute(string inputName, bool inputMuted)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(inputMuted), inputMuted }
@@ -541,7 +539,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the source which mute state will be toggled</param>
         public void ToggleInputMute(string inputName)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -554,10 +552,10 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the scene that has the SceneItem</param>
         /// <param name="sceneItemId">Id of the Scene Item</param>
-        /// <param name="sceneItemTransform">JObject holding transform settings</param>
-        public void SetSceneItemTransform(string sceneName, int sceneItemId, JObject sceneItemTransform)
+        /// <param name="sceneItemTransform">JsonObject holding transform settings</param>
+        public void SetSceneItemTransform(string sceneName, int sceneItemId, JsonObject sceneItemTransform)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId },
@@ -575,7 +573,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemTransform">Transform settings</param>
         public void SetSceneItemTransform(string sceneName, int sceneItemId, SceneItemTransformInfo sceneItemTransform)
         {
-            SetSceneItemTransform(sceneName, sceneItemId, JObject.FromObject(sceneItemTransform));
+            SetSceneItemTransform(sceneName, sceneItemId, JsonObjectExtensions.FromObject(sceneItemTransform, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }
 
         /// <summary>
@@ -584,7 +582,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneCollectionName">Desired scene collection name</param>
         public void SetCurrentSceneCollection(string sceneCollectionName)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(sceneCollectionName), sceneCollectionName }
             };
@@ -610,7 +608,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetSceneCollectionList()
         {
             var response = SendRequest(nameof(GetSceneCollectionList));
-            return JsonConvert.DeserializeObject<List<string>>(response["sceneCollections"].ToString());
+            return JsonSerializer.Deserialize<List<string>>(response["sceneCollections"]?.ToString() ?? "[]", AppJsonSerializerContext.Default.ListString);
         }
 
         /// <summary>
@@ -619,7 +617,7 @@ namespace OBSWebsocketDotNet
         /// <param name="profileName">Name of the desired profile</param>
         public void SetCurrentProfile(string profileName)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(profileName), profileName }
             };
@@ -634,7 +632,7 @@ namespace OBSWebsocketDotNet
         public GetProfileListInfo GetProfileList()
         {
             var response = SendRequest(nameof(GetProfileList));
-            return JsonConvert.DeserializeObject<GetProfileListInfo>(response.ToString());
+            return JsonSerializer.Deserialize<GetProfileListInfo>(response.ToString(), AppJsonSerializerContext.Default.GetProfileListInfo);
         }
 
         /// <summary>
@@ -704,7 +702,7 @@ namespace OBSWebsocketDotNet
         public RecordingStatus GetRecordStatus()
         {
             var response = SendRequest(nameof(GetRecordStatus));
-            return JsonConvert.DeserializeObject<RecordingStatus>(response.ToString());
+            return JsonSerializer.Deserialize<RecordingStatus>(response.ToString(), AppJsonSerializerContext.Default.RecordingStatus);
         }
 
         /// <summary>
@@ -725,7 +723,7 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest(nameof(GetSceneTransitionList));
 
-            return JsonConvert.DeserializeObject<GetTransitionListInfo>(response.ToString());
+            return JsonSerializer.Deserialize<GetTransitionListInfo>(response.ToString(), AppJsonSerializerContext.Default.GetTransitionListInfo);
         }
 
         /// <summary>
@@ -744,7 +742,7 @@ namespace OBSWebsocketDotNet
         /// <param name="studioModeEnabled"></param>
         public void SetStudioModeEnabled(bool studioModeEnabled)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(studioModeEnabled), studioModeEnabled }
             };
@@ -770,7 +768,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Preview scene name</param>
         public void SetCurrentPreviewScene(string sceneName)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(sceneName), sceneName }
             };
@@ -840,7 +838,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputAudioSyncOffset">Audio offset (in nanoseconds) for the specified source</param>
         public void SetInputAudioSyncOffset(string inputName, int inputAudioSyncOffset)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(inputAudioSyncOffset), inputAudioSyncOffset }
@@ -856,7 +854,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Audio offset (in nanoseconds) of the specified source</returns>
         public int GetInputAudioSyncOffset(string inputName)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -872,7 +870,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Scene name from which to delete item</param>
         public void RemoveSceneItem(string sceneName, int sceneItemId)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
@@ -887,7 +885,7 @@ namespace OBSWebsocketDotNet
         /// <param name="captionText">Captions text</param>
         public void SendStreamCaption(string captionText)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(captionText), captionText }
             };
@@ -903,7 +901,7 @@ namespace OBSWebsocketDotNet
         /// <param name="destinationSceneName">Name of scene to add the new duplicated Scene Item. If not specified will assume sceneName</param>
         public void DuplicateSceneItem(string sceneName, int sceneItemId, string destinationSceneName = null)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
@@ -925,7 +923,7 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest(nameof(GetSpecialInputs));
             var sources = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, JToken> kvp in response)
+            foreach (var kvp in response)
             {
                 string key = kvp.Key;
                 string value = (string)kvp.Value;
@@ -935,19 +933,17 @@ namespace OBSWebsocketDotNet
                 }
             }
             return sources;
-        }
-
-        /// <summary>
+        }        /// <summary>
         /// Sets the current stream service settings (stream destination).
         /// Note: Simple RTMP settings can be set with type `rtmp_custom` and the settings fields `server` and `key`.
         /// </summary>
         /// <param name="service">Stream Service Type Name and Settings objects</param>
         public void SetStreamServiceSettings(StreamingService service)
         {
-            var requestFields = new JObject
+            var requestFields = new JsonObject
             {
                 { "streamServiceType", service.Type },
-                { "streamServiceSettings", JToken.FromObject(service.Settings) }
+                { "streamServiceSettings", JsonObjectExtensions.FromObject(service.Settings, AppJsonSerializerContext.Default) }
             };
 
             SendRequest(nameof(SetStreamServiceSettings), requestFields);
@@ -961,7 +957,7 @@ namespace OBSWebsocketDotNet
         {
             var response = SendRequest(nameof(GetStreamServiceSettings));
 
-            return JsonConvert.DeserializeObject<StreamingService>(response.ToString());
+            return JsonSerializer.Deserialize<StreamingService>(response.ToString(), AppJsonSerializerContext.Default.StreamingService);
         }
 
         /// <summary>
@@ -975,7 +971,7 @@ namespace OBSWebsocketDotNet
         /// <returns>The monitor type in use</returns>
         public string GetInputAudioMonitorType(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -991,7 +987,7 @@ namespace OBSWebsocketDotNet
         /// <param name="monitorType">Audio monitor type. See `GetInputAudioMonitorType for possible types.</param>
         public void SetInputAudioMonitorType(string inputName, string monitorType)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(monitorType), monitorType }
@@ -1004,9 +1000,9 @@ namespace OBSWebsocketDotNet
         /// Broadcasts a `CustomEvent` to all WebSocket clients. Receivers are clients which are identified and subscribed.
         /// </summary>
         /// <param name="eventData">Data payload to emit to all receivers</param>
-        public void BroadcastCustomEvent(JObject eventData)
+        public void BroadcastCustomEvent(JsonObject eventData)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(eventData), eventData }
             };
@@ -1022,7 +1018,7 @@ namespace OBSWebsocketDotNet
         /// <param name="mediaCursor">New cursor position to set (milliseconds).</param>
         public void SetMediaInputCursor(string inputName, int mediaCursor)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(mediaCursor), mediaCursor }
@@ -1039,7 +1035,7 @@ namespace OBSWebsocketDotNet
         /// <param name="mediaCursorOffset">Value to offset the current cursor position by (milliseconds +/-)</param>
         public void OffsetMediaInputCursor(string inputName, int mediaCursorOffset)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(mediaCursorOffset), mediaCursorOffset }
@@ -1057,9 +1053,9 @@ namespace OBSWebsocketDotNet
         /// <param name="inputSettings">Jobject holding the settings object to initialize the input with</param>
         /// <param name="sceneItemEnabled">Whether to set the created scene item to enabled or disabled</param>
         /// <returns>ID of the SceneItem in the scene.</returns>
-        public int CreateInput(string sceneName, string inputName, string inputKind, JObject inputSettings, bool? sceneItemEnabled)
+        public int CreateInput(string sceneName, string inputName, string inputKind, JsonObject inputSettings, bool? sceneItemEnabled)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(inputName), inputName },
@@ -1085,15 +1081,15 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="inputKind">Input kind to get the default settings for</param>
         /// <returns>Object of default settings for the input kind</returns>
-        public JObject GetInputDefaultSettings(string inputKind)
+        public JsonObject GetInputDefaultSettings(string inputKind)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputKind), inputKind }
             };
 
             var response = SendRequest(nameof(GetInputDefaultSettings), request);
-            return (JObject)response["defaultInputSettings"];
+            return response["defaultInputSettings"].AsObject();
         }
 
         /// <summary>
@@ -1104,17 +1100,17 @@ namespace OBSWebsocketDotNet
         /// <returns>Array of scene items in the scene</returns>
         public List<SceneItemDetails> GetSceneItemList(string sceneName)
         {
-            JObject request = null;
+            JsonObject request = null;
             if (!string.IsNullOrEmpty(sceneName))
             {
-                request = new JObject
+                request = new JsonObject
                 {
                     { nameof(sceneName), sceneName }
                 };
             }
 
             var response = SendRequest(nameof(GetSceneItemList), request);
-            return response["sceneItems"].Select(m => new SceneItemDetails((JObject)m)).ToList();
+            return response["sceneItems"].AsArray().Select(m => new SceneItemDetails(m.AsObject())).ToList();
         }
 
         /// <summary>
@@ -1127,7 +1123,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Numeric ID of the scene item</returns>
         public int CreateSceneItem(string sceneName, string sourceName, bool sceneItemEnabled = true)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sourceName), sourceName },
@@ -1144,7 +1140,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Name for the new scene</param>
         public void CreateScene(string sceneName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName }
             };
@@ -1159,7 +1155,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Object of audio tracks and associated enable states</returns>
         public SourceTracks GetInputAudioTracks(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -1172,10 +1168,10 @@ namespace OBSWebsocketDotNet
         /// Sets the enable state of audio tracks of an input.
         /// </summary>
         /// <param name="inputName">Name of the input</param>
-        /// <param name="inputAudioTracks">JObject holding track settings to apply</param>
-        public void SetInputAudioTracks(string inputName, JObject inputAudioTracks)
+        /// <param name="inputAudioTracks">JsonObject holding track settings to apply</param>
+        public void SetInputAudioTracks(string inputName, JsonObject inputAudioTracks)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(inputAudioTracks), inputAudioTracks }
@@ -1191,7 +1187,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputAudioTracks">Track settings to apply</param>
         public void SetInputAudioTracks(string inputName, SourceTracks inputAudioTracks)
         {
-            SetInputAudioTracks(inputName, JObject.FromObject(inputAudioTracks));
+            SetInputAudioTracks(inputName, JsonObjectExtensions.FromObject(inputAudioTracks, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }       
 
         /// <summary>
@@ -1202,7 +1198,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Whether the source is showing in Program</returns>
         public SourceActiveInfo GetSourceActive(string sourceName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName }
             };
@@ -1217,7 +1213,7 @@ namespace OBSWebsocketDotNet
         /// <returns>An <see cref="VirtualCamStatus"/> object describing the current virtual camera state</returns>
         public VirtualCamStatus GetVirtualCamStatus()
         {
-            JObject response = SendRequest(nameof(GetVirtualCamStatus));
+            JsonObject response = SendRequest(nameof(GetVirtualCamStatus));
             var outputStatus = new VirtualCamStatus(response);
             return outputStatus;
         }
@@ -1244,7 +1240,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Whether the output is active</returns>
         public VirtualCamStatus ToggleVirtualCam()
         {
-            JObject response = SendRequest(nameof(ToggleVirtualCam));
+            JsonObject response = SendRequest(nameof(ToggleVirtualCam));
             var outputStatus = new VirtualCamStatus(response);
             return outputStatus;
         }
@@ -1255,9 +1251,9 @@ namespace OBSWebsocketDotNet
         /// <param name="realm">The data realm to select. `OBS_WEBSOCKET_DATA_REALM_GLOBAL` or `OBS_WEBSOCKET_DATA_REALM_PROFILE`</param>
         /// <param name="slotName">The name of the slot to retrieve data from</param>
         /// <returns type="Any">Value associated with the slot. `null` if not set</returns>
-        public JObject GetPersistentData(string realm, string slotName)
+        public JsonObject GetPersistentData(string realm, string slotName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(realm), realm },
                 { nameof(slotName), slotName }
@@ -1272,9 +1268,9 @@ namespace OBSWebsocketDotNet
         /// <param name="realm">The data realm to select. `OBS_WEBSOCKET_DATA_REALM_GLOBAL` or `OBS_WEBSOCKET_DATA_REALM_PROFILE`</param>
         /// <param name="slotName">The name of the slot to retrieve data from</param>
         /// <param name="slotValue">The value to apply to the slot</param>
-        public void SetPersistentData(string realm, string slotName, JObject slotValue)
+        public void SetPersistentData(string realm, string slotName, JsonObject slotValue)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(realm), realm },
                 { nameof(slotName), slotName },
@@ -1290,7 +1286,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneCollectionName">Name for the new scene collection</param>
         public void CreateSceneCollection(string sceneCollectionName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneCollectionName), sceneCollectionName }
             };
@@ -1304,7 +1300,7 @@ namespace OBSWebsocketDotNet
         /// <param name="profileName">Name for the new profile</param>
         public void CreateProfile(string profileName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(profileName), profileName }
             };
@@ -1318,7 +1314,7 @@ namespace OBSWebsocketDotNet
         /// <param name="profileName">Name of the profile to remove</param>
         public void RemoveProfile(string profileName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(profileName), profileName }
             };
@@ -1332,9 +1328,9 @@ namespace OBSWebsocketDotNet
         /// <param name="parameterCategory">Category of the parameter to get</param>
         /// <param name="parameterName">Name of the parameter to get</param>
         /// <returns></returns>
-        public JObject GetProfileParameter(string parameterCategory, string parameterName)
+        public JsonObject GetProfileParameter(string parameterCategory, string parameterName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(parameterCategory), parameterCategory },
                 { nameof(parameterName), parameterName }
@@ -1351,7 +1347,7 @@ namespace OBSWebsocketDotNet
         /// <param name="parameterValue">Value of the parameter to set. Use `null` to delete</param>
         public void SetProfileParameter(string parameterCategory, string parameterName, string parameterValue)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(parameterCategory), parameterCategory },
                 { nameof(parameterName), parameterName },
@@ -1368,7 +1364,7 @@ namespace OBSWebsocketDotNet
         /// <param name="obsVideoSettings">Object containing video settings</param>
         public void SetVideoSettings(ObsVideoSettings obsVideoSettings)
         {
-            SendRequest(nameof(SetVideoSettings), JObject.FromObject(obsVideoSettings));
+            SendRequest(nameof(SetVideoSettings), JsonObjectExtensions.FromObject(obsVideoSettings, AppJsonSerializerContext.Default.JsonObject.Options).AsObject());
         }
 
         /// <summary>
@@ -1376,9 +1372,9 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="filterKind">Filter kind to get the default settings for</param>
         /// <returns>Object of default settings for the filter kind</returns>
-        public JObject GetSourceFilterDefaultSettings(string filterKind)
+        public JsonObject GetSourceFilterDefaultSettings(string filterKind)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(filterKind), filterKind }
             };
@@ -1394,7 +1390,7 @@ namespace OBSWebsocketDotNet
         /// <param name="newFilterName">New name for the filter</param>
         public void SetSourceFilterName(string sourceName, string filterName, string newFilterName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(filterName), filterName },
@@ -1412,7 +1408,7 @@ namespace OBSWebsocketDotNet
         /// <param name="filterIndex">New index position of the filter</param>
         public void SetSourceFilterIndex(string sourceName, string filterName, int filterIndex)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(filterName), filterName },
@@ -1428,7 +1424,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Version info in an <see cref="ObsVersion"/> object</returns>
         public ObsVersion GetVersion()
         {
-            JObject response = SendRequest(nameof(GetVersion));
+            JsonObject response = SendRequest(nameof(GetVersion));
             return new ObsVersion(response);
         }
 
@@ -1441,9 +1437,9 @@ namespace OBSWebsocketDotNet
         /// <param name="requestType">The request type to call</param>
         /// <param name="requestData">Object containing appropriate request data</param>
         /// <returns>Object containing appropriate response data. {} if request does not provide any response data</returns>
-        public JObject CallVendorRequest(string vendorName, string requestType, JObject requestData = null)
+        public JsonObject CallVendorRequest(string vendorName, string requestType, JsonObject requestData = null)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(vendorName), vendorName },
                 { nameof(requestType), requestType },
@@ -1460,7 +1456,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetHotkeyList()
         {
             var response = SendRequest(nameof(GetHotkeyList));
-            return JsonConvert.DeserializeObject<List<string>>(response["hotkeys"].ToString());
+            return JsonSerializer.Deserialize<List<string>>(response["hotkeys"]?.ToString() ?? "[]", AppJsonSerializerContext.Default.ListString);
         }
 
         /// <summary>
@@ -1470,7 +1466,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sleepFrames">Number of frames to sleep for (if `SERIAL_FRAME` mode)</param>
         public void Sleep(int sleepMillis, int sleepFrames)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sleepMillis), sleepMillis },
                 { nameof(sleepFrames), sleepFrames }
@@ -1486,7 +1482,7 @@ namespace OBSWebsocketDotNet
         /// <returns>List of Inputs in OBS</returns>
         public List<InputBasicInfo> GetInputList(string inputKind = null)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputKind), inputKind }
             };
@@ -1496,9 +1492,9 @@ namespace OBSWebsocketDotNet
                 : SendRequest(nameof(GetInputList), request);
 
             var returnList = new List<InputBasicInfo>();
-            foreach (var input in response["inputs"])
+            foreach (var input in response["inputs"].AsObject())
             {
-                returnList.Add(new InputBasicInfo(input as JObject));
+                returnList.Add(new InputBasicInfo(input.Value.AsObject()));
             }
 
             return returnList;
@@ -1511,7 +1507,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Array of input kinds</returns>
         public List<string> GetInputKindList(bool unversioned = false)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(unversioned), unversioned }
             };
@@ -1520,7 +1516,7 @@ namespace OBSWebsocketDotNet
                 ? SendRequest(nameof(GetInputKindList))
                 : SendRequest(nameof(GetInputKindList), request);
 
-            return JsonConvert.DeserializeObject<List<string>>(response["inputKinds"].ToString());
+            return JsonSerializer.Deserialize<List<string>>(response["inputKinds"]?.ToString() ?? "[]", AppJsonSerializerContext.Default.ListString);
         }
 
         /// <summary>
@@ -1530,7 +1526,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input to remove</param>
         public void RemoveInput(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -1545,7 +1541,7 @@ namespace OBSWebsocketDotNet
         /// <param name="newInputName">New name for the input</param>
         public void SetInputName(string inputName, string newInputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(newInputName), newInputName }
@@ -1562,7 +1558,7 @@ namespace OBSWebsocketDotNet
         /// <returns>New populated InputSettings object</returns>
         public InputSettings GetInputSettings(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -1588,9 +1584,9 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input to set the settings of</param>
         /// <param name="inputSettings">Object of settings to apply</param>
         /// <param name="overlay">True == apply the settings on top of existing ones, False == reset the input to its defaults, then apply settings.</param>
-        public void SetInputSettings(string inputName, JObject inputSettings, bool overlay = true)
+        public void SetInputSettings(string inputName, JsonObject inputSettings, bool overlay = true)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(inputSettings), inputSettings },
@@ -1607,7 +1603,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Audio balance value from 0.0-1.0</returns>
         public double GetInputAudioBalance(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -1623,7 +1619,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputAudioBalance">New audio balance value</param>
         public void SetInputAudioBalance(string inputName, double inputAudioBalance)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(inputAudioBalance), inputAudioBalance }
@@ -1640,16 +1636,16 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input</param>
         /// <param name="propertyName">Name of the list property to get the items of</param>
         /// <returns>Array of items in the list property</returns>
-        public List<JObject> GetInputPropertiesListPropertyItems(string inputName, string propertyName)
+        public List<JsonObject> GetInputPropertiesListPropertyItems(string inputName, string propertyName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(propertyName), propertyName }
             };
 
             var response = SendRequest(nameof(GetInputPropertiesListPropertyItems), request);
-            return response["propertyItems"].Value<List<JObject>>();
+            return response["propertyItems"].AsArray().Select(x => x.AsObject()).ToList();
         }
 
         /// <summary>
@@ -1661,7 +1657,7 @@ namespace OBSWebsocketDotNet
         /// <param name="propertyName">Name of the button property to press</param>
         public void PressInputPropertiesButton(string inputName, string propertyName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(propertyName), propertyName }
@@ -1685,7 +1681,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Object containing string mediaState, int mediaDuration, int mediaCursor properties</returns>
         public MediaInputStatus GetMediaInputStatus(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -1700,7 +1696,7 @@ namespace OBSWebsocketDotNet
         /// <param name="mediaAction">Identifier of the `ObsMediaInputAction` enum</param>
         public void TriggerMediaInputAction(string inputName, string mediaAction)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName },
                 { nameof(mediaAction), mediaAction }
@@ -1735,15 +1731,15 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the group to get the items of</param>
         /// <returns>Array of scene items in the group</returns>
-        public List<JObject> GetGroupSceneItemList(string sceneName)
+        public List<JsonObject> GetGroupSceneItemList(string sceneName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName }
             };
 
             var response = SendRequest(nameof(GetGroupSceneItemList), request);
-            return JsonConvert.DeserializeObject<List<JObject>>((string)response["sceneItems"]);
+            return JsonSerializer.Deserialize<List<JsonObject>>((string)response["sceneItems"], AppJsonSerializerContext.Default.ListJsonObject);
         }
 
         /// <summary>
@@ -1755,7 +1751,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Numeric ID of the scene item</returns>
         public int GetSceneItemId(string sceneName, string sourceName, int searchOffset)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sourceName), sourceName },
@@ -1776,19 +1772,19 @@ namespace OBSWebsocketDotNet
         public SceneItemTransformInfo GetSceneItemTransform(string sceneName, int sceneItemId)
         {
             var response = GetSceneItemTransformRaw(sceneName, sceneItemId);
-            return JsonConvert.DeserializeObject<SceneItemTransformInfo>(response["sceneItemTransform"].ToString());
+            return JsonSerializer.Deserialize<SceneItemTransformInfo>(response["sceneItemTransform"]?.ToString() ?? "{}", AppJsonSerializerContext.Default.SceneItemTransformInfo);
         }
 
         /// <summary>
-        /// Gets the JObject of transform settings for a scene item. Use this one you don't want it populated with default values.
+        /// Gets the JsonObject of transform settings for a scene item. Use this one you don't want it populated with default values.
         /// Scenes and Groups
         /// </summary>
         /// <param name="sceneName">Name of the scene the item is in</param>
         /// <param name="sceneItemId">Numeric ID of the scene item</param>
         /// <returns>Object containing scene item transform info</returns>
-        public JObject GetSceneItemTransformRaw(string sceneName, int sceneItemId)
+        public JsonObject GetSceneItemTransformRaw(string sceneName, int sceneItemId)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
@@ -1806,7 +1802,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Whether the scene item is enabled. `true` for enabled, `false` for disabled</returns>
         public bool GetSceneItemEnabled(string sceneName, int sceneItemId)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
@@ -1825,7 +1821,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemEnabled">New enable state of the scene item</param>
         public void SetSceneItemEnabled(string sceneName, int sceneItemId, bool sceneItemEnabled)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId },
@@ -1844,7 +1840,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Whether the scene item is locked. `true` for locked, `false` for unlocked</returns>
         public bool GetSceneItemLocked(string sceneName, int sceneItemId)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
@@ -1863,7 +1859,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemLocked">New lock state of the scene item</param>
         public void SetSceneItemLocked(string sceneName, int sceneItemId, bool sceneItemLocked)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId },
@@ -1883,7 +1879,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Index position of the scene item</returns>
         public int GetSceneItemIndex(string sceneName, int sceneItemId)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
@@ -1902,7 +1898,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemIndex">New index position of the scene item</param>
         public void SetSceneItemIndex(string sceneName, int sceneItemId, int sceneItemIndex)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId },
@@ -1929,7 +1925,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Current blend mode</returns>
         public string GetSceneItemBlendMode(string sceneName, int sceneItemId)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId }
@@ -1948,7 +1944,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneItemBlendMode"></param>
         public void SetSceneItemBlendMode(string sceneName, int sceneItemId, string sceneItemBlendMode)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(sceneItemId), sceneItemId },
@@ -1966,7 +1962,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetGroupList()
         {
             var response = SendRequest(nameof(GetGroupList));
-            return JsonConvert.DeserializeObject<List<string>>(response["groups"].ToString());
+            return JsonSerializer.Deserialize<List<string>>(response["groups"]?.ToString() ?? "[]", AppJsonSerializerContext.Default.ListString);
         }
 
         /// <summary>
@@ -1975,7 +1971,7 @@ namespace OBSWebsocketDotNet
         /// <param name="sceneName">Name of the scene to remove</param>
         public void RemoveScene(string sceneName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName }
             };
@@ -1990,7 +1986,7 @@ namespace OBSWebsocketDotNet
         /// <param name="newSceneName">New name for the scene</param>
         public void SetSceneName(string sceneName, string newSceneName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sceneName), sceneName },
                 { nameof(newSceneName), newSceneName }
@@ -2013,7 +2009,7 @@ namespace OBSWebsocketDotNet
         /// <returns>Base64-encoded screenshot</returns>
         public string GetSourceScreenshot(string sourceName, string imageFormat, int imageWidth = -1, int imageHeight = -1, int imageCompressionQuality = -1)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(imageFormat), imageFormat }
@@ -2044,7 +2040,7 @@ namespace OBSWebsocketDotNet
         public List<string> GetTransitionKindList()
         {
             var response = SendRequest(nameof(GetTransitionKindList));
-            return JsonConvert.DeserializeObject<List<string>>(response["transitionKinds"].ToString());
+            return JsonSerializer.Deserialize<List<string>>(response["transitionKinds"]?.ToString() ?? "[]", AppJsonSerializerContext.Default.ListString);
         }
 
         /// <summary>
@@ -2064,7 +2060,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input to open the dialog of</param>
         public void OpenInputPropertiesDialog(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -2078,7 +2074,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input to open the dialog of</param>
         public void OpenInputFiltersDialog(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -2092,7 +2088,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input to open the dialog of</param>
         public void OpenInputInteractDialog(string inputName)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(inputName), inputName }
             };
@@ -2109,9 +2105,9 @@ namespace OBSWebsocketDotNet
             var response = SendRequest(nameof(GetMonitorList));
             var monitors = new List<Monitor>();
 
-            foreach(var monitor in response["monitors"])
+            foreach(var monitor in response["monitors"].AsObject())
             {
-                monitors.Add(new Monitor((JObject)monitor));
+                monitors.Add(new Monitor(monitor.Value.AsObject()));
             }
             return monitors;
         }
@@ -2125,7 +2121,7 @@ namespace OBSWebsocketDotNet
         /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
         public void OpenSourceProjector(string sourceName, string projectorGeometry, int monitorIndex = -1)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(sourceName), sourceName },
                 { nameof(projectorGeometry), projectorGeometry },
@@ -2144,7 +2140,7 @@ namespace OBSWebsocketDotNet
         /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
         public void OpenVideoMixProjector(string videoMixType, string projectorGeometry, int monitorIndex = -1)
         {
-            var request = new JObject
+            var request = new JsonObject
             {
                 { nameof(videoMixType), videoMixType },
                 { nameof(projectorGeometry), projectorGeometry },

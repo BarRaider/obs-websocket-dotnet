@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -11,22 +11,21 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Whether the source is showing in Program
         /// </summary>
-        [JsonProperty(PropertyName = "videaActive")]
+        [JsonPropertyName("videaActive")]
         public bool VideoActive { get; set; }
 
         /// <summary>
         /// Whether the source is showing in the UI (Preview, Projector, Properties)
         /// </summary>
-        [JsonProperty(PropertyName = "videoShowing")]
-        public bool VideoShowing { get; set; }
-
-        /// <summary>
+        [JsonPropertyName("videoShowing")]
+        public bool VideoShowing { get; set; }        /// <summary>
         /// Auto populate constructor
         /// </summary>
         /// <param name="data"></param>
-        public SourceActiveInfo(JObject data)
+        public SourceActiveInfo(JsonObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            VideoActive = data["videaActive"]?.GetValue<bool>() ?? false;
+            VideoShowing = data["videoShowing"]?.GetValue<bool>() ?? false;
         }
 
         /// <summary>

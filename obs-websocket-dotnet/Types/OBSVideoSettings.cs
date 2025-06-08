@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -10,37 +10,37 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Numerator of the fractional FPS value
         /// </summary>
-        [JsonProperty(PropertyName = "fpsNumerator")]
+        [JsonPropertyName("fpsNumerator")]
         public double FpsNumerator { set; get; }
 
         /// <summary>
         /// Denominator of the fractional FPS value
         /// </summary>
-        [JsonProperty(PropertyName = "fpsDenominator")]
+        [JsonPropertyName("fpsDenominator")]
         public double FpsDenominator { set; get; }
 
         /// <summary>
         /// Base (canvas) width
         /// </summary>
-        [JsonProperty(PropertyName = "baseWidth")]
+        [JsonPropertyName("baseWidth")]
         public int BaseWidth { set; get; }
 
         /// <summary>
         /// Base (canvas) height
         /// </summary>
-        [JsonProperty(PropertyName = "baseHeight")]
+        [JsonPropertyName("baseHeight")]
         public int BaseHeight { set; get; }
 
         /// <summary>
         /// Width of the output resolution in pixels
         /// </summary>
-        [JsonProperty(PropertyName = "outputWidth")]
+        [JsonPropertyName("outputWidth")]
         public int OutputWidth { set; get; }
 
         /// <summary>
         /// Height of the output resolution in pixels
         /// </summary>
-        [JsonProperty(PropertyName = "outputHeight")]
+        [JsonPropertyName("outputHeight")]
         public int OutputHeight { set; get; }
     }
 }

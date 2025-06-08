@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
 using System;
@@ -323,7 +323,7 @@ namespace TestClient
             bool isLocked = obs.GetSceneItemLocked(scene, itemId);
             LogMessage($"Source Locked: {isLocked}");
 
-            JObject data = obs.GetSceneItemTransformRaw(scene, itemId);
+            JsonObject data = obs.GetSceneItemTransformRaw(scene, itemId);
             LogMessage($"Raw Data: {data}");
 
             var transform = obs.GetSceneItemTransform(scene, itemId);
@@ -439,7 +439,7 @@ namespace TestClient
                 obs.SetCurrentSceneTransition(transition.Name);
                 var activeTransition = obs.GetCurrentSceneTransition();
                 var info = activeTransition.Settings;
-                info ??= new JObject();
+                info ??= new JsonObject();
                 LogMessage($"Transition: {transition.Name} has {info.Count} settings");
             }
             obs.SetCurrentSceneTransition(enteringTransition.Name);

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
 using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet.Types
@@ -11,19 +11,19 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Name of the currently active transition
         /// </summary>
-        [JsonProperty(PropertyName = "currentSceneTransitionName")]
+        [JsonPropertyName("currentSceneTransitionName")]
         public string CurrentTransition { set; get; }
 
         /// <summary>
         /// Kind of the currently active transition
         /// </summary>
-        [JsonProperty(PropertyName = "currentSceneTransitionKind")]
+        [JsonPropertyName("currentSceneTransitionKind")]
         public string CurrentTransitionKing { set; get; }
 
         /// <summary>
         /// List of transitions.
         /// </summary>
-        [JsonProperty(PropertyName = "transitions")]
+        [JsonPropertyName("transitions")]
         public List<TransitionSettings> Transitions { set; get; }
     }
 }
