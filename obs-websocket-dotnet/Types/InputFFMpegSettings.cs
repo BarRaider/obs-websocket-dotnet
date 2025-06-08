@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,73 +17,73 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Buffering MB
         /// </summary>
-        [JsonProperty(PropertyName = "buffering_mb")]
+        [JsonPropertyName("buffering_mb")]
         public int BufferingMB { get; set; } = 2;
 
         /// <summary>
         /// Clear window when media ends
         /// </summary>
-        [JsonProperty(PropertyName = "clear_on_media_end")]
+        [JsonPropertyName("clear_on_media_end")]
         public bool ClearOnMediaEnd { get; set; } = true;
 
         /// <summary>
         /// Close when inactive
         /// </summary>
-        [JsonProperty(PropertyName = "close_when_inactive")]
+        [JsonPropertyName("close_when_inactive")]
         public bool CloseWhenInactive { get; set; } = false;
 
         /// <summary>
         /// Color Range
         /// </summary>
-        [JsonProperty(PropertyName = "color_range")]
+        [JsonPropertyName("color_range")]
         public int ColorRange { get; set; } = 0;
 
         /// <summary>
         /// HW Decoder
         /// </summary>
-        [JsonProperty(PropertyName = "hw_decode")]
+        [JsonPropertyName("hw_decode")]
         public bool HWDecode { get; set; } = false;
 
         /// <summary>
         /// Is Local file
         /// </summary>
-        [JsonProperty(PropertyName = "is_local_file")]
+        [JsonPropertyName("is_local_file")]
         public bool IsLocalFile { get; set; } = true;
 
         /// <summary>
         /// Local filename
         /// </summary>
-        [JsonProperty(PropertyName = "local_file")]
+        [JsonPropertyName("local_file")]
         public string LocalFile { get; set; }
 
         /// <summary>
         /// Looping
         /// </summary>
-        [JsonProperty(PropertyName = "looping")]
+        [JsonPropertyName("looping")]
         public bool Looping { get; set; } = false;
 
         /// <summary>
         /// Apply alpha in linear space
         /// </summary>
-        [JsonProperty(PropertyName = "linear_alpha")]
+        [JsonPropertyName("linear_alpha")]
         public bool LinearAlpha { get; set; } = false;
 
         /// <summary>
         /// Restart when activated
         /// </summary>
-        [JsonProperty(PropertyName = "restart_on_activate")]
+        [JsonPropertyName("restart_on_activate")]
         public bool RestartOnActivate { get; set; } = true;
 
         /// <summary>
         /// ffmpeg options
         /// </summary>
-        [JsonProperty(PropertyName = "ffmpeg_options")]
+        [JsonPropertyName("ffmpeg_options")]
         public string Options { get; set; }
 
         /// <summary>
         /// Speed percentage
         /// </summary>
-        [JsonProperty(PropertyName = "speed_percent")]
+        [JsonPropertyName("speed_percent")]
         public int SpeedPercent { get; set; } = 100;
 
         /// <summary>
@@ -95,15 +95,27 @@ namespace OBSWebsocketDotNet.Types
         public static InputFFMpegSettings FromInputSettings(InputSettings settings)
         {
             return new InputFFMpegSettings(settings);
-        }
-        // Private Constrctor
-        private InputFFMpegSettings(InputSettings settings) : base(JObject.FromObject(settings))
+        }        // Private Constrctor
+        private InputFFMpegSettings(InputSettings settings) : base(JsonSerializer.SerializeToNode(settings, AppJsonSerializerContext.Default.InputSettings)?.AsObject())
         {
             if (settings.InputKind != SUPPORTED_INPUT_KIND)
             {
                 throw new InvalidCastException();
             }
-            JsonConvert.PopulateObject(settings.Settings.ToString(), this);
+
+            BufferingMB = settings.Settings["buffering_mb"]?.GetValue<int>() ?? BufferingMB;
+            ClearOnMediaEnd = settings.Settings["clear_on_media_end"]?.GetValue<bool>() ?? ClearOnMediaEnd;
+            CloseWhenInactive = settings.Settings["close_when_inactive"]?.GetValue<bool>() ?? CloseWhenInactive;
+            ColorRange = settings.Settings["color_range"]?.GetValue<int>() ?? ColorRange;
+            HWDecode = settings.Settings["hw_decode"]?.GetValue<bool>() ?? HWDecode;
+            IsLocalFile = settings.Settings["is_local_file"]?.GetValue<bool>() ?? IsLocalFile;
+            LocalFile = settings.Settings["local_file"]?.GetValue<string>() ?? string.Empty;
+            Looping = settings.Settings["looping"]?.GetValue<bool>() ?? Looping;
+            LinearAlpha = settings.Settings["linear_alpha"]?.GetValue<bool>() ?? LinearAlpha;
+            RestartOnActivate = settings.Settings["restart_on_activate"]?.GetValue<bool>() ?? RestartOnActivate;
+            Options = settings.Settings["ffmpeg_options"]?.GetValue<string>() ?? string.Empty;
+            SpeedPercent = settings.Settings["speed_percent"]?.GetValue<int>() ?? SpeedPercent;
+
         }
     }
 }

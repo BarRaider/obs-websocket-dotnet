@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -11,46 +11,49 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Monitor height (px)
         /// </summary>
-        [JsonProperty(PropertyName = "monitorHeight")]
+        [JsonPropertyName("monitorHeight")]
         public int Height { get; set; }
 
         /// <summary>
         /// Monitor width (px)
         /// </summary>
-        [JsonProperty(PropertyName = "monitorWidth")]
+        [JsonPropertyName("monitorWidth")]
         public int Width { get; set; }
 
         /// <summary>
         /// Monitor Name
         /// </summary>
-        [JsonProperty(PropertyName = "monitorName")]
+        [JsonPropertyName("monitorName")]
         public string Name { get; set; }
 
         /// <summary>
         /// Monitor Index
         /// </summary>
-        [JsonProperty(PropertyName = "monitorIndex")]
+        [JsonPropertyName("monitorIndex")]
         public int Index { get; set; }
 
         /// <summary>
         /// Monitor Position X
         /// </summary>
-        [JsonProperty(PropertyName = "monitorPositionX")]
+        [JsonPropertyName("monitorPositionX")]
         public int PositionX { get; set; }
 
         /// <summary>
         /// Monitor Position Y
         /// </summary>
-        [JsonProperty(PropertyName = "monitorPositionY")]
-        public int PositionY { get; set; }
-
-        /// <summary>
+        [JsonPropertyName("monitorPositionY")]
+        public int PositionY { get; set; }        /// <summary>
         /// Constructor to auto populate
         /// </summary>
         /// <param name="data"></param>
-        public Monitor (JObject data)
+        public Monitor (JsonObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            Height = data["monitorHeight"]?.GetValue<int>() ?? 0;
+            Width = data["monitorWidth"]?.GetValue<int>() ?? 0;
+            Name = data["monitorName"]?.GetValue<string>() ?? string.Empty;
+            Index = data["monitorIndex"]?.GetValue<int>() ?? 0;
+            PositionX = data["monitorPositionX"]?.GetValue<int>() ?? 0;
+            PositionY = data["monitorPositionY"]?.GetValue<int>() ?? 0;
         }
 
         /// <summary>

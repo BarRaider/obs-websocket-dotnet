@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using OBSWebsocketDotNet.Communication;
 using OBSWebsocketDotNet.Types;
 using OBSWebsocketDotNet.Types.Events;
@@ -128,9 +128,9 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sourceName">Source with filter</param>
         /// <param name="filterName">Filter name</param>
-        /// <param name="filterSettings">JObject with filter settings</param>
+        /// <param name="filterSettings">JsonObject with filter settings</param>
         /// <param name="overlay">Apply over existing settings?</param>
-        void SetSourceFilterSettings(string sourceName, string filterName, JObject filterSettings, bool overlay = false);
+        void SetSourceFilterSettings(string sourceName, string filterName, JsonObject filterSettings, bool overlay = false);
 
         /// <summary>
         /// Apply settings to a source filter
@@ -175,8 +175,8 @@ namespace OBSWebsocketDotNet
         /// <param name="sourceName">Name of the source for the filter</param>
         /// <param name="filterName">Name of the filter</param>
         /// <param name="filterKind">Type of filter</param>
-        /// <param name="filterSettings">JObject holding filter settings object</param>
-        void CreateSourceFilter(string sourceName, string filterName, string filterKind, JObject filterSettings);
+        /// <param name="filterSettings">JsonObject holding filter settings object</param>
+        void CreateSourceFilter(string sourceName, string filterName, string filterKind, JsonObject filterSettings);
 
         /// <summary>
         /// Add a filter to a source
@@ -228,7 +228,7 @@ namespace OBSWebsocketDotNet
         /// <param name="transitionSettings">Transition settings (they can be partial)</param>
         /// <param name="overlay">Whether to overlay over the current settins or replace them</param>
         /// <returns>Updated transition settings</returns>
-        void SetCurrentSceneTransitionSettings(JObject transitionSettings, bool overlay);
+        void SetCurrentSceneTransitionSettings(JsonObject transitionSettings, bool overlay);
 
         /// <summary>
         /// Change the volume of the specified source
@@ -271,8 +271,8 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the scene that has the SceneItem</param>
         /// <param name="sceneItemId">Id of the Scene Item</param>
-        /// <param name="sceneItemTransform">JObject holding transform settings</param>
-        void SetSceneItemTransform(string sceneName, int sceneItemId, JObject sceneItemTransform);
+        /// <param name="sceneItemTransform">JsonObject holding transform settings</param>
+        void SetSceneItemTransform(string sceneName, int sceneItemId, JsonObject sceneItemTransform);
 
         /// <summary>
         /// Sets the transform and crop info of a scene item
@@ -507,7 +507,7 @@ namespace OBSWebsocketDotNet
         /// Broadcasts a `CustomEvent` to all WebSocket clients. Receivers are clients which are identified and subscribed.
         /// </summary>
         /// <param name="eventData">Data payload to emit to all receivers</param>
-        void BroadcastCustomEvent(JObject eventData);
+        void BroadcastCustomEvent(JsonObject eventData);
 
         /// <summary>
         /// Sets the cursor position of a media input.
@@ -534,14 +534,14 @@ namespace OBSWebsocketDotNet
         /// <param name="inputSettings">Jobject holding the settings object to initialize the input with</param>
         /// <param name="sceneItemEnabled">Whether to set the created scene item to enabled or disabled</param>
         /// <returns>ID of the SceneItem in the scene.</returns>
-        int CreateInput(string sceneName, string inputName, string inputKind, JObject inputSettings, bool? sceneItemEnabled);
+        int CreateInput(string sceneName, string inputName, string inputKind, JsonObject inputSettings, bool? sceneItemEnabled);
 
         /// <summary>
         /// Gets the default settings for an input kind.
         /// </summary>
         /// <param name="inputKind">Input kind to get the default settings for</param>
         /// <returns>Object of default settings for the input kind</returns>
-        JObject GetInputDefaultSettings(string inputKind);
+        JsonObject GetInputDefaultSettings(string inputKind);
 
         /// <summary>
         /// Gets a list of all scene items in a scene.
@@ -578,8 +578,8 @@ namespace OBSWebsocketDotNet
         /// Sets the enable state of audio tracks of an input.
         /// </summary>
         /// <param name="inputName">Name of the input</param>
-        /// <param name="inputAudioTracks">JObject holding track settings to apply</param>
-        void SetInputAudioTracks(string inputName, JObject inputAudioTracks);
+        /// <param name="inputAudioTracks">JsonObject holding track settings to apply</param>
+        void SetInputAudioTracks(string inputName, JsonObject inputAudioTracks);
 
         /// <summary>
         /// Sets the enable state of audio tracks of an input.
@@ -624,7 +624,7 @@ namespace OBSWebsocketDotNet
         /// <param name="realm">The data realm to select. `OBS_WEBSOCKET_DATA_REALM_GLOBAL` or `OBS_WEBSOCKET_DATA_REALM_PROFILE`</param>
         /// <param name="slotName">The name of the slot to retrieve data from</param>
         /// <returns type="Any">Value associated with the slot. `null` if not set</returns>
-        JObject GetPersistentData(string realm, string slotName);
+        JsonObject GetPersistentData(string realm, string slotName);
 
         /// <summary>
         /// Sets the value of a \"slot\" from the selected persistent data realm.
@@ -632,7 +632,7 @@ namespace OBSWebsocketDotNet
         /// <param name="realm">The data realm to select. `OBS_WEBSOCKET_DATA_REALM_GLOBAL` or `OBS_WEBSOCKET_DATA_REALM_PROFILE`</param>
         /// <param name="slotName">The name of the slot to retrieve data from</param>
         /// <param name="slotValue">The value to apply to the slot</param>
-        void SetPersistentData(string realm, string slotName, JObject slotValue);
+        void SetPersistentData(string realm, string slotName, JsonObject slotValue);
 
         /// <summary>
         /// Creates a new scene collection, switching to it in the process.\n\nNote: This will block until the collection has finished changing.
@@ -658,7 +658,7 @@ namespace OBSWebsocketDotNet
         /// <param name="parameterCategory">Category of the parameter to get</param>
         /// <param name="parameterName">Name of the parameter to get</param>
         /// <returns></returns>
-        JObject GetProfileParameter(string parameterCategory, string parameterName);
+        JsonObject GetProfileParameter(string parameterCategory, string parameterName);
 
         /// <summary>
         /// Sets the value of a parameter in the current profile's configuration.
@@ -680,7 +680,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="filterKind">Filter kind to get the default settings for</param>
         /// <returns>Object of default settings for the filter kind</returns>
-        JObject GetSourceFilterDefaultSettings(string filterKind);
+        JsonObject GetSourceFilterDefaultSettings(string filterKind);
 
         /// <summary>
         /// Sets the name of a source filter (rename).
@@ -713,7 +713,7 @@ namespace OBSWebsocketDotNet
         /// <param name="requestType">The request type to call</param>
         /// <param name="requestData">Object containing appropriate request data</param>
         /// <returns>Object containing appropriate response data. {} if request does not provide any response data</returns>
-        JObject CallVendorRequest(string vendorName, string requestType, JObject requestData = null);
+        JsonObject CallVendorRequest(string vendorName, string requestType, JsonObject requestData = null);
 
         /// <summary>
         /// Gets an array of all hotkey names in OBS
@@ -777,7 +777,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input to set the settings of</param>
         /// <param name="inputSettings">Object of settings to apply</param>
         /// <param name="overlay">True == apply the settings on top of existing ones, False == reset the input to its defaults, then apply settings.</param>
-        void SetInputSettings(string inputName, JObject inputSettings, bool overlay = true);
+        void SetInputSettings(string inputName, JsonObject inputSettings, bool overlay = true);
 
         /// <summary>
         /// Gets the audio balance of an input.
@@ -801,7 +801,7 @@ namespace OBSWebsocketDotNet
         /// <param name="inputName">Name of the input</param>
         /// <param name="propertyName">Name of the list property to get the items of</param>
         /// <returns>Array of items in the list property</returns>
-        List<JObject> GetInputPropertiesListPropertyItems(string inputName, string propertyName);
+        List<JsonObject> GetInputPropertiesListPropertyItems(string inputName, string propertyName);
 
         /// <summary>
         /// Presses a button in the properties of an input.
@@ -853,7 +853,7 @@ namespace OBSWebsocketDotNet
         /// </summary>
         /// <param name="sceneName">Name of the group to get the items of</param>
         /// <returns>Array of scene items in the group</returns>
-        List<JObject> GetGroupSceneItemList(string sceneName);
+        List<JsonObject> GetGroupSceneItemList(string sceneName);
 
         /// <summary>
         /// Searches a scene for a source, and returns its id.\n\nScenes and Groups
@@ -874,13 +874,13 @@ namespace OBSWebsocketDotNet
         SceneItemTransformInfo GetSceneItemTransform(string sceneName, int sceneItemId);
 
         /// <summary>
-        /// Gets the JObject of transform settings for a scene item. Use this one you don't want it populated with default values.
+        /// Gets the JsonObject of transform settings for a scene item. Use this one you don't want it populated with default values.
         /// Scenes and Groups
         /// </summary>
         /// <param name="sceneName">Name of the scene the item is in</param>
         /// <param name="sceneItemId">Numeric ID of the scene item</param>
         /// <returns>Object containing scene item transform info</returns>
-        JObject GetSceneItemTransformRaw(string sceneName, int sceneItemId);
+        JsonObject GetSceneItemTransformRaw(string sceneName, int sceneItemId);
 
         /// <summary>
         /// Gets the enable state of a scene item.
@@ -1063,7 +1063,7 @@ namespace OBSWebsocketDotNet
         /// <param name="requestType">obs-websocket request type, must be one specified in the protocol specification</param>
         /// <param name="additionalFields">additional JSON fields if required by the request type</param>
         /// <returns>The server's JSON response as a JObject</returns>
-        JObject SendRequest(string requestType, JObject additionalFields = null);
+        JsonObject SendRequest(string requestType, JsonObject additionalFields = null);
 
         /// <summary>
         /// Request authentication data. You don't have to call this manually.

@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace OBSWebsocketDotNet.Types.Events
 {
@@ -16,14 +16,14 @@ namespace OBSWebsocketDotNet.Types.Events
         /// <summary>
         /// Object of audio tracks along with their associated enable states
         /// </summary>
-        public JObject InputAudioTracks {get;}
+        public JsonObject InputAudioTracks {get;}
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         /// <param name="inputName">The input name</param>
         /// <param name="inputAudioTracks">The audio track data as a JObject</param>
-        public InputAudioTracksChangedEventArgs(string inputName, JObject inputAudioTracks)
+        public InputAudioTracksChangedEventArgs(string inputName, JsonObject inputAudioTracks)
         {
             InputName = inputName;
             InputAudioTracks = inputAudioTracks;

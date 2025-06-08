@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,13 +13,13 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Name of scene
         /// </summary>
-        [JsonProperty(PropertyName = "sceneName")]
+        [JsonPropertyName("sceneName")]
         public string Name { set; get; }
 
         /// <summary>
         /// Index of scene
         /// </summary>
-        [JsonProperty(PropertyName = "sceneIndex")]
-        public string Index { set; get; }
+        [JsonPropertyName("sceneIndex")]
+        public int Index { set; get; }
     }
 }

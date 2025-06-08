@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using OBSWebsocketDotNet.Communication;
 using OBSWebsocketDotNet.Types;
 
@@ -19,7 +19,7 @@ namespace OBSWebsocketDotNet.Tests
             int sceneItemId = 22;
             
 
-            JObject itemData = new JObject
+            JsonObject itemData = new JsonObject
             {
                 { "sourceName", itemName },
                 { "sourceType", (int)sourceType },
@@ -39,7 +39,7 @@ namespace OBSWebsocketDotNet.Tests
                 itemData
             };
 
-            var data = new JObject
+            var data = new JsonObject
             {
                 { "sceneName", sceneName },
                 { "sources", items },
@@ -64,7 +64,7 @@ namespace OBSWebsocketDotNet.Tests
             string challenge = "pBWv82hj";
             string salt = "B9fL8CF7";
 
-            var data = new JObject
+            var data = new JsonObject
             {
                 { "authRequired", true },
                 { "challenge", challenge },
@@ -90,7 +90,7 @@ namespace OBSWebsocketDotNet.Tests
             var requests = new JArray(availableRequests.Split(','));
             var images = new JArray(supportedImageFormats.Split(','));
 
-            var data = new JObject
+            var data = new JsonObject
             {
                 { "obsWebSocketVersion", pluginVersion },
                 { "obsVersion", obsVersion },
@@ -120,7 +120,7 @@ namespace OBSWebsocketDotNet.Tests
             int outputSkippedFrames = 120;
             int outputTotalFrames = 2000;
 
-            var data = new JObject
+            var data = new JsonObject
             {
                 { "outputActive", true },
                 { "outputReconnecting", true },
@@ -147,7 +147,7 @@ namespace OBSWebsocketDotNet.Tests
         [TestMethod]
         public void OBSOutputStatus_BuildFromJSON()
         {
-            var data = new JObject
+            var data = new JsonObject
             {
                 { "outputActive", true }
             };
@@ -168,7 +168,7 @@ namespace OBSWebsocketDotNet.Tests
             bool transitionFixed = true;
             bool transitionConfigurable = true;
 
-            var data = new JObject
+            var data = new JsonObject
             {
                 { "transitionName", transitionName },
                 { "transitionDuration", duration },
@@ -192,7 +192,7 @@ namespace OBSWebsocketDotNet.Tests
             float volumeMul = 0.50f;
             float volumeDB = 45.4f;
 
-            var data = new JObject
+            var data = new JsonObject
             {
                 { "inputVolumeMul", volumeMul },
                 { "inputVolumeDb", volumeDB }

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 
 namespace OBSWebsocketDotNet.Types
 {
@@ -11,26 +11,26 @@ namespace OBSWebsocketDotNet.Types
         /// <summary>
         /// Name of the source
         /// </summary>
-        [JsonProperty(PropertyName = "inputName")]
+        [JsonPropertyName("inputName")]
         public string InputName { set; get; }
         /// <summary>
         /// The source volume in percent
         /// </summary>
-        [JsonProperty(PropertyName = "inputVolumeMul")]
+        [JsonPropertyName("inputVolumeMul")]
         public float InputVolumeMul { get; set; }
         /// <summary>
         /// The source volume in decibels
         /// </summary>
-        [JsonProperty(PropertyName = "inputVolumeDb")]
-        public float InputVolumeDb { get; set; }
-
-        /// <summary>
+        [JsonPropertyName("inputVolumeDb")]
+        public float InputVolumeDb { get; set; }        /// <summary>
         /// Builds the object from the JSON response body
         /// </summary>
-        /// <param name="data">JSON response body as a <see cref="JObject"/></param>
-        public InputVolume(JObject data)
+        /// <param name="data">JSON response body as a <see cref="JsonObject"/></param>
+        public InputVolume(JsonObject data)
         {
-            JsonConvert.PopulateObject(data.ToString(), this);
+            InputName = data["inputName"]?.GetValue<string>() ?? string.Empty;
+            InputVolumeMul = data["inputVolumeMul"]?.GetValue<float>() ?? 0.0f;
+            InputVolumeDb = data["inputVolumeDb"]?.GetValue<float>() ?? 0.0f;
         }
 
         /// <summary>
