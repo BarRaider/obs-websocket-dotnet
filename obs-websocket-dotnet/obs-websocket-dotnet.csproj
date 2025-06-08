@@ -24,6 +24,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <DocumentationFile>obs-websocket-dotnet.xml</DocumentationFile>
+	  <DebugType>none</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
