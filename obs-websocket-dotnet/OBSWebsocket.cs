@@ -255,7 +255,8 @@ namespace OBSWebsocketDotNet
             }
 
             // Wait for a response (received and notified by the websocket response handler)
-            tcs.Task.Wait(wsTimeout.Milliseconds);
+            if(!tcs.Task.Wait((int)wsTimeout.TotalMilliseconds))
+                throw new ErrorResponseException("Request timed out", 1);
 
             if (tcs.Task.IsCanceled)
                 throw new ErrorResponseException("Request canceled", 0);
