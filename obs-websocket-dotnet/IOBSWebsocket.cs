@@ -1377,6 +1377,26 @@ namespace OBSWebsocketDotNet
         /// </summary>
         event EventHandler<SceneNameChangedEventArgs> SceneNameChanged;
 
+        /// <summary>
+        /// An input's settings have changed (been updated).
+        /// </summary>
+        event EventHandler<InputSettingsChangedEventArgs> InputSettingsChanged;
+
+        /// <summary>
+        /// A source filter's settings have changed (been updated).
+        /// </summary>
+        event EventHandler<SourceFilterSettingsChangedEventArgs> SourceFilterSettingsChanged;
+
+        /// <summary>
+        /// The record output has started writing to a new file. For example, when a file split happens.
+        /// </summary>
+        event EventHandler<RecordFileChangedEventArgs> RecordFileChanged;
+
+        /// <summary>
+        /// A screenshot has been saved.
+        /// </summary>
+        event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
+
         #endregion
     }
 }

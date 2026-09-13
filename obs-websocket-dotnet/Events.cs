@@ -296,6 +296,26 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<UnsupportedEventArgs> UnsupportedEvent;
 
+        /// <summary>
+        /// An input's settings have changed (been updated).
+        /// </summary>
+        public event EventHandler<InputSettingsChangedEventArgs> InputSettingsChanged;
+
+        /// <summary>
+        /// A source filter's settings have changed (been updated).
+        /// </summary>
+        public event EventHandler<SourceFilterSettingsChangedEventArgs> SourceFilterSettingsChanged;
+
+        /// <summary>
+        /// The record output has started writing to a new file. For example, when a file split happens.
+        /// </summary>
+        public event EventHandler<RecordFileChangedEventArgs> RecordFileChanged;
+
+        /// <summary>
+        /// A screenshot has been saved.
+        /// </summary>
+        public event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
+
         #endregion
 
         #region EventProcessing
@@ -523,6 +543,22 @@ namespace OBSWebsocketDotNet
 
                 case nameof(SceneNameChanged):
                     SceneNameChanged?.Invoke(this, new SceneNameChangedEventArgs((string)body["oldSceneName"], (string)body["sceneName"]));
+                    break;
+
+                case nameof(InputSettingsChanged):
+                    InputSettingsChanged?.Invoke(this, new InputSettingsChangedEventArgs((string)body["inputName"], (string)body["inputUuid"], (JObject)body["inputSettings"]));
+                    break;
+
+                case nameof(SourceFilterSettingsChanged):
+                    SourceFilterSettingsChanged?.Invoke(this, new SourceFilterSettingsChangedEventArgs((string)body["sourceName"], (string)body["filterName"], (JObject)body["filterSettings"]));
+                    break;
+
+                case nameof(RecordFileChanged):
+                    RecordFileChanged?.Invoke(this, new RecordFileChangedEventArgs((string)body["newOutputPath"]));
+                    break;
+
+                case nameof(ScreenshotSaved):
+                    ScreenshotSaved?.Invoke(this, new ScreenshotSavedEventArgs((string)body["savedScreenshotPath"]));
                     break;
 
                 default:
