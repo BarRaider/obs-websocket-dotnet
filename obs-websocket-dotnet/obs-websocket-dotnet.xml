@@ -454,6 +454,21 @@
             A screenshot has been saved.
             </summary>
         </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.CanvasCreated">
+            <summary>
+            A new canvas has been created.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.CanvasRemoved">
+            <summary>
+            A canvas has been removed.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.CanvasNameChanged">
+            <summary>
+            The name of a canvas has changed.
+            </summary>
+        </member>
         <member name="P:OBSWebsocketDotNet.OBSWebsocket.EventSubscriptions">
             <summary>
             Gets or sets the event subscriptions bitmask. High-volume events are normally
@@ -1722,6 +1737,12 @@
             <param name="outputName">Output name</param>
             <param name="outputSettings">Output settings</param>
         </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetCanvasList">
+            <summary>
+            Gets an array of canvases in OBS.
+            </summary>
+            <returns>Array of canvases. The obs-websocket protocol does not document a fixed field list for each canvas object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList/GetOutputList precedent for undocumented array shapes).</returns>
+        </member>
         <member name="T:OBSWebsocketDotNet.AuthFailureException">
             <summary>
             Thrown if authentication fails
@@ -2926,6 +2947,12 @@
             <param name="outputName">Output name</param>
             <param name="outputSettings">Output settings</param>
         </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetCanvasList">
+            <summary>
+            Gets an array of canvases in OBS.
+            </summary>
+            <returns>Array of canvases. The obs-websocket protocol does not document a fixed field list for each canvas object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList/GetOutputList precedent for undocumented array shapes).</returns>
+        </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.Connect(System.String,System.String)">
             <summary>
             Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
@@ -3258,6 +3285,21 @@
             A screenshot has been saved.
             </summary>
         </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.CanvasCreated">
+            <summary>
+            A new canvas has been created.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.CanvasRemoved">
+            <summary>
+            A canvas has been removed.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.CanvasNameChanged">
+            <summary>
+            The name of a canvas has changed.
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.DeinterlaceFieldOrder">
             <summary>
             Deinterlace field order of an input. Deinterlacing is restricted to async inputs only.
@@ -3419,6 +3461,78 @@
             <summary>
             Subscription value to receive the `SceneItemTransformChanged` high-volume event
             </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.CanvasCreatedEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.CanvasCreated"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CanvasCreatedEventArgs.CanvasName">
+            <summary>
+            Name of the new canvas
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CanvasCreatedEventArgs.CanvasUuid">
+            <summary>
+            UUID of the new canvas
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.CanvasCreatedEventArgs.#ctor(System.String,System.String)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="canvasName">The canvas name</param>
+            <param name="canvasUuid">The canvas UUID</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.CanvasNameChangedEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.CanvasNameChanged"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CanvasNameChangedEventArgs.CanvasUuid">
+            <summary>
+            UUID of the canvas
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CanvasNameChangedEventArgs.OldCanvasName">
+            <summary>
+            Old name of the canvas
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CanvasNameChangedEventArgs.CanvasName">
+            <summary>
+            New name of the canvas
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.CanvasNameChangedEventArgs.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="canvasUuid">The canvas UUID</param>
+            <param name="oldCanvasName">The old canvas name</param>
+            <param name="canvasName">The new canvas name</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.CanvasRemovedEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.CanvasRemoved"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CanvasRemovedEventArgs.CanvasName">
+            <summary>
+            Name of the removed canvas
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CanvasRemovedEventArgs.CanvasUuid">
+            <summary>
+            UUID of the removed canvas
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.CanvasRemovedEventArgs.#ctor(System.String,System.String)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="canvasName">The canvas name</param>
+            <param name="canvasUuid">The canvas UUID</param>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.CurrentPreviewSceneChangedEventArgs">
             <summary>
