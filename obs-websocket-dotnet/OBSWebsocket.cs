@@ -237,17 +237,18 @@ namespace OBSWebsocketDotNet
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
             JObject message = null;
+            string messageId;
             do
             {
                 // Generate a random message id
-                message = MessageFactory.BuildMessage(operationCode, requestType, additionalFields, out string messageId);
+                message = MessageFactory.BuildMessage(operationCode, requestType, additionalFields, out messageId);
                 if (!waitForReply || responseHandlers.TryAdd(messageId, tcs))
                 {
                     break;
                 }
                 // Message id already exists, retry with a new one.
             } while (true);
-            // Send the message 
+            // Send the message
             wsConnection.Send(message.ToString());
             if (!waitForReply)
             {
@@ -255,7 +256,11 @@ namespace OBSWebsocketDotNet
             }
 
             // Wait for a response (received and notified by the websocket response handler)
-            tcs.Task.Wait(wsTimeout.Milliseconds);
+            if (!tcs.Task.Wait((int)wsTimeout.TotalMilliseconds))
+            {
+                responseHandlers.TryRemove(messageId, out _);
+                throw new ErrorResponseException("Request timed out", 1);
+            }
 
             if (tcs.Task.IsCanceled)
                 throw new ErrorResponseException("Request canceled", 0);
