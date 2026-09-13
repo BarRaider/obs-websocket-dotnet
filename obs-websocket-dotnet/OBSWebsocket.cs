@@ -62,6 +62,13 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+        /// Unlike <see cref="IsConnected"/>, which only reflects the transport-level connection, this
+        /// indicates the session is fully established and requests/subscription changes may be sent.
+        /// </summary>
+        public bool IsIdentified { get; private set; }
+
+        /// <summary>
         /// Gets or sets the logger for this instance
         /// </summary>
         public ILogger<OBSWebsocket> Logger { get; set; } = NullLogger<OBSWebsocket>.Instance;
@@ -133,6 +140,8 @@ namespace OBSWebsocketDotNet
                 wsConnection = null;
             }
 
+            IsIdentified = false;
+
             var unusedHandlers = responseHandlers.ToArray();
             responseHandlers.Clear();
             foreach (var cb in unusedHandlers)
@@ -145,6 +154,8 @@ namespace OBSWebsocketDotNet
         // This callback handles a websocket disconnection
         private void OnWebsocketDisconnect(object sender, DisconnectionInfo d)
         {
+            IsIdentified = false;
+
             if (d == null || d.CloseStatus == null)
             {
                 Disconnected?.Invoke(sender, new ObsDisconnectionInfo(ObsCloseCodes.UnknownReason, null, d));
@@ -174,6 +185,7 @@ namespace OBSWebsocketDotNet
                     HandleHello(body);
                     break;
                 case MessageTypes.Identified:
+                    IsIdentified = true;
                     Task.Run(() => Connected?.Invoke(this, EventArgs.Empty));
                     break;
                 case MessageTypes.RequestResponse:

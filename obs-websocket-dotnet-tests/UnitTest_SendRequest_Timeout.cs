@@ -1,6 +1,4 @@
 using System;
-using System.Net;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -16,18 +14,13 @@ namespace OBSWebsocketDotNet.Tests
         // Raw opcode for a "RequestResponse" message, per the obs-websocket protocol.
         private const int OpCodeRequestResponse = 7;
 
-        private HttpListener listener;
-        private WebSocket serverSocket;
+        private TestWebSocketServer server;
 
         [TestCleanup]
         public void Cleanup()
         {
             Disconnect();
-            serverSocket?.Dispose();
-            if (listener != null && listener.IsListening)
-            {
-                listener.Stop();
-            }
+            server?.Dispose();
         }
 
         [TestMethod]
@@ -88,23 +81,20 @@ namespace OBSWebsocketDotNet.Tests
 
         private void ConnectToServerThatNeverReplies()
         {
-            int port = StartWebSocketServer(async (socket, ct) =>
+            server = TestWebSocketServer.Start(async (socket, ct) =>
             {
-                serverSocket = socket;
                 // Accept the connection but never send a response back.
                 await Task.Delay(Timeout.Infinite, ct).ContinueWith(_ => { });
             });
-            ConnectAsync($"ws://127.0.0.1:{port}/", string.Empty);
+            ConnectAsync($"ws://127.0.0.1:{server.Port}/", string.Empty);
         }
 
         private void ConnectToServerThatEchoesSuccess()
         {
-            int port = StartWebSocketServer(async (socket, ct) =>
+            server = TestWebSocketServer.Start(async (socket, ct) =>
             {
-                serverSocket = socket;
-                var buffer = new byte[8192];
-                var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), ct);
-                var request = JObject.Parse(Encoding.UTF8.GetString(buffer, 0, result.Count));
+                string json = await TestWebSocketServer.ReceiveTextAsync(socket, ct);
+                var request = JObject.Parse(json);
                 string requestId = (string)request["d"]["requestId"];
 
                 var response = new JObject
@@ -117,43 +107,9 @@ namespace OBSWebsocketDotNet.Tests
                         ["responseData"] = new JObject { ["obsVersion"] = "1.0.0" }
                     }
                 };
-                var bytes = Encoding.UTF8.GetBytes(response.ToString(Newtonsoft.Json.Formatting.None));
-                await socket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, ct);
+                await TestWebSocketServer.SendTextAsync(socket, response.ToString(Newtonsoft.Json.Formatting.None), ct);
             });
-            ConnectAsync($"ws://127.0.0.1:{port}/", string.Empty);
-        }
-
-        private int StartWebSocketServer(Func<WebSocket, CancellationToken, Task> onConnected)
-        {
-            int port = GetFreeTcpPort();
-            listener = new HttpListener();
-            listener.Prefixes.Add($"http://127.0.0.1:{port}/");
-            listener.Start();
-
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    var context = await listener.GetContextAsync();
-                    var wsContext = await context.AcceptWebSocketAsync(null);
-                    await onConnected(wsContext.WebSocket, CancellationToken.None);
-                }
-                catch
-                {
-                    // Listener stopped/disposed during test teardown - ignore.
-                }
-            });
-
-            return port;
-        }
-
-        private static int GetFreeTcpPort()
-        {
-            var tcpListener = new TcpListener(IPAddress.Loopback, 0);
-            tcpListener.Start();
-            int port = ((IPEndPoint)tcpListener.LocalEndpoint).Port;
-            tcpListener.Stop();
-            return port;
+            ConnectAsync($"ws://127.0.0.1:{server.Port}/", string.Empty);
         }
     }
 }

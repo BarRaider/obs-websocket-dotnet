@@ -25,6 +25,13 @@ namespace OBSWebsocketDotNet
         /// </summary>
         bool IsConnected { get; }
 
+        /// <summary>
+        /// True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+        /// Unlike <see cref="IsConnected"/>, which only reflects the transport-level connection, this
+        /// indicates the session is fully established and requests/subscription changes may be sent.
+        /// </summary>
+        bool IsIdentified { get; }
+
         #endregion
 
         #region Requests
