@@ -316,11 +316,11 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneListChanged):
-                    SceneListChanged?.Invoke(this, new SceneListChangedEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["scenes"])));
+                    SceneListChanged?.Invoke(this, new SceneListChangedEventArgs(JsonConvert.DeserializeObject<List<JObject>>(body["scenes"].ToString())));
                     break;
 
                 case nameof(SceneItemListReindexed):
-                    SceneItemListReindexed?.Invoke(this, new SceneItemListReindexedEventArgs((string)body["sceneName"], JsonConvert.DeserializeObject<List<JObject>>((string)body["sceneItems"])));
+                    SceneItemListReindexed?.Invoke(this, new SceneItemListReindexedEventArgs((string)body["sceneName"], JsonConvert.DeserializeObject<List<JObject>>(body["sceneItems"].ToString())));
                     break;
 
                 case nameof(SceneItemCreated):
@@ -344,7 +344,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneCollectionListChanged):
-                    SceneCollectionListChanged?.Invoke(this, new SceneCollectionListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["sceneCollections"])));
+                    SceneCollectionListChanged?.Invoke(this, new SceneCollectionListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>(body["sceneCollections"].ToString())));
                     break;
 
                 case nameof(CurrentSceneTransitionChanged):
@@ -372,7 +372,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(ProfileListChanged):
-                    ProfileListChanged?.Invoke(this, new ProfileListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["profiles"])));
+                    ProfileListChanged?.Invoke(this, new ProfileListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>(body["profiles"].ToString())));
                     break;
 
                 case nameof(StreamStateChanged):
@@ -506,7 +506,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(InputVolumeMeters):
-                    InputVolumeMeters?.Invoke(this, new InputVolumeMetersEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["inputs"])));
+                    InputVolumeMeters?.Invoke(this, new InputVolumeMetersEventArgs(JsonConvert.DeserializeObject<List<JObject>>(body["inputs"].ToString())));
                     break;
 
                 case nameof(ReplayBufferSaved):
