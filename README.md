@@ -12,7 +12,8 @@ Supported target frameworks: **netstandard2.1** and **net10.0**. Tests target **
 Brings the library up to date with the obs-websocket 5.7.0 protocol, and adds first-class .NET 10 support.
 
 * **.NET 10 support** — the package now multi-targets `netstandard2.1` and `net10.0`; existing consumers on
-  older TFMs are unaffected, .NET 10 apps get a first-party asset
+  older TFMs are unaffected, .NET 10 apps get a first-party asset. Tests and `TestClient` were retargeted
+  from net9 to net10
 * **Event subscriptions** — control which events you receive via `EventSubscriptions`, including the four
   high-volume events (`InputVolumeMeters`, `InputActiveStateChanged`, `InputShowStateChanged`,
   `SceneItemTransformChanged`) which now require explicit opt-in
@@ -37,10 +38,6 @@ Brings the library up to date with the obs-websocket 5.7.0 protocol, and adds fi
 
 > **Not yet covered:** the optional `canvasUuid` parameter added in 5.7.0 to several pre-existing requests,
 > and `*Uuid`-based addressing generally (the library only supports name-based addressing for inputs today).
-
-## New in v5.0.2
-* Multi-target netstandard2.1 and net10.0
-* Tests and TestClient retargeted from net9 to net10
 
 ## New in v5.0.1
 * Fixes for deserialization issues in MediaInputStatus
