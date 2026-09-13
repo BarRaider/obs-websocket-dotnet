@@ -1061,6 +1061,68 @@ namespace OBSWebsocketDotNet
         void OpenVideoMixProjector(string videoMixType, string projectorGeometry, int monitorIndex = -1);
 
         /// <summary>
+        /// Gets the list of available outputs.
+        /// </summary>
+        /// <returns>Array of outputs. The obs-websocket protocol does not document a fixed field list for each output object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList precedent for undocumented array shapes).</returns>
+        List<JObject> GetOutputList();
+
+        /// <summary>
+        /// Gets the source associated with a scene item.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene the item is in</param>
+        /// <param name="sceneItemId">Numeric ID of the scene item</param>
+        /// <returns>Object containing the source's name and UUID</returns>
+        SceneItemSource GetSceneItemSource(string sceneName, int sceneItemId);
+
+        /// <summary>
+        /// Gets the deinterlace mode of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <returns>Deinterlace mode of the input</returns>
+        string GetInputDeinterlaceMode(string inputName);
+
+        /// <summary>
+        /// Sets the deinterlace mode of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        void SetInputDeinterlaceMode(string inputName, string inputDeinterlaceMode);
+
+        /// <summary>
+        /// Sets the deinterlace mode of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        void SetInputDeinterlaceMode(string inputName, DeinterlaceMode inputDeinterlaceMode);
+
+        /// <summary>
+        /// Gets the deinterlace field order of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <returns>Deinterlace field order of the input</returns>
+        string GetInputDeinterlaceFieldOrder(string inputName);
+
+        /// <summary>
+        /// Sets the deinterlace field order of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        void SetInputDeinterlaceFieldOrder(string inputName, string inputDeinterlaceFieldOrder);
+
+        /// <summary>
+        /// Sets the deinterlace field order of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        void SetInputDeinterlaceFieldOrder(string inputName, DeinterlaceFieldOrder inputDeinterlaceFieldOrder);
+
+        /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
         /// NOTE: Please subscribe to the Connected/Disconnected events (or atlease check the IsConnected property) to determine when the connection is actually fully established
         /// </summary>
