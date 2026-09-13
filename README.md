@@ -6,7 +6,7 @@ Official .NET library (written in C#) to communicate with an obs-websocket serve
 This library is available on the [NuGet gallery](https://www.nuget.org/packages/obs-websocket-dotnet)  
 See the `TestClient` project for a working example.
 
-Supported target frameworks: **netstandard2.1** and **net10.0**. Tests target **net10.0**. `TestClient` targets **net10.0-windows**. Both were moved from net9.
+Supported target frameworks: **netstandard2.1** and **net10.0**.
 
 ## New in v5.7.0
 Brings the library up to date with the obs-websocket 5.7.0 protocol, and adds first-class .NET 10 support.
@@ -31,13 +31,6 @@ Brings the library up to date with the obs-websocket 5.7.0 protocol, and adds fi
 * `OpenSourceProjector` and `OpenVideoMixProjector` are now declared on `IOBSWebsocket` (they were missing)
 * Greatly expanded test suite: request/response round-trip coverage plus conformance gates that fail the
   build if the library drifts from the protocol spec again
-
-> **Upgrading:** if you *implement* `IOBSWebsocket` yourself (e.g. a hand-written mock), this release adds
-> members to the interface and you will need to implement them. Simply *using* `OBSWebsocket` or
-> `IOBSWebsocket` requires no changes, and no existing method signature or behavior has changed.
-
-> **Not yet covered:** the optional `canvasUuid` parameter added in 5.7.0 to several pre-existing requests,
-> and `*Uuid`-based addressing generally (the library only supports name-based addressing for inputs today).
 
 ## New in v5.0.1
 * Fixes for deserialization issues in MediaInputStatus
