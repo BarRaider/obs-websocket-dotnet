@@ -404,6 +404,26 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<UnsupportedEventArgs> UnsupportedEvent;
 
+        /// <summary>
+        /// An input's settings have changed (been updated).
+        /// </summary>
+        public event EventHandler<InputSettingsChangedEventArgs> InputSettingsChanged;
+
+        /// <summary>
+        /// A source filter's settings have changed (been updated).
+        /// </summary>
+        public event EventHandler<SourceFilterSettingsChangedEventArgs> SourceFilterSettingsChanged;
+
+        /// <summary>
+        /// The record output has started writing to a new file. For example, when a file split happens.
+        /// </summary>
+        public event EventHandler<RecordFileChangedEventArgs> RecordFileChanged;
+
+        /// <summary>
+        /// A screenshot has been saved.
+        /// </summary>
+        public event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
+
         #endregion
 
         #region EventSubscription
@@ -487,11 +507,11 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneListChanged):
-                    SceneListChanged?.Invoke(this, new SceneListChangedEventArgs(JsonConvert.DeserializeObject<List<JObject>>((string)body["scenes"])));
+                    SceneListChanged?.Invoke(this, new SceneListChangedEventArgs(JsonConvert.DeserializeObject<List<JObject>>(body["scenes"].ToString())));
                     break;
 
                 case nameof(SceneItemListReindexed):
-                    SceneItemListReindexed?.Invoke(this, new SceneItemListReindexedEventArgs((string)body["sceneName"], JsonConvert.DeserializeObject<List<JObject>>((string)body["sceneItems"])));
+                    SceneItemListReindexed?.Invoke(this, new SceneItemListReindexedEventArgs((string)body["sceneName"], JsonConvert.DeserializeObject<List<JObject>>(body["sceneItems"].ToString())));
                     break;
 
                 case nameof(SceneItemCreated):
@@ -515,7 +535,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(SceneCollectionListChanged):
-                    SceneCollectionListChanged?.Invoke(this, new SceneCollectionListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["sceneCollections"])));
+                    SceneCollectionListChanged?.Invoke(this, new SceneCollectionListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>(body["sceneCollections"].ToString())));
                     break;
 
                 case nameof(CurrentSceneTransitionChanged):
@@ -543,7 +563,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(ProfileListChanged):
-                    ProfileListChanged?.Invoke(this, new ProfileListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>((string)body["profiles"])));
+                    ProfileListChanged?.Invoke(this, new ProfileListChangedEventArgs(JsonConvert.DeserializeObject<List<string>>(body["profiles"].ToString())));
                     break;
 
                 case nameof(StreamStateChanged):
@@ -621,7 +641,7 @@ namespace OBSWebsocketDotNet
                     break;
 
                 case nameof(MediaInputPlaybackStarted):
-                    MediaInputPlaybackStarted?.Invoke(this, new MediaInputPlaybackStartedEventArgs((string)body["sourceName"]));
+                    MediaInputPlaybackStarted?.Invoke(this, new MediaInputPlaybackStartedEventArgs((string)body["inputName"]));
                     break;
 
                 case nameof(MediaInputActionTriggered):
@@ -694,6 +714,22 @@ namespace OBSWebsocketDotNet
 
                 case nameof(SceneNameChanged):
                     SceneNameChanged?.Invoke(this, new SceneNameChangedEventArgs((string)body["oldSceneName"], (string)body["sceneName"]));
+                    break;
+
+                case nameof(InputSettingsChanged):
+                    InputSettingsChanged?.Invoke(this, new InputSettingsChangedEventArgs((string)body["inputName"], (string)body["inputUuid"], (JObject)body["inputSettings"]));
+                    break;
+
+                case nameof(SourceFilterSettingsChanged):
+                    SourceFilterSettingsChanged?.Invoke(this, new SourceFilterSettingsChangedEventArgs((string)body["sourceName"], (string)body["filterName"], (JObject)body["filterSettings"]));
+                    break;
+
+                case nameof(RecordFileChanged):
+                    RecordFileChanged?.Invoke(this, new RecordFileChangedEventArgs((string)body["newOutputPath"]));
+                    break;
+
+                case nameof(ScreenshotSaved):
+                    ScreenshotSaved?.Invoke(this, new ScreenshotSavedEventArgs((string)body["savedScreenshotPath"]));
                     break;
 
                 default:

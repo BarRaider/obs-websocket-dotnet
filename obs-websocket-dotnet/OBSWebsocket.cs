@@ -62,6 +62,13 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+        /// Unlike <see cref="IsConnected"/>, which only reflects the transport-level connection, this
+        /// indicates the session is fully established and requests/subscription changes may be sent.
+        /// </summary>
+        public bool IsIdentified { get; private set; }
+
+        /// <summary>
         /// Gets or sets the logger for this instance
         /// </summary>
         public ILogger<OBSWebsocket> Logger { get; set; } = NullLogger<OBSWebsocket>.Instance;
@@ -133,6 +140,8 @@ namespace OBSWebsocketDotNet
                 wsConnection = null;
             }
 
+            IsIdentified = false;
+
             var unusedHandlers = responseHandlers.ToArray();
             responseHandlers.Clear();
             foreach (var cb in unusedHandlers)
@@ -145,6 +154,8 @@ namespace OBSWebsocketDotNet
         // This callback handles a websocket disconnection
         private void OnWebsocketDisconnect(object sender, DisconnectionInfo d)
         {
+            IsIdentified = false;
+
             if (d == null || d.CloseStatus == null)
             {
                 Disconnected?.Invoke(sender, new ObsDisconnectionInfo(ObsCloseCodes.UnknownReason, null, d));
@@ -174,6 +185,7 @@ namespace OBSWebsocketDotNet
                     HandleHello(body);
                     break;
                 case MessageTypes.Identified:
+                    IsIdentified = true;
                     Task.Run(() => Connected?.Invoke(this, EventArgs.Empty));
                     break;
                 case MessageTypes.RequestResponse:
@@ -237,17 +249,18 @@ namespace OBSWebsocketDotNet
             // Prepare the asynchronous response handler
             var tcs = new TaskCompletionSource<JObject>();
             JObject message = null;
+            string messageId;
             do
             {
                 // Generate a random message id
-                message = MessageFactory.BuildMessage(operationCode, requestType, additionalFields, out string messageId);
+                message = MessageFactory.BuildMessage(operationCode, requestType, additionalFields, out messageId);
                 if (!waitForReply || responseHandlers.TryAdd(messageId, tcs))
                 {
                     break;
                 }
                 // Message id already exists, retry with a new one.
             } while (true);
-            // Send the message 
+            // Send the message
             wsConnection.Send(message.ToString());
             if (!waitForReply)
             {
@@ -255,7 +268,11 @@ namespace OBSWebsocketDotNet
             }
 
             // Wait for a response (received and notified by the websocket response handler)
-            tcs.Task.Wait(wsTimeout.Milliseconds);
+            if (!tcs.Task.Wait((int)wsTimeout.TotalMilliseconds))
+            {
+                responseHandlers.TryRemove(messageId, out _);
+                throw new ErrorResponseException("Request timed out", 1);
+            }
 
             if (tcs.Task.IsCanceled)
                 throw new ErrorResponseException("Request canceled", 0);

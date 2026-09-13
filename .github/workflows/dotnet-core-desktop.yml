@@ -50,20 +50,18 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [ Release ]
+        configuration: [ Debug, Release ]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      Solution_Name: obs-websocket-dotnet.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: obs-websocket-dotnet-tests\obs-websocket-dotnet-tests.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
-      #Wap_Project_Directory: your-wap-project-directory-name    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
-      #Wap_Project_Path: your-wap-project-path                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
+      Solution_Name: obs-websocket-dotnet.sln
+      Library_Project_Path: obs-websocket-dotnet\obs-websocket-dotnet.csproj
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -73,16 +71,49 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Restore
+      run: dotnet restore $env:Solution_Name
 
-    # Execute all unit tests in the solution
+    - name: Build
+      run: dotnet build $env:Solution_Name --no-restore -c ${{ matrix.configuration }}
+
     - name: Execute unit tests
-      run: dotnet test
+      run: >
+        dotnet test $env:Solution_Name --no-build -c ${{ matrix.configuration }}
+        --logger "trx;LogFileName=test-results.trx"
+        --collect:"XPlat Code Coverage"
+        --results-directory ${{ github.workspace }}\TestResults
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.configuration }}
+        path: TestResults
+
+    - name: Coverage summary
+      if: matrix.configuration == 'Release'
+      shell: pwsh
+      run: |
+        dotnet tool install --global dotnet-reportgenerator-globaltool
+        reportgenerator -reports:TestResults/**/coverage.cobertura.xml -targetdir:coverage -reporttypes:"MarkdownSummaryGithub"
+        Get-Content coverage/SummaryGithub.md >> $env:GITHUB_STEP_SUMMARY
+
+    # Only the Release build sets <DocumentationFile>, so this is the only configuration where a
+    # missing/stale XML doc comment (CS1591, or the committed obs-websocket-dotnet.xml going stale)
+    # can be caught.
+    - name: Verify committed XML docs are up to date
+      if: matrix.configuration == 'Release'
+      shell: bash
+      run: git diff --exit-code -- obs-websocket-dotnet/obs-websocket-dotnet.xml
+
+    - name: Pack
+      if: matrix.configuration == 'Release'
+      run: dotnet pack $env:Library_Project_Path --no-build -c Release -o artifacts
+
+    - name: Upload package
+      if: matrix.configuration == 'Release'
+      uses: actions/upload-artifact@v4
+      with:
+        name: nupkg
+        path: artifacts/*.nupkg

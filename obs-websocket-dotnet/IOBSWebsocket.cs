@@ -26,6 +26,13 @@ namespace OBSWebsocketDotNet
         bool IsConnected { get; }
 
         /// <summary>
+        /// True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+        /// Unlike <see cref="IsConnected"/>, which only reflects the transport-level connection, this
+        /// indicates the session is fully established and requests/subscription changes may be sent.
+        /// </summary>
+        bool IsIdentified { get; }
+
+        /// <summary>
         /// Gets or sets the event subscriptions bitmask. High-volume events are normally
         /// managed automatically by subscribing/unsubscribing their C# events; set this directly
         /// only if you need custom control over the subscription mask.
@@ -1044,6 +1051,89 @@ namespace OBSWebsocketDotNet
         List<Monitor> GetMonitorList();
 
         /// <summary>
+        /// Opens a projector for a source.
+        /// Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+        /// </summary>
+        /// <param name="sourceName">Name of the source to open a projector for</param>
+        /// <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+        /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        void OpenSourceProjector(string sourceName, string projectorGeometry, int monitorIndex = -1);
+
+        /// <summary>
+        /// Opens a projector for a specific output video mix.
+        /// Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+        /// </summary>
+        /// <param name="videoMixType">Mix types: OBS_WEBSOCKET_VIDEO_MIX_TYPE_PREVIEW, OBS_WEBSOCKET_VIDEO_MIX_TYPE_PROGRAM, OBS_WEBSOCKET_VIDEO_MIX_TYPE_MULTIVIEW</param>
+        /// <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+        /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        void OpenVideoMixProjector(string videoMixType, string projectorGeometry, int monitorIndex = -1);
+
+        /// <summary>
+        /// Sets the current directory that the record output writes files to.
+        /// </summary>
+        /// <param name="recordDirectory">Output directory</param>
+        void SetRecordDirectory(string recordDirectory);
+
+        /// <summary>
+        /// Splits the current file being recorded into a new file.
+        /// </summary>
+        void SplitRecordFile();
+
+        /// <summary>
+        /// Adds a new chapter marker to the file currently being recorded.
+        /// Note: As of OBS 30.2.0, the only file format supporting this feature is Hybrid MP4.
+        /// </summary>
+        /// <param name="chapterName">Name of the new chapter</param>
+        void CreateRecordChapter(string chapterName = null);
+
+        /// <summary>
+        /// Gets an array of all available source filter kinds.
+        /// Similar to `GetInputKindList`
+        /// </summary>
+        /// <returns>Array of source filter kinds</returns>
+        List<string> GetSourceFilterKindList();
+
+        /// <summary>
+        /// Gets the status of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>An <see cref="OutputStatus"/> object describing the current output state</returns>
+        OutputStatus GetOutputStatus(string outputName);
+
+        /// <summary>
+        /// Toggles the status of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>Whether the output is active</returns>
+        bool ToggleOutput(string outputName);
+
+        /// <summary>
+        /// Starts an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        void StartOutput(string outputName);
+
+        /// <summary>
+        /// Stops an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        void StopOutput(string outputName);
+
+        /// <summary>
+        /// Gets the settings of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>Output settings</returns>
+        JObject GetOutputSettings(string outputName);
+
+        /// <summary>
+        /// Sets the settings of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <param name="outputSettings">Output settings</param>
+        void SetOutputSettings(string outputName, JObject outputSettings);
+
+        /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
         /// NOTE: Please subscribe to the Connected/Disconnected events (or atlease check the IsConnected property) to determine when the connection is actually fully established
         /// </summary>
@@ -1359,6 +1449,26 @@ namespace OBSWebsocketDotNet
         /// The name of a scene has changed.
         /// </summary>
         event EventHandler<SceneNameChangedEventArgs> SceneNameChanged;
+
+        /// <summary>
+        /// An input's settings have changed (been updated).
+        /// </summary>
+        event EventHandler<InputSettingsChangedEventArgs> InputSettingsChanged;
+
+        /// <summary>
+        /// A source filter's settings have changed (been updated).
+        /// </summary>
+        event EventHandler<SourceFilterSettingsChangedEventArgs> SourceFilterSettingsChanged;
+
+        /// <summary>
+        /// The record output has started writing to a new file. For example, when a file split happens.
+        /// </summary>
+        event EventHandler<RecordFileChangedEventArgs> RecordFileChanged;
+
+        /// <summary>
+        /// A screenshot has been saved.
+        /// </summary>
+        event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
 
         #endregion
     }
