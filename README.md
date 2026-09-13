@@ -4,9 +4,15 @@
 Official .NET library (written in C#) to communicate with an obs-websocket server.
 
 This library is available on the [NuGet gallery](https://www.nuget.org/packages/obs-websocket-dotnet)  
-See the `TestClient` project for a working example.  
+See the `TestClient` project for a working example.
 
-## New in v5.0.1  
+Supported target frameworks: **netstandard2.1** and **net10.0**. Tests target **net10.0**. `TestClient` targets **net10.0-windows**. Both were moved from net9.
+
+## New in v5.0.2
+* Multi-target netstandard2.1 and net10.0
+* Tests and TestClient retargeted from net9 to net10
+
+## New in v5.0.1
 * Fixes for deserialization issues in MediaInputStatus
 * Allow OBSVideoSettings to be updated via the API
 * New ILogger support instead of writing to console
