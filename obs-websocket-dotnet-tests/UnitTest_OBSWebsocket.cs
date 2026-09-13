@@ -83,7 +83,7 @@ namespace OBSWebsocketDotNet.Tests
 
             Assert.IsNotNull(eventArgs);
             Assert.AreEqual(1, eventArgs.inputs.Count);
-            Assert.AreEqual("Mic/Aux", (string)eventArgs.inputs[0]["inputName"]);
+            Assert.AreEqual("Mic/Aux", eventArgs.inputs[0].InputName);
         }
 
         [TestMethod]

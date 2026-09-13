@@ -313,7 +313,8 @@ namespace OBSWebsocketDotNet
         {
             var requestFields = new JObject
             {
-                { "rpcVersion", SUPPORTED_RPC_VERSION }
+                { "rpcVersion", SUPPORTED_RPC_VERSION },
+                { "eventSubscriptions", (uint)registeredEvents }
             };
 
             if (authInfo != null)

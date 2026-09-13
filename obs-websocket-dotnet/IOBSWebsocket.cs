@@ -32,6 +32,14 @@ namespace OBSWebsocketDotNet
         /// </summary>
         bool IsIdentified { get; }
 
+        /// <summary>
+        /// Gets or sets the event subscriptions bitmask. High-volume events are normally
+        /// managed automatically by subscribing/unsubscribing their C# events; set this directly
+        /// only if you need custom control over the subscription mask.
+        /// Changing this while connected sends a ReIdentify to the server.
+        /// </summary>
+        EventSubscription EventSubscriptions { get; set; }
+
         #endregion
 
         #region Requests
