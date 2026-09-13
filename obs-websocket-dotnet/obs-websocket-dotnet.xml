@@ -1577,6 +1577,71 @@
             <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
             <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
         </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetRecordDirectory(System.String)">
+            <summary>
+            Sets the current directory that the record output writes files to.
+            </summary>
+            <param name="recordDirectory">Output directory</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SplitRecordFile">
+            <summary>
+            Splits the current file being recorded into a new file.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.CreateRecordChapter(System.String)">
+            <summary>
+            Adds a new chapter marker to the file currently being recorded.
+            Note: As of OBS 30.2.0, the only file format supporting this feature is Hybrid MP4.
+            </summary>
+            <param name="chapterName">Name of the new chapter</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSourceFilterKindList">
+            <summary>
+            Gets an array of all available source filter kinds.
+            Similar to `GetInputKindList`
+            </summary>
+            <returns>Array of source filter kinds</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetOutputStatus(System.String)">
+            <summary>
+            Gets the status of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <returns>An <see cref="T:OBSWebsocketDotNet.Types.OutputStatus"/> object describing the current output state</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.ToggleOutput(System.String)">
+            <summary>
+            Toggles the status of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <returns>Whether the output is active</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StartOutput(System.String)">
+            <summary>
+            Starts an output.
+            </summary>
+            <param name="outputName">Output name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.StopOutput(System.String)">
+            <summary>
+            Stops an output.
+            </summary>
+            <param name="outputName">Output name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetOutputSettings(System.String)">
+            <summary>
+            Gets the settings of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <returns>Output settings</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetOutputSettings(System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Sets the settings of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <param name="outputSettings">Output settings</param>
+        </member>
         <member name="T:OBSWebsocketDotNet.AuthFailureException">
             <summary>
             Thrown if authentication fails
@@ -2645,6 +2710,71 @@
             <param name="videoMixType">Mix types: OBS_WEBSOCKET_VIDEO_MIX_TYPE_PREVIEW, OBS_WEBSOCKET_VIDEO_MIX_TYPE_PROGRAM, OBS_WEBSOCKET_VIDEO_MIX_TYPE_MULTIVIEW</param>
             <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
             <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetRecordDirectory(System.String)">
+            <summary>
+            Sets the current directory that the record output writes files to.
+            </summary>
+            <param name="recordDirectory">Output directory</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SplitRecordFile">
+            <summary>
+            Splits the current file being recorded into a new file.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.CreateRecordChapter(System.String)">
+            <summary>
+            Adds a new chapter marker to the file currently being recorded.
+            Note: As of OBS 30.2.0, the only file format supporting this feature is Hybrid MP4.
+            </summary>
+            <param name="chapterName">Name of the new chapter</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetSourceFilterKindList">
+            <summary>
+            Gets an array of all available source filter kinds.
+            Similar to `GetInputKindList`
+            </summary>
+            <returns>Array of source filter kinds</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetOutputStatus(System.String)">
+            <summary>
+            Gets the status of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <returns>An <see cref="T:OBSWebsocketDotNet.Types.OutputStatus"/> object describing the current output state</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.ToggleOutput(System.String)">
+            <summary>
+            Toggles the status of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <returns>Whether the output is active</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.StartOutput(System.String)">
+            <summary>
+            Starts an output.
+            </summary>
+            <param name="outputName">Output name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.StopOutput(System.String)">
+            <summary>
+            Stops an output.
+            </summary>
+            <param name="outputName">Output name</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetOutputSettings(System.String)">
+            <summary>
+            Gets the settings of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <returns>Output settings</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetOutputSettings(System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Sets the settings of an output.
+            </summary>
+            <param name="outputName">Output name</param>
+            <param name="outputSettings">Output settings</param>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.Connect(System.String,System.String)">
             <summary>

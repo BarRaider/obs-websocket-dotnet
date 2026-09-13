@@ -2153,5 +2153,154 @@ namespace OBSWebsocketDotNet
 
             SendRequest(nameof(OpenVideoMixProjector), request);
         }
+
+        /// <summary>
+        /// Sets the current directory that the record output writes files to.
+        /// </summary>
+        /// <param name="recordDirectory">Output directory</param>
+        public void SetRecordDirectory(string recordDirectory)
+        {
+            var request = new JObject
+            {
+                { nameof(recordDirectory), recordDirectory }
+            };
+
+            SendRequest(nameof(SetRecordDirectory), request);
+        }
+
+        /// <summary>
+        /// Splits the current file being recorded into a new file.
+        /// </summary>
+        public void SplitRecordFile()
+        {
+            SendRequest(nameof(SplitRecordFile));
+        }
+
+        /// <summary>
+        /// Adds a new chapter marker to the file currently being recorded.
+        /// Note: As of OBS 30.2.0, the only file format supporting this feature is Hybrid MP4.
+        /// </summary>
+        /// <param name="chapterName">Name of the new chapter</param>
+        public void CreateRecordChapter(string chapterName = null)
+        {
+            JObject request = null;
+            if (!string.IsNullOrEmpty(chapterName))
+            {
+                request = new JObject
+                {
+                    { nameof(chapterName), chapterName }
+                };
+            }
+
+            SendRequest(nameof(CreateRecordChapter), request);
+        }
+
+        /// <summary>
+        /// Gets an array of all available source filter kinds.
+        /// Similar to `GetInputKindList`
+        /// </summary>
+        /// <returns>Array of source filter kinds</returns>
+        public List<string> GetSourceFilterKindList()
+        {
+            var response = SendRequest(nameof(GetSourceFilterKindList));
+            if (!response.HasValues)
+            {
+                return new List<string>();
+            }
+
+            return JsonConvert.DeserializeObject<List<string>>(response["sourceFilterKinds"].ToString());
+        }
+
+        /// <summary>
+        /// Gets the status of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>An <see cref="OutputStatus"/> object describing the current output state</returns>
+        public OutputStatus GetOutputStatus(string outputName)
+        {
+            var request = new JObject
+            {
+                { nameof(outputName), outputName }
+            };
+
+            var response = SendRequest(nameof(GetOutputStatus), request);
+            return new OutputStatus(response);
+        }
+
+        /// <summary>
+        /// Toggles the status of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>Whether the output is active</returns>
+        public bool ToggleOutput(string outputName)
+        {
+            var request = new JObject
+            {
+                { nameof(outputName), outputName }
+            };
+
+            var response = SendRequest(nameof(ToggleOutput), request);
+            return (bool)response["outputActive"];
+        }
+
+        /// <summary>
+        /// Starts an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        public void StartOutput(string outputName)
+        {
+            var request = new JObject
+            {
+                { nameof(outputName), outputName }
+            };
+
+            SendRequest(nameof(StartOutput), request);
+        }
+
+        /// <summary>
+        /// Stops an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        public void StopOutput(string outputName)
+        {
+            var request = new JObject
+            {
+                { nameof(outputName), outputName }
+            };
+
+            SendRequest(nameof(StopOutput), request);
+        }
+
+        /// <summary>
+        /// Gets the settings of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>Output settings</returns>
+        public JObject GetOutputSettings(string outputName)
+        {
+            var request = new JObject
+            {
+                { nameof(outputName), outputName }
+            };
+
+            var response = SendRequest(nameof(GetOutputSettings), request);
+            return (JObject)response["outputSettings"];
+        }
+
+        /// <summary>
+        /// Sets the settings of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <param name="outputSettings">Output settings</param>
+        public void SetOutputSettings(string outputName, JObject outputSettings)
+        {
+            var request = new JObject
+            {
+                { nameof(outputName), outputName },
+                { nameof(outputSettings), outputSettings }
+            };
+
+            SendRequest(nameof(SetOutputSettings), request);
+        }
     }
 }
