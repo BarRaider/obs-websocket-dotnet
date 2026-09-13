@@ -4,7 +4,7 @@
 		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
 		<AssemblyName>obs-websocket-dotnet</AssemblyName>
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
-		<Copyright>Copyright © BarRaider 2025</Copyright>
+		<Copyright>Copyright © BarRaider 2026</Copyright>
 		<LangVersion>8</LangVersion>
 		<Version>5.7.0</Version>
 		<Authors>BarRaider</Authors>
