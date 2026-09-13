@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
-using WebSocketSharp;
 
 namespace OBSWebsocketDotNet.Tests
 {
@@ -13,7 +12,7 @@ namespace OBSWebsocketDotNet.Tests
             int idLength = 22;
             string msgID = NewMessageID(idLength);
 
-            Assert.IsFalse(msgID.IsNullOrEmpty());
+            Assert.IsFalse(string.IsNullOrEmpty(msgID));
             Assert.AreEqual(idLength, msgID.Length);
         }
 
