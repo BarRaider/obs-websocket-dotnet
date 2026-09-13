@@ -1043,6 +1043,24 @@ namespace OBSWebsocketDotNet
         List<Monitor> GetMonitorList();
 
         /// <summary>
+        /// Opens a projector for a source.
+        /// Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+        /// </summary>
+        /// <param name="sourceName">Name of the source to open a projector for</param>
+        /// <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+        /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        void OpenSourceProjector(string sourceName, string projectorGeometry, int monitorIndex = -1);
+
+        /// <summary>
+        /// Opens a projector for a specific output video mix.
+        /// Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+        /// </summary>
+        /// <param name="videoMixType">Mix types: OBS_WEBSOCKET_VIDEO_MIX_TYPE_PREVIEW, OBS_WEBSOCKET_VIDEO_MIX_TYPE_PROGRAM, OBS_WEBSOCKET_VIDEO_MIX_TYPE_MULTIVIEW</param>
+        /// <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+        /// <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        void OpenVideoMixProjector(string videoMixType, string projectorGeometry, int monitorIndex = -1);
+
+        /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
         /// NOTE: Please subscribe to the Connected/Disconnected events (or atlease check the IsConnected property) to determine when the connection is actually fully established
         /// </summary>

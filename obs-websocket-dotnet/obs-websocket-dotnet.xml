@@ -447,6 +447,13 @@
             Current connection state
             </summary>
         </member>
+        <member name="P:OBSWebsocketDotNet.OBSWebsocket.IsIdentified">
+            <summary>
+            True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+            Unlike <see cref="P:OBSWebsocketDotNet.OBSWebsocket.IsConnected"/>, which only reflects the transport-level connection, this
+            indicates the session is fully established and requests/subscription changes may be sent.
+            </summary>
+        </member>
         <member name="P:OBSWebsocketDotNet.OBSWebsocket.Logger">
             <summary>
             Gets or sets the logger for this instance
@@ -1587,6 +1594,13 @@
             Current connection state
             </summary>
         </member>
+        <member name="P:OBSWebsocketDotNet.IOBSWebsocket.IsIdentified">
+            <summary>
+            True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+            Unlike <see cref="P:OBSWebsocketDotNet.IOBSWebsocket.IsConnected"/>, which only reflects the transport-level connection, this
+            indicates the session is fully established and requests/subscription changes may be sent.
+            </summary>
+        </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetVideoSettings">
             <summary>
             Get basic OBS video information
@@ -2593,6 +2607,24 @@
             Gets a list of connected monitors and information about them.
             </summary>
             <returns>a list of detected monitors with some information</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.OpenSourceProjector(System.String,System.String,System.Int32)">
+            <summary>
+            Opens a projector for a source.
+            Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+            </summary>
+            <param name="sourceName">Name of the source to open a projector for</param>
+            <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+            <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.OpenVideoMixProjector(System.String,System.String,System.Int32)">
+            <summary>
+            Opens a projector for a specific output video mix.
+            Note: This request serves to provide feature parity with 4.x. It is very likely to be changed/deprecated in a future release.
+            </summary>
+            <param name="videoMixType">Mix types: OBS_WEBSOCKET_VIDEO_MIX_TYPE_PREVIEW, OBS_WEBSOCKET_VIDEO_MIX_TYPE_PROGRAM, OBS_WEBSOCKET_VIDEO_MIX_TYPE_MULTIVIEW</param>
+            <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
+            <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.Connect(System.String,System.String)">
             <summary>
