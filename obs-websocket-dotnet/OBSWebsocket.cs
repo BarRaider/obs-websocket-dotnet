@@ -336,7 +336,7 @@ namespace OBSWebsocketDotNet
         /// <returns></returns>
         protected string HashEncode(string input)
         {
-            using var sha256 = new SHA256Managed();
+            using var sha256 = SHA256.Create();
 
             byte[] textBytes = Encoding.ASCII.GetBytes(input);
             byte[] hash = sha256.ComputeHash(textBytes);
