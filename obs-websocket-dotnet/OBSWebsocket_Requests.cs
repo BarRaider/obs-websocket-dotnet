@@ -2155,6 +2155,124 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
+        /// Gets the list of available outputs.
+        /// </summary>
+        /// <returns>Array of outputs. The obs-websocket protocol does not document a fixed field list for each output object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList precedent for undocumented array shapes).</returns>
+        public List<JObject> GetOutputList()
+        {
+            var response = SendRequest(nameof(GetOutputList));
+            return response["outputs"].Select(o => (JObject)o).ToList();
+        }
+
+        /// <summary>
+        /// Gets the source associated with a scene item.
+        /// </summary>
+        /// <param name="sceneName">Name of the scene the item is in</param>
+        /// <param name="sceneItemId">Numeric ID of the scene item</param>
+        /// <returns>Object containing the source's name and UUID</returns>
+        public SceneItemSource GetSceneItemSource(string sceneName, int sceneItemId)
+        {
+            var request = new JObject
+            {
+                { nameof(sceneName), sceneName },
+                { nameof(sceneItemId), sceneItemId }
+            };
+
+            var response = SendRequest(nameof(GetSceneItemSource), request);
+            return new SceneItemSource(response);
+        }
+
+        /// <summary>
+        /// Gets the deinterlace mode of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <returns>Deinterlace mode of the input</returns>
+        public string GetInputDeinterlaceMode(string inputName)
+        {
+            var request = new JObject
+            {
+                { nameof(inputName), inputName }
+            };
+
+            var response = SendRequest(nameof(GetInputDeinterlaceMode), request);
+            return (string)response["inputDeinterlaceMode"];
+        }
+
+        /// <summary>
+        /// Sets the deinterlace mode of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        public void SetInputDeinterlaceMode(string inputName, string inputDeinterlaceMode)
+        {
+            var request = new JObject
+            {
+                { nameof(inputName), inputName },
+                { nameof(inputDeinterlaceMode), inputDeinterlaceMode }
+            };
+
+            SendRequest(nameof(SetInputDeinterlaceMode), request);
+        }
+
+        /// <summary>
+        /// Sets the deinterlace mode of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        public void SetInputDeinterlaceMode(string inputName, DeinterlaceMode inputDeinterlaceMode)
+        {
+            SetInputDeinterlaceMode(inputName, inputDeinterlaceMode.ToString());
+        }
+
+        /// <summary>
+        /// Gets the deinterlace field order of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <returns>Deinterlace field order of the input</returns>
+        public string GetInputDeinterlaceFieldOrder(string inputName)
+        {
+            var request = new JObject
+            {
+                { nameof(inputName), inputName }
+            };
+
+            var response = SendRequest(nameof(GetInputDeinterlaceFieldOrder), request);
+            return (string)response["inputDeinterlaceFieldOrder"];
+        }
+
+        /// <summary>
+        /// Sets the deinterlace field order of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        public void SetInputDeinterlaceFieldOrder(string inputName, string inputDeinterlaceFieldOrder)
+        {
+            var request = new JObject
+            {
+                { nameof(inputName), inputName },
+                { nameof(inputDeinterlaceFieldOrder), inputDeinterlaceFieldOrder }
+            };
+
+            SendRequest(nameof(SetInputDeinterlaceFieldOrder), request);
+        }
+
+        /// <summary>
+        /// Sets the deinterlace field order of an input.
+        /// Note: Deinterlacing functionality is restricted to async inputs only.
+        /// </summary>
+        /// <param name="inputName">Name of the input</param>
+        /// <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        public void SetInputDeinterlaceFieldOrder(string inputName, DeinterlaceFieldOrder inputDeinterlaceFieldOrder)
+        {
+            SetInputDeinterlaceFieldOrder(inputName, inputDeinterlaceFieldOrder.ToString());
+        }
+
+        /// <summary>
         /// Sets the current directory that the record output writes files to.
         /// </summary>
         /// <param name="recordDirectory">Output directory</param>
