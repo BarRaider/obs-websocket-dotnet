@@ -1165,7 +1165,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest(nameof(GetInputAudioTracks), request);
-            return new SourceTracks(response);
+            return new SourceTracks((JObject)response["inputAudioTracks"]);
         }
 
         /// <summary>
