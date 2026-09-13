@@ -6,7 +6,7 @@
 		<RootNamespace>OBSWebsocketDotNet</RootNamespace>
 		<Copyright>Copyright © BarRaider 2025</Copyright>
 		<LangVersion>8</LangVersion>
-		<Version>5.0.2</Version>
+		<Version>5.7.0</Version>
 		<Authors>BarRaider</Authors>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BarRaider/obs-websocket-dotnet</PackageProjectUrl>
@@ -14,10 +14,13 @@
 		<Description>Official obs-websocket .NET library. Written in C#. Supports .NET Standard 2.1 and .NET 10.</Description>
 		<PackageTags>OBS obs-websocket websocket official obs-websocket-dotnet obs.websocket.net obs-websocket-net netstandard2.1 net10</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageReleaseNotes>What's new in v5.0.2
-* Multi-target netstandard2.1 and net10.0
-* Bump Microsoft.Extensions.Logging.Abstractions to 10.0.12
-* Bump Newtonsoft.Json to 13.0.4
+		<PackageReleaseNotes>What's new in v5.7.0
+* Brings the library up to date with the obs-websocket 5.7.0 protocol: 8 new events (CustomEvent, InputSettingsChanged, SourceFilterSettingsChanged, RecordFileChanged, ScreenshotSaved, CanvasCreated, CanvasRemoved, CanvasNameChanged) and 17 new requests (generic Outputs, recording directory/split/chapter, input deinterlacing, GetSourceFilterKindList, GetSceneItemSource, GetCanvasList)
+* Event subscription control via EventSubscriptions, including opt-in for high-volume events
+* Multi-target netstandard2.1 and net10.0; tests and TestClient moved from net9 to net10
+* Fixed GetInputAudioTracks always returning false for every track
+* IOBSWebsocket now declares OpenSourceProjector, OpenVideoMixProjector, and every event/request added above (implementers of IOBSWebsocket will need to add these members)
+* Greatly expanded test suite: request/response round-trip coverage plus conformance gates that catch drift from the protocol spec
 
 </PackageReleaseNotes>
 	</PropertyGroup>
