@@ -469,6 +469,11 @@
             The name of a canvas has changed.
             </summary>
         </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.CustomEvent">
+            <summary>
+            Custom event emitted by <see cref="M:OBSWebsocketDotNet.OBSWebsocket.BroadcastCustomEvent(Newtonsoft.Json.Linq.JObject)"/>.
+            </summary>
+        </member>
         <member name="P:OBSWebsocketDotNet.OBSWebsocket.EventSubscriptions">
             <summary>
             Gets or sets the event subscriptions bitmask. High-volume events are normally
@@ -3300,6 +3305,11 @@
             The name of a canvas has changed.
             </summary>
         </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.CustomEvent">
+            <summary>
+            Custom event emitted by <see cref="M:OBSWebsocketDotNet.IOBSWebsocket.BroadcastCustomEvent(Newtonsoft.Json.Linq.JObject)"/>.
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.DeinterlaceFieldOrder">
             <summary>
             Deinterlace field order of an input. Deinterlacing is restricted to async inputs only.
@@ -3645,6 +3655,22 @@
             Default Constructor
             </summary>
             <param name="transitionDuration">The transition duration</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.CustomEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.CustomEvent"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.CustomEventArgs.EventData">
+            <summary>
+            Custom event data, as passed to BroadcastCustomEvent by the sender
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.CustomEventArgs.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="eventData">The custom event data</param>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.InputActiveStateChangedEventArgs">
             <summary>

@@ -439,6 +439,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<CanvasNameChangedEventArgs> CanvasNameChanged;
 
+        /// <summary>
+        /// Custom event emitted by <see cref="OBSWebsocket.BroadcastCustomEvent"/>.
+        /// </summary>
+        public event EventHandler<CustomEventArgs> CustomEvent;
+
         #endregion
 
         #region EventSubscription
@@ -760,6 +765,13 @@ namespace OBSWebsocketDotNet
 
                 case nameof(CanvasNameChanged):
                     CanvasNameChanged?.Invoke(this, new CanvasNameChangedEventArgs((string)body["canvasUuid"], (string)body["oldCanvasName"], (string)body["canvasName"]));
+                    break;
+
+                case nameof(CustomEvent):
+                    // Verified against a live OBS 32.2.2 instance: the payload passed to
+                    // BroadcastCustomEvent arrives directly as body here (already unwrapped from
+                    // eventData above), with no extra nesting - matching VendorEvent's dispatch.
+                    CustomEvent?.Invoke(this, new CustomEventArgs(body));
                     break;
 
                 default:

@@ -1553,6 +1553,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         event EventHandler<CanvasNameChangedEventArgs> CanvasNameChanged;
 
+        /// <summary>
+        /// Custom event emitted by <see cref="BroadcastCustomEvent"/>.
+        /// </summary>
+        event EventHandler<CustomEventArgs> CustomEvent;
+
         #endregion
     }
 }
