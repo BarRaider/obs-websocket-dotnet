@@ -1123,6 +1123,71 @@ namespace OBSWebsocketDotNet
         void SetInputDeinterlaceFieldOrder(string inputName, DeinterlaceFieldOrder inputDeinterlaceFieldOrder);
 
         /// <summary>
+        /// Sets the current directory that the record output writes files to.
+        /// </summary>
+        /// <param name="recordDirectory">Output directory</param>
+        void SetRecordDirectory(string recordDirectory);
+
+        /// <summary>
+        /// Splits the current file being recorded into a new file.
+        /// </summary>
+        void SplitRecordFile();
+
+        /// <summary>
+        /// Adds a new chapter marker to the file currently being recorded.
+        /// Note: As of OBS 30.2.0, the only file format supporting this feature is Hybrid MP4.
+        /// </summary>
+        /// <param name="chapterName">Name of the new chapter</param>
+        void CreateRecordChapter(string chapterName = null);
+
+        /// <summary>
+        /// Gets an array of all available source filter kinds.
+        /// Similar to `GetInputKindList`
+        /// </summary>
+        /// <returns>Array of source filter kinds</returns>
+        List<string> GetSourceFilterKindList();
+
+        /// <summary>
+        /// Gets the status of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>An <see cref="OutputStatus"/> object describing the current output state</returns>
+        OutputStatus GetOutputStatus(string outputName);
+
+        /// <summary>
+        /// Toggles the status of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>Whether the output is active</returns>
+        bool ToggleOutput(string outputName);
+
+        /// <summary>
+        /// Starts an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        void StartOutput(string outputName);
+
+        /// <summary>
+        /// Stops an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        void StopOutput(string outputName);
+
+        /// <summary>
+        /// Gets the settings of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <returns>Output settings</returns>
+        JObject GetOutputSettings(string outputName);
+
+        /// <summary>
+        /// Sets the settings of an output.
+        /// </summary>
+        /// <param name="outputName">Output name</param>
+        /// <param name="outputSettings">Output settings</param>
+        void SetOutputSettings(string outputName, JObject outputSettings);
+
+        /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
         /// NOTE: Please subscribe to the Connected/Disconnected events (or atlease check the IsConnected property) to determine when the connection is actually fully established
         /// </summary>
