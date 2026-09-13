@@ -1577,6 +1577,68 @@
             <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
             <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
         </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetOutputList">
+            <summary>
+            Gets the list of available outputs.
+            </summary>
+            <returns>Array of outputs. The obs-websocket protocol does not document a fixed field list for each output object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList precedent for undocumented array shapes).</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetSceneItemSource(System.String,System.Int32)">
+            <summary>
+            Gets the source associated with a scene item.
+            </summary>
+            <param name="sceneName">Name of the scene the item is in</param>
+            <param name="sceneItemId">Numeric ID of the scene item</param>
+            <returns>Object containing the source's name and UUID</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetInputDeinterlaceMode(System.String)">
+            <summary>
+            Gets the deinterlace mode of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <returns>Deinterlace mode of the input</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetInputDeinterlaceMode(System.String,System.String)">
+            <summary>
+            Sets the deinterlace mode of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetInputDeinterlaceMode(System.String,OBSWebsocketDotNet.Types.DeinterlaceMode)">
+            <summary>
+            Sets the deinterlace mode of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.GetInputDeinterlaceFieldOrder(System.String)">
+            <summary>
+            Gets the deinterlace field order of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <returns>Deinterlace field order of the input</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetInputDeinterlaceFieldOrder(System.String,System.String)">
+            <summary>
+            Sets the deinterlace field order of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetInputDeinterlaceFieldOrder(System.String,OBSWebsocketDotNet.Types.DeinterlaceFieldOrder)">
+            <summary>
+            Sets the deinterlace field order of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.SetRecordDirectory(System.String)">
             <summary>
             Sets the current directory that the record output writes files to.
@@ -2711,6 +2773,68 @@
             <param name="projectorGeometry">Size/Position data for a windowed projector, in Qt Base64 encoded format. Mutually exclusive with monitorIndex</param>
             <param name="monitorIndex">Monitor index, use GetMonitorList to obtain index. -1 to open in windowed mode</param>
         </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetOutputList">
+            <summary>
+            Gets the list of available outputs.
+            </summary>
+            <returns>Array of outputs. The obs-websocket protocol does not document a fixed field list for each output object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList precedent for undocumented array shapes).</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetSceneItemSource(System.String,System.Int32)">
+            <summary>
+            Gets the source associated with a scene item.
+            </summary>
+            <param name="sceneName">Name of the scene the item is in</param>
+            <param name="sceneItemId">Numeric ID of the scene item</param>
+            <returns>Object containing the source's name and UUID</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetInputDeinterlaceMode(System.String)">
+            <summary>
+            Gets the deinterlace mode of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <returns>Deinterlace mode of the input</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetInputDeinterlaceMode(System.String,System.String)">
+            <summary>
+            Sets the deinterlace mode of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetInputDeinterlaceMode(System.String,OBSWebsocketDotNet.Types.DeinterlaceMode)">
+            <summary>
+            Sets the deinterlace mode of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetInputDeinterlaceFieldOrder(System.String)">
+            <summary>
+            Gets the deinterlace field order of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <returns>Deinterlace field order of the input</returns>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetInputDeinterlaceFieldOrder(System.String,System.String)">
+            <summary>
+            Sets the deinterlace field order of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetInputDeinterlaceFieldOrder(System.String,OBSWebsocketDotNet.Types.DeinterlaceFieldOrder)">
+            <summary>
+            Sets the deinterlace field order of an input.
+            Note: Deinterlacing functionality is restricted to async inputs only.
+            </summary>
+            <param name="inputName">Name of the input</param>
+            <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
+        </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.SetRecordDirectory(System.String)">
             <summary>
             Sets the current directory that the record output writes files to.
@@ -3106,6 +3230,71 @@
         <member name="E:OBSWebsocketDotNet.IOBSWebsocket.ScreenshotSaved">
             <summary>
             A screenshot has been saved.
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.DeinterlaceFieldOrder">
+            <summary>
+            Deinterlace field order of an input. Deinterlacing is restricted to async inputs only.
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceFieldOrder.OBS_DEINTERLACE_FIELD_ORDER_TOP">
+            <summary>
+            Top
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceFieldOrder.OBS_DEINTERLACE_FIELD_ORDER_BOTTOM">
+            <summary>
+            Bottom
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.DeinterlaceMode">
+            <summary>
+            Deinterlace mode of an input. Deinterlacing is restricted to async inputs only.
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_DISABLE">
+            <summary>
+            Disable
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_DISCARD">
+            <summary>
+            Discard
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_RETRO">
+            <summary>
+            Retro
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_BLEND">
+            <summary>
+            Blend
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_BLEND_2X">
+            <summary>
+            Blend 2x
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_LINEAR">
+            <summary>
+            Linear
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_LINEAR_2X">
+            <summary>
+            Linear 2x
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_YADIF">
+            <summary>
+            Yadif
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.DeinterlaceMode.OBS_DEINTERLACE_MODE_YADIF_2X">
+            <summary>
+            Yadif 2x
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.CurrentPreviewSceneChangedEventArgs">
@@ -5246,6 +5435,32 @@
             <param name="data">JSON item description as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
         </member>
         <member name="M:OBSWebsocketDotNet.Types.SceneItemDetails.#ctor">
+            <summary>
+            Default Constructor for deserialization
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.SceneItemSource">
+            <summary>
+            GetSceneItemSource response
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemSource.SourceName">
+            <summary>
+            Name of the source associated with the scene item
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.SceneItemSource.SourceUuid">
+            <summary>
+            UUID of the source associated with the scene item
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemSource.#ctor(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Builds the object from the JSON response body
+            </summary>
+            <param name="data">JSON response body as a <see cref="T:Newtonsoft.Json.Linq.JObject"/></param>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.SceneItemSource.#ctor">
             <summary>
             Default Constructor for deserialization
             </summary>
