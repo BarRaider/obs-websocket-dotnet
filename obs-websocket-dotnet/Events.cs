@@ -425,6 +425,21 @@ namespace OBSWebsocketDotNet
         public event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
 
         /// <summary>
+        /// A new canvas has been created.
+        /// </summary>
+        public event EventHandler<CanvasCreatedEventArgs> CanvasCreated;
+
+        /// <summary>
+        /// A canvas has been removed.
+        /// </summary>
+        public event EventHandler<CanvasRemovedEventArgs> CanvasRemoved;
+
+        /// <summary>
+        /// The name of a canvas has changed.
+        /// </summary>
+        public event EventHandler<CanvasNameChangedEventArgs> CanvasNameChanged;
+
+        /// <summary>
         /// Custom event emitted by <see cref="OBSWebsocket.BroadcastCustomEvent"/>.
         /// </summary>
         public event EventHandler<CustomEventArgs> CustomEvent;
@@ -738,6 +753,18 @@ namespace OBSWebsocketDotNet
 
                 case nameof(ScreenshotSaved):
                     ScreenshotSaved?.Invoke(this, new ScreenshotSavedEventArgs((string)body["savedScreenshotPath"]));
+                    break;
+
+                case nameof(CanvasCreated):
+                    CanvasCreated?.Invoke(this, new CanvasCreatedEventArgs((string)body["canvasName"], (string)body["canvasUuid"]));
+                    break;
+
+                case nameof(CanvasRemoved):
+                    CanvasRemoved?.Invoke(this, new CanvasRemovedEventArgs((string)body["canvasName"], (string)body["canvasUuid"]));
+                    break;
+
+                case nameof(CanvasNameChanged):
+                    CanvasNameChanged?.Invoke(this, new CanvasNameChangedEventArgs((string)body["canvasUuid"], (string)body["oldCanvasName"], (string)body["canvasName"]));
                     break;
 
                 case nameof(CustomEvent):

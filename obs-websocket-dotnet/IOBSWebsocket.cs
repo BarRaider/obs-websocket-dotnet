@@ -1196,6 +1196,12 @@ namespace OBSWebsocketDotNet
         void SetOutputSettings(string outputName, JObject outputSettings);
 
         /// <summary>
+        /// Gets an array of canvases in OBS.
+        /// </summary>
+        /// <returns>Array of canvases. The obs-websocket protocol does not document a fixed field list for each canvas object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList/GetOutputList precedent for undocumented array shapes).</returns>
+        List<JObject> GetCanvasList();
+
+        /// <summary>
         /// Connect this instance to the specified URL, and authenticate (if needed) with the specified password.
         /// NOTE: Please subscribe to the Connected/Disconnected events (or atlease check the IsConnected property) to determine when the connection is actually fully established
         /// </summary>
@@ -1531,6 +1537,21 @@ namespace OBSWebsocketDotNet
         /// A screenshot has been saved.
         /// </summary>
         event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
+
+        /// <summary>
+        /// A new canvas has been created.
+        /// </summary>
+        event EventHandler<CanvasCreatedEventArgs> CanvasCreated;
+
+        /// <summary>
+        /// A canvas has been removed.
+        /// </summary>
+        event EventHandler<CanvasRemovedEventArgs> CanvasRemoved;
+
+        /// <summary>
+        /// The name of a canvas has changed.
+        /// </summary>
+        event EventHandler<CanvasNameChangedEventArgs> CanvasNameChanged;
 
         /// <summary>
         /// Custom event emitted by <see cref="BroadcastCustomEvent"/>.

@@ -2420,5 +2420,15 @@ namespace OBSWebsocketDotNet
 
             SendRequest(nameof(SetOutputSettings), request);
         }
+
+        /// <summary>
+        /// Gets an array of canvases in OBS.
+        /// </summary>
+        /// <returns>Array of canvases. The obs-websocket protocol does not document a fixed field list for each canvas object, so these are returned as raw JObjects (matching the existing GetGroupSceneItemList/GetOutputList precedent for undocumented array shapes).</returns>
+        public List<JObject> GetCanvasList()
+        {
+            var response = SendRequest(nameof(GetCanvasList));
+            return response["canvases"].Select(c => (JObject)c).ToList();
+        }
     }
 }
