@@ -71,9 +71,14 @@ namespace OBSWebsocketDotNet.Types
         Ui = 1 << 10,
 
         /// <summary>
+        /// Subscription value to receive events in the `Canvases` category
+        /// </summary>
+        Canvases = 1 << 11,
+
+        /// <summary>
         /// Helper to receive all non-high-volume events
         /// </summary>
-        All = General | Config | Scenes | Inputs | Transitions | Filters | Outputs | SceneItems | MediaInputs | Vendors | Ui,
+        All = General | Config | Scenes | Inputs | Transitions | Filters | Outputs | SceneItems | MediaInputs | Vendors | Ui | Canvases,
 
         // High-volume events require separate, explicit subscription.
 

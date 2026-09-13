@@ -276,7 +276,8 @@
         </member>
         <member name="E:OBSWebsocketDotNet.OBSWebsocket.SceneItemTransformChanged">
             <summary>
-            A scene item transform has changed
+            A scene item transform has changed.
+            This is a high-volume event: subscribing sends a ReIdentify to opt in, unsubscribing (once no handlers remain) opts back out.
             </summary>
         </member>
         <member name="E:OBSWebsocketDotNet.OBSWebsocket.InputAudioSyncOffsetChanged">
@@ -373,12 +374,14 @@
             <summary>
             An input's active state has changed.
             When an input is active, it means it's being shown by the program feed.
+            This is a high-volume event: subscribing sends a ReIdentify to opt in, unsubscribing (once no handlers remain) opts back out.
             </summary>
         </member>
         <member name="E:OBSWebsocketDotNet.OBSWebsocket.InputShowStateChanged">
             <summary>
             An input's show state has changed.
             When an input is showing, it means it's being shown by the preview or a dialog.
+            This is a high-volume event: subscribing sends a ReIdentify to opt in, unsubscribing (once no handlers remain) opts back out.
             </summary>
         </member>
         <member name="E:OBSWebsocketDotNet.OBSWebsocket.InputAudioBalanceChanged">
@@ -403,6 +406,7 @@
         <member name="E:OBSWebsocketDotNet.OBSWebsocket.InputVolumeMeters">
             <summary>
             A high-volume event providing volume levels of all active inputs every 50 milliseconds.
+            Subscribing sends a ReIdentify to opt in, unsubscribing (once no handlers remain) opts back out.
             </summary>
         </member>
         <member name="E:OBSWebsocketDotNet.OBSWebsocket.ReplayBufferSaved">
@@ -449,6 +453,20 @@
             <summary>
             A screenshot has been saved.
             </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.OBSWebsocket.EventSubscriptions">
+            <summary>
+            Gets or sets the event subscriptions bitmask. High-volume events are normally
+            managed automatically by subscribing/unsubscribing their C# events; set this directly
+            only if you need custom control over the subscription mask.
+            Changing this while connected sends a ReIdentify to the server.
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.OBSWebsocket.SendReidentify">
+            <summary>
+            Sends a ReIdentify request with the current event subscriptions. No-ops if not identified.
+            </summary>
+            <returns>true if the ReIdentify request was sent, false if not identified or if the server rejected it</returns>
         </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.ProcessEventType(System.String,Newtonsoft.Json.Linq.JObject)">
             <summary>
@@ -1684,6 +1702,14 @@
             True once the server has confirmed identification (received the OpCode 2 `Identified` message).
             Unlike <see cref="P:OBSWebsocketDotNet.IOBSWebsocket.IsConnected"/>, which only reflects the transport-level connection, this
             indicates the session is fully established and requests/subscription changes may be sent.
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.IOBSWebsocket.EventSubscriptions">
+            <summary>
+            Gets or sets the event subscriptions bitmask. High-volume events are normally
+            managed automatically by subscribing/unsubscribing their C# events; set this directly
+            only if you need custom control over the subscription mask.
+            Changing this while connected sends a ReIdentify to the server.
             </summary>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetVideoSettings">
@@ -3108,6 +3134,103 @@
             A screenshot has been saved.
             </summary>
         </member>
+        <member name="T:OBSWebsocketDotNet.Types.EventSubscription">
+            <summary>
+            Bitmask of obs-websocket event categories, sent during identification (and re-identification)
+            to control which events the server sends. High-volume events are excluded from
+            <see cref="F:OBSWebsocketDotNet.Types.EventSubscription.All"/> and must be requested individually.
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.None">
+            <summary>
+            Subscription value used to disable all events
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.General">
+            <summary>
+            Subscription value to receive events in the `General` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Config">
+            <summary>
+            Subscription value to receive events in the `Config` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Scenes">
+            <summary>
+            Subscription value to receive events in the `Scenes` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Inputs">
+            <summary>
+            Subscription value to receive events in the `Inputs` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Transitions">
+            <summary>
+            Subscription value to receive events in the `Transitions` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Filters">
+            <summary>
+            Subscription value to receive events in the `Filters` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Outputs">
+            <summary>
+            Subscription value to receive events in the `Outputs` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.SceneItems">
+            <summary>
+            Subscription value to receive events in the `SceneItems` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.MediaInputs">
+            <summary>
+            Subscription value to receive events in the `MediaInputs` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Vendors">
+            <summary>
+            Subscription value to receive the `VendorEvent` event
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Ui">
+            <summary>
+            Subscription value to receive events in the `Ui` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.Canvases">
+            <summary>
+            Subscription value to receive events in the `Canvases` category
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.All">
+            <summary>
+            Helper to receive all non-high-volume events
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.InputVolumeMeters">
+            <summary>
+            Subscription value to receive the `InputVolumeMeters` high-volume event
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.InputActiveStateChanged">
+            <summary>
+            Subscription value to receive the `InputActiveStateChanged` high-volume event
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.InputShowStateChanged">
+            <summary>
+            Subscription value to receive the `InputShowStateChanged` high-volume event
+            </summary>
+        </member>
+        <member name="F:OBSWebsocketDotNet.Types.EventSubscription.SceneItemTransformChanged">
+            <summary>
+            Subscription value to receive the `SceneItemTransformChanged` high-volume event
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.CurrentPreviewSceneChangedEventArgs">
             <summary>
             Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.CurrentPreviewSceneChanged"/>
@@ -3510,11 +3633,11 @@
             Array of active inputs with their associated volume levels
             </summary>
         </member>
-        <member name="M:OBSWebsocketDotNet.Types.Events.InputVolumeMetersEventArgs.#ctor(System.Collections.Generic.List{Newtonsoft.Json.Linq.JObject})">
+        <member name="M:OBSWebsocketDotNet.Types.Events.InputVolumeMetersEventArgs.#ctor(System.Collections.Generic.List{OBSWebsocketDotNet.Types.InputVolumeMeter})">
             <summary>
             Default Constructor
             </summary>
-            <param name="inputs">Collection inputs as JObjects</param>
+            <param name="inputs">Collection of active inputs and their volume levels</param>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.MediaInputActionTriggeredEventArgs">
             <summary>
@@ -4634,6 +4757,41 @@
         <member name="M:OBSWebsocketDotNet.Types.InputVolume.#ctor">
             <summary>
             Empty constructor for jsonconvert
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.InputVolumeMeter">
+            <summary>
+            Volume meter data for a single input, as emitted by the InputVolumeMeters high-volume event
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.InputVolumeMeter.InputName">
+            <summary>
+            Name of the input
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.InputVolumeMeter.InputLevels">
+            <summary>
+            Volume levels for each audio channel on this input
+            </summary>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.InputVolumeMeter.ChannelLevel">
+            <summary>
+            Volume level data for a single audio channel
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.InputVolumeMeter.ChannelLevel.MagnitudeWithVolume">
+            <summary>
+            Magnitude of the signal, with the input's volume applied (0.0 to 1.0)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.InputVolumeMeter.ChannelLevel.PeakWithVolume">
+            <summary>
+            Peak of the signal, with the input's volume applied (0.0 to 1.0)
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.InputVolumeMeter.ChannelLevel.PeakRaw">
+            <summary>
+            Raw peak of the signal, without the input's volume applied (0.0 to 1.0)
             </summary>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.KeyModifier">

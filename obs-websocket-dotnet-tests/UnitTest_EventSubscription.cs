@@ -33,6 +33,7 @@ namespace OBSWebsocketDotNet.Tests
             Assert.IsTrue(all.HasFlag(EventSubscription.MediaInputs));
             Assert.IsTrue(all.HasFlag(EventSubscription.Vendors));
             Assert.IsTrue(all.HasFlag(EventSubscription.Ui));
+            Assert.IsTrue(all.HasFlag(EventSubscription.Canvases));
         }
 
         [TestMethod]
@@ -71,7 +72,8 @@ namespace OBSWebsocketDotNet.Tests
             Assert.AreEqual((uint)(1 << 8), (uint)EventSubscription.MediaInputs);
             Assert.AreEqual((uint)(1 << 9), (uint)EventSubscription.Vendors);
             Assert.AreEqual((uint)(1 << 10), (uint)EventSubscription.Ui);
-            Assert.AreEqual((uint)0x7FF, (uint)EventSubscription.All);
+            Assert.AreEqual((uint)(1 << 11), (uint)EventSubscription.Canvases);
+            Assert.AreEqual((uint)0xFFF, (uint)EventSubscription.All);
             Assert.AreEqual((uint)(1 << 16), (uint)EventSubscription.InputVolumeMeters);
             Assert.AreEqual((uint)(1 << 17), (uint)EventSubscription.InputActiveStateChanged);
             Assert.AreEqual((uint)(1 << 18), (uint)EventSubscription.InputShowStateChanged);

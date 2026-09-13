@@ -459,12 +459,15 @@ namespace OBSWebsocketDotNet
         }
 
         /// <summary>
-        /// Sends a ReIdentify request with the current event subscriptions. No-ops if not connected.
+        /// Sends a ReIdentify request with the current event subscriptions. No-ops if not identified.
         /// </summary>
-        /// <returns>true if the ReIdentify request was sent, false if not connected or if the server rejected it</returns>
+        /// <returns>true if the ReIdentify request was sent, false if not identified or if the server rejected it</returns>
         protected bool SendReidentify()
         {
-            if (wsConnection == null || !wsConnection.IsStarted)
+            // Gate on IsIdentified rather than wsConnection.IsStarted: IsStarted only means Start() was
+            // called, not that the server has completed the Hello/Identify/Identified handshake. Sending
+            // a ReIdentify before that completes violates the protocol's message ordering.
+            if (wsConnection == null || !IsIdentified)
             {
                 return false;
             }
