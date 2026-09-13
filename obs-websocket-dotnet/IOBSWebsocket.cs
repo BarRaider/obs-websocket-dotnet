@@ -1532,6 +1532,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
 
+        /// <summary>
+        /// Custom event emitted by <see cref="BroadcastCustomEvent"/>.
+        /// </summary>
+        event EventHandler<CustomEventArgs> CustomEvent;
+
         #endregion
     }
 }

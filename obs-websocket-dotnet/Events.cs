@@ -424,6 +424,11 @@ namespace OBSWebsocketDotNet
         /// </summary>
         public event EventHandler<ScreenshotSavedEventArgs> ScreenshotSaved;
 
+        /// <summary>
+        /// Custom event emitted by <see cref="OBSWebsocket.BroadcastCustomEvent"/>.
+        /// </summary>
+        public event EventHandler<CustomEventArgs> CustomEvent;
+
         #endregion
 
         #region EventSubscription
@@ -733,6 +738,13 @@ namespace OBSWebsocketDotNet
 
                 case nameof(ScreenshotSaved):
                     ScreenshotSaved?.Invoke(this, new ScreenshotSavedEventArgs((string)body["savedScreenshotPath"]));
+                    break;
+
+                case nameof(CustomEvent):
+                    // Verified against a live OBS 32.2.2 instance: the payload passed to
+                    // BroadcastCustomEvent arrives directly as body here (already unwrapped from
+                    // eventData above), with no extra nesting - matching VendorEvent's dispatch.
+                    CustomEvent?.Invoke(this, new CustomEventArgs(body));
                     break;
 
                 default:
