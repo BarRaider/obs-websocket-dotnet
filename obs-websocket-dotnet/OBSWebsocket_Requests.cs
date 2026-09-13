@@ -1743,7 +1743,7 @@ namespace OBSWebsocketDotNet
             };
 
             var response = SendRequest(nameof(GetGroupSceneItemList), request);
-            return JsonConvert.DeserializeObject<List<JObject>>((string)response["sceneItems"]);
+            return JsonConvert.DeserializeObject<List<JObject>>(response["sceneItems"].ToString());
         }
 
         /// <summary>
