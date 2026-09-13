@@ -430,6 +430,26 @@
             An unsupported event has been received.
             </summary>
         </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.InputSettingsChanged">
+            <summary>
+            An input's settings have changed (been updated).
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterSettingsChanged">
+            <summary>
+            A source filter's settings have changed (been updated).
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.RecordFileChanged">
+            <summary>
+            The record output has started writing to a new file. For example, when a file split happens.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.OBSWebsocket.ScreenshotSaved">
+            <summary>
+            A screenshot has been saved.
+            </summary>
+        </member>
         <member name="M:OBSWebsocketDotNet.OBSWebsocket.ProcessEventType(System.String,Newtonsoft.Json.Linq.JObject)">
             <summary>
             Update message handler
@@ -445,6 +465,13 @@
         <member name="P:OBSWebsocketDotNet.OBSWebsocket.IsConnected">
             <summary>
             Current connection state
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.OBSWebsocket.IsIdentified">
+            <summary>
+            True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+            Unlike <see cref="P:OBSWebsocketDotNet.OBSWebsocket.IsConnected"/>, which only reflects the transport-level connection, this
+            indicates the session is fully established and requests/subscription changes may be sent.
             </summary>
         </member>
         <member name="P:OBSWebsocketDotNet.OBSWebsocket.Logger">
@@ -1585,6 +1612,13 @@
         <member name="P:OBSWebsocketDotNet.IOBSWebsocket.IsConnected">
             <summary>
             Current connection state
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.IOBSWebsocket.IsIdentified">
+            <summary>
+            True once the server has confirmed identification (received the OpCode 2 `Identified` message).
+            Unlike <see cref="P:OBSWebsocketDotNet.IOBSWebsocket.IsConnected"/>, which only reflects the transport-level connection, this
+            indicates the session is fully established and requests/subscription changes may be sent.
             </summary>
         </member>
         <member name="M:OBSWebsocketDotNet.IOBSWebsocket.GetVideoSettings">
@@ -2906,6 +2940,26 @@
             The name of a scene has changed.
             </summary>
         </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.InputSettingsChanged">
+            <summary>
+            An input's settings have changed (been updated).
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.SourceFilterSettingsChanged">
+            <summary>
+            A source filter's settings have changed (been updated).
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.RecordFileChanged">
+            <summary>
+            The record output has started writing to a new file. For example, when a file split happens.
+            </summary>
+        </member>
+        <member name="E:OBSWebsocketDotNet.IOBSWebsocket.ScreenshotSaved">
+            <summary>
+            A screenshot has been saved.
+            </summary>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.CurrentPreviewSceneChangedEventArgs">
             <summary>
             Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.CurrentPreviewSceneChanged"/>
@@ -3232,6 +3286,34 @@
             </summary>
             <param name="inputName">The input name</param>
         </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.InputSettingsChangedEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.InputSettingsChanged"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.InputSettingsChangedEventArgs.InputName">
+            <summary>
+            Name of the input
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.InputSettingsChangedEventArgs.InputUuid">
+            <summary>
+            UUID of the input
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.InputSettingsChangedEventArgs.InputSettings">
+            <summary>
+            New settings object of the input
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.InputSettingsChangedEventArgs.#ctor(System.String,System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="inputName">The input name</param>
+            <param name="inputUuid">The input UUID</param>
+            <param name="inputSettings">The new settings object of the input</param>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.InputShowStateChangedEventArgs">
             <summary>
             Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.InputShowStateChanged"/>
@@ -3371,6 +3453,22 @@
             Default Constructor
             </summary>
             <param name="sceneName">The scene name</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.RecordFileChangedEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.RecordFileChanged"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.RecordFileChangedEventArgs.NewOutputPath">
+            <summary>
+            File name that the record output has begun writing to
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.RecordFileChangedEventArgs.#ctor(System.String)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="newOutputPath">The new output path</param>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.RecordStateChangedEventArgs">
             <summary>
@@ -3756,6 +3854,22 @@
             </summary>
             <param name="transitionName">The transition name</param>
         </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.ScreenshotSavedEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.ScreenshotSaved"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.ScreenshotSavedEventArgs.SavedScreenshotPath">
+            <summary>
+            Path of the saved image file
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.ScreenshotSavedEventArgs.#ctor(System.String)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="savedScreenshotPath">The saved screenshot path</param>
+        </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.SourceFilterCreatedEventArgs">
             <summary>
             Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterCreated"/>
@@ -3901,6 +4015,34 @@
             </summary>
             <param name="sourceName">The source name</param>
             <param name="filterName">The filter name that's been removed</param>
+        </member>
+        <member name="T:OBSWebsocketDotNet.Types.Events.SourceFilterSettingsChangedEventArgs">
+            <summary>
+            Event args for <see cref="E:OBSWebsocketDotNet.OBSWebsocket.SourceFilterSettingsChanged"/>
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.SourceFilterSettingsChangedEventArgs.SourceName">
+            <summary>
+            Name of the source the filter is on
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.SourceFilterSettingsChangedEventArgs.FilterName">
+            <summary>
+            Name of the filter
+            </summary>
+        </member>
+        <member name="P:OBSWebsocketDotNet.Types.Events.SourceFilterSettingsChangedEventArgs.FilterSettings">
+            <summary>
+            New settings object of the filter
+            </summary>
+        </member>
+        <member name="M:OBSWebsocketDotNet.Types.Events.SourceFilterSettingsChangedEventArgs.#ctor(System.String,System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Default Constructor
+            </summary>
+            <param name="sourceName">The source name</param>
+            <param name="filterName">The filter name</param>
+            <param name="filterSettings">The new settings object of the filter</param>
         </member>
         <member name="T:OBSWebsocketDotNet.Types.Events.StreamStateChangedEventArgs">
             <summary>
