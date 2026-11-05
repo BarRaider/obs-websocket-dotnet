@@ -185,8 +185,15 @@ namespace OBSWebsocketDotNet
                     HandleHello(body);
                     break;
                 case MessageTypes.Identified:
+                    // The server also sends Identified to confirm every ReIdentify, so only the first one
+                    // on a connection means the session has just been established. ReIdentify is only sent
+                    // once IsIdentified is true, so its Identified can never race the initial one.
+                    bool isNewSession = !IsIdentified;
                     IsIdentified = true;
-                    Task.Run(() => Connected?.Invoke(this, EventArgs.Empty));
+                    if (isNewSession)
+                    {
+                        Task.Run(() => Connected?.Invoke(this, EventArgs.Empty));
+                    }
                     break;
                 case MessageTypes.RequestResponse:
                 case MessageTypes.RequestBatchResponse:

@@ -126,7 +126,8 @@ namespace OBSWebsocketDotNet
         public event EventHandler ExitStarted;
 
         /// <summary>
-        /// Triggered when connected successfully to an obs-websocket server
+        /// Triggered once per connection, when the server confirms identification. Not raised again when
+        /// a later ReIdentify (e.g. a high-volume event subscription change) is confirmed
         /// </summary>
         public event EventHandler Connected;
 
